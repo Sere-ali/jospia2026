@@ -1031,3 +1031,42 @@ footer a { color: #fff; font-weight: 600; }
     .jos-badge { max-width: 100mm; box-shadow: none; }
     .page-badges .jos-badge { max-width: 88mm; }
 }
+
+/* ---------- Séminaristes : badge orange + certificat doré (maquettes officielles) ---------- */
+@font-face { font-family: 'JosAnton'; font-weight: 400; font-display: block; src: url('../fonts/anton-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JosSemi'; font-weight: 700; font-display: block; src: url('../fonts/barlow-semi-condensed-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JosSemi'; font-weight: 600; font-display: block; src: url('../fonts/barlow-semi-condensed-latin-600-normal.woff2') format('woff2'); }
+
+.jos-badge-sem .jos-doc__stage { --u: calc(100cqw / 904); background: #fff; }
+.jos-badge-sem__photo {
+    position: absolute; left: calc(var(--u) * 238.5); top: calc(var(--u) * 470);
+    width: calc(var(--u) * 424); height: calc(var(--u) * 424);
+    object-fit: cover; object-position: 50% 20%; display: block; background: #fff;
+}
+.jos-badge-sem__nom {
+    position: absolute; left: calc(var(--u) * 112); width: calc(var(--u) * 680);
+    top: calc(var(--u) * 902); height: calc(var(--u) * 66);
+    display: flex; align-items: center; justify-content: center; color: #fff; text-transform: uppercase;
+    font-weight: 800; font-size: calc(var(--u) * 62 * var(--fit, 1)); letter-spacing: .01em;
+    text-shadow: 0 calc(var(--u) * 3) calc(var(--u) * 4) rgba(0,0,0,.22);
+}
+.jos-badge-sem__nom span { white-space: nowrap; }
+.jos-badge-sem__val {
+    position: absolute; left: calc(var(--u) * 403); width: calc(var(--u) * 340); height: calc(var(--u) * 42);
+    display: flex; align-items: center; justify-content: flex-start; color: #fff;
+    font-family: 'JosSemi', 'Barlow', Arial, sans-serif; font-weight: 700; font-size: calc(var(--u) * 37 * var(--fit, 1));
+}
+.jos-badge-sem__val span { white-space: nowrap; }
+.jos-badge-sem__val.v1 { top: calc(var(--u) * 994); }
+.jos-badge-sem__val.v2 { top: calc(var(--u) * 1037); }
+.jos-badge-sem__val.v3 { top: calc(var(--u) * 1081); }
+
+.jos-cert-sem .jos-doc__stage { --u: calc(100cqw / 1123); aspect-ratio: 1123 / 793; }
+.jos-cert-sem__nom {
+    position: absolute; left: calc(var(--u) * 190); width: calc(var(--u) * 750);
+    top: calc(var(--u) * 343); height: calc(var(--u) * 62);
+    display: flex; align-items: center; justify-content: center; color: #000;
+    font-family: 'JosAnton', Impact, 'Arial Narrow', sans-serif; font-weight: 400; text-transform: uppercase;
+    font-size: calc(var(--u) * 52 * var(--fit, 1)); letter-spacing: .01em;
+}
+.jos-cert-sem__nom span { white-space: nowrap; }

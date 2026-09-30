@@ -1,33 +1,19 @@
 <?php
-/** Attend en entrée : $s (ligne de seminaristes) */
+/**
+ * Badge officiel « Séminariste » JOSPIA 2026, généré automatiquement depuis la maquette fournie.
+ * Attend en entrée : $s (ligne de seminaristes). Seuls photo, nom, dortoir, niveau et matricule sont insérés.
+ */
+$__avatar = BASE_URL . '/assets/img/avatar.svg';
+$__photo = !empty($s['photo']) ? BASE_URL . '/uploads/photos/' . rawurlencode($s['photo']) : $__avatar;
+$__nom = mb_strtoupper((string)$s['nom_prenoms'], 'UTF-8');
 ?>
-<div class="badge-jos">
-    <img class="badge-jos__entete" src="<?= BASE_URL ?>/assets/img/badge_entete.png" alt="JOSPIA 2026 - AEEMCI">
-    <div class="badge-jos__corps">
-        <div class="badge-jos__photo-wrap">
-            <?php if ($s['photo']): ?>
-                <img src="<?= BASE_URL ?>/uploads/photos/<?= e($s['photo']) ?>" alt="Photo">
-            <?php else: ?>
-                <img src="<?= BASE_URL ?>/assets/img/logo.jpg" alt="Photo">
-            <?php endif; ?>
-        </div>
-        <div class="badge-jos__nom"><?= e($s['nom_prenoms']) ?></div>
-        <div class="badge-jos__divider"><span class="ligne"></span><span class="losange"></span><span class="ligne"></span></div>
-        <div class="badge-jos__infos">
-            <div class="ligne-info"><span class="label-info">Dortoir :</span><span class="valeur-info"><?= e($s['dortoir']) ?></span></div>
-            <div class="ligne-info"><span class="label-info">Niveau :</span><span class="valeur-info"><?= e($s['niveau_affecte'] ?: 'Non affecté') ?></span></div>
-            <div class="ligne-info"><span class="label-info">Matricule :</span><span class="valeur-info"><?= e($s['matricule']) ?></span></div>
-        </div>
-        <div class="badge-jos__dates">
-            <div class="badge-jos__date-box">
-                <div class="jour"><?= e(EVENT_JOUR_DEBUT) ?></div>
-                <div class="mois"><?= e(EVENT_MOIS_ANNEE) ?></div>
-            </div>
-            <span class="badge-jos__fleche">➤</span>
-            <div class="badge-jos__date-box">
-                <div class="jour"><?= e(EVENT_JOUR_FIN) ?></div>
-                <div class="mois"><?= e(EVENT_MOIS_ANNEE) ?></div>
-            </div>
-        </div>
+<div class="jos-doc jos-badge jos-badge-sem">
+    <div class="jos-doc__stage">
+        <img class="jos-badge-sem__photo" src="<?= e($__photo) ?>" alt="" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
+        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_seminariste.webp" alt="Badge JOSPIA 2026 - Séminariste">
+        <div class="jos-badge-sem__nom" data-fit="0.98"><span><?= e($__nom) ?></span></div>
+        <div class="jos-badge-sem__val v1" data-fit="0.97"><span><?= e($s['dortoir']) ?></span></div>
+        <div class="jos-badge-sem__val v2" data-fit="0.97"><span><?= e($s['niveau_affecte'] ?: 'Non affecté') ?></span></div>
+        <div class="jos-badge-sem__val v3" data-fit="0.97"><span><?= e($s['matricule']) ?></span></div>
     </div>
 </div>

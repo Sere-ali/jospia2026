@@ -170,7 +170,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
 
                 <h3 style="margin-top:26px;">Mon diplôme</h3>
-                <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
+                <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
                 <div class="acces-restreint" style="margin-top:14px;">
                     🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
                 </div>

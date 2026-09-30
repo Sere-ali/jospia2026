@@ -18,7 +18,7 @@ require_once __DIR__ . '/../includes/header.php';
             <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer / Télécharger le diplôme</button>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
-        <?php $nomCertificat = $s['nom_prenoms']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
+        <?php $nomCertificat = $s['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
     </div>
 </section>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
