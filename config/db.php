@@ -28,7 +28,7 @@ define('EVENT_MOIS_ANNEE', 'DÉCEMBRE 2026');
 
 // Lien de paiement Wave marchand
 // Numéro Wave qui reçoit les paiements (chiffres, sans +225)
-define('WAVE_NUMERO', getenv('WAVE_NUMERO') ?: '0546155398');
+define('WAVE_NUMERO', getenv('WAVE_NUMERO') ?: '0767752772');
 define('WAVE_PAYMENT_LINK', getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/VOTRE_MARCHAND_ID');
 
 // Frais de participation au séminaire
