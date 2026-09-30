@@ -7,7 +7,12 @@ if (in_array($u['role'], ['admin','superadmin'], true) && !$u['membre_id'] && !$
     redirect('/admin/dashboard.php');
 }
 
+if ($u['role'] === 'finance') {
+    redirect('/finance/paiements.php');
+}
+
 $membre = null; $seminariste = null;
+$recu = null;
 if ($u['role'] === 'membre' && $u['membre_id']) {
     $stmt = $pdo->prepare("SELECT * FROM membres_commission WHERE id = ?");
     $stmt->execute([$u['membre_id']]);
@@ -23,6 +28,9 @@ if ($u['role'] === 'seminariste' && $u['seminariste_id']) {
     $stmt = $pdo->prepare("SELECT * FROM seminaristes WHERE id = ?");
     $stmt->execute([$u['seminariste_id']]);
     $seminariste = $stmt->fetch();
+    $stR = $pdo->prepare("SELECT p.*, c.nom_affiche AS valideur FROM paiements p LEFT JOIN comptes c ON c.id = p.admin_validateur_id WHERE p.seminariste_id = ? AND p.statut = 'validé' ORDER BY p.id DESC LIMIT 1");
+    $stR->execute([$u['seminariste_id']]);
+    $recu = $stR->fetch() ?: null;
 }
 $titrePage = "Mon espace";
 require_once __DIR__ . '/../includes/header.php';
@@ -121,6 +129,8 @@ require_once __DIR__ . '/../includes/header.php';
                 🔒 Le téléchargement / impression du badge est réservé aux administrateurs.
             </div>
         </div>
+
+        <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; endif; ?>
 
         <div class="carte" style="max-width:720px;margin:30px auto 0;">
             <h3>Test d'entrée</h3>

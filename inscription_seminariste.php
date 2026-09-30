@@ -70,6 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?)")
             ->execute([$identifiant, $hash, 'seminariste', $seminaristeId, $nom]);
 
+        // Connexion automatique pour enchaîner directement sur le paiement
+        if (!estConnecte()) {
+            $stC = $pdo->prepare("SELECT * FROM comptes WHERE identifiant = ?");
+            $stC->execute([$identifiant]);
+            if ($compteNew = $stC->fetch()) {
+                session_regenerate_id(true);
+                $_SESSION['compte_id'] = $compteNew['id'];
+                $_SESSION['compte'] = $compteNew;
+            }
+        }
+
         $succes = "Inscription réussie ! Votre dortoir a été attribué automatiquement : $dortoir.";
         $identifiantsGeneres = ['id' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir, 'anyama' => $anyama, 'section' => $sectionFinale];
     }
@@ -91,9 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    <strong>Section :</strong> <?= e($identifiantsGeneres['section']) ?><br>
                    <strong>Identifiant (contact) :</strong> <?= e($identifiantsGeneres['id']) ?><br>
                    <strong>Mot de passe :</strong> <?= e($identifiantsGeneres['mdp']) ?></p>
-                <p>Prochaine étape : connectez-vous puis effectuez votre <strong>paiement via Wave</strong> pour pouvoir accéder au test d'entrée et recevoir votre affectation finale.</p>
-                <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter et payer</a>
+                <p><strong>Notez bien ces identifiants</strong> : ils vous serviront à vous reconnecter.</p>
             </div>
+            <?php if (estConnecte()): require __DIR__ . '/includes/paiement_bloc.php'; else: ?>
+                <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter et payer</a>
+            <?php endif; ?>
         <?php else: ?>
 
             <?php foreach ($erreurs as $err): ?>

@@ -153,3 +153,16 @@ function redirect($url) {
     header("Location: $url");
     exit;
 }
+
+/** Valide un paiement et génère le code secret du reçu (utilisé dans le QR code). */
+function validerPaiement(PDO $pdo, int $paiementId, int $validateurId): bool {
+    $code = bin2hex(random_bytes(12));
+    $st = $pdo->prepare("UPDATE paiements SET statut = 'validé', admin_validateur_id = ?, code_recu = COALESCE(code_recu, ?), date_validation = NOW(), montant = ? WHERE id = ? AND statut <> 'validé'");
+    $st->execute([$validateurId, $code, FRAIS_PARTICIPATION, $paiementId]);
+    return $st->rowCount() > 0;
+}
+
+/** Numéro Wave affiché : +225 05 46 15 53 98 */
+function numeroWaveAffiche() {
+    return '+225 ' . trim(chunk_split(WAVE_NUMERO, 2, ' '));
+}

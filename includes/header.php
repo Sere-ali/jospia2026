@@ -29,6 +29,8 @@ $page = basename($_SERVER['PHP_SELF']);
                 <a href="<?= BASE_URL ?>/espace/fiche.php">Mon espace</a>
                 <?php if (estAdmin()): ?>
                     <a href="<?= BASE_URL ?>/admin/dashboard.php">Tableau de bord</a>
+                <?php elseif (estFinance()): ?>
+                    <a href="<?= BASE_URL ?>/finance/paiements.php">Finance</a>
                 <?php endif; ?>
                 <a href="<?= BASE_URL ?>/compte.php">Mon compte</a>
                 <a href="<?= BASE_URL ?>/logout.php" class="btn-nav">Déconnexion</a>

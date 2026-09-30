@@ -6,7 +6,7 @@ $erreurs = [];
 $succes = null;
 
 if (isset($_GET['desactiver'])) {
-    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','superadmin')")->execute([(int)$_GET['desactiver']]);
+    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','superadmin','finance')")->execute([(int)$_GET['desactiver']]);
     redirect('/admin/users.php');
 }
 if (isset($_GET['supprimer'])) {
@@ -14,7 +14,7 @@ if (isset($_GET['supprimer'])) {
     $stmt->execute([(int)$_GET['supprimer']]);
     $cible = $stmt->fetch();
     if ($cible && $cible['identifiant'] !== 'superadmin') {
-        $pdo->prepare("DELETE FROM comptes WHERE id = ? AND role IN ('admin','superadmin')")->execute([(int)$_GET['supprimer']]);
+        $pdo->prepare("DELETE FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance')")->execute([(int)$_GET['supprimer']]);
     }
     redirect('/admin/users.php');
 }
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($nom === '' || $identifiant === '' || strlen($mdp) < 6) {
         $erreurs[] = "Nom, identifiant obligatoires. Le mot de passe doit contenir au moins 6 caractères.";
-    } elseif (!in_array($role, ['admin','superadmin'], true)) {
+    } elseif (!in_array($role, ['admin','superadmin','finance'], true)) {
         $erreurs[] = "Rôle invalide.";
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ?");
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$comptes = $pdo->query("SELECT * FROM comptes WHERE role IN ('admin','superadmin') ORDER BY role, nom_affiche")->fetchAll();
+$comptes = $pdo->query("SELECT * FROM comptes WHERE role IN ('admin','superadmin','finance') ORDER BY role, nom_affiche")->fetchAll();
 
 $titrePage = "Comptes administrateurs";
 require_once __DIR__ . '/../includes/header.php';
@@ -72,6 +72,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <select name="role">
                             <option value="admin">Administrateur</option>
                             <option value="superadmin">Super Administrateur</option>
+                            <option value="finance">Commission Finance (valide les paiements)</option>
                         </select>
                     </div>
                 </div>

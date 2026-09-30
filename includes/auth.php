@@ -58,3 +58,9 @@ function estSuperAdmin() {
     $u = utilisateurCourant();
     return $u && $u['role'] === 'superadmin';
 }
+
+/** Accès à la validation des paiements et au scanner de reçus (commission Finance, admins). */
+function estFinance() {
+    $u = utilisateurCourant();
+    return $u && in_array($u['role'], ['finance', 'admin', 'superadmin'], true);
+}

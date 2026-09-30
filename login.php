@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['compte_id'] = $compte['id'];
         $_SESSION['compte'] = $compte;
-        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard.php' : '/espace/fiche.php');
+        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard.php' : ($compte['role'] === 'finance' ? '/finance/paiements.php' : '/espace/fiche.php'));
     } else {
         $erreur = "Identifiant ou mot de passe incorrect.";
     }

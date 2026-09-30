@@ -27,6 +27,8 @@ define('EVENT_JOUR_FIN', '28');
 define('EVENT_MOIS_ANNEE', 'DÉCEMBRE 2026');
 
 // Lien de paiement Wave marchand
+// Numéro Wave qui reçoit les paiements (chiffres, sans +225)
+define('WAVE_NUMERO', getenv('WAVE_NUMERO') ?: '0546155398');
 define('WAVE_PAYMENT_LINK', getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/VOTRE_MARCHAND_ID');
 
 // Frais de participation au séminaire
@@ -80,7 +82,8 @@ try {
 // applique sql/migration_features.sql (idempotent) une seule fois.
 try {
     $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
-    if ($nbTables < 2) {
+    $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'paiements' AND column_name = 'code_recu'")->fetchColumn() : 0;
+    if ($nbTables < 2 || $aCodeRecu < 1) {
         $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
     }
 } catch (Throwable $e) {
