@@ -70,6 +70,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td style="white-space:nowrap;">
                             <a href="<?= BASE_URL ?>/admin/edit_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
                             <a href="<?= BASE_URL ?>/admin/download_badge?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/download_diplome_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-primaire">🎓 Diplôme</a>
                             <?php if (estSuperAdmin()): ?>
                                 <a href="<?= BASE_URL ?>/admin/commissions?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce membre ?')">🗑️</a>
                             <?php endif; ?>

@@ -14,6 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("SELECT * FROM comptes WHERE identifiant = ? AND actif = 1");
     $stmt->execute([$identifiant]);
     $compte = $stmt->fetch();
+    if (!$compte && preg_match('/^[+0-9 .\-]+$/', $identifiant)) {
+        // numéro saisi avec espaces ou indicatif 225 : on le ramène au format local
+        $stmt->execute([numeroLocal($identifiant)]);
+        $compte = $stmt->fetch();
+    }
 
     if ($compte && password_verify($motDePasse, $compte['mot_de_passe'])) {
         session_regenerate_id(true);
@@ -32,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($erreur): ?><div class="alert alert-erreur"><?= e($erreur) ?></div><?php endif; ?>
         <form method="post">
             <div class="form-group">
-                <label>Identifiant (contact ou nom d'utilisateur)</label>
+                <label>Identifiant (votre numéro sans 225, ou nom d'utilisateur)</label>
                 <input type="text" name="identifiant" required autofocus>
             </div>
             <div class="form-group">

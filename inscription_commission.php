@@ -9,7 +9,7 @@ $identifiantsGeneres = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
     $commission = trim($_POST['commission'] ?? '');
-    $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
+    $contact = numeroLocal($_POST['contact'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir une commission valide.";
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Vos identifiants de connexion</h3>
                 <p>Conservez-les précieusement pour accéder à votre espace personnel.</p>
                 <p class="mono"><strong>Matricule :</strong> <?= e($identifiantsGeneres['matricule']) ?><br>
-                   <strong>Identifiant (contact) :</strong> <?= e($identifiantsGeneres['id']) ?><br>
+                   <strong>Identifiant (votre numéro, sans 225) :</strong> <?= e($identifiantsGeneres['id']) ?><br>
                    <strong>Mot de passe :</strong> <?= e($identifiantsGeneres['mdp']) ?></p>
                 <a href="<?= BASE_URL ?>/login" class="btn btn-primaire">Me connecter maintenant</a>
             </div>

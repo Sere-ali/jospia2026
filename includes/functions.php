@@ -188,3 +188,11 @@ function josLignesNom($nom) {
     }
     return $meilleur;
 }
+
+/** Numéro de téléphone local : chiffres uniquement, sans indicatif 225 (ex : +225 05 46 15 53 98 => 0546155398). */
+function numeroLocal($tel) {
+    $n = preg_replace('/\D+/', '', (string)$tel);
+    if (strpos($n, '00225') === 0) { $n = substr($n, 5); }
+    elseif (strpos($n, '225') === 0 && strlen($n) >= 12) { $n = substr($n, 3); }
+    return $n;
+}

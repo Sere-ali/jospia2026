@@ -55,6 +55,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <p><strong>Matricule :</strong> <span class="mono"><?= e($membre['matricule']) ?></span><br>
                    <strong>Commission :</strong> <?= e($membre['commission']) ?><br>
                    <strong>Contact :</strong> <?= e($membre['contact']) ?><br>
+                   <strong>Identifiant de connexion :</strong> <span class="mono"><?= e(utilisateurCourant()['identifiant'] ?? $membre['contact']) ?></span><br>
                    <strong>Inscrit le :</strong> <?= date('d/m/Y', strtotime($membre['created_at'])) ?></p>
             </div>
             <div>
@@ -63,6 +64,14 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="acces-restreint">
                     🔒 Le téléchargement / impression du badge est réservé aux administrateurs.
                 </div>
+            </div>
+        </div>
+
+        <div class="carte" style="margin-top:24px;">
+            <h3>Mon diplôme</h3>
+            <?php $nomCertificat = $membre['nom_prenoms']; $qualiteCertificat = 'MEMBRE DE LA COMMISSION ' . $membre['commission']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
+            <div class="acces-restreint" style="margin-top:14px;">
+                🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
             </div>
         </div>
 
