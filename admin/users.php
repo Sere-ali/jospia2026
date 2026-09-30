@@ -9,17 +9,31 @@ if (isset($_GET['desactiver'])) {
     $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')")->execute([(int)$_GET['desactiver']]);
     redirect('/admin/users');
 }
-if (isset($_GET['supprimer'])) {
-    $stmt = $pdo->prepare("SELECT identifiant FROM comptes WHERE id = ?");
-    $stmt->execute([(int)$_GET['supprimer']]);
+$messageSuppression = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_id'])) {
+    $idCible = (int)$_POST['supprimer_id'];
+    $stmt = $pdo->prepare("SELECT id, identifiant, nom_affiche FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')");
+    $stmt->execute([$idCible]);
     $cible = $stmt->fetch();
-    if ($cible && $cible['identifiant'] !== 'superadmin' && (int)$_GET['supprimer'] !== (int)$_SESSION['compte_id']) {
-        $pdo->prepare("DELETE FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')")->execute([(int)$_GET['supprimer']]);
+    if (!$cible) {
+        $erreurs[] = "Compte introuvable.";
+    } elseif ($cible['identifiant'] === 'superadmin') {
+        $erreurs[] = "Le compte principal ne peut pas être supprimé.";
+    } elseif ($idCible === (int)$_SESSION['compte_id']) {
+        $erreurs[] = "Vous ne pouvez pas supprimer votre propre compte.";
+    } else {
+        try {
+            $pdo->prepare("UPDATE paiements SET admin_validateur_id = NULL WHERE admin_validateur_id = ?")->execute([$idCible]);
+            $pdo->prepare("DELETE FROM comptes WHERE id = ?")->execute([$idCible]);
+            $succes = "Le compte de " . $cible['nom_affiche'] . " a été supprimé.";
+        } catch (Throwable $e) {
+            error_log('Suppression compte échouée : ' . $e->getMessage());
+            $erreurs[] = "Suppression impossible (compte lié à des données). Désactivez-le à la place.";
+        }
     }
-    redirect('/admin/users');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['supprimer_id'])) {
     $nom = trim($_POST['nom_affiche'] ?? '');
     $identifiant = trim($_POST['identifiant'] ?? '');
     $mdp = $_POST['mot_de_passe'] ?? '';
@@ -98,7 +112,10 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                             <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
                             <?php if ($c['identifiant'] !== 'superadmin' && (int)$c['id'] !== (int)$_SESSION['compte_id']): ?>
                                 <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
-                                <a href="<?= BASE_URL ?>/admin/users?supprimer=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer définitivement ce compte : <?= e(addslashes($c['nom_affiche'])) ?> ?')">🗑️ Supprimer</a>
+                                <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement le compte de <?= e(addslashes($c['nom_affiche'])) ?> ?');">
+                                    <input type="hidden" name="supprimer_id" value="<?= (int)$c['id'] ?>">
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                </form>
                             <?php else: ?>
                                 <span class="help-text"><?= $c['identifiant'] === 'superadmin' ? 'Compte principal' : 'Votre compte' ?></span>
                             <?php endif; ?>
