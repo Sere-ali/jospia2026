@@ -977,11 +977,11 @@ footer a { color: #fff; font-weight: 600; }
 /* ---------- Badge commission 904 x 1280 ---------- */
 .jos-badge { max-width: 380px; }
 .page-badges .jos-badge { max-width: 300px; }
-.jos-badge .jos-doc__stage { --u: calc(100cqw / 904); aspect-ratio: 904 / 1280; border-radius: calc(var(--u) * 38); background: #f7f7f7; }
+.jos-badge .jos-doc__stage { --u: calc(100cqw / 904); aspect-ratio: 904 / 1280; border-radius: calc(var(--u) * 38); background: #fff; }
 .jos-badge__photo {
     position: absolute; left: calc(var(--u) * 496); top: calc(var(--u) * 10);
     width: calc(var(--u) * 400); height: calc(var(--u) * 660);
-    object-fit: cover; object-position: 50% 18%; display: block;
+    object-fit: cover; object-position: 50% 18%; display: block; background: #fff;
 }
 .jos-badge__nom {
     position: absolute; left: calc(var(--u) * 150); width: calc(var(--u) * 610);

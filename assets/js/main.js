@@ -284,9 +284,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 new Promise(function (ok, ko) { setTimeout(function () { ko(new Error('delai')); }, 150000); })
             ]);
             var part = await partVisible(sortie);
-            return (part < 0.06 || part > 0.97) ? null : sortie;
+            if (part < 0.06 || part > 0.97) { return null; }
+            // Personne détourée posée sur un fond BLANC uni (JPEG léger)
+            var det = await lireImage(sortie);
+            var f = document.createElement('canvas'); f.width = det.naturalWidth; f.height = det.naturalHeight;
+            var fx = f.getContext('2d'); fx.fillStyle = '#ffffff'; fx.fillRect(0, 0, f.width, f.height);
+            fx.drawImage(det, 0, 0);
+            return await versBlob(f, 'image/jpeg');
         }
 
+        var formulaire = input.form, apres = false;
+        if (formulaire) {
+            formulaire.addEventListener('submit', function (ev) {
+                if (occupe) {
+                    ev.preventDefault(); apres = true;
+                    etat.style.color = '#0C5B3A';
+                    etat.textContent = '⏳ Merci de patienter : suppression de l\'arrière-plan en cours. Le formulaire sera envoyé automatiquement ensuite.';
+                }
+            });
+        }
         input.addEventListener('change', async function () {
             if (occupe || !input.files || !input.files[0]) { return; }
             var f = input.files[0];
@@ -297,10 +313,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 var blob = await detourer(f);
                 if (blob) {
-                    var nouveau = new File([blob], 'detoure_' + Date.now() + '.png', { type: 'image/png' });
+                    var nouveau = new File([blob], 'detoure_' + Date.now() + '.jpg', { type: 'image/jpeg' });
                     var dt = new DataTransfer(); dt.items.add(nouveau); input.files = dt.files;
                     var ap = document.getElementById('apercu-photo');
-                    if (ap) { ap.src = URL.createObjectURL(nouveau); ap.style.display = 'block'; ap.style.background = 'repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 50% / 14px 14px'; }
+                    if (ap) { ap.src = URL.createObjectURL(nouveau); ap.style.display = 'block'; ap.style.background = '#fff'; ap.style.border = '1px solid #ddd'; }
                     etat.textContent = '✅ Arrière-plan supprimé automatiquement.';
                 } else {
                     etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (personne non détectée). Utilisez de préférence une photo de face, bien éclairée.';
@@ -309,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (détourage indisponible pour le moment).';
             }
             occupe = false;
+            if (apres && formulaire) { apres = false; if (formulaire.requestSubmit) { formulaire.requestSubmit(); } else { formulaire.submit(); } }
         });
     });
 })();
