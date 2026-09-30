@@ -232,13 +232,14 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('afterprint', ajuster);
 })();
 
-/* ---------- Détourage automatique de la photo (suppression de l'arrière-plan, dans le navigateur) ---------- */
+/* ---------- Détourage automatique de la photo (suppression de l'arrière-plan par IA, dans le navigateur) ---------- */
 (function () {
+    var DONNEES = 'https://staticimgly.com/@imgly/background-removal-data/1.4.5/dist/';
     document.addEventListener('DOMContentLoaded', function () {
         var input = document.querySelector('input[type=file][name=photo][data-detourage]');
         if (!input) { return; }
-        var base = (input.getAttribute('data-base') || '') + '/assets/js/vendor/selfie/';
-        var occupe = false, segmenteur = null;
+        var base = input.getAttribute('data-base') || '';
+        var occupe = false;
         var etat = document.createElement('div');
         etat.className = 'help-text';
         etat.style.cssText = 'margin-top:6px;font-weight:700;';
@@ -246,9 +247,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function chargerLib() {
             return new Promise(function (ok, ko) {
-                if (window.SelfieSegmentation) { return ok(); }
+                if (window.ImglyBG) { return ok(); }
                 var s = document.createElement('script');
-                s.src = base + 'selfie_segmentation.js';
+                s.src = base + '/assets/js/vendor/imgly-bg.js';
                 s.onload = ok; s.onerror = ko;
                 document.head.appendChild(s);
             });
@@ -260,50 +261,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 img.onerror = ko; img.src = url;      // l'orientation EXIF est appliquée par le navigateur
             });
         }
-        function segmenter(canvas) {
-            return new Promise(function (ok, ko) {
-                if (!segmenteur) {
-                    segmenteur = new window.SelfieSegmentation({ locateFile: function (f) { return base + f; } });
-                    segmenteur.setOptions({ modelSelection: 0 });
-                }
-                segmenteur.onResults(function (r) { ok(r.segmentationMask); });
-                segmenteur.send({ image: canvas }).catch(ko);
+        function versBlob(canvas, type) { return new Promise(function (ok) { canvas.toBlob(ok, type, 0.92); }); }
+        function partVisible(blob) {
+            return lireImage(blob).then(function (img) {
+                var c = document.createElement('canvas'); c.width = 64; c.height = 64;
+                var x = c.getContext('2d'); x.drawImage(img, 0, 0, 64, 64);
+                var d = x.getImageData(0, 0, 64, 64).data, t = 0;
+                for (var i = 3; i < d.length; i += 4) { t += d[i]; }
+                return t / (255 * 64 * 64);
             });
         }
         async function detourer(fichier) {
             var img = await lireImage(fichier);
-            var max = 1000, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
-            var w = Math.round(img.naturalWidth * k), h = Math.round(img.naturalHeight * k);
-            var src = document.createElement('canvas'); src.width = w; src.height = h;
-            src.getContext('2d').drawImage(img, 0, 0, w, h);
+            var k = Math.min(1, 1000 / Math.max(img.naturalWidth, img.naturalHeight));
+            var c = document.createElement('canvas');
+            c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            var entree = await versBlob(c, 'image/jpeg');
             await chargerLib();
-            var masque = await segmenter(src);
-            // Masque : lissé puis converti en transparence douce
-            var mc = document.createElement('canvas'); mc.width = w; mc.height = h;
-            var mx = mc.getContext('2d');
-            mx.filter = 'blur(1.5px)';
-            mx.drawImage(masque, 0, 0, w, h);
-            var md = mx.getImageData(0, 0, w, h).data;
-            var sx = src.getContext('2d'), px = sx.getImageData(0, 0, w, h), d = px.data, tot = 0;
-            for (var i = 0; i < d.length; i += 4) {
-                var p = md[i] / 255;                                   // probabilité « personne » (canal rouge)
-                var a = Math.min(1, Math.max(0, (p - 0.55) / 0.28));    // seuil doux
-                a = a * a * (3 - 2 * a);
-                d[i + 3] = Math.round(a * 255); tot += a;
-            }
-            // Si presque rien (ou presque tout) n'est détecté, on garde la photo d'origine
-            var part = tot / (w * h);
-            if (part < 0.08 || part > 0.97) { return null; }
-            sx.putImageData(px, 0, 0);
-            return new Promise(function (ok) { src.toBlob(function (b) { ok(b); }, 'image/png'); });
+            var sortie = await Promise.race([
+                window.ImglyBG.removeBackground(entree, { publicPath: DONNEES, model: 'small', output: { format: 'image/png' } }),
+                new Promise(function (ok, ko) { setTimeout(function () { ko(new Error('delai')); }, 150000); })
+            ]);
+            var part = await partVisible(sortie);
+            return (part < 0.06 || part > 0.97) ? null : sortie;
         }
 
         input.addEventListener('change', async function () {
             if (occupe || !input.files || !input.files[0]) { return; }
             var f = input.files[0];
-            if (f.type === 'image/png' && f.name.indexOf('detoure') === 0) { return; }
+            if (f.name.indexOf('detoure_') === 0) { return; }
             occupe = true;
-            etat.style.color = '#0C5B3A'; etat.textContent = '⏳ Suppression automatique de l\'arrière-plan…';
+            etat.style.color = '#0C5B3A';
+            etat.textContent = '⏳ Suppression de l\'arrière-plan en cours… (la première fois, cela peut prendre une minute)';
             try {
                 var blob = await detourer(f);
                 if (blob) {
@@ -316,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (personne non détectée). Utilisez de préférence une photo de face, bien éclairée.';
                 }
             } catch (e) {
-                etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle.';
+                etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (détourage indisponible pour le moment).';
             }
             occupe = false;
         });
