@@ -41,18 +41,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var timerEl = document.getElementById('quiz-timer');
     if (timerEl) {
-        var dureeRestante = parseInt(timerEl.dataset.seconds, 10);
+        var finTest = Date.now() + parseInt(timerEl.dataset.seconds, 10) * 1000;
         var formulaireQuiz = document.getElementById('quiz-form');
-        var interval = setInterval(function () {
-            dureeRestante--;
-            var m = Math.floor(dureeRestante / 60);
-            var s = dureeRestante % 60;
+        var soumis = false;
+        if (formulaireQuiz) {
+            formulaireQuiz.addEventListener('submit', function (ev) {
+                if (soumis) { return; }
+                var total = formulaireQuiz.querySelectorAll('.question-card').length;
+                var repondues = formulaireQuiz.querySelectorAll('input[type=radio]:checked').length;
+                if (repondues < total && !confirm('Il vous reste ' + (total - repondues) + ' question(s) sans réponse. Soumettre quand même ?')) {
+                    ev.preventDefault();
+                    return;
+                }
+                soumis = true;
+            });
+        }
+        var afficher = function () {
+            var restant = Math.max(0, Math.round((finTest - Date.now()) / 1000));
+            var m = Math.floor(restant / 60), s = restant % 60;
             timerEl.textContent = '⏱ Temps restant : ' + m + ':' + (s < 10 ? '0' : '') + s;
-            if (dureeRestante <= 0) {
+            if (restant <= 60) { timerEl.style.background = '#c0392b'; }
+            if (restant <= 0 && !soumis) {
+                soumis = true;
                 clearInterval(interval);
-                if (formulaireQuiz) formulaireQuiz.submit();
+                timerEl.textContent = '⏱ Temps écoulé : envoi de vos réponses...';
+                if (formulaireQuiz) { formulaireQuiz.submit(); }
             }
-        }, 1000);
+        };
+        var interval = setInterval(afficher, 500);
+        afficher();
     }
 
     var inputPhoto = document.querySelector('input[type=file][name=photo]');
