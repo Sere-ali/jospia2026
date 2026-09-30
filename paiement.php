@@ -12,11 +12,17 @@ $seminariste_id = $compte['seminariste_id'];
 
 // Juste après l'inscription : envoi direct vers Wave (si un lien de paiement est configuré)
 $nouveau = isset($_GET['nouveau']);
-if ($nouveau && lienWavePaiement() && empty($_SESSION['wave_redirige'])) {
+if ($nouveau && waveApiActive() && empty($_SESSION['wave_redirige'])) {
+    $_SESSION['wave_redirige'] = 1;
+    redirect('/wave_pay');
+}
+if ($nouveau && !waveApiActive() && lienWavePaiement() && empty($_SESSION['wave_redirige'])) {
     $_SESSION['wave_redirige'] = 1;
     header('Location: ' . lienWavePaiement());
     exit;
 }
+$flashPaiement = $_SESSION['flash_paiement'] ?? null;
+unset($_SESSION['flash_paiement']);
 $matriculeNouveau = null;
 if ($nouveau) {
     $stM = $pdo->prepare("SELECT matricule FROM seminaristes WHERE id = ?");
@@ -64,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         <h2 style="color:var(--primaire);text-align:center;margin-bottom:1rem;">Validation de votre paiement</h2>
         
+        <?php if ($flashPaiement): ?><div class="alert alert-erreur"><?= e($flashPaiement) ?></div><?php endif; ?>
         <?php if ($erreur): ?><div class="alert alert-erreur"><?= e($erreur) ?></div><?php endif; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 

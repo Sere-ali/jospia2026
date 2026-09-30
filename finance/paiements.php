@@ -11,8 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
     $admin_id = $_SESSION['compte_id'];
 
     if ($action === 'valider') {
-        validerPaiement($pdo, $paiement_id, (int)$admin_id);
-        $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
+        $stR = $pdo->prepare("SELECT reference_transaction FROM paiements WHERE id = ?");
+        $stR->execute([$paiement_id]);
+        if (trim((string)$stR->fetchColumn()) === '') {
+            $_SESSION['flash_succes'] = "Impossible de valider : aucun ID de transaction (paiement non effectué).";
+        } else {
+            validerPaiement($pdo, $paiement_id, (int)$admin_id);
+            $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
+        }
     } elseif ($action === 'supprimer') {
         if (estSuperAdmin()) {
             $pdo->prepare("DELETE FROM paiements WHERE id = ?")->execute([$paiement_id]);
@@ -36,7 +42,15 @@ $query = "SELECT p.*, s.nom_prenoms, s.matricule, s.contact, s.anyama, s.section
           JOIN seminaristes s ON p.seminariste_id = s.id
           LEFT JOIN comptes c ON p.admin_validateur_id = c.id
           ORDER BY FIELD(p.statut, 'en attente') DESC, p.created_at DESC";
-$paiements = $pdo->query($query)->fetchAll();
+$tous = $pdo->query($query)->fetchAll();
+// Liste principale : paiements avec ID de transaction (ou déjà traités).
+// Sans ID = paiement non effectué / échoué (solde insuffisant...) : jamais validable.
+$paiements = [];
+$sansId = [];
+foreach ($tous as $p) {
+    if ($p['statut'] === 'en attente' && trim((string)$p['reference_transaction']) === '') $sansId[] = $p;
+    else $paiements[] = $p;
+}
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../includes/finance_nav.php');
@@ -107,7 +121,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         </td>
                         <td><?= e($p['contact']) ?></td>
                         <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
-                        <td style="font-family: monospace;"><?= $p['reference_transaction'] !== '' ? e($p['reference_transaction']) : '<small style="color:var(--texte-doux)">non fourni</small>' ?></td>
+                        <td style="font-family: monospace;"><?= $p['reference_transaction'] !== '' ? '<strong>' . e($p['reference_transaction']) . '</strong>' : '-' ?></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente</span>
@@ -155,6 +169,34 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                 </tbody>
             </table>
         </div>
+
+        <?php if ($sansId): ?>
+        <details class="carte" style="margin-top:20px;overflow-x:auto;">
+            <summary style="cursor:pointer;font-weight:bold;">Sans paiement confirmé (<?= count($sansId) ?>) - paiement non effectué ou échoué (ex. solde insuffisant) : non validable</summary>
+            <table style="margin-top:10px;">
+                <thead><tr><th>Date</th><th>Séminariste</th><th>Contact</th><th>Info</th><?php if (estSuperAdmin()): ?><th></th><?php endif; ?></tr></thead>
+                <tbody>
+                <?php foreach ($sansId as $p): ?>
+                    <tr>
+                        <td style="font-size:0.9rem;"><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
+                        <td><strong><?= e($p['nom_prenoms']) ?></strong><br><small class="tag"><?= e($p['matricule']) ?></small></td>
+                        <td><?= e($p['contact']) ?></td>
+                        <td><small style="color:var(--texte-doux)">Aucun ID de transaction reçu</small></td>
+                        <?php if (estSuperAdmin()): ?>
+                        <td>
+                            <form method="post" onsubmit="return confirm('Supprimer cette ligne ?');">
+                                <input type="hidden" name="paiement_id" value="<?= (int)$p['id'] ?>">
+                                <input type="hidden" name="action" value="supprimer">
+                                <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                            </form>
+                        </td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </details>
+        <?php endif; ?>
     </div>
 </section>
 

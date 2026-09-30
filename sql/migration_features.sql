@@ -43,6 +43,7 @@ UPDATE questions SET banque = 5 WHERE banque = 1 AND categorie LIKE 'Gestion%';
 -- 4. Reçu de paiement avec QR code + rôle "finance"
 ALTER TABLE paiements ADD COLUMN IF NOT EXISTS code_recu VARCHAR(40) NULL;
 ALTER TABLE paiements ADD COLUMN IF NOT EXISTS montant INT NOT NULL DEFAULT 5100;
+ALTER TABLE paiements ADD COLUMN IF NOT EXISTS wave_session_id VARCHAR(80) NULL;
 ALTER TABLE paiements ADD COLUMN IF NOT EXISTS date_validation DATETIME NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS uq_paiements_code_recu ON paiements (code_recu);
 UPDATE paiements SET code_recu = REPLACE(UUID(), '-', ''), date_validation = COALESCE(updated_at, NOW()) WHERE statut = 'validé' AND code_recu IS NULL;

@@ -88,7 +88,8 @@ if (!is_file($drapeauMigration)) {
         $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
         $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND ((table_name = 'paiements' AND column_name = 'code_recu') OR (table_name = 'comptes' AND column_name = 'mdp_initial') OR (table_name = 'paiements' AND column_name = 'numero_wave'))")->fetchColumn() : 0;
         $enumOk = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'comptes' AND column_name = 'role' AND column_type LIKE '%scientifique%'")->fetchColumn();
-        if ($nbTables < 2 || $aCodeRecu < 3 || !$enumOk) {
+        $aSession = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'paiements' AND column_name = 'wave_session_id'")->fetchColumn() : 0;
+        if ($nbTables < 2 || $aCodeRecu < 3 || !$enumOk || !$aSession) {
             $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
         }
         @file_put_contents($drapeauMigration, '1');

@@ -157,7 +157,7 @@ function redirect($url) {
 }
 
 /** Valide un paiement et génère le code secret du reçu (utilisé dans le QR code). */
-function validerPaiement(PDO $pdo, int $paiementId, int $validateurId): bool {
+function validerPaiement(PDO $pdo, int $paiementId, ?int $validateurId): bool {
     $code = bin2hex(random_bytes(12));
     $st = $pdo->prepare("UPDATE paiements SET statut = 'validé', admin_validateur_id = ?, code_recu = COALESCE(code_recu, ?), date_validation = NOW(), montant = ? WHERE id = ? AND statut <> 'validé'");
     $st->execute([$validateurId, $code, FRAIS_PARTICIPATION, $paiementId]);
@@ -235,4 +235,42 @@ function photoSauvegarderEnBase($nom, $chemin, $ext) {
     } catch (Throwable $e) {
         error_log('Sauvegarde photo en base échouée : ' . $e->getMessage());
     }
+}
+
+/** Paiement automatique Wave (API Checkout) : actif seulement si la clé WAVE_API_KEY est définie sur Render. */
+function waveApiActive() { return (bool)getenv('WAVE_API_KEY'); }
+
+function waveApi($methode, $chemin, $corps = null) {
+    $ch = curl_init('https://api.wave.com' . $chemin);
+    $entetes = ['Authorization: Bearer ' . getenv('WAVE_API_KEY'), 'Content-Type: application/json'];
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_HTTPHEADER => $entetes, CURLOPT_CUSTOMREQUEST => $methode]);
+    if ($corps !== null) { curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($corps)); }
+    $rep = curl_exec($ch);
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return [$code, $rep ? json_decode($rep, true) : null];
+}
+
+/** Adresse publique du site (https) pour les retours Wave. */
+function urlSite() {
+    $hote = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return 'https://' . $hote . BASE_URL;
+}
+
+/**
+ * Interroge Wave sur une session de paiement ; si le paiement a abouti, enregistre l'ID de transaction
+ * et valide automatiquement. Retourne true si le paiement est confirmé.
+ */
+function waveVerifierEtValider(PDO $pdo, $sessionId) {
+    [$code, $j] = waveApi('GET', '/v1/checkout/sessions/' . rawurlencode($sessionId));
+    if ($code !== 200 || !is_array($j) || ($j['payment_status'] ?? '') !== 'succeeded') { return false; }
+    if ((int)($j['amount'] ?? 0) < FRAIS_PARTICIPATION) { return false; }
+    $st = $pdo->prepare("SELECT id FROM paiements WHERE wave_session_id = ? LIMIT 1");
+    $st->execute([$sessionId]);
+    $pid = (int)$st->fetchColumn();
+    if (!$pid) { return false; }
+    $tx = (string)($j['transaction_id'] ?? '');
+    $pdo->prepare("UPDATE paiements SET reference_transaction = ? WHERE id = ?")->execute([$tx !== '' ? $tx : 'WAVE-' . $sessionId, $pid]);
+    validerPaiement($pdo, $pid, null);
+    return true;
 }
