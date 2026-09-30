@@ -3,7 +3,7 @@ $titrePage = "Connexion";
 require_once __DIR__ . '/includes/header.php';
 
 if (estConnecte()) {
-    redirect(estAdmin() ? '/admin/dashboard.php' : '/espace/fiche.php');
+    redirect(estAdmin() ? '/admin/dashboard' : '/espace/fiche');
 }
 
 $erreur = null;
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['compte_id'] = $compte['id'];
         $_SESSION['compte'] = $compte;
-        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard.php' : ($compte['role'] === 'finance' ? '/finance/paiements.php' : '/espace/fiche.php'));
+        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard' : ($compte['role'] === 'finance' ? '/finance/paiements' : '/espace/fiche'));
     } else {
         $erreur = "Identifiant ou mot de passe incorrect.";
     }
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primaire btn-block">Se connecter</button>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--texte-doux);">
-            Inscrit mais sans identifiants ? <a href="<?= BASE_URL ?>/statut.php">Suivre mon paiement</a><br>Pas encore inscrit ? <a href="<?= BASE_URL ?>/index.php">Choisir un formulaire d'inscription</a>
+            Inscrit mais sans identifiants ? <a href="<?= BASE_URL ?>/statut">Suivre mon paiement</a><br>Pas encore inscrit ? <a href="<?= BASE_URL ?>/">Choisir un formulaire d'inscription</a>
         </p>
     </div>
 </div>

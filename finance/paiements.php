@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
         $_SESSION['flash_succes'] = "Paiement rejeté.";
     }
     
-    redirect('/finance/paiements.php');
+    redirect('/finance/paiements');
 }
 
 // Récupérer la liste des paiements avec infos du séminariste
@@ -38,9 +38,9 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
 <section class="section">
     <div class="container">
         <div class="section-titre">
-            <h2>Commission Finance — Paiements Wave</h2>
+            <h2>Commission Finance - Paiements Wave</h2>
             <p>Vérifiez chaque référence dans le compte Wave (<?= e(numeroWaveAffiche()) ?>) puis validez ou rejetez. La validation génère le reçu avec QR code du séminariste.</p>
-            <p><a href="<?= BASE_URL ?>/finance/scanner.php" class="btn btn-primaire">📷 Scanner un reçu</a></p>
+            <p><a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-primaire">📷 Scanner un reçu</a></p>
         </div>
 
         <?php
@@ -99,7 +99,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                             <small class="tag"><?= e($p['matricule']) ?></small>
                         </td>
                         <td><?= e($p['contact']) ?></td>
-                        <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '—') ?></strong></td>
+                        <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
                         <td style="font-family: monospace;"><?= $p['reference_transaction'] !== '' ? e($p['reference_transaction']) : '<small style="color:var(--texte-doux)">non fourni</small>' ?></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>

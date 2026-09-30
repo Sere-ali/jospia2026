@@ -10,11 +10,11 @@ $seminariste = $stmt->fetch();
 if (!$seminariste) { die("Fiche introuvable."); }
 
 if ($seminariste['test_complete']) {
-    redirect('/espace/fiche.php');
+    redirect('/espace/fiche');
 }
 
 if ($seminariste['dortoir'] === 'Pépinière') {
-    redirect('/espace/fiche.php');
+    redirect('/espace/fiche');
 }
 
 // Récupération de la configuration des banques
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->prepare("UPDATE seminaristes SET test_complete = 1, note_test = ?, niveau_affecte = ? WHERE id = ?")
         ->execute([$note, $niveau, $seminariste['id']]);
 
-    redirect('/espace/fiche.php');
+    redirect('/espace/fiche');
 }
 
 $titrePage = "Test d'entrée";
@@ -68,7 +68,7 @@ require_once __DIR__ . '/includes/header.php';
 <section class="section">
     <div class="container form-wrap">
         <div class="section-titre">
-            <span class="eyebrow">Test d'entrée — Noté sur 20</span>
+            <span class="eyebrow">Test d'entrée - Noté sur 20</span>
             <h2>Bonne chance, <?= e($seminariste['nom_prenoms']) ?> !</h2>
             <p style="color:var(--texte-doux);">Répondez aux <?= count($questions) ?> questions ci-dessous. Le test se soumet automatiquement à la fin du temps imparti.</p>
         </div>

@@ -1,5 +1,5 @@
 -- ============================================================
--- JOSPIA 2026 — Migration : ajout du système de bulletin de notes
+-- JOSPIA 2026 - Migration : ajout du système de bulletin de notes
 -- À utiliser UNIQUEMENT si vous avez DÉJÀ une base existante avec
 -- des inscriptions réelles que vous ne voulez pas perdre.
 -- (Si votre base ne contient que des données de test, il est plus

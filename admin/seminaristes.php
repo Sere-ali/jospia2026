@@ -5,7 +5,7 @@ exigerRole(['admin', 'superadmin']);
 if (isset($_GET['supprimer']) && estSuperAdmin()) {
     $pdo->prepare("DELETE FROM comptes WHERE seminariste_id = ?")->execute([(int)$_GET['supprimer']]);
     $pdo->prepare("DELETE FROM seminaristes WHERE id = ?")->execute([(int)$_GET['supprimer']]);
-    redirect('/admin/seminaristes.php');
+    redirect('/admin/seminaristes');
 }
 
 $recherche = trim($_GET['q'] ?? '');
@@ -37,7 +37,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <h2>Séminaristes (<?= count($seminaristes) ?>)</h2>
-            <a href="<?= BASE_URL ?>/admin/badges_seminaristes.php" class="btn btn-or btn-sm">🖨️ Imprimer tous les badges (4/page)</a>
+            <a href="<?= BASE_URL ?>/admin/badges_seminaristes" class="btn btn-or btn-sm">🖨️ Imprimer tous les badges (4/page)</a>
         </div>
 
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
@@ -90,18 +90,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><span class="pill pill-vert"><?= e($s['section']) ?></span></td>
                         <td><?= e($s['dortoir']) ?></td>
                         <td><?php if ($s['test_complete']): ?><span class="pill pill-or"><?= e($s['note_test']) ?>/20</span><?php else: ?><span class="pill pill-gris">En attente</span><?php endif; ?></td>
-                        <td><?= e($s['niveau_affecte'] ?? '—') ?></td>
+                        <td><?= e($s['niveau_affecte'] ?? '-') ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_seminariste.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <a href="<?= BASE_URL ?>/admin/seminariste_detail.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">👁️</a>
-                            <a href="<?= BASE_URL ?>/admin/download_fiche.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">📄 Fiche</a>
-                            <a href="<?= BASE_URL ?>/admin/download_badge_seminariste.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/seminariste_detail?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">👁️</a>
+                            <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">📄 Fiche</a>
+                            <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
                             <?php if ($s['test_complete']): ?>
-                                <a href="<?= BASE_URL ?>/admin/download_diplome.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🎖️ Diplôme</a>
-                                <a href="<?= BASE_URL ?>/admin/correction.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">🔍 Correction</a>
+                                <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🎖️ Diplôme</a>
+                                <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">🔍 Correction</a>
                             <?php endif; ?>
                             <?php if (estSuperAdmin()): ?>
-                                <a href="<?= BASE_URL ?>/admin/seminaristes.php?supprimer=<?= $s['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce séminariste ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/seminaristes?supprimer=<?= $s['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce séminariste ?')">🗑️</a>
                             <?php endif; ?>
                         </td>
                     </tr>

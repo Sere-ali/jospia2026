@@ -2,7 +2,7 @@
 /** Attend en entrée : $s (ligne de seminaristes) */
 ?>
 <div class="badge-jos">
-    <img class="badge-jos__entete" src="<?= BASE_URL ?>/assets/img/badge_entete.png" alt="JOSPIA 2026 — AEEMCI">
+    <img class="badge-jos__entete" src="<?= BASE_URL ?>/assets/img/badge_entete.png" alt="JOSPIA 2026 - AEEMCI">
     <div class="badge-jos__corps">
         <div class="badge-jos__photo-wrap">
             <?php if ($s['photo']): ?>

@@ -56,8 +56,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 <section class="section">
     <div class="container">
         <div class="section-tete" style="text-align:left;">
-            <h2>Saisie des notes — Commission scientifique</h2>
-            <p style="color:var(--texte-doux);">Recherchez un séminariste, puis renseignez sa note pour chaque matière. Les bulletins restent invisibles pour les séminaristes tant que vous n'avez pas <a href="<?= BASE_URL ?>/admin/matieres.php">publié les résultats</a>.</p>
+            <h2>Saisie des notes - Commission scientifique</h2>
+            <p style="color:var(--texte-doux);">Recherchez un séminariste, puis renseignez sa note pour chaque matière. Les bulletins restent invisibles pour les séminaristes tant que vous n'avez pas <a href="<?= BASE_URL ?>/admin/matieres">publié les résultats</a>.</p>
         </div>
 
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
@@ -79,7 +79,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                             <td><?= e($r['nom_prenoms']) ?></td>
                             <td><?= e($r['section']) ?></td>
                             <td><?= e($r['contact']) ?></td>
-                            <td><a href="<?= BASE_URL ?>/admin/notes.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-primaire">Saisir ses notes</a></td>
+                            <td><a href="<?= BASE_URL ?>/admin/notes?id=<?= $r['id'] ?>" class="btn btn-sm btn-primaire">Saisir ses notes</a></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php if (!$resultatsRecherche): ?><tr><td colspan="5">Aucun résultat.</td></tr><?php endif; ?>

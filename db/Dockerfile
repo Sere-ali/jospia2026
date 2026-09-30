@@ -4,4 +4,4 @@ FROM mariadb:10.11
 COPY sql/databasejospia26.sql /docker-entrypoint-initdb.d/01-jospia2026.sql
 COPY sql/migration_features.sql /docker-entrypoint-initdb.d/02-migration.sql
 # datadir dans un sous-dossier : évite le "lost+found" à la racine du disque Render
-CMD ["mariadbd", "--datadir=/var/lib/mysql/data", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+CMD ["mariadbd", "--datadir=/var/lib/mysql/data", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--max-connections=400", "--innodb-buffer-pool-size=192M", "--innodb-flush-log-at-trx-commit=2", "--skip-name-resolve"]

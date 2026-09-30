@@ -30,7 +30,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </div>
         
         <p style="margin-bottom: 20px;">
-            <a href="<?= BASE_URL ?>/admin/questions.php" class="btn btn-sm btn-outline">← Retour aux questions</a>
+            <a href="<?= BASE_URL ?>/admin/questions" class="btn btn-sm btn-outline">← Retour aux questions</a>
         </p>
 
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>

@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erreurs)) {
         $nomPhoto = uploadPhoto($_FILES['photo']);
-        if (!$nomPhoto) $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp — 5 Mo max).";
+        if (!$nomPhoto) $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp - 5 Mo max).";
     }
 
     if (empty($erreurs)) {
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (estConnecte()) {
-            redirect('/paiement.php?nouveau=1');
+            redirect('/paiement?nouveau=1');
         }
 
         $succes = "Inscription réussie ! Votre dortoir a été attribué automatiquement : $dortoir.";
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container form-wrap">
         <div class="section-titre">
             <span class="eyebrow">Séminariste</span>
-            <h2>Inscription — Séminariste</h2>
+            <h2>Inscription - Séminariste</h2>
         </div>
 
         <?php if ($succes): ?>
@@ -108,10 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="mono"><strong>Matricule :</strong> <?= e($identifiantsGeneres['matricule']) ?><br>
                    <strong>Sous-comité :</strong> <?= e($identifiantsGeneres['anyama']) ?><br>
                    <strong>Section :</strong> <?= e($identifiantsGeneres['section']) ?></p>
-                <p>🔒 Vos <strong>identifiants de connexion</strong> et votre <strong>reçu</strong> seront disponibles dès que la commission Finance aura <strong>validé votre paiement</strong>. Notez votre matricule <strong><?= e($identifiantsGeneres['matricule']) ?></strong> : il vous permettra de les récupérer sur la page <a href="<?= BASE_URL ?>/statut.php">« Suivre mon paiement »</a>.</p>
+                <p>🔒 Vos <strong>identifiants de connexion</strong> et votre <strong>reçu</strong> seront disponibles dès que la commission Finance aura <strong>validé votre paiement</strong>. Notez votre matricule <strong><?= e($identifiantsGeneres['matricule']) ?></strong> : il vous permettra de les récupérer sur la page <a href="<?= BASE_URL ?>/statut">« Suivre mon paiement »</a>.</p>
             </div>
             <?php if (estConnecte()): require __DIR__ . '/includes/paiement_bloc.php'; else: ?>
-                <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter et payer</a>
+                <a href="<?= BASE_URL ?>/login" class="btn btn-primaire">Me connecter et payer</a>
             <?php endif; ?>
         <?php else: ?>
 
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group">
                             <label>Anyama <span class="req">*</span></label>
                             <select name="anyama" id="anyama" required>
-                                <option value="">— Choisir —</option>
+                                <option value="">- Choisir -</option>
                                 <option value="Anyama 1" <?= (($_POST['anyama'] ?? '') === 'Anyama 1') ? 'selected' : '' ?>>Anyama 1</option>
                                 <option value="Anyama 2" <?= (($_POST['anyama'] ?? '') === 'Anyama 2') ? 'selected' : '' ?>>Anyama 2</option>
                             </select>
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group">
                             <label>Section <span class="req">*</span></label>
                             <select name="section" id="section" required>
-                                <option value="">— Choisir une section —</option>
+                                <option value="">- Choisir une section -</option>
                             </select>
                         </div>
                     </div>

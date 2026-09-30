@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php else: ?>
                         <p>Connectez-vous avec votre identifiant (votre numéro) et le mot de passe que vous avez choisi.</p>
                     <?php endif; ?>
-                    <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter et voir mon reçu</a>
+                    <a href="<?= BASE_URL ?>/login" class="btn btn-primaire">Me connecter et voir mon reçu</a>
                 <?php elseif ($resultat['statut'] === 'en attente'): ?>
                     <div class="alert alert-info" style="background:#fff8e1;border:1px solid #ffe08a;padding:12px;border-radius:8px;">⏳ Paiement en attente de validation par la commission Finance. Revenez un peu plus tard.</div>
                 <?php elseif ($resultat['statut'] === 'rejeté'): ?>

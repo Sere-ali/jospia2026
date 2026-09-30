@@ -35,7 +35,7 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/espace/fiche.php" class="btn btn-outline btn-sm">&larr; Retour à mon espace</a>
+        <a href="<?= BASE_URL ?>/espace/fiche" class="btn btn-outline btn-sm">&larr; Retour à mon espace</a>
 
         <div class="section-titre" style="text-align:left;margin-top:16px;">
             <span class="eyebrow">Votre avis compte</span>
@@ -52,7 +52,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="form-group">
                     <label>Commission concernée <span class="req">*</span></label>
                     <select name="commission" required>
-                        <option value="">— Choisir une commission —</option>
+                        <option value="">- Choisir une commission -</option>
                         <?php foreach (listeCommissions() as $c): ?>
                             <option value="<?= e($c) ?>" <?= (($_POST['commission'] ?? '') === $c) ? 'selected' : '' ?>><?= e($c) ?></option>
                         <?php endforeach; ?>

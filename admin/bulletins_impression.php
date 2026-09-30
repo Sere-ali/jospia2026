@@ -22,7 +22,7 @@ require_once __DIR__ . '/../includes/header.php';
 <section class="section">
     <div class="container">
         <div class="no-print" style="text-align:center;margin-bottom:20px;">
-            <a href="<?= BASE_URL ?>/admin/notes.php" class="btn btn-outline btn-sm">&larr; Retour à la saisie des notes</a>
+            <a href="<?= BASE_URL ?>/admin/notes" class="btn btn-outline btn-sm">&larr; Retour à la saisie des notes</a>
             <form method="get" style="display:inline-flex;gap:8px;">
                 <select name="niveau" onchange="this.form.submit()">
                     <option value="">Tous les niveaux (<?= count($seminaristesListe) ?> bulletins)</option>
@@ -31,7 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($seminaristesListe) ?> bulletin(s) — <?= count($pages) ?> page(s)</button>
+            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($seminaristesListe) ?> bulletin(s) - <?= count($pages) ?> page(s)</button>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
 

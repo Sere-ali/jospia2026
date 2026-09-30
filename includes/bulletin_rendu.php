@@ -21,7 +21,7 @@ foreach ($lignesBulletin as $l) {
     }
 }
 $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null;
-[$mentionGenerale, $couleurMention] = $moyenneGenerale !== null ? appreciationNote($moyenneGenerale) : ['—', 'gris'];
+[$mentionGenerale, $couleurMention] = $moyenneGenerale !== null ? appreciationNote($moyenneGenerale) : ['-', 'gris'];
 ?>
 <div class="fiche-doc bulletin-doc" style="max-width:680px;">
     <div class="entete-fiche">
@@ -47,7 +47,7 @@ $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null
             <?php if ($seminariste['dortoir'] === 'Pépinière'): ?>
                 Non applicable (sous-comité Pépinière)
             <?php elseif ($seminariste['test_complete']): ?>
-                <?= e($seminariste['note_test']) ?> / 20 — Niveau <?= e($seminariste['niveau_affecte']) ?>
+                <?= e($seminariste['note_test']) ?> / 20 - Niveau <?= e($seminariste['niveau_affecte']) ?>
             <?php else: ?>
                 Non composé
             <?php endif; ?>
@@ -71,7 +71,7 @@ $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null
                 ?>
                 <tr>
                     <td><strong><?= e($l['nom']) ?></strong></td>
-                    <td><?= $l['note'] !== null ? e($l['note']) : '<span style="color:var(--texte-doux);">—</span>' ?></td>
+                    <td><?= $l['note'] !== null ? e($l['note']) : '<span style="color:var(--texte-doux);">-</span>' ?></td>
                     <td>/ <?= e($l['note_max']) ?></td>
                     <td><span class="pill pill-<?= $couleur ?>"><?= e($appreciation) ?></span></td>
                 </tr>
@@ -95,6 +95,6 @@ $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null
     </div>
 
     <div style="margin-top:22px;border-top:1px dashed var(--bordure);padding-top:12px;font-size:.78rem;color:var(--texte-doux);text-align:center;">
-        Bulletin généré automatiquement — <?= e(EVENT_FULL) ?>
+        Bulletin généré automatiquement - <?= e(EVENT_FULL) ?>
     </div>
 </div>

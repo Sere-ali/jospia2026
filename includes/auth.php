@@ -13,7 +13,7 @@ function utilisateurCourant() {
 
 function exigerConnexion() {
     if (!estConnecte()) {
-        redirect('/login.php');
+        redirect('/login');
     }
     
     // Si l'utilisateur est un séminariste, on bloque l'accès aux pages protégées tant que son paiement n'est pas validé
@@ -29,7 +29,7 @@ function exigerConnexion() {
                 $paiement = $stmt->fetch();
                 
                 if (!$paiement || $paiement['statut'] !== 'validé') {
-                    redirect('/paiement.php');
+                    redirect('/paiement');
                 }
             }
         }
@@ -44,7 +44,7 @@ function exigerRole(array $rolesAutorises) {
         die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;">
                 <h2>Accès refusé</h2>
                 <p>Vous n\'avez pas les droits nécessaires pour accéder à cette page.</p>
-                <a href="' . BASE_URL . '/index.php">Retour à l\'accueil</a>
+                <a href="' . BASE_URL . '/index">Retour à l\'accueil</a>
              </div>');
     }
 }

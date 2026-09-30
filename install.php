@@ -1,6 +1,6 @@
 <?php
 /**
- * JOSPIA 2026 — Script d'installation (méthode alternative)
+ * JOSPIA 2026 - Script d'installation (méthode alternative)
  * À utiliser UNIQUEMENT si vous n'avez pas importé sql/jospia2026_complet.sql.
  * 1) Créez d'abord une base vide nommée "jospia2026" dans phpMyAdmin/MySQL.
  * 2) Ouvrez ce fichier dans le navigateur : http://localhost/jospia2026/install.php
@@ -65,7 +65,7 @@ try {
             <div class="alert <?= $erreur ? 'alert-erreur' : 'alert-succes' ?>"><?= $m ?></div>
         <?php endforeach; ?>
         <?php if (!$erreur): ?>
-            <p><strong>⚠️ Important :</strong> supprimez ou renommez le fichier <code>install.php</code> maintenant, puis rendez-vous sur la <a href="<?= BASE_URL ?>/login.php">page de connexion</a>.</p>
+            <p><strong>⚠️ Important :</strong> supprimez ou renommez le fichier <code>install.php</code> maintenant, puis rendez-vous sur la <a href="<?= BASE_URL ?>/login">page de connexion</a>.</p>
         <?php endif; ?>
     </div>
 </div>

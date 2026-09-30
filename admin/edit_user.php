@@ -52,16 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$titrePage = "Modifier — " . $compte['nom_affiche'];
+$titrePage = "Modifier - " . $compte['nom_affiche'];
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/admin/users.php" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
+        <a href="<?= BASE_URL ?>/admin/users" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
 
         <div class="section-titre" style="text-align:left;margin-top:16px;">
-            <h2>Modifier — <?= e($compte['nom_affiche']) ?></h2>
+            <h2>Modifier - <?= e($compte['nom_affiche']) ?></h2>
         </div>
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>

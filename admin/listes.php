@@ -64,7 +64,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                     <td><?= e($s['age']) ?></td>
                                     <td><?= e($s['section']) ?></td>
                                     <td><?= e($s['contact']) ?></td>
-                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
+                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -87,11 +87,11 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                 <tr>
                                     <td class="mono"><?= e($s['matricule']) ?></td>
                                     <td><?= e($s['nom_prenoms']) ?></td>
-                                    <td><?= $s['test_complete'] ? e($s['note_test']) : '—' ?></td>
+                                    <td><?= $s['test_complete'] ? e($s['note_test']) : '-' ?></td>
                                     <td><?= e($s['section']) ?></td>
                                     <td><?= e($s['dortoir']) ?></td>
                                     <td><?= e($s['contact']) ?></td>
-                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste.php?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
+                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

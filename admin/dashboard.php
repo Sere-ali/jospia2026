@@ -33,7 +33,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre">
             <span class="eyebrow"><?= estSuperAdmin() ? 'Super Administrateur' : 'Administrateur' ?></span>
-            <h2>Tableau de bord — <?= EVENT_NAME ?></h2>
+            <h2>Tableau de bord - <?= EVENT_NAME ?></h2>
         </div>
 
         <div class="grid grid-3" style="margin-bottom:30px;">

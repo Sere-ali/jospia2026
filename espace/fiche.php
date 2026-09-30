@@ -4,11 +4,11 @@ exigerConnexion();
 $u = utilisateurCourant();
 
 if (in_array($u['role'], ['admin','superadmin'], true) && !$u['membre_id'] && !$u['seminariste_id']) {
-    redirect('/admin/dashboard.php');
+    redirect('/admin/dashboard');
 }
 
 if ($u['role'] === 'finance') {
-    redirect('/finance/paiements.php');
+    redirect('/finance/paiements');
 }
 
 $membre = null; $seminariste = null;
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">
                 <div>
-                    <h3 style="margin:0;">Fiche d'inscription — Séminariste</h3>
+                    <h3 style="margin:0;">Fiche d'inscription - Séminariste</h3>
                     <div style="color:var(--texte-doux);font-size:.85rem;"><?= e(EVENT_FULL) ?></div>
                 </div>
             </div>
@@ -114,8 +114,8 @@ require_once __DIR__ . '/../includes/header.php';
                 <dt>Section</dt><dd><?= e($seminariste['section']) ?></dd>
                 <dt>Lieu de résidence</dt><dd><?= e($seminariste['lieu_residence']) ?></dd>
                 <dt>Contact</dt><dd><?= e($seminariste['contact']) ?></dd>
-                <dt>Maladie / allergie</dt><dd><?= e($seminariste['maladie']) ?><?= $seminariste['maladie_autre'] ? ' — ' . e($seminariste['maladie_autre']) : '' ?></dd>
-                <dt>Contact d'urgence</dt><dd><?= e($seminariste['parent_nom']) ?> (<?= e($seminariste['parent_lien']) ?>) — <?= e($seminariste['parent_contact']) ?></dd>
+                <dt>Maladie / allergie</dt><dd><?= e($seminariste['maladie']) ?><?= $seminariste['maladie_autre'] ? ' - ' . e($seminariste['maladie_autre']) : '' ?></dd>
+                <dt>Contact d'urgence</dt><dd><?= e($seminariste['parent_nom']) ?> (<?= e($seminariste['parent_lien']) ?>) - <?= e($seminariste['parent_contact']) ?></dd>
             </dl>
             <div class="dortoir-box">
                 <div class="label">Dortoir attribué</div>
@@ -140,7 +140,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>🔑 Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
-            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte.php">Mon compte</a> (ce bloc disparaîtra alors).</p>
+            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
         </div>
         <?php endif; ?>
 
@@ -152,11 +152,11 @@ require_once __DIR__ . '/../includes/header.php';
                 <p style="color:var(--texte-doux);">Les séminaristes du sous-comité <strong>Pépinière</strong> ne composent pas de test d'entrée. Niveau : <span class="pill pill-vert">Pépinière</span></p>
             <?php elseif (!$seminariste['test_complete']): ?>
                 <p>Vous n'avez pas encore composé le test d'entrée en ligne. Il détermine automatiquement votre niveau d'affectation (Primaire, Secondaire, Universitaire, Leader).</p>
-                <a href="<?= BASE_URL ?>/quiz.php" class="btn btn-or">Composer le test maintenant</a>
+                <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
             <?php else: ?>
                 <p><strong>Note obtenue :</strong> <?= e($seminariste['note_test']) ?> / 20<br>
                    <strong>Niveau d'affectation :</strong> <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>
-                <a href="<?= BASE_URL ?>/espace/correction.php" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
+                <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
 
                 <h3 style="margin-top:26px;">Mon diplôme</h3>
                 <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
@@ -170,7 +170,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Bulletin de notes</h3>
             <?php if (resultatsPublies($pdo)): ?>
                 <p style="color:var(--texte-doux);">Les résultats des compositions du séminaire sont disponibles.</p>
-                <a href="<?= BASE_URL ?>/espace/bulletin.php" class="btn btn-primaire">📄 Voir et imprimer mon bulletin</a>
+                <a href="<?= BASE_URL ?>/espace/bulletin" class="btn btn-primaire">📄 Voir et imprimer mon bulletin</a>
             <?php else: ?>
                 <p style="color:var(--texte-doux);">Le bulletin de notes des compositions sera disponible ici dès que le comité d'organisation aura publié les résultats.</p>
             <?php endif; ?>
@@ -179,7 +179,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="carte" style="max-width:720px;margin:24px auto 0;">
             <h3>Votre avis compte</h3>
             <p style="color:var(--texte-doux);">Vous pouvez donner votre avis sur le travail d'une commission durant les JOSPIA. Votre message sera transmis directement à ses membres.</p>
-            <a href="<?= BASE_URL ?>/espace/critiquer.php" class="btn btn-outline">💬 Critiquer une commission</a>
+            <a href="<?= BASE_URL ?>/espace/critiquer" class="btn btn-outline">💬 Critiquer une commission</a>
         </div>
     <?php else: ?>
         <div class="alert alert-info">Aucune fiche associée à ce compte.</div>

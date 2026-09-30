@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['photo']['name'])) {
         $uploaded = uploadPhoto($_FILES['photo']);
         if (!$uploaded) {
-            $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp — 5 Mo max).";
+            $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp - 5 Mo max).";
         } else {
             $nomPhoto = $uploaded;
         }
@@ -73,16 +73,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$titrePage = "Modifier — " . $s['nom_prenoms'];
+$titrePage = "Modifier - " . $s['nom_prenoms'];
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/admin/seminaristes.php" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
+        <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
 
         <div class="section-titre" style="text-align:left;margin-top:16px;">
-            <h2>Modifier — <?= e($s['nom_prenoms']) ?></h2>
+            <h2>Modifier - <?= e($s['nom_prenoms']) ?></h2>
         </div>
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
@@ -138,7 +138,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <input type="text" name="section" required value="<?= e($s['section']) ?>">
                     </div>
                 </div>
-                <div class="help-text">Dortoir actuel : <strong><?= e($s['dortoir']) ?></strong> — recalculé automatiquement à l'enregistrement selon l'âge.</div>
+                <div class="help-text">Dortoir actuel : <strong><?= e($s['dortoir']) ?></strong> - recalculé automatiquement à l'enregistrement selon l'âge.</div>
             </fieldset>
 
             <fieldset>

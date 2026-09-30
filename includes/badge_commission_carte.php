@@ -1,6 +1,6 @@
 <?php
 /**
- * Badge officiel « Commission » JOSPIA 2026 — généré automatiquement depuis la maquette fournie.
+ * Badge officiel « Commission » JOSPIA 2026 - généré automatiquement depuis la maquette fournie.
  * Attend en entrée : $membre (ligne de membres_commission). Seuls photo, nom et commission sont insérés.
  */
 $__photo = (!empty($membre['photo']) && is_file(__DIR__ . '/../uploads/photos/' . $membre['photo']))
@@ -12,7 +12,7 @@ $__commission = mb_strtoupper((string)$membre['commission'], 'UTF-8');
 <div class="jos-doc jos-badge">
     <div class="jos-doc__stage">
         <img class="jos-badge__photo" src="<?= e($__photo) ?>" alt="">
-        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.png" alt="Badge JOSPIA 2026 — Commission">
+        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.webp" alt="Badge JOSPIA 2026 - Commission">
         <div class="jos-badge__nom" data-fit="0.96">
             <?php foreach ($__lignes as $__l): ?><span><?= e($__l) ?></span><?php endforeach; ?>
         </div>

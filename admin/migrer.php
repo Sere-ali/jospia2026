@@ -25,6 +25,6 @@ require_once __DIR__ . '/../includes/header.php';
     <p>Ajoute les tables et colonnes manquantes (paiements Wave, banques de questions). Sans risque si déjà appliquée.</p>
     <?php if ($message): ?><div class="alert <?= $ok ? 'alert-succes' : 'alert-erreur' ?>"><?= e($message) ?></div><?php endif; ?>
     <form method="post"><button type="submit" class="btn btn-primaire">Lancer la migration</button></form>
-    <p style="margin-top:16px;"><a href="<?= BASE_URL ?>/admin/dashboard.php">Aller au tableau de bord</a></p>
+    <p style="margin-top:16px;"><a href="<?= BASE_URL ?>/admin/dashboard">Aller au tableau de bord</a></p>
 </div>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

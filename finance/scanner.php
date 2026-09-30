@@ -51,7 +51,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d', { willReadFrequently: true });
     var flux = null, facing = 'environment', actif = true, enVerif = false;
-    var URL_API = '<?= BASE_URL ?>/finance/verifier.php';
+    var URL_API = '<?= BASE_URL ?>/finance/verifier';
 
     function esc(t) { var d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
 

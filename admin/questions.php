@@ -10,7 +10,7 @@ $banquesParId = array_column($banques, 'nom_banque', 'banque');
 
 if (isset($_GET['supprimer'])) {
     $pdo->prepare("DELETE FROM questions WHERE id = ?")->execute([(int)$_GET['supprimer']]);
-    redirect('/admin/questions.php');
+    redirect('/admin/questions');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -56,7 +56,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;">
             <h2>Banque de questions (<?= count($questions) ?>)</h2>
-            <p><a href="<?= BASE_URL ?>/admin/config_quiz.php" class="btn btn-sm btn-outline">⚙️ Configurer le tirage des banques</a></p>
+            <p><a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-sm btn-outline">⚙️ Configurer le tirage des banques</a></p>
         </div>
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
@@ -103,7 +103,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <div class="form-group"><label>Option D</label><input type="text" name="option_d" required value="<?= e($questionEnEdition['option_d'] ?? '') ?>"></div>
                 </div>
                 <button class="btn btn-primaire"><?= $questionEnEdition ? 'Enregistrer les modifications' : 'Ajouter la question' ?></button>
-                <?php if ($questionEnEdition): ?><a href="<?= BASE_URL ?>/admin/questions.php" class="btn btn-outline">Annuler</a><?php endif; ?>
+                <?php if ($questionEnEdition): ?><a href="<?= BASE_URL ?>/admin/questions" class="btn btn-outline">Annuler</a><?php endif; ?>
             </form>
         </div>
 
@@ -118,8 +118,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($q['enonce']) ?></td>
                         <td><?= e($q['bonne_reponse']) ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/questions.php?modifier=<?= $q['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
-                            <a href="<?= BASE_URL ?>/admin/questions.php?supprimer=<?= $q['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette question ?')">🗑️</a>
+                            <a href="<?= BASE_URL ?>/admin/questions?modifier=<?= $q['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
+                            <a href="<?= BASE_URL ?>/admin/questions?supprimer=<?= $q['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette question ?')">🗑️</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

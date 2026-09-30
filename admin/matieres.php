@@ -9,12 +9,12 @@ $succes = null;
 if (isset($_GET['publier'])) {
     $valeur = $_GET['publier'] === '1' ? '1' : '0';
     $pdo->prepare("UPDATE parametres SET valeur = ? WHERE cle = 'resultats_publies'")->execute([$valeur]);
-    redirect('/admin/matieres.php');
+    redirect('/admin/matieres');
 }
 
 if (isset($_GET['supprimer'])) {
     $pdo->prepare("DELETE FROM matieres WHERE id = ?")->execute([(int)$_GET['supprimer']]);
-    redirect('/admin/matieres.php');
+    redirect('/admin/matieres');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -64,18 +64,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <h3 style="margin-bottom:4px;">Statut des résultats</h3>
                 <p style="margin:0;color:var(--texte-doux);">
                     <?php if ($publie): ?>
-                        <span class="pill pill-vert">✅ Résultats publiés</span> — les séminaristes voient leur bulletin sur leur espace personnel.
+                        <span class="pill pill-vert">✅ Résultats publiés</span> - les séminaristes voient leur bulletin sur leur espace personnel.
                     <?php else: ?>
-                        <span class="pill pill-gris">🔒 Résultats non publiés</span> — les bulletins restent invisibles pour les séminaristes.
+                        <span class="pill pill-gris">🔒 Résultats non publiés</span> - les bulletins restent invisibles pour les séminaristes.
                     <?php endif; ?>
                 </p>
             </div>
             <?php if ($publie): ?>
-                <a href="<?= BASE_URL ?>/admin/matieres.php?publier=0" class="btn btn-danger" onclick="return confirm('Masquer les bulletins aux séminaristes ?')">Dépublier les résultats</a>
+                <a href="<?= BASE_URL ?>/admin/matieres?publier=0" class="btn btn-danger" onclick="return confirm('Masquer les bulletins aux séminaristes ?')">Dépublier les résultats</a>
             <?php else: ?>
-                <a href="<?= BASE_URL ?>/admin/matieres.php?publier=1" class="btn btn-primaire" onclick="return confirm('Rendre les bulletins visibles à tous les séminaristes ?')">Publier les résultats</a>
+                <a href="<?= BASE_URL ?>/admin/matieres?publier=1" class="btn btn-primaire" onclick="return confirm('Rendre les bulletins visibles à tous les séminaristes ?')">Publier les résultats</a>
             <?php endif; ?>
-            <a href="<?= BASE_URL ?>/admin/bulletins_impression.php" class="btn btn-outline">🖨️ Imprimer les bulletins (2/page)</a>
+            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-outline">🖨️ Imprimer les bulletins (2/page)</a>
         </div>
 
         <div class="carte" style="margin-bottom:24px;">
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <input type="number" name="ordre" value="<?= e($matiereEnEdition['ordre'] ?? count($matieres) + 1) ?>">
                 </div>
                 <button class="btn btn-primaire"><?= $matiereEnEdition ? 'Enregistrer' : 'Ajouter la matière' ?></button>
-                <?php if ($matiereEnEdition): ?><a href="<?= BASE_URL ?>/admin/matieres.php" class="btn btn-outline">Annuler</a><?php endif; ?>
+                <?php if ($matiereEnEdition): ?><a href="<?= BASE_URL ?>/admin/matieres" class="btn btn-outline">Annuler</a><?php endif; ?>
             </form>
         </div>
 
@@ -111,8 +111,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($m['nom']) ?></td>
                         <td>/ <?= e($m['note_max']) ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/matieres.php?modifier=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
-                            <a href="<?= BASE_URL ?>/admin/matieres.php?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette matière ? Les notes associées seront aussi supprimées.')">🗑️</a>
+                            <a href="<?= BASE_URL ?>/admin/matieres?modifier=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
+                            <a href="<?= BASE_URL ?>/admin/matieres?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette matière ? Les notes associées seront aussi supprimées.')">🗑️</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

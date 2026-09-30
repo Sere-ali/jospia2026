@@ -3,7 +3,7 @@
  * Bloc de paiement Wave (affiché après l'inscription et sur paiement.php).
  * Variable optionnelle : $paiementAction (URL du formulaire, défaut /paiement.php)
  */
-$paiementAction = $paiementAction ?? (BASE_URL . '/paiement.php');
+$paiementAction = $paiementAction ?? (BASE_URL . '/paiement');
 $numeroPayeur = null;
 if (!empty($_SESSION['compte']['seminariste_id'])) {
     $stNP = $pdo->prepare("SELECT numero_wave FROM paiements WHERE seminariste_id = ? ORDER BY id DESC LIMIT 1");
@@ -57,7 +57,7 @@ $lienWaveConfigure = lienWavePaiement() !== null;
         } else {
             window.open('https://www.wave.com/fr/', '_blank', 'noopener');
         }
-        btn.textContent = '✔ Numéro copié — ouvrez Wave et payez';
+        btn.textContent = '✔ Numéro copié - ouvrez Wave et payez';
     });
 })();
 </script>

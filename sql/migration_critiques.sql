@@ -1,5 +1,5 @@
 -- ============================================================
--- JOSPIA 2026 — Migration : ajout du système de critiques
+-- JOSPIA 2026 - Migration : ajout du système de critiques
 -- des séminaristes envers les commissions.
 -- À importer sur une base EXISTANTE (n'affecte aucune donnée déjà présente).
 -- ============================================================

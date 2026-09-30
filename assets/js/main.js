@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (selAnyama && selSection) {
         function majSections() {
             var val = selAnyama.value;
-            selSection.innerHTML = '<option value="">— Choisir une section —</option>';
+            selSection.innerHTML = '<option value="">- Choisir une section -</option>';
             (sections[val] || []).forEach(function (s) {
                 var opt = document.createElement('option');
                 opt.value = s;

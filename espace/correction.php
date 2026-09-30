@@ -9,7 +9,7 @@ $seminariste = $stmt->fetch();
 
 if (!$seminariste) { die("Fiche introuvable."); }
 if (!$seminariste['test_complete']) {
-    redirect('/espace/fiche.php');
+    redirect('/espace/fiche');
 }
 
 $titrePage = "Correction de mon test";
@@ -17,10 +17,10 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/espace/fiche.php" class="btn btn-outline btn-sm">&larr; Retour à mon espace</a>
+        <a href="<?= BASE_URL ?>/espace/fiche" class="btn btn-outline btn-sm">&larr; Retour à mon espace</a>
         <div class="section-titre" style="text-align:left;margin-top:16px;">
             <span class="eyebrow">Correction du test</span>
-            <h2>Détail de mes réponses — <?= e($seminariste['nom_prenoms']) ?></h2>
+            <h2>Détail de mes réponses - <?= e($seminariste['nom_prenoms']) ?></h2>
             <p style="color:var(--texte-doux);">Voici, question par question, ce qui justifie votre note. Les questions en rouge sont celles où la bonne réponse n'a pas été trouvée.</p>
         </div>
 

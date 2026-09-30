@@ -1,6 +1,6 @@
 <?php
 /**
- * Banque de 20 questions (test d'entrée /20) — modifiable depuis
+ * Banque de 20 questions (test d'entrée /20) - modifiable depuis
  * l'espace Super Admin (admin/questions.php) après installation.
  * Format : [categorie, enonce, option_a, option_b, option_c, option_d, bonne_reponse]
  */

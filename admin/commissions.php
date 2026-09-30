@@ -5,7 +5,7 @@ exigerRole(['admin', 'superadmin']);
 if (isset($_GET['supprimer']) && estSuperAdmin()) {
     $pdo->prepare("DELETE FROM comptes WHERE membre_id = ?")->execute([(int)$_GET['supprimer']]);
     $pdo->prepare("DELETE FROM membres_commission WHERE id = ?")->execute([(int)$_GET['supprimer']]);
-    redirect('/admin/commissions.php');
+    redirect('/admin/commissions');
 }
 
 $recherche = trim($_GET['q'] ?? '');
@@ -34,7 +34,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <h2>Membres de commission (<?= count($membres) ?>)</h2>
-            <a href="<?= BASE_URL ?>/admin/badges_commission.php" class="btn btn-or btn-sm">🖨️ Imprimer tous les badges (4/page)</a>
+            <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">🖨️ Imprimer tous les badges (4/page)</a>
         </div>
 
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
@@ -68,10 +68,10 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><span class="pill pill-vert"><?= e($m['commission']) ?></span></td>
                         <td><?= e($m['contact']) ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_membre.php?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <a href="<?= BASE_URL ?>/admin/download_badge.php?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/edit_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/download_badge?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
                             <?php if (estSuperAdmin()): ?>
-                                <a href="<?= BASE_URL ?>/admin/commissions.php?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce membre ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/commissions?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce membre ?')">🗑️</a>
                             <?php endif; ?>
                         </td>
                     </tr>

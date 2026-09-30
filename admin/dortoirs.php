@@ -18,7 +18,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 
         <div class="carte" style="margin-bottom:20px;display:flex;align-items:center;gap:16px;">
             <div class="stat-card" style="flex:none;"><div class="chiffre"><?= $nbPepiniere ?></div><div class="label">Pépinière</div></div>
-            <p style="margin:0;color:var(--texte-doux);">Ce dortoir n'a pas de capacité limitée suivie ici : consultez la <a href="<?= BASE_URL ?>/admin/listes.php">liste nominative par dortoir</a> pour le détail.</p>
+            <p style="margin:0;color:var(--texte-doux);">Ce dortoir n'a pas de capacité limitée suivie ici : consultez la <a href="<?= BASE_URL ?>/admin/listes">liste nominative par dortoir</a> pour le détail.</p>
         </div>
 
         <div class="grid grid-2">

@@ -8,8 +8,8 @@ require_once __DIR__ . '/includes/header.php';
         <h1>Bienvenue à la plateforme officielle des <?= EVENT_FULL ?></h1>
         <p class="lead">Inscrivez-vous en tant que membre de commission ou séminariste, composez le test d'entrée en ligne, et retrouvez toutes vos informations sur votre espace personnel : fiche, dortoir, badge.</p>
         <div class="hero-actions">
-            <a href="<?= BASE_URL ?>/inscription_commission.php" class="btn btn-primaire">👥 Rejoindre une commission</a>
-            <a href="<?= BASE_URL ?>/inscription_seminariste.php" class="btn btn-or">🎓 M'inscrire comme séminariste</a>
+            <a href="<?= BASE_URL ?>/inscription_commission" class="btn btn-primaire">👥 Rejoindre une commission</a>
+            <a href="<?= BASE_URL ?>/inscription_seminariste" class="btn btn-or">🎓 M'inscrire comme séminariste</a>
         </div>
     </div>
 </header>
@@ -51,13 +51,13 @@ require_once __DIR__ . '/includes/header.php';
                 <h3>🗂️ Membre de commission</h3>
                 <p style="color:var(--texte-doux)">Pour les encadreurs et responsables des commissions : MG, MGA, Administration, Scientifique, MIC, Finance, Santé, Sécurité, Hygiène, Pépinière, Restauration, Logistique, Protocole.</p>
                 <p style="color:var(--texte-doux)">Un badge officiel est généré automatiquement (téléchargeable uniquement par les administrateurs).</p>
-                <a href="<?= BASE_URL ?>/inscription_commission.php" class="btn btn-primaire btn-block">S'inscrire comme membre</a>
+                <a href="<?= BASE_URL ?>/inscription_commission" class="btn btn-primaire btn-block">S'inscrire comme membre</a>
             </div>
             <div class="carte">
                 <h3>🎓 Séminariste</h3>
                 <p style="color:var(--texte-doux)">Après inscription, vous composerez un test d'entrée en ligne (/20) qui déterminera votre niveau, votre sous-comité et votre dortoir.</p>
                 <p style="color:var(--texte-doux)">Une fiche d'inscription imprimable avec le nom du dortoir est générée automatiquement.</p>
-                <a href="<?= BASE_URL ?>/inscription_seminariste.php" class="btn btn-or btn-block">S'inscrire comme séminariste</a>
+                <a href="<?= BASE_URL ?>/inscription_seminariste" class="btn btn-or btn-block">S'inscrire comme séminariste</a>
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Certificat de participation officiel JOSPIA 2026 — généré automatiquement depuis la maquette fournie.
+ * Certificat de participation officiel JOSPIA 2026 - généré automatiquement depuis la maquette fournie.
  * Attend en entrée : $nomCertificat (nom et prénoms du séminariste). Seul le nom est inséré.
  */
 ?>

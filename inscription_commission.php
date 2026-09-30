@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erreurs)) {
         $nomPhoto = uploadPhoto($_FILES['photo']);
-        if (!$nomPhoto) $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp — 5 Mo max).";
+        if (!$nomPhoto) $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp - 5 Mo max).";
     }
 
     if (empty($erreurs)) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container form-wrap">
         <div class="section-titre">
             <span class="eyebrow">Commission</span>
-            <h2>Inscription — Membre de commission</h2>
+            <h2>Inscription - Membre de commission</h2>
         </div>
 
         <?php if ($succes): ?>
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="mono"><strong>Matricule :</strong> <?= e($identifiantsGeneres['matricule']) ?><br>
                    <strong>Identifiant (contact) :</strong> <?= e($identifiantsGeneres['id']) ?><br>
                    <strong>Mot de passe :</strong> <?= e($identifiantsGeneres['mdp']) ?></p>
-                <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter maintenant</a>
+                <a href="<?= BASE_URL ?>/login" class="btn btn-primaire">Me connecter maintenant</a>
             </div>
         <?php else: ?>
 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Commission <span class="req">*</span></label>
                         <select name="commission" required>
-                            <option value="">— Choisir une commission —</option>
+                            <option value="">- Choisir une commission -</option>
                             <?php foreach (listeCommissions() as $c): ?>
                                 <option value="<?= e($c) ?>" <?= (($_POST['commission'] ?? '') === $c) ? 'selected' : '' ?>><?= e($c) ?></option>
                             <?php endforeach; ?>

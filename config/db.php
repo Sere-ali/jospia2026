@@ -2,10 +2,10 @@
 /**
  * JOSPIA 2026 - Connexion à la base de données
  *
- * — Sur WampServer/XAMPP/InfinityFree : modifiez simplement les 4 valeurs
+ * - Sur WampServer/XAMPP/InfinityFree : modifiez simplement les 4 valeurs
  *   ci-dessous par défaut (getenv() renverra false, donc la valeur de
  *   repli après "?:" sera utilisée).
- * — Sur Render (Docker) : ne modifiez rien ici, définissez plutôt les
+ * - Sur Render (Docker) : ne modifiez rien ici, définissez plutôt les
  *   variables d'environnement DB_HOST / DB_NAME / DB_USER / DB_PASS
  *   dans le tableau de bord Render (onglet "Environment"). C'est plus
  *   sûr : vos identifiants ne sont jamais écrits dans le code.
@@ -40,7 +40,7 @@ define('FRAIS_PARTICIPATION', 5000);
 define('AGE_PEPINIERE_SEUIL', 9);
 
 /**
- * BASE_URL — détecté automatiquement, quel que soit le nom/emplacement du
+ * BASE_URL - détecté automatiquement, quel que soit le nom/emplacement du
  * dossier du site (racine du serveur, /jospia2026/, /monsite/, etc.).
  * C'est ce qui évite les liens et le CSS cassés sur WampServer/XAMPP
  * quand le site n'est pas à la racine de "www"/"htdocs".
@@ -57,6 +57,8 @@ try {
     $optionsPdo = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_PERSISTENT => true,   // réutilise les connexions MySQL entre les requêtes (charge élevée)
+        PDO::ATTR_EMULATE_PREPARES => false,
     ];
     if (DB_SSL_CA !== '' && file_exists(DB_SSL_CA)) {
         $optionsPdo[PDO::MYSQL_ATTR_SSL_CA] = DB_SSL_CA;
@@ -75,17 +77,21 @@ try {
         $optionsPdo
     );
 } catch (PDOException $e) {
-    die("Erreur de connexion à la base de données. Vérifiez config/db.php et que MySQL est démarré. (" . $e->getMessage() . ")");
+    die("Erreur de connexion à la base de données. Vérifiez config/db et que MySQL est démarré. (" . $e->getMessage() . ")");
 }
 
-// Auto-migration : si les tables récentes (paiements, config_quiz) manquent,
-// applique sql/migration_features.sql (idempotent) une seule fois.
-try {
-    $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
-    $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND ((table_name = 'paiements' AND column_name = 'code_recu') OR (table_name = 'comptes' AND column_name = 'mdp_initial') OR (table_name = 'paiements' AND column_name = 'numero_wave'))")->fetchColumn() : 0;
-    if ($nbTables < 2 || $aCodeRecu < 3) {
-        $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
+// Auto-migration : vérifiée une seule fois par démarrage du serveur (drapeau en mémoire/disque),
+// et non à chaque requête, pour ne pas ralentir le site.
+$drapeauMigration = sys_get_temp_dir() . '/jospia_migration_ok';
+if (!is_file($drapeauMigration)) {
+    try {
+        $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
+        $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND ((table_name = 'paiements' AND column_name = 'code_recu') OR (table_name = 'comptes' AND column_name = 'mdp_initial') OR (table_name = 'paiements' AND column_name = 'numero_wave'))")->fetchColumn() : 0;
+        if ($nbTables < 2 || $aCodeRecu < 3) {
+            $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
+        }
+        @file_put_contents($drapeauMigration, '1');
+    } catch (Throwable $e) {
+        error_log('Auto-migration JOSPIA échouée : ' . $e->getMessage());
     }
-} catch (Throwable $e) {
-    error_log('Auto-migration JOSPIA échouée : ' . $e->getMessage());
 }

@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/header.php';
 
 // Seuls les séminaristes ont besoin de payer (ou les membres connectés, selon les specs, ici on assume les séminaristes connectés)
 if (!estConnecte() || $_SESSION['compte']['role'] !== 'seminariste') {
-    redirect('/login.php');
+    redirect('/login');
 }
 
 $compte = $_SESSION['compte'];
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container" style="max-width: 600px; margin-top: 2rem;">
     <div class="card p-4">
         <?php if ($matriculeNouveau): ?>
-            <div class="alert alert-succes">✔ Inscription enregistrée — matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
+            <div class="alert alert-succes">✔ Inscription enregistrée - matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
         <?php endif; ?>
         <h2 style="color:var(--primaire);text-align:center;margin-bottom:1rem;">Validation de votre paiement</h2>
         
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Votre reçu avec QR code est disponible sur votre espace.
             </div>
             <div class="text-center mt-3">
-                <a href="<?= BASE_URL ?>/espace/fiche.php" class="btn btn-primaire">Voir mon reçu et mon espace</a>
+                <a href="<?= BASE_URL ?>/espace/fiche" class="btn btn-primaire">Voir mon reçu et mon espace</a>
             </div>
         <?php else: ?>
         
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php elseif ($paiement && $paiement['statut'] === 'en attente'): ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
                     <strong>Paiement en attente de validation.</strong><br>
-                    Numéro Wave du payeur : <strong><?= e($paiement['numero_wave'] ?: '—') ?></strong><?php if ($paiement['reference_transaction'] !== ''): ?><br>ID de transaction : <strong><?= e($paiement['reference_transaction']) ?></strong><?php endif; ?>
+                    Numéro Wave du payeur : <strong><?= e($paiement['numero_wave'] ?: '-') ?></strong><?php if ($paiement['reference_transaction'] !== ''): ?><br>ID de transaction : <strong><?= e($paiement['reference_transaction']) ?></strong><?php endif; ?>
                 </div>
             <?php else: ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">

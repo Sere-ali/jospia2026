@@ -7,7 +7,7 @@ $succes = null;
 
 if (isset($_GET['desactiver'])) {
     $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','superadmin','finance')")->execute([(int)$_GET['desactiver']]);
-    redirect('/admin/users.php');
+    redirect('/admin/users');
 }
 if (isset($_GET['supprimer'])) {
     $stmt = $pdo->prepare("SELECT identifiant FROM comptes WHERE id = ?");
@@ -16,7 +16,7 @@ if (isset($_GET['supprimer'])) {
     if ($cible && $cible['identifiant'] !== 'superadmin') {
         $pdo->prepare("DELETE FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance')")->execute([(int)$_GET['supprimer']]);
     }
-    redirect('/admin/users.php');
+    redirect('/admin/users');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -91,10 +91,10 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><span class="pill pill-vert"><?= e($c['role']) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_user.php?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
                             <?php if ($c['identifiant'] !== 'superadmin'): ?>
-                                <a href="<?= BASE_URL ?>/admin/users.php?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
-                                <a href="<?= BASE_URL ?>/admin/users.php?supprimer=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce compte ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
+                                <a href="<?= BASE_URL ?>/admin/users?supprimer=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce compte ?')">🗑️</a>
                             <?php else: ?>
                                 <span class="help-text">Compte principal</span>
                             <?php endif; ?>

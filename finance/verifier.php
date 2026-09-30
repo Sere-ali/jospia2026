@@ -35,7 +35,7 @@ echo json_encode([
     'message' => 'Paiement validé',
     'nom' => $r['nom_prenoms'],
     'matricule' => $r['matricule'],
-    'section' => $r['anyama'] . ' — ' . $r['section'],
+    'section' => $r['anyama'] . ' - ' . $r['section'],
     'dortoir' => $r['dortoir'],
     'montant' => (int)$r['montant'],
     'date' => $r['date_validation'] ? date('d/m/Y H:i', strtotime($r['date_validation'])) : '',

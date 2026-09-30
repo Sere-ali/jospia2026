@@ -15,13 +15,13 @@ $stmt->execute($params);
 $membres = $stmt->fetchAll();
 $pages = array_chunk($membres, 4);
 
-$titrePage = "Impression des badges — Commission";
+$titrePage = "Impression des badges - Commission";
 require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="section">
     <div class="container">
         <div class="no-print" style="text-align:center;margin-bottom:20px;">
-            <a href="<?= BASE_URL ?>/admin/commissions.php" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
+            <a href="<?= BASE_URL ?>/admin/commissions" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
             <form method="get" style="display:inline-flex;gap:8px;">
                 <select name="commission" onchange="this.form.submit()">
                     <option value="">Toutes les commissions (<?= count($membres) ?> badges)</option>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($membres) ?> badge(s) — <?= count($pages) ?> page(s)</button>
+            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($membres) ?> badge(s) - <?= count($pages) ?> page(s)</button>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
 

@@ -15,7 +15,7 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="section">
     <div class="container">
-        <a href="<?= BASE_URL ?>/espace/fiche.php" class="btn btn-outline btn-sm no-print">&larr; Retour à mon espace</a>
+        <a href="<?= BASE_URL ?>/espace/fiche" class="btn btn-outline btn-sm no-print">&larr; Retour à mon espace</a>
 
         <?php if (!$publie): ?>
             <div class="carte" style="max-width:640px;margin:24px auto;text-align:center;">
