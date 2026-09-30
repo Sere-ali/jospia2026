@@ -226,5 +226,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 </section>
-<script src="<?= BASE_URL ?>/assets/js/main.js"></script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -90,5 +90,4 @@ require_once __DIR__ . '/includes/header.php';
         </form>
     </div>
 </section>
-<script src="<?= BASE_URL ?>/assets/js/main.js"></script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

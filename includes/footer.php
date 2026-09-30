@@ -4,5 +4,6 @@
         Plateforme de gestion développée pour le comité d'organisation JOSPIA.
     </div>
 </footer>
+<script src="<?= BASE_URL ?>/assets/js/main.js"></script>
 </body>
 </html>

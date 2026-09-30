@@ -190,5 +190,4 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </form>
     </div>
 </section>
-<script src="<?= BASE_URL ?>/assets/js/main.js"></script>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

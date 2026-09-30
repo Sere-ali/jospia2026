@@ -104,4 +104,3 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     </div>
 </section>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
-<script src="<?= BASE_URL ?>/assets/js/main.js"></script>
