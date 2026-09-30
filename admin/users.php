@@ -13,7 +13,7 @@ if (isset($_GET['supprimer'])) {
     $stmt = $pdo->prepare("SELECT identifiant FROM comptes WHERE id = ?");
     $stmt->execute([(int)$_GET['supprimer']]);
     $cible = $stmt->fetch();
-    if ($cible && $cible['identifiant'] !== 'superadmin') {
+    if ($cible && $cible['identifiant'] !== 'superadmin' && (int)$_GET['supprimer'] !== (int)$_SESSION['compte_id']) {
         $pdo->prepare("DELETE FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')")->execute([(int)$_GET['supprimer']]);
     }
     redirect('/admin/users');
@@ -89,15 +89,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <tr>
                         <td><?= e($c['nom_affiche']) ?></td>
                         <td class="mono"><?= e($c['identifiant']) ?></td>
-                        <td><span class="pill pill-vert"><?= e($c['role']) ?></span></td>
+                        <td><?php
+                            $libelles = ['superadmin' => '👑 Super Administrateur', 'admin' => 'Administrateur', 'finance' => '💰 Commission finance', 'scientifique' => '🔬 Commission scientifique'];
+                            $lib = $libelles[$c['role']] ?? $c['role'];
+                        ?><span class="pill <?= $c['role'] === 'superadmin' ? 'pill-or' : 'pill-vert' ?>" <?= $c['role'] === 'superadmin' ? 'style="background:#C89A3E;color:#fff;font-weight:800;"' : '' ?>><?= e($lib) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>
                         <td style="white-space:nowrap;">
                             <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <?php if ($c['identifiant'] !== 'superadmin'): ?>
+                            <?php if ($c['identifiant'] !== 'superadmin' && (int)$c['id'] !== (int)$_SESSION['compte_id']): ?>
                                 <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
-                                <a href="<?= BASE_URL ?>/admin/users?supprimer=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce compte ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/users?supprimer=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer définitivement ce compte : <?= e(addslashes($c['nom_affiche'])) ?> ?')">🗑️ Supprimer</a>
                             <?php else: ?>
-                                <span class="help-text">Compte principal</span>
+                                <span class="help-text"><?= $c['identifiant'] === 'superadmin' ? 'Compte principal' : 'Votre compte' ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>
