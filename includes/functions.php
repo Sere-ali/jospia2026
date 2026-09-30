@@ -111,14 +111,52 @@ function testOuvert(PDO $pdo) {
     } catch (Throwable $e) { return false; }
 }
 
-/** Bloc (bouton) de verrouillage / déverrouillage du test d'entrée. */
+/** La commission scientifique a-t-elle accès au test d'entrée ? (autorisé par le super administrateur ; le super admin y a toujours accès) */
+function accesTestScientifique(PDO $pdo) {
+    if (estSuperAdmin()) return true;
+    try {
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'test_acces_scientifique'");
+        $st->execute();
+        return $st->fetchColumn() === '1';
+    } catch (Throwable $e) { return false; }
+}
+
+/** Bloque (message) la commission scientifique tant que le super administrateur n'a pas autorisé le test d'entrée. */
+function exigerAccesTest(PDO $pdo) {
+    if (accesTestScientifique($pdo)) return;
+    $titrePage = "Test d'entrée verrouillé";
+    require_once __DIR__ . '/header.php';
+    require_once __DIR__ . '/admin_nav.php';
+    echo '<section class="section"><div class="container"><div class="carte" style="max-width:640px;margin:0 auto;text-align:center;"><h3>🔒 Test d\'entrée verrouillé</h3><p>Le test d\'entrée (questions, configuration, déverrouillage) n\'est pas encore accessible à la commission scientifique. Il sera déverrouillé par le <strong>super administrateur</strong>.</p><a href="' . BASE_URL . '/admin/commission_scientifique" class="btn btn-outline btn-sm">&larr; Retour</a></div></div></section>';
+    require_once __DIR__ . '/footer.php';
+    exit;
+}
+
+function blocFormParametre($cle, $valeurActuelle, $libelleActiver, $libelleDesactiver, $classeActiver = 'btn-primaire') {
+    $retour = strpos($_SERVER['PHP_SELF'], 'dashboard') !== false ? 'dashboard' : '';
+    return '<form method="post" action="' . BASE_URL . '/admin/test_entree" style="display:inline;"><input type="hidden" name="retour" value="' . $retour . '"><input type="hidden" name="cle" value="' . $cle . '"><input type="hidden" name="valeur" value="' . ($valeurActuelle ? '0' : '1') . '">'
+        . '<button type="submit" class="btn btn-sm ' . ($valeurActuelle ? 'btn-danger' : $classeActiver) . '">' . ($valeurActuelle ? $libelleDesactiver : $libelleActiver) . '</button></form>';
+}
+
+/** Blocs de verrouillage du test d'entrée (super admin : accès commission scientifique + test des séminaristes). */
 function blocTestEntree(PDO $pdo) {
-    $ouvert = testOuvert($pdo);
-    $h = '<div class="carte" style="border-left:4px solid ' . ($ouvert ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
-    $h .= '<h3>' . ($ouvert ? '🔓 Test d\'entrée déverrouillé' : '🔒 Test d\'entrée verrouillé') . '</h3>';
-    $h .= '<p>' . ($ouvert ? 'Les séminaristes dont le paiement est validé peuvent composer le test.' : 'Les séminaristes (paiement validé) ne peuvent pas encore composer le test.') . '</p>';
-    $h .= '<form method="post" action="' . BASE_URL . '/admin/test_entree"><input type="hidden" name="retour" value="' . (strpos($_SERVER['PHP_SELF'], 'dashboard') !== false ? 'dashboard' : '') . '"><input type="hidden" name="ouvrir" value="' . ($ouvert ? '0' : '1') . '">';
-    $h .= '<button type="submit" class="btn btn-sm ' . ($ouvert ? 'btn-danger' : 'btn-primaire') . '">' . ($ouvert ? '🔒 Verrouiller le test' : '🔓 Déverrouiller le test') . '</button></form></div>';
+    $h = '';
+    if (estSuperAdmin()) {
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'test_acces_scientifique'");
+        $st->execute();
+        $acces = $st->fetchColumn() === '1';
+        $h .= '<div class="carte" style="border-left:4px solid ' . ($acces ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:16px;">';
+        $h .= '<h3>' . ($acces ? '🔓 Commission scientifique : accès au test autorisé' : '🔒 Commission scientifique : accès au test verrouillé') . '</h3>';
+        $h .= '<p>' . ($acces ? 'La commission scientifique peut gérer le test d\'entrée (questions, configuration, ouverture aux séminaristes).' : 'Tant que vous ne déverrouillez pas, la commission scientifique ne peut pas utiliser le test d\'entrée.') . '</p>';
+        $h .= blocFormParametre('test_acces_scientifique', $acces, '🔓 Déverrouiller pour la commission scientifique', '🔒 Reverrouiller pour la commission scientifique') . '</div>';
+    }
+    if (accesTestScientifique($pdo)) {
+        $ouvert = testOuvert($pdo);
+        $h .= '<div class="carte" style="border-left:4px solid ' . ($ouvert ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
+        $h .= '<h3>' . ($ouvert ? '🔓 Test ouvert aux séminaristes' : '🔒 Test fermé aux séminaristes') . '</h3>';
+        $h .= '<p>' . ($ouvert ? 'Les séminaristes dont le paiement est validé peuvent composer le test.' : 'Les séminaristes (paiement validé) ne peuvent pas encore composer le test.') . '</p>';
+        $h .= blocFormParametre('test_ouvert', $ouvert, '🔓 Ouvrir le test aux séminaristes', '🔒 Fermer le test') . '</div>';
+    }
     return $h;
 }
 

@@ -12,7 +12,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <h2>Notes, bulletins et test d'entrée</h2>
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
-        <?php if (estScientifique()) echo blocTestEntree($pdo); ?>
+        <?php if (estSuperAdmin()) echo blocTestEntree($pdo); ?>
         <div class="grid grid-2">
             <div class="carte"><h3>📝 Saisie des notes</h3><p>Saisir les notes des séminaristes par matière.</p><a href="<?= BASE_URL ?>/admin/notes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🖨️ Bulletins</h3><p>Imprimer les bulletins (2 par page).</p><a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-primaire btn-sm">Ouvrir</a></div>

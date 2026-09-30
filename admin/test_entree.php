@@ -1,17 +1,22 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['scientifique', 'admin', 'superadmin']);
+exigerRole(['scientifique', 'superadmin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (estScientifique()) {
-        $v = ($_POST['ouvrir'] ?? '0') === '1' ? '1' : '0';
+    $cle = $_POST['cle'] ?? '';
+    $v = ($_POST['valeur'] ?? '0') === '1' ? '1' : '0';
+    $permis = ($cle === 'test_acces_scientifique' && estSuperAdmin())
+           || ($cle === 'test_ouvert' && accesTestScientifique($pdo) && estScientifique());
+    if ($permis) {
         $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
-        $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES ('test_ouvert', ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([$v]);
-        $_SESSION['flash_succes'] = $v === '1' ? "Test d'entrée déverrouillé." : "Test d'entrée verrouillé.";
+        $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([$cle, $v]);
+        $_SESSION['flash_succes'] = "Paramètre du test d'entrée mis à jour.";
     }
-    $retour = ($_POST['retour'] ?? '') === 'dashboard' ? '/admin/dashboard' : '/admin/test_entree';
-    redirect($retour);
+    redirect(($_POST['retour'] ?? '') === 'dashboard' ? '/admin/dashboard' : '/admin/test_entree');
 }
+
+// La commission scientifique n'y accède que si le super administrateur a déverrouillé le test
+if (!estSuperAdmin()) { exigerAccesTest($pdo); }
 
 $nbTotal = (int)$pdo->query("SELECT COUNT(*) FROM seminaristes WHERE dortoir IS NULL OR dortoir <> 'Pépinière'")->fetchColumn();
 $nbFaits = (int)$pdo->query("SELECT COUNT(*) FROM seminaristes WHERE test_complete = 1")->fetchColumn();
@@ -31,9 +36,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
-        <?php if (estScientifique()): echo blocTestEntree($pdo); else: ?>
-            <div class="carte" style="margin-bottom:24px;"><h3><?= testOuvert($pdo) ? "🔓 Test déverrouillé" : "🔒 Test verrouillé" ?></h3><p>Seuls la commission scientifique et le super administrateur peuvent le verrouiller ou le déverrouiller.</p></div>
-        <?php endif; ?>
+        <?= blocTestEntree($pdo) ?>
 
         <div class="grid grid-3" style="margin-bottom:24px;">
             <div class="carte stat-card"><div class="chiffre"><?= $nbFaits ?> / <?= $nbTotal ?></div><div class="label">Tests composés</div></div>
@@ -41,7 +44,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <div class="carte stat-card"><div class="chiffre">20 min</div><div class="label">Durée du test</div></div>
         </div>
 
-        <?php if (estScientifique()): ?>
+        <?php if (accesTestScientifique($pdo)): ?>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
             <a href="<?= BASE_URL ?>/admin/questions" class="btn btn-primaire btn-sm">📝 Questions du test</a>
             <a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-primaire btn-sm">⚙️ Config Quiz (6 banques)</a>

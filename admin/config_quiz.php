@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
 exigerRole(['scientifique', 'superadmin']);
+exigerAccesTest($pdo);
 
 $titrePage = "Configuration du Quiz";
 
