@@ -1,29 +1,25 @@
 <?php
-/** Attend en entrée : $membre (ligne de membres_commission) */
+/**
+ * Badge officiel « Commission » JOSPIA 2026 — généré automatiquement depuis la maquette fournie.
+ * Attend en entrée : $membre (ligne de membres_commission). Seuls photo, nom et commission sont insérés.
+ */
+$__photo = (!empty($membre['photo']) && is_file(__DIR__ . '/../uploads/photos/' . $membre['photo']))
+    ? BASE_URL . '/uploads/photos/' . rawurlencode($membre['photo'])
+    : BASE_URL . '/assets/img/avatar.svg';
+$__lignes = josLignesNom($membre['nom_prenoms']);
+$__commission = mb_strtoupper((string)$membre['commission'], 'UTF-8');
 ?>
-<div class="badge-jos-com">
-    <img class="badge-jos-com__entete" src="<?= BASE_URL ?>/assets/img/badge_entete_commission.png" alt="JOSPIA 2026 — AEEMCI">
-    <div class="badge-jos-com__corps">
-        <div class="badge-jos-com__photo-wrap">
-            <?php if ($membre['photo']): ?>
-                <img src="<?= BASE_URL ?>/uploads/photos/<?= e($membre['photo']) ?>" alt="Photo">
-            <?php else: ?>
-                <img src="<?= BASE_URL ?>/assets/img/logo.jpg" alt="Photo">
-            <?php endif; ?>
+<div class="jos-doc jos-badge">
+    <div class="jos-doc__stage">
+        <img class="jos-badge__photo" src="<?= e($__photo) ?>" alt="">
+        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.png" alt="Badge JOSPIA 2026 — Commission">
+        <div class="jos-badge__nom" data-fit="0.96">
+            <?php foreach ($__lignes as $__l): ?><span><?= e($__l) ?></span><?php endforeach; ?>
         </div>
-        <div class="badge-jos-com__nom"><?= e($membre['nom_prenoms']) ?></div>
-        <div class="badge-jos-com__divider"><span class="ligne"></span><span class="losange"></span><span class="ligne"></span></div>
-        <div class="badge-jos-com__commission">Commission<br><?= e($membre['commission']) ?></div>
-        <div class="badge-jos-com__dates">
-            <div class="badge-jos-com__date-box">
-                <div class="jour"><?= e(EVENT_JOUR_DEBUT) ?></div>
-                <div class="mois"><?= e(EVENT_MOIS_ANNEE) ?></div>
-            </div>
-            <span class="badge-jos-com__fleche">➤</span>
-            <div class="badge-jos-com__date-box">
-                <div class="jour"><?= e(EVENT_JOUR_FIN) ?></div>
-                <div class="mois"><?= e(EVENT_MOIS_ANNEE) ?></div>
-            </div>
+        <div class="jos-badge__com" data-fit="0.62">
+            <div class="deco g"><i></i><b></b></div>
+            <div class="valeur"><?= e($__commission) ?></div>
+            <div class="deco d"><i></i><b></b></div>
         </div>
     </div>
 </div>

@@ -159,15 +159,8 @@ require_once __DIR__ . '/../includes/header.php';
                 <a href="<?= BASE_URL ?>/espace/correction.php" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
 
                 <h3 style="margin-top:26px;">Mon diplôme</h3>
-                <div class="diplome-card" style="transform:scale(.7);transform-origin:top left;margin-bottom:-140px;">
-                    <div class="mention">Certificat de participation</div>
-                    <h1><?= e(EVENT_FULL) ?></h1>
-                    <div>Ce diplôme est décerné à</div>
-                    <div class="nom-diplome"><?= e($seminariste['nom_prenoms']) ?></div>
-                    <p class="texte">pour sa participation active aux <?= e(EVENT_NAME) ?>, ayant atteint le niveau <strong><?= e($seminariste['niveau_affecte']) ?></strong>.</p>
-                    <div class="signatures"><span>Le Coordonnateur</span><span>Le Super Administrateur</span></div>
-                </div>
-                <div class="acces-restreint" style="margin-top:150px;">
+                <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
+                <div class="acces-restreint" style="margin-top:14px;">
                     🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
                 </div>
             <?php endif; ?>

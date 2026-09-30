@@ -191,3 +191,43 @@ document.addEventListener('DOMContentLoaded', function () {
         demarrer();
     });
 });
+
+/* ---------- Ajustement automatique du texte des certificats / badges JOSPIA (aucun débordement) ---------- */
+(function () {
+    function largeurMax(zone, sel) {
+        var max = 0;
+        zone.querySelectorAll(sel).forEach(function (n) { max = Math.max(max, n.getBoundingClientRect().width); });
+        return max;
+    }
+    function ajuster() {
+        document.querySelectorAll('.jos-doc [data-fit]').forEach(function (zone) {
+            var cible = zone.querySelectorAll('.valeur, span').length ? '.valeur, span' : null;
+            if (!cible) { return; }
+            var ratio = parseFloat(zone.getAttribute('data-fit')) || 1;
+            zone.classList.remove('large');
+            zone.style.setProperty('--fit', 1);
+            var w = largeurMax(zone, cible);
+            if (!w) { return; }
+            var dispo = zone.clientWidth * ratio;
+            if (zone.classList.contains('jos-badge__com')) {
+                // place restante entre les deux filets décoratifs ; si trop serré → mode large (sans filets)
+                var f = (zone.clientWidth * 0.62) / w;
+                if (f < 0.6) {
+                    zone.classList.add('large');
+                    zone.style.setProperty('--fit', 1);
+                    w = largeurMax(zone, cible);
+                    f = (zone.clientWidth * ratio) / w;
+                }
+                zone.style.setProperty('--fit', Math.min(1, f));
+                return;
+            }
+            zone.style.setProperty('--fit', Math.min(1, dispo / w));
+        });
+    }
+    function lancer() { ajuster(); if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajuster); } }
+    if (document.readyState !== 'loading') { lancer(); } else { document.addEventListener('DOMContentLoaded', lancer); }
+    window.addEventListener('load', ajuster);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('beforeprint', ajuster);
+    window.addEventListener('afterprint', ajuster);
+})();

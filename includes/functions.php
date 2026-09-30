@@ -173,3 +173,18 @@ function lienWavePaiement() {
     $base = preg_replace('/[?&]amount=\d+/', '', WAVE_PAYMENT_LINK);
     return $base . (strpos($base, '?') === false ? '?' : '&') . 'amount=' . (int)FRAIS_PARTICIPATION;
 }
+
+/** Répartit un nom en 1 ou 2 lignes équilibrées (majuscules) pour le badge. */
+function josLignesNom($nom) {
+    $mots = preg_split('/\s+/u', trim(mb_strtoupper($nom, 'UTF-8')), -1, PREG_SPLIT_NO_EMPTY);
+    if (count($mots) <= 1) { return $mots ?: ['']; }
+    $meilleur = null; $score = PHP_INT_MAX;
+    for ($i = 1; $i < count($mots); $i++) {
+        $a = implode(' ', array_slice($mots, 0, $i));
+        $b = implode(' ', array_slice($mots, $i));
+        $s = max(mb_strlen($a), mb_strlen($b));
+        // à longueur égale on préfère la première ligne la plus longue (comme la maquette : « CHEICK OMER / DIARRA »)
+        if ($s < $score || ($s === $score && mb_strlen($a) >= mb_strlen($b))) { $score = $s; $meilleur = [$a, $b]; }
+    }
+    return $meilleur;
+}

@@ -946,3 +946,78 @@ footer a { color: #fff; font-weight: 600; }
 .ok .scan-verdict { color: #0a8f3c; }
 .ko .scan-verdict { color: #c81e1e; }
 .scan-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 6px auto; display: block; border: 3px solid #0a8f3c; }
+
+/* =====================================================================
+   Modèles officiels JOSPIA : certificat de participation + badge commission
+   Les visuels (assets/img/modeles) sont les maquettes fournies, sans aucune
+   modification ; seules les données dynamiques sont insérées par-dessus,
+   aux emplacements exacts de la maquette (unité --u = 1 px de la maquette).
+   ===================================================================== */
+@font-face { font-family: 'JosBarlow'; font-weight: 700; font-style: normal; font-display: block;
+    src: url('../fonts/barlow-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JosBarlow'; font-weight: 800; font-style: normal; font-display: block;
+    src: url('../fonts/barlow-latin-800-normal.woff2') format('woff2'); }
+
+.jos-doc { container-type: inline-size; width: 100%; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.jos-doc__stage { position: relative; overflow: hidden; line-height: 1; font-family: 'JosBarlow', 'Barlow', Arial, sans-serif; }
+.jos-doc__modele { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+
+/* ---------- Certificat 1280 x 904 ---------- */
+.jos-cert { max-width: 980px; box-shadow: 0 6px 24px rgba(0,0,0,.16); }
+.jos-cert .jos-doc__stage { --u: calc(100cqw / 1280); aspect-ratio: 1280 / 904; }
+.jos-cert__nom span { white-space: nowrap; }
+.jos-cert__nom {
+    position: absolute; left: calc(var(--u) * 214); width: calc(var(--u) * 910);
+    top: calc(var(--u) * 378); height: calc(var(--u) * 54);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: .03em;
+    font-size: calc(var(--u) * 56 * var(--fit, 1));
+}
+
+/* ---------- Badge commission 904 x 1280 ---------- */
+.jos-badge { max-width: 380px; }
+.page-badges .jos-badge { max-width: 300px; }
+.jos-badge .jos-doc__stage { --u: calc(100cqw / 904); aspect-ratio: 904 / 1280; border-radius: calc(var(--u) * 38); background: #f7f7f7; }
+.jos-badge__photo {
+    position: absolute; left: calc(var(--u) * 496); top: calc(var(--u) * 10);
+    width: calc(var(--u) * 400); height: calc(var(--u) * 660);
+    object-fit: cover; object-position: 50% 18%; display: block;
+}
+.jos-badge__nom {
+    position: absolute; left: calc(var(--u) * 150); width: calc(var(--u) * 610);
+    top: calc(var(--u) * 708); height: calc(var(--u) * 172);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; color: #fff; font-weight: 800; text-transform: uppercase;
+    font-size: calc(var(--u) * 76 * var(--fit, 1)); line-height: 1.12; letter-spacing: .01em;
+    text-shadow: 0 calc(var(--u) * 3) calc(var(--u) * 4) rgba(0,0,0,.28);
+}
+.jos-badge__nom span { display: block; white-space: nowrap; }
+.jos-badge__com {
+    position: absolute; left: calc(var(--u) * 232); width: calc(var(--u) * 450);
+    top: calc(var(--u) * 985); height: calc(var(--u) * 90);
+    display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 10);
+}
+.jos-badge__com .deco { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
+.jos-badge__com .deco i { flex: 1; height: calc(var(--u) * 3); background: linear-gradient(90deg, rgba(214,170,69,0), #D6AA45); }
+.jos-badge__com .deco.d i { background: linear-gradient(270deg, rgba(214,170,69,0), #D6AA45); }
+.jos-badge__com .deco b { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: #D6AA45; transform: rotate(45deg); flex: none; margin: 0 calc(var(--u) * 2); }
+.jos-badge__com .deco.d { flex-direction: row-reverse; }
+.jos-badge__com .valeur {
+    flex: none; font-weight: 800; text-transform: uppercase; letter-spacing: .01em;
+    font-size: calc(var(--u) * 84 * var(--fit, 1)); line-height: 1; padding-top: calc(var(--u) * 4);
+    background: linear-gradient(180deg, #F0CF73 0%, #D6A93F 55%, #B98526 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 calc(var(--u) * 3) calc(var(--u) * 2) rgba(0,0,0,.3));
+}
+.jos-badge__com.large { left: calc(var(--u) * 160); width: calc(var(--u) * 594); }
+.jos-badge__com.large .deco { display: none; }
+
+@page jos-cert { size: A4 landscape; margin: 0; }
+@media print {
+    .jos-cert-print { page: jos-cert; }
+    .jos-cert-print .container { max-width: none; padding: 0; }
+    .jos-cert-print .section { padding: 0; }
+    .jos-cert { max-width: none; width: 297mm; box-shadow: none; }
+    .jos-badge { max-width: 100mm; box-shadow: none; }
+    .page-badges .jos-badge { max-width: 88mm; }
+}
