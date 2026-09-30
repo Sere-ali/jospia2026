@@ -84,7 +84,8 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <th>Date</th>
                         <th>Séminariste (Matricule)</th>
                         <th>Contact</th>
-                        <th>Référence Transaction</th>
+                        <th>N° Wave du payeur</th>
+                        <th>ID transaction</th>
                         <th>Statut</th>
                         <th>Action / Info</th>
                     </tr>
@@ -98,9 +99,8 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                             <small class="tag"><?= e($p['matricule']) ?></small>
                         </td>
                         <td><?= e($p['contact']) ?></td>
-                        <td style="font-family: monospace; font-size: 1.1em;">
-                            <strong><?= e($p['reference_transaction']) ?></strong>
-                        </td>
+                        <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '—') ?></strong></td>
+                        <td style="font-family: monospace;"><?= $p['reference_transaction'] !== '' ? e($p['reference_transaction']) : '<small style="color:var(--texte-doux)">non fourni</small>' ?></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente</span>
@@ -136,7 +136,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$paiements): ?>
-                    <tr><td colspan="6" class="text-center">Aucun paiement trouvé.</td></tr>
+                    <tr><td colspan="7" class="text-center">Aucun paiement trouvé.</td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>

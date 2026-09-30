@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reference = trim($_POST['reference_transaction'] ?? '');
     
     if (empty($reference)) {
-        $erreur = "Veuillez saisir la référence de transaction Wave.";
+        $erreur = "Veuillez saisir l'ID de transaction, ou attendez la validation de la commission Finance.";
     } else {
         if ($paiement && $paiement['statut'] === 'en attente') {
             // Mise à jour de la référence
@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$reference, $paiement['id']]);
         } else {
             // Nouveau paiement
-            $stmt = $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut) VALUES (?, ?, 'en attente')");
-            $stmt->execute([$seminariste_id, $reference]);
+            $stmt = $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, ?, 'en attente', ?, ?)");
+            $stmt->execute([$seminariste_id, $reference, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
         }
         $succes = "Votre référence de paiement a été soumise avec succès. Elle est en attente de validation par la commission Finance.";
         
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php elseif ($paiement && $paiement['statut'] === 'en attente'): ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
                     <strong>Paiement en attente de validation.</strong><br>
-                    Référence soumise : <strong><?= e($paiement['reference_transaction']) ?></strong>
+                    Numéro Wave du payeur : <strong><?= e($paiement['numero_wave'] ?: '—') ?></strong><?php if ($paiement['reference_transaction'] !== ''): ?><br>ID de transaction : <strong><?= e($paiement['reference_transaction']) ?></strong><?php endif; ?>
                 </div>
             <?php else: ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">

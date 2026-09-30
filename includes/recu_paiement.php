@@ -25,7 +25,8 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
                 <dt>Sous-comité / Section</dt><dd><?= e($s['anyama']) ?> — <?= e($s['section']) ?></dd>
                 <dt>Dortoir</dt><dd><?= e($s['dortoir']) ?></dd>
                 <dt>Contact</dt><dd><?= e($s['contact']) ?></dd>
-                <dt>Réf. transaction Wave</dt><dd class="mono"><?= e($recu['reference_transaction']) ?></dd>
+                <dt>Payé depuis (Wave)</dt><dd class="mono"><?= e($recu['numero_wave'] ?: '—') ?></dd>
+                <?php if ($recu['reference_transaction'] !== ''): ?><dt>ID transaction</dt><dd class="mono"><?= e($recu['reference_transaction']) ?></dd><?php endif; ?>
                 <dt>Montant payé</dt><dd><strong><?= number_format((int)$recu['montant'], 0, ',', ' ') ?> FCFA</strong></dd>
                 <dt>Validé par</dt><dd><?= e($recu['valideur'] ?: 'Commission Finance') ?></dd>
             </dl>

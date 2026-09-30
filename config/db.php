@@ -82,8 +82,8 @@ try {
 // applique sql/migration_features.sql (idempotent) une seule fois.
 try {
     $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
-    $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND ((table_name = 'paiements' AND column_name = 'code_recu') OR (table_name = 'comptes' AND column_name = 'mdp_initial'))")->fetchColumn() : 0;
-    if ($nbTables < 2 || $aCodeRecu < 2) {
+    $aCodeRecu = $nbTables === 2 ? (int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND ((table_name = 'paiements' AND column_name = 'code_recu') OR (table_name = 'comptes' AND column_name = 'mdp_initial') OR (table_name = 'paiements' AND column_name = 'numero_wave'))")->fetchColumn() : 0;
+    if ($nbTables < 2 || $aCodeRecu < 3) {
         $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
     }
 } catch (Throwable $e) {

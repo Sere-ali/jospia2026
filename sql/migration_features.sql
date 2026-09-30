@@ -50,3 +50,7 @@ ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin'
 
 -- 5. Mot de passe initial conservé jusqu'à validation du paiement (affiché une fois payé)
 ALTER TABLE comptes ADD COLUMN IF NOT EXISTS mdp_initial VARCHAR(20) NULL;
+
+-- 6. Numéro Wave du payeur (saisi à l'inscription) ; référence de transaction facultative
+ALTER TABLE paiements ADD COLUMN IF NOT EXISTS numero_wave VARCHAR(20) NULL;
+ALTER TABLE paiements MODIFY reference_transaction VARCHAR(255) NOT NULL DEFAULT '';

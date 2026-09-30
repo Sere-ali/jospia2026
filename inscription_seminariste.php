@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $parentNom = trim($_POST['parent_nom'] ?? '');
     $parentLien = trim($_POST['parent_lien'] ?? '');
     $parentContact = preg_replace('/\D+/', '', $_POST['parent_contact'] ?? '');
+    $numeroWave = preg_replace('/\D+/', '', $_POST['numero_wave'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($genre, ['Masculin', 'Féminin'], true)) $erreurs[] = "Veuillez préciser le genre.";
@@ -35,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($maladie === 'Autre' && $maladieAutre === '') $erreurs[] = "Veuillez préciser la maladie.";
     if ($parentNom === '') $erreurs[] = "Le nom du parent/tuteur (contact d'urgence) est obligatoire.";
     if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
+    if (!preg_match('/^[0-9]{8,15}$/', $numeroWave)) $erreurs[] = "Le numéro Wave (celui qui effectuera le paiement) doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
     if (empty($erreurs)) {
@@ -69,6 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hash = password_hash($motDePasse, PASSWORD_DEFAULT);
         $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?,?)")
             ->execute([$identifiant, $hash, $motDePasse, 'seminariste', $seminaristeId, $nom]);
+
+        // Paiement en attente, avec le numéro Wave du payeur (la Finance le retrouve dans son compte Wave)
+        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, '', 'en attente', ?, ?)")
+            ->execute([$seminaristeId, $numeroWave, FRAIS_PARTICIPATION]);
 
         // Connexion automatique pour enchaîner directement sur le paiement
         if (!estConnecte()) {
@@ -201,6 +207,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Contact du parent/tuteur <span class="req">*</span></label>
                         <input type="tel" name="parent_contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($_POST['parent_contact'] ?? '') ?>">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Paiement (5 000 FCFA via Wave)</legend>
+                    <div class="form-group">
+                        <label>Numéro Wave avec lequel vous allez payer <span class="req">*</span></label>
+                        <input type="tel" name="numero_wave" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" title="Chiffres uniquement (8 à 15)" placeholder="Ex : 0700000000" required value="<?= e($_POST['numero_wave'] ?? '') ?>">
+                        <small style="color:var(--texte-doux);">Après validation du formulaire, vous enverrez <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA depuis ce numéro vers le compte Wave de l'organisation. La commission Finance vérifiera le paiement, puis vos identifiants et votre reçu seront débloqués.</small>
                     </div>
                 </fieldset>
 
