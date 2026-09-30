@@ -12,7 +12,7 @@ if ($u['role'] === 'finance') {
 }
 
 $membre = null; $seminariste = null;
-$recu = null;
+$recu = null; $idsInitiaux = null;
 if ($u['role'] === 'membre' && $u['membre_id']) {
     $stmt = $pdo->prepare("SELECT * FROM membres_commission WHERE id = ?");
     $stmt->execute([$u['membre_id']]);
@@ -31,6 +31,11 @@ if ($u['role'] === 'seminariste' && $u['seminariste_id']) {
     $stR = $pdo->prepare("SELECT p.*, c.nom_affiche AS valideur FROM paiements p LEFT JOIN comptes c ON c.id = p.admin_validateur_id WHERE p.seminariste_id = ? AND p.statut = 'validé' ORDER BY p.id DESC LIMIT 1");
     $stR->execute([$u['seminariste_id']]);
     $recu = $stR->fetch() ?: null;
+    if ($recu) {
+        $stI = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE id = ? AND mdp_initial IS NOT NULL");
+        $stI->execute([$u['id']]);
+        $idsInitiaux = $stI->fetch() ?: null;
+    }
 }
 $titrePage = "Mon espace";
 require_once __DIR__ . '/../includes/header.php';
@@ -129,6 +134,15 @@ require_once __DIR__ . '/../includes/header.php';
                 🔒 Le téléchargement / impression du badge est réservé aux administrateurs.
             </div>
         </div>
+
+        <?php if ($idsInitiaux): ?>
+        <div class="carte" style="max-width:720px;margin:30px auto 0;border:2px solid var(--primaire,#1b7a3d);">
+            <h3>🔑 Vos identifiants de connexion</h3>
+            <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
+               <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
+            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte.php">Mon compte</a> (ce bloc disparaîtra alors).</p>
+        </div>
+        <?php endif; ?>
 
         <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; endif; ?>
 

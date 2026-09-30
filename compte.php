@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreurs[] = "La confirmation ne correspond pas au nouveau mot de passe.";
     } else {
         $hash = password_hash($nouveau, PASSWORD_DEFAULT);
-        $pdo->prepare("UPDATE comptes SET mot_de_passe = ? WHERE id = ?")->execute([$hash, $u['id']]);
+        $pdo->prepare("UPDATE comptes SET mot_de_passe = ?, mdp_initial = NULL WHERE id = ?")->execute([$hash, $u['id']]);
         $_SESSION['compte']['mot_de_passe'] = $hash;
         $succes = "Mot de passe modifié avec succès.";
     }

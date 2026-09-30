@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primaire btn-block">Se connecter</button>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--texte-doux);">
-            Pas encore inscrit ? <a href="<?= BASE_URL ?>/index.php">Choisir un formulaire d'inscription</a>
+            Inscrit mais sans identifiants ? <a href="<?= BASE_URL ?>/statut.php">Suivre mon paiement</a><br>Pas encore inscrit ? <a href="<?= BASE_URL ?>/index.php">Choisir un formulaire d'inscription</a>
         </p>
     </div>
 </div>

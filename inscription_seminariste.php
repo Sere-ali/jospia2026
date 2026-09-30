@@ -67,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($chk->fetchColumn() > 0) $identifiant .= '_' . $seminaristeId;
 
         $hash = password_hash($motDePasse, PASSWORD_DEFAULT);
-        $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?)")
-            ->execute([$identifiant, $hash, 'seminariste', $seminaristeId, $nom]);
+        $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?,?)")
+            ->execute([$identifiant, $hash, $motDePasse, 'seminariste', $seminaristeId, $nom]);
 
         // Connexion automatique pour enchaîner directement sur le paiement
         if (!estConnecte()) {
@@ -94,15 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <?php if ($succes): ?>
-            <div class="alert alert-succes">Inscription pré-validée ! Veuillez procéder au paiement pour finaliser.</div>
+            <div class="alert alert-succes">Inscription enregistrée ! Il reste à effectuer le paiement pour la finaliser.</div>
             <div class="carte" style="margin-bottom:24px;">
-                <h3>Vos informations de connexion</h3>
+                <h3>Votre inscription</h3>
                 <p class="mono"><strong>Matricule :</strong> <?= e($identifiantsGeneres['matricule']) ?><br>
                    <strong>Sous-comité :</strong> <?= e($identifiantsGeneres['anyama']) ?><br>
-                   <strong>Section :</strong> <?= e($identifiantsGeneres['section']) ?><br>
-                   <strong>Identifiant (contact) :</strong> <?= e($identifiantsGeneres['id']) ?><br>
-                   <strong>Mot de passe :</strong> <?= e($identifiantsGeneres['mdp']) ?></p>
-                <p><strong>Notez bien ces identifiants</strong> : ils vous serviront à vous reconnecter.</p>
+                   <strong>Section :</strong> <?= e($identifiantsGeneres['section']) ?></p>
+                <p>🔒 Vos <strong>identifiants de connexion</strong> et votre <strong>reçu</strong> seront disponibles dès que la commission Finance aura <strong>validé votre paiement</strong>. Notez votre matricule <strong><?= e($identifiantsGeneres['matricule']) ?></strong> : il vous permettra de les récupérer sur la page <a href="<?= BASE_URL ?>/statut.php">« Suivre mon paiement »</a>.</p>
             </div>
             <?php if (estConnecte()): require __DIR__ . '/includes/paiement_bloc.php'; else: ?>
                 <a href="<?= BASE_URL ?>/login.php" class="btn btn-primaire">Me connecter et payer</a>
