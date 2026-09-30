@@ -75,3 +75,14 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données. Vérifiez config/db.php et que MySQL est démarré. (" . $e->getMessage() . ")");
 }
+
+// Auto-migration : si les tables récentes (paiements, config_quiz) manquent,
+// applique sql/migration_features.sql (idempotent) une seule fois.
+try {
+    $nbTables = (int)$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name IN ('paiements','config_quiz')")->fetchColumn();
+    if ($nbTables < 2) {
+        $pdo->exec(file_get_contents(__DIR__ . '/../sql/migration_features.sql'));
+    }
+} catch (Throwable $e) {
+    error_log('Auto-migration JOSPIA échouée : ' . $e->getMessage());
+}
