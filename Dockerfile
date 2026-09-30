@@ -16,6 +16,10 @@ RUN a2enmod rewrite
 # fully qualified domain name" dans les logs Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Réglages PHP : mise en tampon de la sortie (nécessaire pour les redirections
+# et session_regenerate_id() après l'affichage de l'en-tête) et erreurs masquées
+RUN printf "output_buffering=On\ndisplay_errors=Off\nlog_errors=On\n" > /usr/local/etc/php/conf.d/jospia.ini
+
 # Copie du code source de l'application
 COPY . /var/www/html/
 
