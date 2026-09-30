@@ -329,3 +329,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 })();
+
+/* ---------- Photos légères : réduction automatique (max 1000 px, JPEG) avant l'envoi ---------- */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[type=file][name=photo]');
+        if (!input || input.hasAttribute('data-detourage')) { return; }
+        var occupe = false;
+        input.addEventListener('change', function () {
+            var f = input.files && input.files[0];
+            if (occupe || !f || f.name.indexOf('photo_c_') === 0 || f.size < 300 * 1024 && f.type === 'image/jpeg') { return; }
+            occupe = true;
+            var url = URL.createObjectURL(f), img = new Image();
+            img.onload = function () {
+                var k = Math.min(1, 1000 / Math.max(img.naturalWidth, img.naturalHeight));
+                var c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+                var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+                c.toBlob(function (b) {
+                    URL.revokeObjectURL(url);
+                    if (b && b.size < f.size) {
+                        var dt = new DataTransfer(); dt.items.add(new File([b], 'photo_c_' + Date.now() + '.jpg', { type: 'image/jpeg' })); input.files = dt.files;
+                    }
+                    occupe = false;
+                }, 'image/jpeg', 0.85);
+            };
+            img.onerror = function () { occupe = false; };
+            img.src = url;
+        });
+    });
+})();

@@ -43,6 +43,8 @@ function uploadPhoto($fichier, $sousDossier = 'photos') {
     $nomFichier = uniqid('photo_', true) . '.' . $ext;
     $cheminDestination = __DIR__ . '/../uploads/' . $sousDossier . '/' . $nomFichier;
     if (move_uploaded_file($fichier['tmp_name'], $cheminDestination)) {
+        // Copie durable en base de données : le disque du site est effacé à chaque mise à jour
+        photoSauvegarderEnBase($nomFichier, $cheminDestination, $ext);
         return $nomFichier;
     }
     return null;
@@ -208,4 +210,29 @@ function synchroniserIdentifiantContact(PDO $pdo, $colonne, $id, $ancienContact,
     if ($st->fetchColumn() > 0) { return null; }
     $pdo->prepare("UPDATE comptes SET identifiant = ? WHERE id = ?")->execute([$nouveauContact, $c['id']]);
     return $nouveauContact;
+}
+
+/** Table de stockage durable des photos (le disque du conteneur est éphémère sur Render). */
+function photoTableBase(PDO $pdo) {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS photos_stockees (
+        nom VARCHAR(120) NOT NULL PRIMARY KEY,
+        mime VARCHAR(40) NOT NULL,
+        donnees MEDIUMBLOB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function photoSauvegarderEnBase($nom, $chemin, $ext) {
+    global $pdo;
+    try {
+        photoTableBase($pdo);
+        $mimes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+        $st = $pdo->prepare("INSERT INTO photos_stockees (nom, mime, donnees) VALUES (?,?,?) ON DUPLICATE KEY UPDATE mime = VALUES(mime), donnees = VALUES(donnees)");
+        $st->bindValue(1, $nom);
+        $st->bindValue(2, $mimes[$ext] ?? 'image/jpeg');
+        $st->bindValue(3, file_get_contents($chemin), PDO::PARAM_LOB);
+        $st->execute();
+    } catch (Throwable $e) {
+        error_log('Sauvegarde photo en base échouée : ' . $e->getMessage());
+    }
 }

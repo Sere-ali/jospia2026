@@ -7,6 +7,10 @@ RewriteEngine On
 # Dossiers internes jamais accessibles depuis le navigateur
 RewriteRule ^(sql|db|config|includes)(/|$) - [F,L]
 
+# Photo absente du disque (après redéploiement) : servie depuis la base
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^uploads/photos/([A-Za-z0-9._-]+)$ photo.php?f=$1 [L,QSA]
+
 # /page.php -> /page (URL propre)
 RewriteCond %{THE_REQUEST} ^[A-Z]+\s(\S*?)\.php(\?\S*)?\sHTTP/ [NC]
 RewriteRule ^ %1%2 [R=301,L,NE]
