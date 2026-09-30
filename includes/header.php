@@ -30,7 +30,9 @@ $page = basename($_SERVER['PHP_SELF']);
                 <?php if (estAdmin()): ?>
                     <a href="<?= BASE_URL ?>/admin/dashboard">Tableau de bord</a>
                 <?php elseif (estFinance()): ?>
-                    <a href="<?= BASE_URL ?>/finance/paiements">Finance</a>
+                    <a href="<?= BASE_URL ?>/finance/paiements">Commission finance</a>
+                <?php elseif (estScientifique()): ?>
+                    <a href="<?= BASE_URL ?>/admin/commission_scientifique">Commission scientifique</a>
                 <?php endif; ?>
                 <a href="<?= BASE_URL ?>/compte">Mon compte</a>
                 <a href="<?= BASE_URL ?>/logout" class="btn-nav">Déconnexion</a>

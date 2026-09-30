@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['scientifique', 'admin', 'superadmin']);
 $titrePage = "Commission scientifique";
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/admin_nav.php';
@@ -14,7 +14,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="grid grid-2">
             <div class="carte"><h3>📝 Saisie des notes</h3><p>Saisir les notes des séminaristes par matière.</p><a href="<?= BASE_URL ?>/admin/notes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🖨️ Bulletins</h3><p>Imprimer les bulletins (2 par page).</p><a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-primaire btn-sm">Ouvrir</a></div>
-            <?php if (estSuperAdmin()): ?>
+            <?php if (estScientifique()): ?>
             <div class="carte"><h3>📚 Matières et résultats</h3><p>Gérer les matières et publier les résultats.</p><a href="<?= BASE_URL ?>/admin/matieres" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>📝 Questions du test</h3><p>Ajouter ou modifier les questions du test d'entrée.</p><a href="<?= BASE_URL ?>/admin/questions" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>⚙️ Config Quiz (6 banques)</h3><p>Régler le tirage des questions par banque.</p><a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-primaire btn-sm">Ouvrir</a></div>

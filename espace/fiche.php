@@ -10,6 +10,9 @@ if (in_array($u['role'], ['admin','superadmin'], true) && !$u['membre_id'] && !$
 if ($u['role'] === 'finance') {
     redirect('/finance/paiements');
 }
+if ($u['role'] === 'scientifique') {
+    redirect('/admin/commission_scientifique');
+}
 
 $membre = null; $seminariste = null;
 $recu = null; $idsInitiaux = null;

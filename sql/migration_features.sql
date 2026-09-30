@@ -46,7 +46,7 @@ ALTER TABLE paiements ADD COLUMN IF NOT EXISTS montant INT NOT NULL DEFAULT 5100
 ALTER TABLE paiements ADD COLUMN IF NOT EXISTS date_validation DATETIME NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS uq_paiements_code_recu ON paiements (code_recu);
 UPDATE paiements SET code_recu = REPLACE(UUID(), '-', ''), date_validation = COALESCE(updated_at, NOW()) WHERE statut = 'validé' AND code_recu IS NULL;
-ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin','finance') NOT NULL DEFAULT 'membre';
+ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin','finance','scientifique') NOT NULL DEFAULT 'membre';
 
 -- 5. Mot de passe initial conservé jusqu'à validation du paiement (affiché une fois payé)
 ALTER TABLE comptes ADD COLUMN IF NOT EXISTS mdp_initial VARCHAR(20) NULL;

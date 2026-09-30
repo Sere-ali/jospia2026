@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['compte_id'] = $compte['id'];
         $_SESSION['compte'] = $compte;
-        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard' : ($compte['role'] === 'finance' ? '/finance/paiements' : '/espace/fiche'));
+        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard' : ($compte['role'] === 'finance' ? '/finance/paiements' : ($compte['role'] === 'scientifique' ? '/admin/commission_scientifique' : '/espace/fiche')));
     } else {
         $erreur = "Identifiant ou mot de passe incorrect.";
     }

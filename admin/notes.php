@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['scientifique', 'admin', 'superadmin']);
 
 $matieres = $pdo->query("SELECT * FROM matieres ORDER BY ordre, nom")->fetchAll();
 $succes = null;

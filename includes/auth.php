@@ -64,3 +64,9 @@ function estFinance() {
     $u = utilisateurCourant();
     return $u && in_array($u['role'], ['finance', 'admin', 'superadmin'], true);
 }
+
+/** Commission scientifique : notes, bulletins, matières, questions et quiz (rôle « scientifique », super admin). */
+function estScientifique() {
+    $u = utilisateurCourant();
+    return $u && in_array($u['role'], ['scientifique', 'superadmin'], true);
+}

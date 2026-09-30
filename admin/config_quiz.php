@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['superadmin']);
+exigerRole(['scientifique', 'superadmin']);
 
 $titrePage = "Configuration du Quiz";
 

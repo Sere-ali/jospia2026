@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['scientifique', 'admin', 'superadmin']);
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare("SELECT * FROM seminaristes WHERE id = ?");

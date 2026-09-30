@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['scientifique', 'admin', 'superadmin']);
 
 $filtreNiveau = $_GET['niveau'] ?? '';
 $sql = "SELECT * FROM seminaristes WHERE 1=1";
