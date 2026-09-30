@@ -16,6 +16,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="grid grid-2">
             <div class="carte"><h3>📝 Saisie des notes</h3><p>Saisir les notes des séminaristes par matière.</p><a href="<?= BASE_URL ?>/admin/notes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🖨️ Bulletins</h3><p>Imprimer les bulletins (2 par page).</p><a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-primaire btn-sm">Ouvrir</a></div>
+            <div class="carte"><h3>🧪 Test d'entrée</h3><p>Verrouiller / déverrouiller le test, suivre les résultats (20 minutes, noté sur 20).</p><a href="<?= BASE_URL ?>/admin/test_entree" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>📋 Listes par dortoir et par niveau</h3><p>Consulter et exporter en Excel les listes des séminaristes.</p><a href="<?= BASE_URL ?>/admin/listes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <?php if (estScientifique()): ?>
             <div class="carte"><h3>📚 Matières et résultats</h3><p>Gérer les matières et publier les résultats.</p><a href="<?= BASE_URL ?>/admin/matieres" class="btn btn-primaire btn-sm">Ouvrir</a></div>

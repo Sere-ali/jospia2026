@@ -117,7 +117,7 @@ function blocTestEntree(PDO $pdo) {
     $h = '<div class="carte" style="border-left:4px solid ' . ($ouvert ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
     $h .= '<h3>' . ($ouvert ? '🔓 Test d\'entrée déverrouillé' : '🔒 Test d\'entrée verrouillé') . '</h3>';
     $h .= '<p>' . ($ouvert ? 'Les séminaristes dont le paiement est validé peuvent composer le test.' : 'Les séminaristes (paiement validé) ne peuvent pas encore composer le test.') . '</p>';
-    $h .= '<form method="post" action="' . BASE_URL . '/admin/test_entree"><input type="hidden" name="ouvrir" value="' . ($ouvert ? '0' : '1') . '">';
+    $h .= '<form method="post" action="' . BASE_URL . '/admin/test_entree"><input type="hidden" name="retour" value="' . (strpos($_SERVER['PHP_SELF'], 'dashboard') !== false ? 'dashboard' : '') . '"><input type="hidden" name="ouvrir" value="' . ($ouvert ? '0' : '1') . '">';
     $h .= '<button type="submit" class="btn btn-sm ' . ($ouvert ? 'btn-danger' : 'btn-primaire') . '">' . ($ouvert ? '🔒 Verrouiller le test' : '🔓 Déverrouiller le test') . '</button></form></div>';
     return $h;
 }
