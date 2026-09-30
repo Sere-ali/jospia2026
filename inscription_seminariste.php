@@ -2,6 +2,12 @@
 $titrePage = "Inscription Séminariste";
 require_once __DIR__ . '/includes/header.php';
 
+if (parametre('inscriptions_seminaristes', '1') === '0') {
+    echo '<div class="container" style="max-width:640px;margin:40px auto;"><div class="carte" style="text-align:center;"><h2>Inscriptions fermées</h2><p>Les inscriptions des séminaristes sont closes pour le moment.</p><a href="' . BASE_URL . '/" class="btn btn-outline">&larr; Accueil</a></div></div>';
+    require_once __DIR__ . '/includes/footer.php';
+    exit;
+}
+
 $erreurs = [];
 $succes = null;
 $identifiantsGeneres = null;

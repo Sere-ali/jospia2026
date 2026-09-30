@@ -17,9 +17,11 @@ $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansS
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
         <a href="<?= BASE_URL ?>/admin/dashboard" class="btn btn-sm <?= $pageAdmin==='dashboard.php'?'btn-primaire':'btn-outline' ?>">📊 Tableau de bord</a>
         <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm <?= $dansAdministration ? 'btn-primaire' : 'btn-or' ?>">🗂️ Administration</a>
-        <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
         <?php if (estSuperAdmin()): ?>
+            <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
             <a href="<?= BASE_URL ?>/admin/users" class="btn btn-sm <?= $pageAdmin==='users.php'?'btn-primaire':'btn-outline' ?>">🔑 Comptes admin</a>
+            <a href="<?= BASE_URL ?>/admin/activite" class="btn btn-sm <?= $pageAdmin==='activite.php'?'btn-primaire':'btn-outline' ?>">📋 Activité journalière</a>
+            <a href="<?= BASE_URL ?>/admin/parametres" class="btn btn-sm <?= $pageAdmin==='parametres.php'?'btn-primaire':'btn-outline' ?>">⚙️ Paramètres du site</a>
         <?php endif; ?>
     </div>
     <?php if ($dansAdministration): ?>

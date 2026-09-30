@@ -21,7 +21,7 @@ if (!testOuvert($pdo)) {
     redirect('/espace/fiche');
 }
 
-const DUREE_TEST = 1200; // 20 minutes
+const DUREE_TEST = DUREE_TEST_MINUTES * 60;
 $cleSession = 'quiz_' . (int)$seminariste['id'];
 $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
 // L'état du test (début + questions) est gardé en base : se déconnecter/reconnecter ne remet pas le chrono à zéro.
@@ -107,7 +107,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Test d'entrée - Noté sur 20</span>
             <h2>Bonne chance, <?= e($seminariste['nom_prenoms']) ?> !</h2>
-            <p style="color:var(--texte-doux);">Répondez aux <?= count($questions) ?> questions ci-dessous. Vous avez <strong>20 minutes</strong> : à la fin du temps, le test est soumis automatiquement avec les réponses déjà données.</p>
+            <p style="color:var(--texte-doux);">Répondez aux <?= count($questions) ?> questions ci-dessous. Vous avez <strong><?= DUREE_TEST_MINUTES ?> minutes</strong> : à la fin du temps, le test est soumis automatiquement avec les réponses déjà données.</p>
         </div>
 
         <div id="quiz-timer" class="timer-box" data-seconds="<?= $tempsRestant ?>">⏱ Temps restant : <?= floor($tempsRestant / 60) ?>:<?= str_pad($tempsRestant % 60, 2, '0', STR_PAD_LEFT) ?></div>

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['superadmin']);
 
 $filtreCommission = $_GET['commission'] ?? '';
 $sql = "SELECT c.*, s.nom_prenoms, s.matricule FROM critiques c

@@ -60,6 +60,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <div class="carte stat-card" style="border-left: 4px solid #f39c12;"><div class="chiffre" style="color: #f39c12;"><?= $nbPaiementsAttente ?></div><div class="label">Paiements en Attente</div></div>
         </div>
 
+        <?php require __DIR__ . '/../includes/graphiques_commissions.php'; ?>
+
         <div class="grid grid-2">
             <div class="carte">
                 <h3>Répartition par commission</h3>

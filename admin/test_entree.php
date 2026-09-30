@@ -32,7 +32,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-titre">
             <span class="eyebrow">Commission scientifique</span>
             <h2>Test d'entrée</h2>
-            <p>Durée : 20 minutes, soumission automatique à la fin du temps. Noté sur 20.</p>
+            <p>Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20.</p>
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
@@ -41,7 +41,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="grid grid-3" style="margin-bottom:24px;">
             <div class="carte stat-card"><div class="chiffre"><?= $nbFaits ?> / <?= $nbTotal ?></div><div class="label">Tests composés</div></div>
             <div class="carte stat-card"><div class="chiffre"><?= $nbQuestions ?></div><div class="label">Questions en banque</div></div>
-            <div class="carte stat-card"><div class="chiffre">20 min</div><div class="label">Durée du test</div></div>
+            <div class="carte stat-card"><div class="chiffre"><?= DUREE_TEST_MINUTES ?> min</div><div class="label">Durée du test</div></div>
         </div>
 
         <?php if (accesTestScientifique($pdo)): ?>

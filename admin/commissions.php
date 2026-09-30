@@ -37,6 +37,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">⬇️ Télécharger tous les badges en PDF (4/page)</a>
         </div>
 
+        <?php require __DIR__ . '/../includes/graphiques_commissions.php'; ?>
+
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
             <div class="form-group" style="flex:1;min-width:200px;margin:0;">
                 <label>Rechercher</label>

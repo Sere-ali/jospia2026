@@ -55,3 +55,18 @@ ALTER TABLE comptes ADD COLUMN IF NOT EXISTS mdp_initial VARCHAR(20) NULL;
 -- 6. Numéro Wave du payeur (saisi à l'inscription) ; référence de transaction facultative
 ALTER TABLE paiements ADD COLUMN IF NOT EXISTS numero_wave VARCHAR(20) NULL;
 ALTER TABLE paiements MODIFY reference_transaction VARCHAR(255) NOT NULL DEFAULT '';
+
+-- 7. Paramètres du site + journal d'activité (qui a fait quoi)
+CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS journal_activite (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    compte_id INT NULL,
+    nom VARCHAR(150) NOT NULL DEFAULT '',
+    role VARCHAR(20) NOT NULL DEFAULT '',
+    action VARCHAR(150) NOT NULL,
+    cible VARCHAR(200) NOT NULL DEFAULT '',
+    ip VARCHAR(45) NOT NULL DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_journal_date (created_at),
+    INDEX idx_journal_compte (compte_id)
+) ENGINE=InnoDB;

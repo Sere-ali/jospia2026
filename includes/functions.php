@@ -332,3 +332,95 @@ function waveVerifierEtValider(PDO $pdo, $sessionId) {
     validerPaiement($pdo, $pid, null);
     return true;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Paramètres du site + journal d'activité                            */
+/* ------------------------------------------------------------------ */
+
+/** Valeur d'un paramètre du site (table parametres), ou $defaut. */
+function parametre($cle, $defaut = null) {
+    global $JOS_PARAMS;
+    return $JOS_PARAMS[$cle] ?? $defaut;
+}
+
+function journalPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $drapeau = sys_get_temp_dir() . '/jospia_journal_ok';
+    if (is_file($drapeau)) return;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS journal_activite (
+        id INT AUTO_INCREMENT PRIMARY KEY, compte_id INT NULL, nom VARCHAR(150) NOT NULL DEFAULT '', role VARCHAR(20) NOT NULL DEFAULT '',
+        action VARCHAR(150) NOT NULL, cible VARCHAR(200) NOT NULL DEFAULT '', ip VARCHAR(45) NOT NULL DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_journal_date (created_at), INDEX idx_journal_compte (compte_id)) ENGINE=InnoDB");
+    @file_put_contents($drapeau, '1');
+}
+
+/** Enregistre une action dans le journal (ne provoque jamais d'erreur visible). */
+function journaliser(PDO $pdo, $action, $cible = '', $compte = null) {
+    try {
+        journalPreparer($pdo);
+        $c = $compte ?: ($_SESSION['compte'] ?? null);
+        $pdo->prepare("INSERT INTO journal_activite (compte_id, nom, role, action, cible, ip) VALUES (?,?,?,?,?,?)")
+            ->execute([$c['id'] ?? null, (string)($c['nom_affiche'] ?? ($c['identifiant'] ?? '')), (string)($c['role'] ?? ''), mb_substr((string)$action, 0, 150), mb_substr((string)$cible, 0, 200), substr((string)($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45)]);
+    } catch (Throwable $e) { error_log('Journal : ' . $e->getMessage()); }
+}
+
+/**
+ * Journal automatique : toute action de modification faite par un compte du personnel
+ * (admin, super admin, finance, scientifique) est enregistrée : qui, quoi, sur qui.
+ */
+function journalAutomatique(PDO $pdo) {
+    $u = $_SESSION['compte'] ?? null;
+    if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique'], true)) return;
+    $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
+    if (in_array($script, ['login', 'logout', 'wave_webhook', 'wave_retour', 'wave_pay'], true)) return;
+    $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+    $action = null;
+    if ($methode === 'POST') {
+        $action = $_POST['action'] ?? ($_POST['cle'] ?? ($_POST['ouvrir'] ?? ($_POST['publier'] ?? 'enregistrer')));
+    } else {
+        foreach (['supprimer' => 'supprimer', 'publier' => 'publier', 'reset' => 'reset', 'activer' => 'activer', 'desactiver' => 'désactiver'] as $k => $a) {
+            if (isset($_GET[$k])) { $action = $a; break; }
+        }
+        if ($script === 'pdf') { $action = 'télécharger PDF ' . ($_GET['type'] ?? ''); }
+    }
+    if ($action === null) return;
+
+    $libelles = [
+        'paiements' => 'Paiements Wave', 'seminaristes' => 'Séminaristes', 'commissions' => 'Membres commission',
+        'edit_seminariste' => 'Modification séminariste', 'edit_membre' => 'Modification membre', 'edit_user' => 'Modification compte admin',
+        'users' => 'Comptes admin', 'identifiants' => 'Identifiants', 'notes' => 'Saisie des notes', 'matieres' => 'Matières et résultats',
+        'questions' => 'Questions du test', 'config_quiz' => 'Config quiz', 'test_entree' => "Test d'entrée", 'listes' => 'Listes',
+        'dortoirs' => 'Dortoirs', 'parametres' => 'Paramètres du site', 'verifier' => 'Vérification de reçu', 'scanner' => 'Scanner de reçus', 'pdf' => 'Document',
+        'critiques' => 'Critiques', 'correction' => 'Correction',
+    ];
+    $verbes = ['valider' => 'a validé', 'rejeter' => 'a rejeté', 'supprimer' => 'a supprimé', 'publier' => 'a publié', 'reset' => 'a réinitialisé'];
+    $verbe = $verbes[$action] ?? ('a fait « ' . $action . ' »');
+    $libelle = ($libelles[$script] ?? $script) . ' : ' . $verbe;
+
+    // Personne / élément concerné (résolu AVANT l'exécution de l'action : l'élément peut être supprimé ensuite)
+    $id = (int)($_POST['paiement_id'] ?? $_POST['id'] ?? $_GET['id'] ?? $_GET['supprimer'] ?? 0);
+    $cible = '';
+    try {
+        if ($id > 0) {
+            if ($script === 'paiements') {
+                $st = $pdo->prepare("SELECT s.nom_prenoms FROM paiements p JOIN seminaristes s ON s.id = p.seminariste_id WHERE p.id = ?");
+            } elseif (in_array($script, ['seminaristes', 'edit_seminariste', 'listes', 'notes', 'pdf', 'correction', 'seminariste_detail'], true)) {
+                $tMembre = $script === 'pdf' && in_array($_GET['type'] ?? '', ['badge_com', 'diplome_com'], true);
+                $st = $pdo->prepare($tMembre ? "SELECT nom_prenoms FROM membres_commission WHERE id = ?" : "SELECT nom_prenoms FROM seminaristes WHERE id = ?");
+            } elseif (in_array($script, ['commissions', 'edit_membre'], true)) {
+                $st = $pdo->prepare("SELECT nom_prenoms FROM membres_commission WHERE id = ?");
+            } elseif (in_array($script, ['users', 'edit_user'], true)) {
+                $st = $pdo->prepare("SELECT nom_affiche FROM comptes WHERE id = ?");
+            } else { $st = null; }
+            if ($st) { $st->execute([$id]); $cible = (string)$st->fetchColumn(); }
+        }
+    } catch (Throwable $e) { $cible = ''; }
+    if ($cible === '' && $id > 0) { $cible = '#' . $id; }
+    if ($script === 'pdf' && isset($_GET['tous'])) { $cible = 'tous'; }
+
+    $compte = $u;
+    register_shutdown_function(function () use ($pdo, $libelle, $cible, $compte) { journaliser($pdo, $libelle, $cible, $compte); });
+}

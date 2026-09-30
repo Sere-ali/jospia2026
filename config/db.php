@@ -26,19 +26,6 @@ define('EVENT_JOUR_DEBUT', '22');
 define('EVENT_JOUR_FIN', '28');
 define('EVENT_MOIS_ANNEE', 'DÉCEMBRE 2026');
 
-// Lien de paiement Wave marchand
-// Numéro Wave qui reçoit les paiements (chiffres, sans +225)
-define('WAVE_NUMERO', getenv('WAVE_NUMERO') ?: '0767752772');
-define('WAVE_PAYMENT_LINK', getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/M_ci_LhLv7A4lJDJ8/c/ci/');
-
-// Frais de participation au séminaire
-define('FRAIS_PARTICIPATION', 5100);
-
-// Seuil d'âge (inclus) jusqu'auquel le DORTOIR attribué devient
-// automatiquement "Pépinière" (ex. 9 = "9 ans et moins").
-// Le sous-comité et la section choisis, eux, ne sont jamais modifiés.
-define('AGE_PEPINIERE_SEUIL', 9);
-
 /**
  * BASE_URL - détecté automatiquement, quel que soit le nom/emplacement du
  * dossier du site (racine du serveur, /jospia2026/, /monsite/, etc.).
@@ -79,6 +66,24 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données. Vérifiez config/db et que MySQL est démarré. (" . $e->getMessage() . ")");
 }
+
+// Paramètres modifiables par le super administrateur (page « Paramètres du site »), stockés en base.
+// Valeurs par défaut = anciennes constantes.
+$JOS_PARAMS = [];
+try {
+    foreach ($pdo->query("SELECT cle, valeur FROM parametres")->fetchAll() as $__p) { $JOS_PARAMS[$__p['cle']] = $__p['valeur']; }
+} catch (Throwable $e) { /* table absente au tout premier démarrage : valeurs par défaut */ }
+
+// Numéro Wave qui reçoit les paiements (chiffres, sans +225)
+define('WAVE_NUMERO', preg_replace('/\D+/', '', $JOS_PARAMS['wave_numero'] ?? '') ?: (getenv('WAVE_NUMERO') ?: '0767752772'));
+// Lien de paiement Wave marchand
+define('WAVE_PAYMENT_LINK', ($JOS_PARAMS['wave_payment_link'] ?? '') !== '' ? $JOS_PARAMS['wave_payment_link'] : (getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/M_ci_LhLv7A4lJDJ8/c/ci/'));
+// Frais de participation au séminaire (FCFA)
+define('FRAIS_PARTICIPATION', max(0, (int)($JOS_PARAMS['frais_participation'] ?? 5100)));
+// Seuil d'âge (inclus) jusqu'auquel le DORTOIR attribué devient automatiquement "Pépinière"
+define('AGE_PEPINIERE_SEUIL', (int)($JOS_PARAMS['age_pepiniere'] ?? 9));
+// Durée du test d'entrée (minutes)
+define('DUREE_TEST_MINUTES', max(1, (int)($JOS_PARAMS['duree_test_minutes'] ?? 20)));
 
 // Auto-migration : vérifiée une seule fois par démarrage du serveur (drapeau en mémoire/disque),
 // et non à chaque requête, pour ne pas ralentir le site.
