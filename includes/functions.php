@@ -170,5 +170,6 @@ function numeroWaveAffiche() {
 /** Lien de paiement Wave (marchand) avec le montant, ou null s'il n'est pas configuré. */
 function lienWavePaiement() {
     if (strpos(WAVE_PAYMENT_LINK, 'VOTRE_MARCHAND_ID') !== false) return null;
-    return WAVE_PAYMENT_LINK . (strpos(WAVE_PAYMENT_LINK, '?') === false ? '?' : '&') . 'amount=' . (int)FRAIS_PARTICIPATION;
+    $base = preg_replace('/[?&]amount=\d+/', '', WAVE_PAYMENT_LINK);
+    return $base . (strpos($base, '?') === false ? '?' : '&') . 'amount=' . (int)FRAIS_PARTICIPATION;
 }
