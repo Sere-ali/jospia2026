@@ -23,7 +23,6 @@ $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansS
             <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
             <a href="<?= BASE_URL ?>/admin/users" class="btn btn-sm <?= $pageAdmin==='users.php'?'btn-primaire':'btn-outline' ?>">🔑 Comptes admin</a>
             <a href="<?= BASE_URL ?>/admin/activite" class="btn btn-sm <?= $pageAdmin==='activite.php'?'btn-primaire':'btn-outline' ?>">📋 Activité journalière</a>
-            <a href="<?= BASE_URL ?>/admin/commissions_noms" class="btn btn-sm <?= $pageAdmin==='commissions_noms.php'?'btn-primaire':'btn-outline' ?>">🏷️ Noms des commissions</a>
             <a href="<?= BASE_URL ?>/admin/parametres" class="btn btn-sm <?= $pageAdmin==='parametres.php'?'btn-primaire':'btn-outline' ?>">⚙️ Paramètres du site</a>
         <?php endif; ?>
     </div>
