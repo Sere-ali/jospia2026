@@ -170,33 +170,6 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
             </table>
         </div>
 
-        <?php if ($sansId): ?>
-        <details class="carte" style="margin-top:20px;overflow-x:auto;">
-            <summary style="cursor:pointer;font-weight:bold;">Sans paiement confirmé (<?= count($sansId) ?>) - paiement non effectué ou échoué (ex. solde insuffisant) : non validable</summary>
-            <table style="margin-top:10px;">
-                <thead><tr><th>Date</th><th>Séminariste</th><th>Contact</th><th>Info</th><?php if (estSuperAdmin()): ?><th></th><?php endif; ?></tr></thead>
-                <tbody>
-                <?php foreach ($sansId as $p): ?>
-                    <tr>
-                        <td style="font-size:0.9rem;"><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
-                        <td><strong><?= e($p['nom_prenoms']) ?></strong><br><small class="tag"><?= e($p['matricule']) ?></small></td>
-                        <td><?= e($p['contact']) ?></td>
-                        <td><small style="color:var(--texte-doux)">Aucun ID de transaction reçu</small></td>
-                        <?php if (estSuperAdmin()): ?>
-                        <td>
-                            <form method="post" onsubmit="return confirm('Supprimer cette ligne ?');">
-                                <input type="hidden" name="paiement_id" value="<?= (int)$p['id'] ?>">
-                                <input type="hidden" name="action" value="supprimer">
-                                <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
-                            </form>
-                        </td>
-                        <?php endif; ?>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </details>
-        <?php endif; ?>
     </div>
 </section>
 
