@@ -84,7 +84,11 @@ function sectionsParAnyama() {
 }
 
 function listeCommissions() {
-    return ['MG', 'MGA', 'ADMINISTRATION', 'SCIENTIFIQUE', 'MIC', 'FINANCE', 'SANTÉ', 'SÉCURITÉ', 'HYGIÈNE', 'PÉPINIÈRE', 'RESTAURATION', 'LOGISTIQUE', 'PROTOCOLE'];
+    $defaut = ['MG', 'MGA', 'ADMINISTRATION', 'SCIENTIFIQUE', 'MIC', 'FINANCE', 'SANTÉ', 'SÉCURITÉ', 'HYGIÈNE', 'PÉPINIÈRE', 'RESTAURATION', 'LOGISTIQUE', 'PROTOCOLE'];
+    $enBase = trim((string)parametre('liste_commissions', ''));
+    if ($enBase === '') return $defaut;
+    $liste = array_values(array_filter(array_map('trim', preg_split('/\R/u', $enBase)), 'strlen'));
+    return $liste ?: $defaut;
 }
 
 /**
