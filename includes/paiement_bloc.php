@@ -22,7 +22,10 @@ $lienWaveConfigure = lienWavePaiement() !== null;
                 <button type="button" class="btn btn-sm btn-outline" onclick="navigator.clipboard && navigator.clipboard.writeText('<?= e(WAVE_NUMERO) ?>'); this.textContent='Copié ✓';">Copier</button>
             </div>
             <?php if ($lienWaveConfigure): ?>
-                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+            <?php else: ?>
+                <button type="button" class="btn btn-wave" id="btn-wave">💙 Payer avec Wave</button>
+                <small style="display:block;color:var(--texte-doux);margin-top:4px;">Le numéro est copié automatiquement, puis l'application Wave s'ouvre : collez le numéro et envoyez <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
             <?php endif; ?>
         </li>
         <li>La <strong>commission Finance</strong> reçoit votre paiement sur son compte Wave et le valide. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors (page « Suivre mon paiement »).</li>
@@ -36,3 +39,25 @@ $lienWaveConfigure = lienWavePaiement() !== null;
         <button type="submit" class="btn btn-primaire btn-block">Envoyer l'ID de transaction</button>
     </form>
 </div>
+
+<script>
+(function () {
+    var btn = document.getElementById('btn-wave');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+        var numero = '<?= e(WAVE_NUMERO) ?>';
+        if (navigator.clipboard) { navigator.clipboard.writeText(numero).catch(function () {}); }
+        var ua = navigator.userAgent || '';
+        if (/Android/i.test(ua)) {
+            // ouvre l'application Wave (sinon Play Store)
+            window.location.href = 'intent://#Intent;package=com.wave.personal;S.browser_fallback_url=' +
+                encodeURIComponent('https://play.google.com/store/apps/details?id=com.wave.personal') + ';end';
+        } else if (/iPhone|iPad|iPod/i.test(ua)) {
+            window.location.href = 'https://apps.apple.com/app/wave-mobile-money/id1523620198';
+        } else {
+            window.open('https://www.wave.com/fr/', '_blank', 'noopener');
+        }
+        btn.textContent = '✔ Numéro copié — ouvrez Wave et payez';
+    });
+})();
+</script>
