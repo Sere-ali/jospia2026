@@ -13,6 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
     if ($action === 'valider') {
         validerPaiement($pdo, $paiement_id, (int)$admin_id);
         $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
+    } elseif ($action === 'supprimer') {
+        if (estSuperAdmin()) {
+            $pdo->prepare("DELETE FROM paiements WHERE id = ?")->execute([$paiement_id]);
+            $_SESSION['flash_succes'] = "Paiement supprimé de la liste.";
+        } else {
+            $_SESSION['flash_succes'] = "Seul le super administrateur peut supprimer un paiement.";
+        }
     } elseif ($action === 'rejeter') {
         $motif = trim($_POST['motif_rejet'] ?? '');
         $stmt = $pdo->prepare("UPDATE paiements SET statut = 'rejeté', motif_rejet = ?, admin_validateur_id = ? WHERE id = ?");
@@ -131,6 +138,13 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                                     <?= ucfirst($p['statut']) ?> par <?= e($p['admin_nom'] ?? 'Admin') ?><br>
                                     <?= $p['motif_rejet'] ? 'Motif: ' . e($p['motif_rejet']) : '' ?>
                                 </small>
+                            <?php endif; ?>
+                            <?php if (estSuperAdmin()): ?>
+                                <form method="post" style="margin-top:6px;" onsubmit="return confirm('Supprimer définitivement ce paiement de <?= e(addslashes($p['nom_prenoms'])) ?> ?<?= $p['statut'] === 'validé' ? ' Son reçu disparaîtra et il devra payer de nouveau pour accéder à son espace.' : '' ?>');">
+                                    <input type="hidden" name="paiement_id" value="<?= (int)$p['id'] ?>">
+                                    <input type="hidden" name="action" value="supprimer">
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                </form>
                             <?php endif; ?>
                         </td>
                     </tr>
