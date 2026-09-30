@@ -166,3 +166,9 @@ function validerPaiement(PDO $pdo, int $paiementId, int $validateurId): bool {
 function numeroWaveAffiche() {
     return '+225 ' . trim(chunk_split(WAVE_NUMERO, 2, ' '));
 }
+
+/** Lien de paiement Wave (marchand) avec le montant, ou null s'il n'est pas configuré. */
+function lienWavePaiement() {
+    if (strpos(WAVE_PAYMENT_LINK, 'VOTRE_MARCHAND_ID') !== false) return null;
+    return WAVE_PAYMENT_LINK . (strpos(WAVE_PAYMENT_LINK, '?') === false ? '?' : '&') . 'amount=' . (int)FRAIS_PARTICIPATION;
+}

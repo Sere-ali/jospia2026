@@ -10,6 +10,20 @@ if (!estConnecte() || $_SESSION['compte']['role'] !== 'seminariste') {
 $compte = $_SESSION['compte'];
 $seminariste_id = $compte['seminariste_id'];
 
+// Juste après l'inscription : envoi direct vers Wave (si un lien de paiement est configuré)
+$nouveau = isset($_GET['nouveau']);
+if ($nouveau && lienWavePaiement() && empty($_SESSION['wave_redirige'])) {
+    $_SESSION['wave_redirige'] = 1;
+    header('Location: ' . lienWavePaiement());
+    exit;
+}
+$matriculeNouveau = null;
+if ($nouveau) {
+    $stM = $pdo->prepare("SELECT matricule FROM seminaristes WHERE id = ?");
+    $stM->execute([$seminariste_id]);
+    $matriculeNouveau = $stM->fetchColumn() ?: null;
+}
+
 // Récupérer le statut actuel du paiement
 $stmt = $pdo->prepare("SELECT * FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");
 $stmt->execute([$seminariste_id]);
@@ -45,6 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container" style="max-width: 600px; margin-top: 2rem;">
     <div class="card p-4">
+        <?php if ($matriculeNouveau): ?>
+            <div class="alert alert-succes">✔ Inscription enregistrée — matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
+        <?php endif; ?>
         <h2 style="color:var(--primaire);text-align:center;margin-bottom:1rem;">Validation de votre paiement</h2>
         
         <?php if ($erreur): ?><div class="alert alert-erreur"><?= e($erreur) ?></div><?php endif; ?>

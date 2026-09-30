@@ -87,6 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        if (estConnecte()) {
+            redirect('/paiement.php?nouveau=1');
+        }
+
         $succes = "Inscription réussie ! Votre dortoir a été attribué automatiquement : $dortoir.";
         $identifiantsGeneres = ['id' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir, 'anyama' => $anyama, 'section' => $sectionFinale];
     }
@@ -228,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </fieldset>
 
-                <button type="submit" class="btn btn-primaire btn-block">Valider mon inscription</button>
+                <button type="submit" class="btn btn-primaire btn-block">Valider mon inscription et payer par Wave</button>
             </form>
         <?php endif; ?>
     </div>

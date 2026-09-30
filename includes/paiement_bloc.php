@@ -10,7 +10,7 @@ if (!empty($_SESSION['compte']['seminariste_id'])) {
     $stNP->execute([$_SESSION['compte']['seminariste_id']]);
     $numeroPayeur = $stNP->fetchColumn() ?: null;
 }
-$lienWaveConfigure = strpos(WAVE_PAYMENT_LINK, 'VOTRE_MARCHAND_ID') === false;
+$lienWaveConfigure = lienWavePaiement() !== null;
 ?>
 <div class="pay-bloc">
     <h3>💳 Paiement des frais de participation</h3>
@@ -22,7 +22,7 @@ $lienWaveConfigure = strpos(WAVE_PAYMENT_LINK, 'VOTRE_MARCHAND_ID') === false;
                 <button type="button" class="btn btn-sm btn-outline" onclick="navigator.clipboard && navigator.clipboard.writeText('<?= e(WAVE_NUMERO) ?>'); this.textContent='Copié ✓';">Copier</button>
             </div>
             <?php if ($lienWaveConfigure): ?>
-                <a href="<?= e(WAVE_PAYMENT_LINK) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer avec Wave</a>
+                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
             <?php endif; ?>
         </li>
         <li>La <strong>commission Finance</strong> reçoit votre paiement sur son compte Wave et le valide. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors (page « Suivre mon paiement »).</li>
