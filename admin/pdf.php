@@ -39,7 +39,7 @@ switch ($type) {
     case 'diplome_com':
         $l = lignesPar($pdo, 'membres_commission', $ids, false);
         if (!$l) { die("Membre introuvable."); }
-        pdfDiplomesA4($l, function ($m) { return pdfDiplomeCommission($m['nom_prenoms'], 'MEMBRE DE LA COMMISSION ' . $m['commission']); }, 'diplome_' . preg_replace('/[^A-Za-z0-9]+/', '_', $l[0]['nom_prenoms']) . '.pdf');
+        pdfDiplomesA4($l, function ($m) { return pdfDiplomeCommission($m['nom_prenoms'], 'MEMBRE DE LA COMMISSION ' . nomCommissionComplet($m['commission'])); }, 'diplome_' . preg_replace('/[^A-Za-z0-9]+/', '_', $l[0]['nom_prenoms']) . '.pdf');
     default:
         http_response_code(400);
         die('Type de document inconnu.');

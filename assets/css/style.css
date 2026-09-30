@@ -1008,6 +1008,18 @@ footer a { color: #fff; font-weight: 600; }
     -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 calc(var(--u) * 3) calc(var(--u) * 2) rgba(0,0,0,.3));
 }
+.jos-badge__com2 {
+    position: absolute; left: calc(var(--u) * 160); width: calc(var(--u) * 594);
+    top: calc(var(--u) * 980); height: calc(var(--u) * 100);
+    display: flex; align-items: center; justify-content: center;
+}
+.jos-badge__com2 .valeur {
+    flex: none; text-align: center; white-space: nowrap; font-weight: 800; text-transform: uppercase; letter-spacing: .01em;
+    font-size: calc(var(--u) * 42 * var(--fit, 1)); line-height: 1.02;
+    background: linear-gradient(180deg, #F0CF73 0%, #D6A93F 55%, #B98526 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 calc(var(--u) * 3) calc(var(--u) * 2) rgba(0,0,0,.3));
+}
 .jos-badge__com.large { left: calc(var(--u) * 160); width: calc(var(--u) * 594); }
 .jos-badge__com.large .deco { display: none; }
 

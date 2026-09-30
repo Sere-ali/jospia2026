@@ -18,7 +18,7 @@ require_once __DIR__ . '/../includes/header.php';
             <a href="<?= BASE_URL ?>/admin/pdf?type=diplome_com&id=<?= (int)$membre['id'] ?>" class="btn btn-primaire">⬇️ Télécharger le diplôme en PDF (A4)</a>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
-        <?php $nomCertificat = $membre['nom_prenoms']; $qualiteCertificat = 'MEMBRE DE LA COMMISSION ' . $membre['commission']; require __DIR__ . '/../includes/certificat_carte.php'; ?>
+        <?php $nomCertificat = $membre['nom_prenoms']; $qualiteCertificat = 'MEMBRE DE LA COMMISSION ' . nomCommissionComplet($membre['commission']); require __DIR__ . '/../includes/certificat_carte.php'; ?>
     </div>
 </section>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

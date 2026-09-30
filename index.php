@@ -29,7 +29,7 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
                     <div class="arche-dates">
                         <strong><?= e(EVENT_JOUR_DEBUT) ?> - <?= e(EVENT_JOUR_FIN) ?></strong>
                         <span><?= e(mb_convert_case(EVENT_MOIS_ANNEE, MB_CASE_TITLE, 'UTF-8')) ?></span>
-                        <small>La Perruche d'Anyama</small>
+                        <small>Collège privé Henriette Dagri-Diabaté d'Anyama</small>
                     </div>
                 </div>
             </div>

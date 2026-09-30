@@ -87,6 +87,31 @@ function listeCommissions() {
     return ['MG', 'MGA', 'ADMINISTRATION', 'SCIENTIFIQUE', 'MIC', 'FINANCE', 'SANTÉ', 'SÉCURITÉ', 'HYGIÈNE', 'PÉPINIÈRE', 'RESTAURATION', 'LOGISTIQUE', 'PROTOCOLE'];
 }
 
+/**
+ * Noms complets des commissions (badges et certificats). Modifiables par le super administrateur
+ * dans « Paramètres du site » (une ligne par commission : SIGLE = Nom complet).
+ */
+function nomsCommissionsComplets() {
+    static $map = null;
+    if ($map !== null) return $map;
+    $map = [
+        'LOGISTIQUE' => 'Logistique et Transport',
+        'HYGIÈNE' => 'Hygiène et Cadre de vie',
+    ];
+    foreach (preg_split('/\R/u', (string)parametre('noms_commissions', '')) as $ligne) {
+        if (strpos($ligne, '=') === false) continue;
+        [$court, $long] = array_map('trim', explode('=', $ligne, 2));
+        if ($court !== '' && $long !== '') { $map[mb_strtoupper($court, 'UTF-8')] = $long; }
+    }
+    return $map;
+}
+
+function nomCommissionComplet($commission) {
+    $c = trim((string)$commission);
+    $map = nomsCommissionsComplets();
+    return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
+}
+
 /** Calcule le niveau d'affectation académique/spirituel à partir de la note /20 */
 function determinerNiveauTest($note) {
     if ($note < 5)  return 'Primaire';

@@ -128,6 +128,40 @@ function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 1.25) {
     return $im;
 }
 
+
+/** Texte doré (dégradé) sur 1 ou plusieurs lignes centrées en ($cx, $cy). */
+function pdfTexteDore($im, $W, $H, array $lignes, $police, $taille, $cx, $cy) {
+    $inter = 1.02 * $taille; $n = count($lignes);
+    $maxL = 0;
+    foreach ($lignes as $l) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $l, 0.01 * $taille)); }
+    $tw = (int)ceil($maxL) + 12; $th = (int)ceil($n * $inter + $taille * 0.5);
+    $x0 = (int)floor($cx - $tw / 2); $y0 = (int)floor($cy - $n * $inter / 2 - $taille * 0.15);
+    if ($tw <= 0 || $th <= 0) return;
+    $masque = imagecreatetruecolor($tw, $th);
+    imagefill($masque, 0, 0, imagecolorallocate($masque, 0, 0, 0));
+    $bl = imagecolorallocate($masque, 255, 255, 255);
+    foreach ($lignes as $i => $l) {
+        $lw = pdfLargeurTexte($taille, $police, $l, 0.01 * $taille);
+        $centreLigne = $cy - $n * $inter / 2 + ($i + 0.5) * $inter;
+        pdfEcrire($masque, $taille, ($tw - $lw) / 2, pdfBaseline($police, $taille, $centreLigne) - $y0, $bl, $police, $l, 0.01 * $taille);
+    }
+    for ($j = 0; $j < $th; $j++) {
+        $t = $j / max(1, $th - 1);
+        if ($t < 0.55) { $k = $t / 0.55; $r = 0xF0 + (0xD6 - 0xF0) * $k; $g = 0xCF + (0xA9 - 0xCF) * $k; $b = 0x73 + (0x3F - 0x73) * $k; }
+        else { $k = ($t - 0.55) / 0.45; $r = 0xD6 + (0xB9 - 0xD6) * $k; $g = 0xA9 + (0x85 - 0xA9) * $k; $b = 0x3F + (0x26 - 0x3F) * $k; }
+        for ($i2 = 0; $i2 < $tw; $i2++) {
+            $a = imagecolorat($masque, $i2, $j) & 0xFF;
+            if ($a < 4) continue;
+            $px = $x0 + $i2; $py = $y0 + $j;
+            if ($px < 0 || $py < 0 || $px >= $W || $py >= $H) continue;
+            $dst = imagecolorat($im, $px, $py);
+            $dr = ($dst >> 16) & 255; $dg = ($dst >> 8) & 255; $db = $dst & 255; $al = $a / 255;
+            imagesetpixel($im, $px, $py, ((int)round($dr + ($r - $dr) * $al) << 16) | ((int)round($dg + ($g - $dg) * $al) << 8) | (int)round($db + ($b - $db) * $al));
+        }
+    }
+    imagedestroy($masque);
+}
+
 /** Badge Commission (vert) 904 x 1280 -> image GD. */
 function pdfBadgeCommission(PDO $pdo, array $m, $S = 1.25) {
     $W = (int)round(904 * $S); $H = (int)round(1280 * $S);
@@ -156,8 +190,18 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 1.25) {
         pdfEcrire($im, $taille, $x, $y, $blanc, $police, $l, 0.01 * $taille);
     }
 
-    // Commission : texte doré entre deux filets
-    $com = mb_strtoupper((string)$m['commission'], 'UTF-8');
+    // Commission : texte doré entre deux filets (nom complet ; sur 2 lignes si long)
+    $com = mb_strtoupper(nomCommissionComplet($m['commission']), 'UTF-8');
+    if (mb_strlen($com, 'UTF-8') > 14) {
+        $lignesCom = josLignesNom($com);
+        $police = 'barlow-latin-800-normal.ttf';
+        $taille = 42 * $S; $maxL = 0;
+        foreach ($lignesCom as $l) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $l, 0.01 * $taille)); }
+        $dispo = 594 * $S * 0.96;
+        if ($maxL > $dispo) { $taille *= $dispo / $maxL; }
+        pdfTexteDore($im, $W, $H, $lignesCom, $police, $taille, (160 + 594 / 2) * $S, (980 + 100 / 2) * $S + 2 * $S);
+        return $im;
+    }
     $police = 'barlow-latin-800-normal.ttf';
     $bx = 232; $bw = 450; $by = 985; $bh = 90;
     $taille = 84 * $S;

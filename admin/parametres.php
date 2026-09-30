@@ -26,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$erreurs) {
         $v['wave_numero'] = numeroLocal($v['wave_numero']);
         foreach ($bascules as $cle => $b) { $v[$cle] = isset($_POST[$cle]) ? '1' : '0'; }
-        $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
+        $v['noms_commissions'] = trim(str_replace("\r", '', $_POST['noms_commissions'] ?? ''));
+        $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur TEXT NOT NULL) ENGINE=InnoDB");
+        try { $pdo->exec("ALTER TABLE parametres MODIFY valeur TEXT NOT NULL"); } catch (Throwable $e) { /* déjà TEXT */ }
         $st = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
         foreach ($v as $cle => $val) { $st->execute([$cle, $val]); }
         $_SESSION['flash_succes'] = "Paramètres enregistrés.";
@@ -54,6 +56,17 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <?php foreach ($bascules as $cle => [$lib, $def]): ?>
                 <label class="option-item" style="display:block;margin-bottom:8px;"><input type="checkbox" name="<?= $cle ?>" value="1" <?= ($_SERVER['REQUEST_METHOD'] === 'POST' ? isset($_POST[$cle]) : parametre($cle, $def) === '1') ? 'checked' : '' ?>> <?= e($lib) ?></label>
             <?php endforeach; ?>
+            <h3 style="margin-top:20px;">Noms complets des commissions</h3>
+            <p class="help-text">Affichés sur les badges et les certificats. Une ligne par commission : <code>SIGLE = Nom complet</code>. Exemple : <code>MIC = Mobilisation, Information et Communication</code></p>
+            <?php
+            $noms = $_POST['noms_commissions'] ?? null;
+            if ($noms === null) {
+                $noms = [];
+                foreach (listeCommissions() as $c) { $noms[] = $c . ' = ' . nomCommissionComplet($c); }
+                $noms = implode("\n", $noms);
+            }
+            ?>
+            <textarea name="noms_commissions" rows="14" style="font-family:var(--police-mono);"><?= e($noms) ?></textarea>
             <button type="submit" class="btn btn-primaire" style="margin-top:14px;">Enregistrer les paramètres</button>
         </form>
         <p style="color:var(--texte-doux);margin-top:12px;">Les changements s'appliquent immédiatement à tout le site (page de paiement, inscriptions, test d'entrée...).</p>

@@ -70,3 +70,5 @@ CREATE TABLE IF NOT EXISTS journal_activite (
     INDEX idx_journal_date (created_at),
     INDEX idx_journal_compte (compte_id)
 ) ENGINE=InnoDB;
+
+ALTER TABLE parametres MODIFY valeur TEXT NOT NULL;
