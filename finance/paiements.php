@@ -113,7 +113,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <div style="display: flex; gap: 5px;">
-                                    <form method="post" onsubmit="return confirm('Confirmer que les 5 000 FCFA ont bien été reçus sur Wave ?');">
+                                    <form method="post" onsubmit="return confirm('Confirmer que les 5 100 FCFA ont bien été reçus sur Wave ?');">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="valider">
                                         <button type="submit" class="btn btn-primaire btn-sm">Valider</button>

@@ -32,7 +32,7 @@ define('WAVE_NUMERO', getenv('WAVE_NUMERO') ?: '0767752772');
 define('WAVE_PAYMENT_LINK', getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/M_ci_LhLv7A4lJDJ8/c/ci/');
 
 // Frais de participation au séminaire
-define('FRAIS_PARTICIPATION', 5000);
+define('FRAIS_PARTICIPATION', 5100);
 
 // Seuil d'âge (inclus) jusqu'auquel le DORTOIR attribué devient
 // automatiquement "Pépinière" (ex. 9 = "9 ans et moins").
