@@ -1016,10 +1016,10 @@ footer a { color: #fff; font-weight: 600; }
 @font-face { font-family: 'JosTinos'; font-weight: 700; font-display: block; src: url('../fonts/tinos-latin-700-normal.woff2') format('woff2'); }
 .jos-cert__qualite {
     position: absolute; left: calc(var(--u) * 140); width: calc(var(--u) * 1000);
-    top: calc(var(--u) * 496); height: calc(var(--u) * 34);
+    top: calc(var(--u) * 493); height: calc(var(--u) * 34);
     display: flex; align-items: center; justify-content: center;
     font-family: 'JosTinos', 'Times New Roman', Times, serif; color: #111;
-    font-size: calc(var(--u) * 28.4 * var(--fit, 1));
+    font-size: calc(var(--u) * 29.2 * var(--fit, 1));
 }
 .jos-cert__qualite span { white-space: nowrap; }
 @page jos-cert { size: A4 landscape; margin: 0; }
