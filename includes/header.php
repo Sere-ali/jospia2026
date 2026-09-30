@@ -15,6 +15,7 @@ $page = basename($_SERVER['PHP_SELF']);
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= @filemtime(__DIR__ . "/../assets/css/style.css") ?>">
 <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/theme.css?v=<?= @filemtime(__DIR__ . "/../assets/css/theme.css") ?>">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/form.css?v=<?= @filemtime(__DIR__ . "/../assets/css/form.css") ?>">
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>

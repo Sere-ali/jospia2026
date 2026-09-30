@@ -554,3 +554,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
 })();
+
+// ============================================================
+// Formulaire d'inscription : progression + étapes validées
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('form-inscription');
+    if (!form) return;
+    var barre = document.querySelector('[data-progress-bar]');
+    var txt = document.querySelector('[data-progress-txt]');
+
+    function rempli(champ) {
+        if (champ.type === 'radio') {
+            return !!form.querySelector('input[type=radio][name="' + champ.name + '"]:checked');
+        }
+        if (champ.type === 'file') return champ.files && champ.files.length > 0;
+        return champ.value.trim() !== '';
+    }
+    function maj() {
+        var vus = {}, total = 0, ok = 0;
+        form.querySelectorAll('[required]').forEach(function (c) {
+            if (c.offsetParent === null && c.type !== 'radio' && c.type !== 'file') return;
+            var cle = c.type === 'radio' ? 'r:' + c.name : c.name;
+            if (vus[cle]) return;
+            vus[cle] = true; total++;
+            if (rempli(c)) ok++;
+        });
+        var pct = total ? Math.round(ok * 100 / total) : 0;
+        if (barre) barre.style.width = pct + '%';
+        if (txt) txt.textContent = pct + '%';
+        form.querySelectorAll('fieldset').forEach(function (fs) {
+            var req = fs.querySelectorAll('[required]');
+            var tout = req.length > 0, vu = {};
+            req.forEach(function (c) {
+                if (c.type === 'radio') { if (vu[c.name]) return; vu[c.name] = 1; }
+                if (!rempli(c)) tout = false;
+            });
+            fs.classList.toggle('ok', tout);
+        });
+    }
+    form.addEventListener('input', maj);
+    form.addEventListener('change', maj);
+    setTimeout(maj, 50);
+});

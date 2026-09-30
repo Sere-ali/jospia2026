@@ -100,11 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<section class="section">
-    <div class="container form-wrap">
-        <div class="section-titre">
+<section class="section form-page">
+    <div class="container <?= $succes ? 'form-wrap' : 'form-layout' ?>">
+        <?php if (!$succes): $asideType = 'seminariste'; require __DIR__ . '/includes/form_aside.php'; endif; ?>
+        <div class="<?= $succes ? '' : 'form-main' ?>">
+        <div class="section-titre form-titre">
             <span class="eyebrow">Séminariste</span>
             <h2>Inscription - Séminariste</h2>
+            <p class="form-intro">Les champs marqués <span class="req">*</span> sont obligatoires.</p>
         </div>
 
         <?php if ($succes): ?>
@@ -125,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-erreur"><?= e($err) ?></div>
             <?php endforeach; ?>
 
-            <form method="post" enctype="multipart/form-data" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate class="form-pro" id="form-inscription">
                 <fieldset>
                     <legend>Identité</legend>
                     <div class="form-group">
@@ -223,13 +226,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Photo d'identité <span class="req">*</span></label>
                         <input type="file" name="photo" accept="image/*" required>
-                        <img id="apercu-photo" style="display:none;margin-top:10px;width:100px;height:100px;object-fit:cover;border-radius:8px;">
+                        <div class="help-text">Photo claire, visage bien visible (jpg, png, webp - 5 Mo max). Elle servira à votre badge.</div>
+                        <img id="apercu-photo" alt="Aperçu de la photo" style="display:none;">
                     </div>
                 </fieldset>
 
-                <button type="submit" class="btn btn-primaire btn-block">Valider mon inscription et payer par Wave</button>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Valider mon inscription et payer par Wave</span><i aria-hidden="true">→</i></button>
+                <p class="form-note">💙 Paiement sécurisé par Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</p>
             </form>
         <?php endif; ?>
+        </div>
     </div>
 </section>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

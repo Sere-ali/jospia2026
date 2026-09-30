@@ -47,11 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<section class="section">
-    <div class="container form-wrap">
-        <div class="section-titre">
+<section class="section form-page">
+    <div class="container <?= $succes ? 'form-wrap' : 'form-layout' ?>">
+        <?php if (!$succes): $asideType = 'commission'; require __DIR__ . '/includes/form_aside.php'; endif; ?>
+        <div class="<?= $succes ? '' : 'form-main' ?>">
+        <div class="section-titre form-titre">
             <span class="eyebrow">Commission</span>
             <h2>Inscription - Membre de commission</h2>
+            <p class="form-intro">Les champs marqués <span class="req">*</span> sont obligatoires.</p>
         </div>
 
         <?php if ($succes): ?>
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-erreur"><?= e($err) ?></div>
             <?php endforeach; ?>
 
-            <form method="post" enctype="multipart/form-data" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate class="form-pro" id="form-inscription">
                 <fieldset>
                     <legend>Informations personnelles</legend>
                     <div class="form-group">
@@ -94,11 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label>Photo d'identité <span class="req">*</span></label>
                         <input type="file" name="photo" accept="image/*" required>
                         <div class="help-text">Format jpg/png/webp, 5 Mo max. Utilisée pour générer votre badge.</div>
+                        <img id="apercu-photo" alt="Aperçu de la photo" style="display:none;">
                     </div>
                 </fieldset>
-                <button type="submit" class="btn btn-primaire btn-block">Valider mon inscription</button>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Valider mon inscription</span><i aria-hidden="true">→</i></button>
             </form>
         <?php endif; ?>
+        </div>
     </div>
 </section>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
