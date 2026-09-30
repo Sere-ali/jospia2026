@@ -447,3 +447,110 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 })();
+
+/* =====================================================================
+   Thème : menu mobile, révélations au défilement, compteurs, compte à rebours
+   ===================================================================== */
+(function () {
+    'use strict';
+    var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function init() {
+        // Menu mobile
+        var bouton = document.querySelector('.nav-toggle');
+        var menu = document.getElementById('menu-principal');
+        if (bouton && menu) {
+            bouton.addEventListener('click', function () {
+                var ouvert = menu.classList.toggle('ouvert');
+                bouton.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
+                bouton.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+            });
+            menu.addEventListener('click', function (e) { if (e.target.closest('a')) { menu.classList.remove('ouvert'); bouton.setAttribute('aria-expanded', 'false'); } });
+        }
+
+        // Ombre de la barre au défilement
+        var nav = document.querySelector('.navbar');
+        if (nav) {
+            var suivi = function () { nav.classList.toggle('defile', window.scrollY > 8); };
+            window.addEventListener('scroll', suivi, { passive: true });
+            suivi();
+        }
+
+        // Tableaux : défilement horizontal sur petit écran
+        document.querySelectorAll('table').forEach(function (t) {
+            var p = t.parentElement;
+            if (!p || p.classList.contains('table-scroll') || p.classList.contains('table-wrap')) { return; }
+            var enveloppe = document.createElement('div');
+            enveloppe.className = 'table-scroll';
+            p.insertBefore(enveloppe, t);
+            enveloppe.appendChild(t);
+        });
+
+        // Révélations au défilement (par lots, avec décalage)
+        var cibles = document.querySelectorAll('.section-titre, .carte, fieldset, .stat-card, .fiche, .login-box, .badge-card, .jos-doc');
+        cibles.forEach(function (el) { if (!el.closest('.hero') && !el.classList.contains('rv') && !el.closest('.jos-doc')) { el.classList.add('rv'); } });
+        var rv = document.querySelectorAll('.rv');
+        if (reduit || !('IntersectionObserver' in window)) {
+            rv.forEach(function (el) { el.classList.add('vu'); });
+        } else {
+            var io = new IntersectionObserver(function (entrees) {
+                var lot = 0;
+                entrees.forEach(function (en) {
+                    if (!en.isIntersecting) { return; }
+                    var el = en.target;
+                    if (!el.style.getPropertyValue('--d')) { el.style.setProperty('--d', Math.min(lot * 0.07, 0.35) + 's'); lot++; }
+                    el.classList.add('vu');
+                    io.unobserve(el);
+                    setTimeout(function () { el.style.removeProperty('--d'); }, 1500);
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+            rv.forEach(function (el) { io.observe(el); });
+        }
+
+        // Compteurs animés (statistiques)
+        document.querySelectorAll('.stat-card .chiffre').forEach(function (el) {
+            var texte = el.textContent.trim();
+            var m = texte.match(/^(≤\s*)?([\d\s]+)(.*)$/);
+            if (!m || reduit) { return; }
+            var cible = parseInt(m[2].replace(/\s+/g, ''), 10);
+            if (isNaN(cible) || cible === 0) { return; }
+            var suffixe = m[3], prefixe = m[1] || '';
+            var lance = false;
+            var depart = function () {
+                if (lance) { return; } lance = true;
+                var t0 = performance.now(), duree = 1100;
+                (function pas(t) {
+                    var k = Math.min(1, (t - t0) / duree), v = Math.round(cible * (1 - Math.pow(1 - k, 3)));
+                    el.textContent = prefixe + v.toLocaleString('fr-FR') + suffixe;
+                    if (k < 1) { requestAnimationFrame(pas); } else { el.textContent = texte; }
+                })(t0);
+            };
+            if ('IntersectionObserver' in window) {
+                var o2 = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { depart(); o2.disconnect(); } }, { threshold: 0.4 });
+                o2.observe(el);
+            } else { depart(); }
+        });
+
+        // Compte à rebours
+        var cr = document.querySelector('.compte-rebours[data-cible]');
+        if (cr) {
+            var fin = new Date(cr.getAttribute('data-cible')).getTime();
+            var cases = {};
+            ['j', 'h', 'm', 's'].forEach(function (u) { cases[u] = cr.querySelector('[data-u=' + u + ']'); });
+            var dernier = {};
+            var maj = function () {
+                var reste = Math.max(0, fin - Date.now());
+                var v = { j: Math.floor(reste / 864e5), h: Math.floor(reste / 36e5) % 24, m: Math.floor(reste / 6e4) % 60, s: Math.floor(reste / 1e3) % 60 };
+                Object.keys(v).forEach(function (u) {
+                    if (dernier[u] === v[u] || !cases[u]) { return; }
+                    dernier[u] = v[u];
+                    cases[u].textContent = (u === 'j' ? String(v[u]) : String(v[u]).padStart(2, '0'));
+                    if (!reduit) { cases[u].classList.remove('tic'); void cases[u].offsetWidth; cases[u].classList.add('tic'); }
+                });
+                if (reste === 0) { var l = cr.querySelector('.compte-legende'); if (l) { l.textContent = "C'est parti !"; } }
+            };
+            maj(); setInterval(maj, 1000);
+        }
+    }
+    if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
+})();
