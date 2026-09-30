@@ -166,7 +166,11 @@ require_once __DIR__ . '/../includes/header.php';
                 <p style="color:var(--texte-doux);">Les séminaristes du sous-comité <strong>Pépinière</strong> ne composent pas de test d'entrée. Niveau : <span class="pill pill-vert">Pépinière</span></p>
             <?php elseif (!$seminariste['test_complete']): ?>
                 <p>Vous n'avez pas encore composé le test d'entrée en ligne. Il détermine automatiquement votre niveau d'affectation (Primaire, Secondaire, Universitaire, Leader).</p>
-                <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
+                <?php if (testOuvert($pdo)): ?>
+                    <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
+                <?php else: ?>
+                    <div class="acces-restreint">🔒 Le test d'entrée est verrouillé pour le moment. Il sera ouvert par la commission scientifique : revenez sur cette page à ce moment-là.</div>
+                <?php endif; ?>
             <?php else: ?>
                 <p><strong>Note obtenue :</strong> <?= e($seminariste['note_test']) ?> / 20<br>
                    <strong>Niveau d'affectation :</strong> <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>

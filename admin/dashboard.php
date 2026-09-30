@@ -36,6 +36,9 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <h2>Tableau de bord - <?= EVENT_NAME ?></h2>
         </div>
 
+        <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
+        <?php if (estSuperAdmin()) echo blocTestEntree($pdo); ?>
+
         <div class="grid grid-3" style="margin-bottom:30px;">
             <div class="carte stat-card"><div class="chiffre"><?= $nbMembres ?></div><div class="label">Membres de commission</div></div>
             <div class="carte stat-card"><div class="chiffre"><?= $nbSeminaristes ?></div><div class="label">Séminaristes inscrits</div></div>

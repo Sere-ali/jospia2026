@@ -17,6 +17,10 @@ if ($seminariste['dortoir'] === 'Pépinière') {
     redirect('/espace/fiche');
 }
 
+if (!testOuvert($pdo)) {
+    redirect('/espace/fiche');
+}
+
 // Récupération de la configuration des banques
 $configBanques = $pdo->query("SELECT * FROM config_quiz")->fetchAll();
 $questions = [];
