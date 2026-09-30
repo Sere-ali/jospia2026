@@ -6,7 +6,7 @@
                     <img src="<?= BASE_URL ?>/assets/img/logo.jpg" alt="Logo JOSPIA">
                     <div><strong><?= e(EVENT_NAME) ?></strong><?= e(EVENT_FULL) ?></div>
                 </div>
-                <p style="margin:14px 0 0;max-width:30em;">Du <?= e(EVENT_JOUR_DEBUT) ?> au <?= e(EVENT_JOUR_FIN) ?> <?= e(mb_strtolower(EVENT_MOIS_ANNEE, 'UTF-8')) ?>, au Collège privé Henriette Dagri-Diabaté d'Anyama. Organisé par l'AEEMCI, secrétariat régional Abidjan Nord.</p>
+                <p style="margin:14px 0 0;max-width:30em;">Du <?= e(EVENT_JOUR_DEBUT) ?> au <?= e(EVENT_JOUR_FIN) ?> <?= e(mb_strtolower(EVENT_MOIS_ANNEE, 'UTF-8')) ?>, au Collège privé Henriette Dagri-Diabaté d'Anyama. Organisé par les sous-comités AEEMCI d'Anyama.</p>
             </div>
             <div>
                 <h4>S'inscrire</h4>
