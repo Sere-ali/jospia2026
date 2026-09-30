@@ -1,6 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['scientifique', 'admin', 'superadmin']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'supprimer') {
+    if (estSuperAdmin()) {
+        $idS = (int)($_POST['id'] ?? 0);
+        $pdo->prepare("DELETE FROM comptes WHERE seminariste_id = ?")->execute([$idS]);
+        $pdo->prepare("DELETE FROM seminaristes WHERE id = ?")->execute([$idS]);
+        $_SESSION['flash_succes'] = "Séminariste supprimé.";
+    }
+    redirect('/admin/listes');
+}
 
 // Groupement par dortoir (y compris "Pépinière")
 $parDortoir = [];
@@ -41,6 +51,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-tete" style="text-align:left;">
             <h2>Listes des séminaristes</h2>
         </div>
+        <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
         <div data-onglets style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;" class="no-print">
             <button type="button" class="btn btn-primaire btn-sm actif" data-onglet="dortoir">🛏️ Par dortoir</button>
@@ -64,7 +75,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                     <td><?= e($s['age']) ?></td>
                                     <td><?= e($s['section']) ?></td>
                                     <td><?= e($s['contact']) ?></td>
-                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
+                                    <td class="no-print" style="white-space:nowrap;">
+                                        <?php if (estAdmin()): ?>
+                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                        <?php endif; ?>
+                                        <?php if (estSuperAdmin()): ?>
+                                        <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement <?= e(addslashes($s['nom_prenoms'])) ?> ?');">
+                                            <input type="hidden" name="action" value="supprimer">
+                                            <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                        </form>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -91,7 +113,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                     <td><?= e($s['section']) ?></td>
                                     <td><?= e($s['dortoir']) ?></td>
                                     <td><?= e($s['contact']) ?></td>
-                                    <td class="no-print"><a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️</a></td>
+                                    <td class="no-print" style="white-space:nowrap;">
+                                        <?php if (estAdmin()): ?>
+                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                        <?php endif; ?>
+                                        <?php if (estSuperAdmin()): ?>
+                                        <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement <?= e(addslashes($s['nom_prenoms'])) ?> ?');">
+                                            <input type="hidden" name="action" value="supprimer">
+                                            <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                        </form>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

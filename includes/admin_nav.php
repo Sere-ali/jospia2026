@@ -1,7 +1,7 @@
 <?php
 $pageAdmin = basename($_SERVER['PHP_SELF']);
 // Pages regroupées sous le bouton « Commission scientifique »
-$pagesScientifique = ['commission_scientifique.php', 'notes.php', 'bulletins_impression.php', 'bulletin.php', 'matieres.php', 'questions.php', 'config_quiz.php'];
+$pagesScientifique = ['commission_scientifique.php', 'notes.php', 'bulletins_impression.php', 'bulletin.php', 'listes.php', 'matieres.php', 'questions.php', 'config_quiz.php'];
 $dansScientifique = in_array($pageAdmin, $pagesScientifique, true);
 ?>
 <div class="container" style="margin-top:18px;">
@@ -29,6 +29,7 @@ $dansScientifique = in_array($pageAdmin, $pagesScientifique, true);
         <div class="carte" style="padding:10px 18px;margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <strong style="margin-right:6px;">🔬 Commission scientifique :</strong>
             <a href="<?= BASE_URL ?>/admin/notes" class="btn btn-sm <?= $pageAdmin==='notes.php'?'btn-primaire':'btn-outline' ?>">📝 Saisie des notes</a>
+            <a href="<?= BASE_URL ?>/admin/listes" class="btn btn-sm <?= $pageAdmin==='listes.php'?'btn-primaire':'btn-outline' ?>">📋 Listes dortoir/niveau</a>
             <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-sm <?= in_array($pageAdmin, ['bulletins_impression.php','bulletin.php'], true)?'btn-primaire':'btn-outline' ?>">🖨️ Bulletins (2/page)</a>
             <?php if (estScientifique()): ?>
                 <a href="<?= BASE_URL ?>/admin/matieres" class="btn btn-sm <?= $pageAdmin==='matieres.php'?'btn-primaire':'btn-outline' ?>">📚 Matières & résultats</a>
