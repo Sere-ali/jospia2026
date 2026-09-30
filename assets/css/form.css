@@ -174,3 +174,12 @@
 .form-pro input[name=section_autre] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 21V4M5 4h11l-2 4 2 4H5'/%3E%3C/svg%3E"); }
 .form-pro input[name=maladie_autre] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6.2-8 11-8 11z'/%3E%3C/svg%3E"); }
 .form-pro select[name=commission], .form-pro select[name=anyama], .form-pro select[name=section], .form-pro select[name=maladie] { }
+
+.form-pro input[name=identifiant] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7'/%3E%3C/svg%3E"); }
+.form-pro input[name=mot_de_passe] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='10.5' width='16' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V8a4 4 0 0 1 8 0v2.5'/%3E%3C/svg%3E"); }
+.form-pro input[name=matricule], .form-pro input[name=reference_transaction] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3L7 21M17 3l-2 18M4 9h17M3 15h17'/%3E%3C/svg%3E"); }
+.form-pro input[type=password] { height: 52px; padding: 0 16px 0 46px; border: 2px solid #E4ECE7; border-radius: 14px; background-color: #FAFCFB; background-repeat: no-repeat; background-position: 15px center; background-size: 20px; font-size: 1rem; transition: border-color .2s, box-shadow .25s; }
+.form-pro input[type=password]:focus { border-color: var(--orange); box-shadow: 0 0 0 5px rgba(247,127,0,.15); outline: 0; }
+.login-page { padding: 40px 0 70px; min-height: 70vh; display: flex; align-items: center; }
+.login-page .container { width: 100%; }
+.login-page .login-box, .form-page .carte.form-pro { background: rgba(255,255,255,.95); box-shadow: 0 30px 60px -28px rgba(6,83,47,.5); }

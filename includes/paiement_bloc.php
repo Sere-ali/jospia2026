@@ -40,12 +40,12 @@ if (waveApiActive()):
         <li>La <strong>commission Finance</strong> reçoit votre paiement sur son compte Wave et le valide. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors (page « Suivre mon paiement »).</li>
         <li><em>Facultatif</em> : pour accélérer la validation, saisissez l'<strong>ID de transaction</strong> (SMS ou application Wave, ex. <span class="mono">TCN...</span>).</li>
     </ol>
-    <form method="post" action="<?= e($paiementAction) ?>">
+    <form method="post" action="<?= e($paiementAction) ?>" class="form-pro">
         <div class="form-group">
             <label style="font-weight:bold;">ID de la transaction Wave (facultatif)</label>
             <input type="text" name="reference_transaction" placeholder="Ex : TCN1234ABCD" maxlength="100">
         </div>
-        <button type="submit" class="btn btn-primaire btn-block">Envoyer l'ID de transaction</button>
+        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Envoyer l'ID de transaction</span><i aria-hidden="true">→</i></button>
     </form>
 </div>
 

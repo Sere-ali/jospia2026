@@ -31,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<div class="container">
+<div class="form-page login-page"><div class="container">
     <div class="login-box">
         <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-login" alt="Logo JOSPIA">
         <h2>Connexion</h2>
         <?php if ($erreur): ?><div class="alert alert-erreur"><?= e($erreur) ?></div><?php endif; ?>
-        <form method="post">
+        <form method="post" class="form-pro">
             <div class="form-group">
                 <label>Identifiant (votre numéro sans 225, ou nom d'utilisateur)</label>
                 <input type="text" name="identifiant" required autofocus>
@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Mot de passe</label>
                 <input type="password" name="mot_de_passe" required>
             </div>
-            <button type="submit" class="btn btn-primaire btn-block">Se connecter</button>
+            <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Se connecter</span><i aria-hidden="true">→</i></button>
         </form>
         <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--texte-doux);">
             Inscrit mais sans identifiants ? <a href="<?= BASE_URL ?>/statut">Suivre mon paiement</a><br>Pas encore inscrit ? <a href="<?= BASE_URL ?>/">Choisir un formulaire d'inscription</a>
         </p>
     </div>
-</div>
+</div></div>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

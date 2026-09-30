@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="container" style="max-width: 600px; margin-top: 2rem;">
+<div class="form-page" style="padding:2rem 0 4rem;"><div class="container" style="max-width: 640px;">
     <div class="card p-4">
         <?php if ($matriculeNouveau): ?>
             <div class="alert alert-succes">✔ Inscription enregistrée - matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
@@ -103,6 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php require __DIR__ . '/includes/paiement_bloc.php'; ?>
         <?php endif; ?>
     </div>
-</div>
+</div></div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

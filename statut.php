@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<section class="section">
+<section class="section form-page">
     <div class="container form-wrap">
         <div class="section-titre">
             <span class="eyebrow">Séminariste</span>
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="post" class="carte">
+        <form method="post" class="carte form-pro">
             <div class="form-group">
                 <label>Matricule</label>
                 <input type="text" name="matricule" placeholder="Ex : JOS-002" required value="<?= e($_POST['matricule'] ?? '') ?>">
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Numéro de téléphone utilisé à l'inscription</label>
                 <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" required value="<?= e($_POST['contact'] ?? '') ?>">
             </div>
-            <button class="btn btn-primaire btn-block">Vérifier</button>
+            <button class="btn btn-primaire btn-block btn-envoi"><span>Vérifier</span><i aria-hidden="true">→</i></button>
         </form>
     </div>
 </section>
