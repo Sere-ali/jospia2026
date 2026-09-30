@@ -34,7 +34,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <h2>Membres de commission (<?= count($membres) ?>)</h2>
-            <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">🖨️ Imprimer tous les badges (4/page)</a>
+            <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">⬇️ Télécharger tous les badges en PDF (4/page)</a>
         </div>
 
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">

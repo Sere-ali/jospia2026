@@ -30,7 +30,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($membres) ?> badge(s) - <?= count($pages) ?> page(s)</button>
+            <a href="<?= BASE_URL ?>/admin/pdf?type=badge_com&tous=1&commission=<?= urlencode($filtreCommission) ?>" class="btn btn-primaire">⬇️ Télécharger <?= count($membres) ?> badge(s) en PDF - <?= count($pages) ?> page(s) A4</a>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
 

@@ -15,7 +15,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="container">
         <div class="no-print" style="text-align:center;margin-bottom:20px;">
             <a href="<?= BASE_URL ?>/admin/commissions" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer / Télécharger le diplôme</button>
+            <a href="<?= BASE_URL ?>/admin/pdf?type=diplome_com&id=<?= (int)$membre['id'] ?>" class="btn btn-primaire">⬇️ Télécharger le diplôme en PDF (A4)</a>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
         <?php $nomCertificat = $membre['nom_prenoms']; $qualiteCertificat = 'MEMBRE DE LA COMMISSION ' . $membre['commission']; require __DIR__ . '/../includes/certificat_carte.php'; ?>

@@ -1,114 +1,57 @@
 <?php
-// 1. Définition du type de contenu renvoyé
-header('Content-Type: image/png');
+require_once __DIR__ . '/../includes/init.php';
+exigerRole(['admin', 'superadmin']);
 
-// 2. Chargement du template de base (le badge vide avec arrière-plan et logos)
-// Assurez-vous d'avoir l'image "template_seminaristes.png" vide (sans texte ni photo) dans le dossier.
-$templatePath = 'template_seminaristes.png';
-if (!file_exists($templatePath)) {
-    die("Erreur : Le fichier template '$templatePath' est introuvable.");
-}
-$badge = imagecreatefrompng($templatePath);
+$dortoir = $_GET['dortoir'] ?? '';
+$niveau = $_GET['niveau'] ?? '';
+$sql = "SELECT id, nom_prenoms, dortoir, niveau_affecte, matricule FROM seminaristes WHERE 1=1";
+$params = [];
+if ($dortoir !== '') { $sql .= " AND dortoir = ?"; $params[] = $dortoir; }
+if ($niveau !== '') { $sql .= " AND niveau_affecte = ?"; $params[] = $niveau; }
+$sql .= " ORDER BY dortoir, nom_prenoms";
+$st = $pdo->prepare($sql);
+$st->execute($params);
+$liste = $st->fetchAll();
+$dortoirs = $pdo->query("SELECT DISTINCT dortoir FROM seminaristes WHERE dortoir IS NOT NULL AND dortoir <> '' ORDER BY dortoir")->fetchAll(PDO::FETCH_COLUMN);
+$niveaux = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
+$nbPages = (int)ceil(count($liste) / 4);
+$qs = http_build_query(['type' => 'badge_sem', 'tous' => 1, 'dortoir' => $dortoir, 'niveau' => $niveau]);
 
-// Dimensions du template
-$badgeWidth  = imagesx($badge);
-$badgeHeight = imagesy($badge);
-
-// 3. Configuration des couleurs (RGB)
-$white = imagecolorallocate($badge, 255, 255, 255);
-
-// 4. Données dynamiques du participant (à remplacer par des données de la BDD)
-$nomComple     = "CHEICK OMER DIARRA";
-$dortoir       = "Amir Mamadou Kone 2";
-$niveau        = "Universitaire";
-$matricule     = "JOS202614";
-$photoPath     = "uploads/user_photo.jpg"; // Photo de l'utilisateur
-
-// 5. Intégration de la photo du participant dans le cadre circulaire
-if (file_exists($photoPath)) {
-    // Adapter selon le format de la photo importée
-    $photoSource = imagecreatefromjpeg($photoPath); 
-    
-    // Définir la taille et la position du cercle central sur le badge
-    // (À ajuster en fonction des dimensions réelles de votre template_seminaristes.png)
-    $circleX = 260;     // Position X de la photo
-    $circleY = 380;     // Position Y de la photo
-    $circleSize = 480;  // Diamètre du cadre circulaire
-
-    // Création d'un masque circulaire avec transparence
-    $mask = imagecreatetruecolor($circleSize, $circleSize);
-    imagealphablending($mask, false);
-    imagesavealpha($mask, true);
-    
-    $transparent = imagecolorallocatealpha($mask, 0, 0, 0, 127);
-    $fillColor   = imagecolorallocate($mask, 0, 0, 0);
-    
-    imagefilledrectangle($mask, 0, 0, $circleSize, $circleSize, $transparent);
-    imagefilledellipse($mask, $circleSize / 2, $circleSize / 2, $circleSize, $circleSize, $fillColor);
-
-    // Redimensionnement de la photo source
-    $resizedPhoto = imagecreatetruecolor($circleSize, $circleSize);
-    imagecopyresampled($resizedPhoto, $photoSource, 0, 0, 0, 0, $circleSize, $circleSize, imagesx($photoSource), imagesy($photoSource));
-
-    // Application du masque sur la photo
-    for ($x = 0; $x < $circleSize; $x++) {
-        for ($y = 0; $y < $circleSize; $y++) {
-            $alpha = (imagecolorat($mask, $x, $y) >> 24) & 0x7F;
-            $color = imagecolorat($resizedPhoto, $x, $y);
-            $r = ($color >> 16) & 0xFF;
-            $g = ($color >> 8) & 0xFF;
-            $b = $color & 0xFF;
-            $newColor = imagecolorallocatealpha($resizedPhoto, $r, $g, $b, $alpha);
-            imagesetpixel($resizedPhoto, $x, $y, $newColor);
-        }
-    }
-
-    // Superposition de la photo découpée sur le badge
-    imagecopy($badge, $resizedPhoto, $circleX, $circleY, 0, 0, $circleSize, $circleSize);
-    
-    // Nettoyage des ressources mémoire de la photo
-    imagedestroy($photoSource);
-    imagedestroy($resizedPhoto);
-    imagedestroy($mask);
-}
-
-// 6. Chemin vers la police TTF (ex: Montserrat, Montserrat-Bold)
-// Assurez-vous que le dossier fonts et les polices existent
-$fontBold = __DIR__ . '/fonts/Montserrat-Bold.ttf';
-
-if (!file_exists($fontBold)) {
-    die("Erreur : La police '$fontBold' est introuvable.");
-}
-
-// 7. Écriture des textes sur le badge
-
-// --- NOM DU PARTICIPANT ---
-$fontSizeNom = 32;
-// Centrer horizontalement le nom
-$bbox = imagettfbbox($fontSizeNom, 0, $fontBold, $nomComple);
-$nomX = ($badgeWidth - ($bbox[2] - $bbox[0])) / 2;
-imagettftext($badge, $fontSizeNom, 0, $nomX, 910, $white, $fontBold, $nomComple);
-
-// --- DETAILS (Dortoir, Niveau, Matricule) ---
-$fontSizeDetails = 20;
-$startXLabel = 250;
-$startXValue = 450;
-
-// Dortoir
-imagettftext($badge, $fontSizeDetails, 0, $startXLabel, 980, $white, $fontBold, "DORTOIR :");
-imagettftext($badge, $fontSizeDetails, 0, $startXValue, 980, $white, $fontBold, $dortoir);
-
-// Niveau
-imagettftext($badge, $fontSizeDetails, 0, $startXLabel, 1030, $white, $fontBold, "NIVEAU :");
-imagettftext($badge, $fontSizeDetails, 0, $startXValue, 1030, $white, $fontBold, $niveau);
-
-// Matricule
-imagettftext($badge, $fontSizeDetails, 0, $startXLabel, 1080, $white, $fontBold, "MATRICULE :");
-imagettftext($badge, $fontSizeDetails, 0, $startXValue, 1080, $white, $fontBold, $matricule);
-
-// 8. Génération et affichage de l'image finale
-imagepng($badge);
-
-// 9. Libération de la mémoire
-imagedestroy($badge);
+$titrePage = "Badges des séminaristes (PDF)";
+require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
+<section class="section">
+    <div class="container">
+        <div class="section-tete" style="text-align:left;"><h2>Badges des séminaristes - PDF A4 (4 par page)</h2></div>
+        <div class="carte" style="margin-bottom:18px;">
+            <form method="get" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <select name="dortoir" onchange="this.form.submit()">
+                    <option value="">Tous les dortoirs</option>
+                    <?php foreach ($dortoirs as $d): ?><option value="<?= e($d) ?>" <?= $dortoir === $d ? 'selected' : '' ?>><?= e($d) ?></option><?php endforeach; ?>
+                </select>
+                <select name="niveau" onchange="this.form.submit()">
+                    <option value="">Tous les niveaux</option>
+                    <?php foreach ($niveaux as $n): ?><option value="<?= e($n) ?>" <?= $niveau === $n ? 'selected' : '' ?>><?= e($n) ?></option><?php endforeach; ?>
+                </select>
+                <a href="<?= BASE_URL ?>/admin/pdf?<?= e($qs) ?>" class="btn btn-primaire">⬇️ Télécharger <?= count($liste) ?> badge(s) en PDF - <?= $nbPages ?> page(s) A4</a>
+            </form>
+            <p style="color:var(--texte-doux);margin:10px 0 0;">Le fichier PDF est prêt à imprimer : 4 badges par page A4, avec repères de découpe. Avec beaucoup de badges, la génération peut prendre un peu de temps.</p>
+        </div>
+        <div class="carte" style="overflow-x:auto;">
+            <table>
+                <thead><tr><th>Matricule</th><th>Nom et prénoms</th><th>Dortoir</th><th>Niveau</th><th></th></tr></thead>
+                <tbody>
+                <?php foreach ($liste as $s): ?>
+                    <tr>
+                        <td class="mono"><?= e($s['matricule']) ?></td><td><?= e($s['nom_prenoms']) ?></td><td><?= e($s['dortoir']) ?></td><td><?= e($s['niveau_affecte'] ?: 'Non affecté') ?></td>
+                        <td><a href="<?= BASE_URL ?>/admin/pdf?type=badge_sem&id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">⬇️ PDF</a></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php if (!$liste): ?><tr><td colspan="5" class="text-center">Aucun badge.</td></tr><?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
