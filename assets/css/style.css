@@ -1070,3 +1070,14 @@ footer a { color: #fff; font-weight: 600; }
     font-size: calc(var(--u) * 52 * var(--fit, 1)); letter-spacing: .01em;
 }
 .jos-cert-sem__nom span { white-space: nowrap; }
+
+/* Œil du mot de passe */
+.mdp-wrap { position: relative; display: block; width: 100%; }
+.mdp-wrap input { width: 100%; padding-right: 48px; }
+.mdp-oeil {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    background: none; border: 0; padding: 8px; cursor: pointer; color: #5b6b62; line-height: 0; border-radius: 8px;
+}
+.mdp-oeil:hover { color: var(--vert, #0C5B3A); }
+.mdp-oeil.actif { color: var(--vert, #0C5B3A); }
+.mdp-oeil.actif::after { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 2px; background: currentColor; transform: rotate(-40deg); }

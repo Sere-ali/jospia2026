@@ -260,3 +260,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 })();
+
+/* ---------- Œil pour afficher / masquer le mot de passe ---------- */
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type=password]').forEach(function (champ) {
+        if (champ.dataset.oeil) { return; }
+        champ.dataset.oeil = '1';
+        var enveloppe = document.createElement('div');
+        enveloppe.className = 'mdp-wrap';
+        champ.parentNode.insertBefore(enveloppe, champ);
+        enveloppe.appendChild(champ);
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'mdp-oeil';
+        bouton.setAttribute('aria-label', 'Afficher le mot de passe');
+        bouton.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+        bouton.addEventListener('click', function () {
+            var visible = champ.type === 'text';
+            champ.type = visible ? 'password' : 'text';
+            bouton.classList.toggle('actif', !visible);
+            bouton.setAttribute('aria-label', visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe');
+        });
+        enveloppe.appendChild(bouton);
+    });
+});
