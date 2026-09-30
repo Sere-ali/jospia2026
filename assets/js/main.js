@@ -231,3 +231,94 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('beforeprint', ajuster);
     window.addEventListener('afterprint', ajuster);
 })();
+
+/* ---------- Détourage automatique de la photo (suppression de l'arrière-plan, dans le navigateur) ---------- */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[type=file][name=photo][data-detourage]');
+        if (!input) { return; }
+        var base = (input.getAttribute('data-base') || '') + '/assets/js/vendor/selfie/';
+        var occupe = false, segmenteur = null;
+        var etat = document.createElement('div');
+        etat.className = 'help-text';
+        etat.style.cssText = 'margin-top:6px;font-weight:700;';
+        input.parentNode.appendChild(etat);
+
+        function chargerLib() {
+            return new Promise(function (ok, ko) {
+                if (window.SelfieSegmentation) { return ok(); }
+                var s = document.createElement('script');
+                s.src = base + 'selfie_segmentation.js';
+                s.onload = ok; s.onerror = ko;
+                document.head.appendChild(s);
+            });
+        }
+        function lireImage(fichier) {
+            return new Promise(function (ok, ko) {
+                var url = URL.createObjectURL(fichier), img = new Image();
+                img.onload = function () { URL.revokeObjectURL(url); ok(img); };
+                img.onerror = ko; img.src = url;      // l'orientation EXIF est appliquée par le navigateur
+            });
+        }
+        function segmenter(canvas) {
+            return new Promise(function (ok, ko) {
+                if (!segmenteur) {
+                    segmenteur = new window.SelfieSegmentation({ locateFile: function (f) { return base + f; } });
+                    segmenteur.setOptions({ modelSelection: 0 });
+                }
+                segmenteur.onResults(function (r) { ok(r.segmentationMask); });
+                segmenteur.send({ image: canvas }).catch(ko);
+            });
+        }
+        async function detourer(fichier) {
+            var img = await lireImage(fichier);
+            var max = 1000, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+            var w = Math.round(img.naturalWidth * k), h = Math.round(img.naturalHeight * k);
+            var src = document.createElement('canvas'); src.width = w; src.height = h;
+            src.getContext('2d').drawImage(img, 0, 0, w, h);
+            await chargerLib();
+            var masque = await segmenter(src);
+            // Masque : lissé puis converti en transparence douce
+            var mc = document.createElement('canvas'); mc.width = w; mc.height = h;
+            var mx = mc.getContext('2d');
+            mx.filter = 'blur(1.5px)';
+            mx.drawImage(masque, 0, 0, w, h);
+            var md = mx.getImageData(0, 0, w, h).data;
+            var sx = src.getContext('2d'), px = sx.getImageData(0, 0, w, h), d = px.data, tot = 0;
+            for (var i = 0; i < d.length; i += 4) {
+                var p = md[i] / 255;                                   // probabilité « personne » (canal rouge)
+                var a = Math.min(1, Math.max(0, (p - 0.55) / 0.28));    // seuil doux
+                a = a * a * (3 - 2 * a);
+                d[i + 3] = Math.round(a * 255); tot += a;
+            }
+            // Si presque rien (ou presque tout) n'est détecté, on garde la photo d'origine
+            var part = tot / (w * h);
+            if (part < 0.08 || part > 0.97) { return null; }
+            sx.putImageData(px, 0, 0);
+            return new Promise(function (ok) { src.toBlob(function (b) { ok(b); }, 'image/png'); });
+        }
+
+        input.addEventListener('change', async function () {
+            if (occupe || !input.files || !input.files[0]) { return; }
+            var f = input.files[0];
+            if (f.type === 'image/png' && f.name.indexOf('detoure') === 0) { return; }
+            occupe = true;
+            etat.style.color = '#0C5B3A'; etat.textContent = '⏳ Suppression automatique de l\'arrière-plan…';
+            try {
+                var blob = await detourer(f);
+                if (blob) {
+                    var nouveau = new File([blob], 'detoure_' + Date.now() + '.png', { type: 'image/png' });
+                    var dt = new DataTransfer(); dt.items.add(nouveau); input.files = dt.files;
+                    var ap = document.getElementById('apercu-photo');
+                    if (ap) { ap.src = URL.createObjectURL(nouveau); ap.style.display = 'block'; ap.style.background = 'repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 50% / 14px 14px'; }
+                    etat.textContent = '✅ Arrière-plan supprimé automatiquement.';
+                } else {
+                    etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (personne non détectée). Utilisez de préférence une photo de face, bien éclairée.';
+                }
+            } catch (e) {
+                etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle.';
+            }
+            occupe = false;
+        });
+    });
+})();
