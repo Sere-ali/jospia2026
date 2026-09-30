@@ -890,3 +890,12 @@ footer a { color: #fff; font-weight: 600; }
     font-weight: 900;
     font-size: 1.8rem;
 }
+
+/* Photo : choix fichier ou caméra */
+.photo-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.photo-ou { color: var(--texte-doux, #666); font-size: .85rem; }
+.cam-fond { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.cam-boite { background: #fff; border-radius: 12px; padding: 14px; width: 100%; max-width: 480px; text-align: center; }
+.cam-boite video { width: 100%; max-height: 60vh; border-radius: 8px; background: #000; transform: scaleX(-1); }
+.cam-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px; }
+.cam-msg { margin: 8px 0 0; color: #8a1f1f; font-size: .85rem; }

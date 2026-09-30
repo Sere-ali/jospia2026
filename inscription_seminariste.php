@@ -18,10 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maladie = $_POST['maladie'] ?? 'Aucune';
     $maladieAutre = trim($_POST['maladie_autre'] ?? '');
     $age = (int)($_POST['age'] ?? 0);
-    $contact = trim($_POST['contact'] ?? '');
+    $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
     $parentNom = trim($_POST['parent_nom'] ?? '');
     $parentLien = trim($_POST['parent_lien'] ?? '');
-    $parentContact = trim($_POST['parent_contact'] ?? '');
+    $parentContact = preg_replace('/\D+/', '', $_POST['parent_contact'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($genre, ['Masculin', 'Féminin'], true)) $erreurs[] = "Veuillez préciser le genre.";
@@ -31,10 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($section === 'Autre' && $sectionAutre === '') $erreurs[] = "Veuillez préciser le nom de la section.";
     if ($lieuResidence === '') $erreurs[] = "Le lieu de résidence est obligatoire.";
     if ($age < 5 || $age > 100) $erreurs[] = "Veuillez indiquer un âge valide.";
-    if ($contact === '' || !preg_match('/^[0-9+ ]{8,20}$/', $contact)) $erreurs[] = "Le contact doit être un numéro de téléphone valide.";
+    if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
     if ($maladie === 'Autre' && $maladieAutre === '') $erreurs[] = "Veuillez préciser la maladie.";
     if ($parentNom === '') $erreurs[] = "Le nom du parent/tuteur (contact d'urgence) est obligatoire.";
-    if ($parentContact === '' || !preg_match('/^[0-9+ ]{8,20}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit être un numéro valide.";
+    if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
     if (empty($erreurs)) {
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Contact (téléphone) <span class="req">*</span></label>
-                        <input type="tel" name="contact" required value="<?= e($_POST['contact'] ?? '') ?>">
+                        <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($_POST['contact'] ?? '') ?>">
                     </div>
                 </fieldset>
 
@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Contact du parent/tuteur <span class="req">*</span></label>
-                        <input type="tel" name="parent_contact" required value="<?= e($_POST['parent_contact'] ?? '') ?>">
+                        <input type="tel" name="parent_contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($_POST['parent_contact'] ?? '') ?>">
                     </div>
                 </fieldset>
 

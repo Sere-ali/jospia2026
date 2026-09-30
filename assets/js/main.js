@@ -83,3 +83,111 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// ============================================================
+// Champs téléphone : chiffres uniquement (frappe, collage, saisie mobile)
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type=tel]').forEach(function (champ) {
+        champ.setAttribute('inputmode', 'numeric');
+        champ.addEventListener('keypress', function (e) {
+            if (e.key && e.key.length === 1 && !/[0-9]/.test(e.key)) e.preventDefault();
+        });
+        champ.addEventListener('input', function () {
+            var propre = this.value.replace(/\D+/g, '');
+            if (this.value !== propre) this.value = propre;
+        });
+        champ.value = champ.value.replace(/\D+/g, '');
+    });
+});
+
+// ============================================================
+// Photo : choisir un fichier OU prendre une photo (webcam / caméra)
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+    var input = document.querySelector('input[type=file][name=photo]');
+    if (!input) return;
+
+    var apercu = document.getElementById('apercu-photo');
+    if (!apercu) {
+        apercu = document.createElement('img');
+        apercu.id = 'apercu-photo';
+        apercu.style.cssText = 'display:none;margin-top:10px;width:100px;height:100px;object-fit:cover;border-radius:8px;';
+        input.parentNode.appendChild(apercu);
+        input.addEventListener('change', function () {
+            if (this.files[0]) { apercu.src = URL.createObjectURL(this.files[0]); apercu.style.display = 'block'; }
+        });
+    }
+
+    var barre = document.createElement('div');
+    barre.className = 'photo-actions';
+    barre.innerHTML = '<span class="photo-ou">ou</span>';
+    var btnCam = document.createElement('button');
+    btnCam.type = 'button';
+    btnCam.className = 'btn btn-outline btn-sm';
+    btnCam.textContent = '📷 Prendre une photo';
+    barre.appendChild(btnCam);
+    input.parentNode.insertBefore(barre, apercu);
+
+    function donnerFichier(blob) {
+        var fichier = new File([blob], 'photo_camera.jpg', { type: 'image/jpeg' });
+        var dt = new DataTransfer();
+        dt.items.add(fichier);
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    // Repli (navigateur sans accès caméra) : ouvre l'appareil photo du téléphone
+    function repliCapture() {
+        input.setAttribute('capture', 'user');
+        input.click();
+        setTimeout(function () { input.removeAttribute('capture'); }, 1000);
+    }
+
+    btnCam.addEventListener('click', function () {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { repliCapture(); return; }
+
+        var flux = null, facing = 'user';
+        var fond = document.createElement('div');
+        fond.className = 'cam-fond';
+        fond.innerHTML =
+            '<div class="cam-boite">' +
+            '<video autoplay playsinline muted></video>' +
+            '<div class="cam-btns">' +
+            '<button type="button" class="btn btn-primaire" data-a="prendre">📸 Capturer</button>' +
+            '<button type="button" class="btn btn-outline" data-a="tourner">🔄 Changer de caméra</button>' +
+            '<button type="button" class="btn btn-outline" data-a="fermer">Annuler</button>' +
+            '</div><p class="cam-msg"></p></div>';
+        document.body.appendChild(fond);
+        var video = fond.querySelector('video');
+        var msg = fond.querySelector('.cam-msg');
+
+        function arreter() { if (flux) flux.getTracks().forEach(function (t) { t.stop(); }); flux = null; }
+        function fermer() { arreter(); fond.remove(); }
+        function demarrer() {
+            arreter();
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 1280 } }, audio: false })
+                .then(function (s) { flux = s; video.srcObject = s; msg.textContent = ''; })
+                .catch(function () {
+                    fermer();
+                    alert("Impossible d'accéder à la caméra (autorisation refusée ou aucune caméra). Utilisez « Choisir un fichier ».");
+                });
+        }
+
+        fond.addEventListener('click', function (e) {
+            var a = e.target.getAttribute && e.target.getAttribute('data-a');
+            if (e.target === fond || a === 'fermer') { fermer(); }
+            else if (a === 'tourner') { facing = (facing === 'user') ? 'environment' : 'user'; demarrer(); }
+            else if (a === 'prendre') {
+                if (!video.videoWidth) { msg.textContent = 'Caméra pas encore prête…'; return; }
+                var c = document.createElement('canvas');
+                var max = 1024, r = Math.min(1, max / Math.max(video.videoWidth, video.videoHeight));
+                c.width = Math.round(video.videoWidth * r);
+                c.height = Math.round(video.videoHeight * r);
+                c.getContext('2d').drawImage(video, 0, 0, c.width, c.height);
+                c.toBlob(function (blob) { if (blob) donnerFichier(blob); fermer(); }, 'image/jpeg', 0.88);
+            }
+        });
+        demarrer();
+    });
+});

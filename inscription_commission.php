@@ -9,11 +9,11 @@ $identifiantsGeneres = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
     $commission = trim($_POST['commission'] ?? '');
-    $contact = trim($_POST['contact'] ?? '');
+    $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir une commission valide.";
-    if ($contact === '' || !preg_match('/^[0-9+ ]{8,20}$/', $contact)) $erreurs[] = "Le contact doit être un numéro de téléphone valide.";
+    if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
     if (empty($erreurs)) {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Contact (téléphone) <span class="req">*</span></label>
-                        <input type="tel" name="contact" required placeholder="Ex : 0700000000" value="<?= e($_POST['contact'] ?? '') ?>">
+                        <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required placeholder="Ex : 0700000000" value="<?= e($_POST['contact'] ?? '') ?>">
                     </div>
                     <div class="form-group">
                         <label>Photo d'identité <span class="req">*</span></label>
