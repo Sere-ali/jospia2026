@@ -84,7 +84,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <th>Date</th>
                         <th>Séminariste (Matricule)</th>
                         <th>Contact</th>
-                        <th>N° Wave du payeur</th>
+                        <th>N° du payeur (contact)</th>
                         <th>ID transaction</th>
                         <th>Statut</th>
                         <th>Action / Info</th>
