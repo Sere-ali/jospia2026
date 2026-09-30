@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Photo d'identité <span class="req">*</span></label>
-                        <input type="file" name="photo" accept="image/*" required data-detourage="1" data-base="<?= BASE_URL ?>">
+                        <input type="file" name="photo" accept="image/*" required>
                         <div class="help-text">Format jpg/png/webp, 5 Mo max. Utilisée pour générer votre badge.</div>
                     </div>
                 </fieldset>

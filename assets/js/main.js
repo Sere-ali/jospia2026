@@ -232,109 +232,11 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('afterprint', ajuster);
 })();
 
-/* ---------- Détourage automatique de la photo (suppression de l'arrière-plan par IA, dans le navigateur) ---------- */
-(function () {
-    var DONNEES = 'https://staticimgly.com/@imgly/background-removal-data/1.4.5/dist/';
-    document.addEventListener('DOMContentLoaded', function () {
-        var input = document.querySelector('input[type=file][name=photo][data-detourage]');
-        if (!input) { return; }
-        var base = input.getAttribute('data-base') || '';
-        var occupe = false;
-        var etat = document.createElement('div');
-        etat.className = 'help-text';
-        etat.style.cssText = 'margin-top:6px;font-weight:700;';
-        input.parentNode.appendChild(etat);
-
-        function chargerLib() {
-            return new Promise(function (ok, ko) {
-                if (window.ImglyBG) { return ok(); }
-                var s = document.createElement('script');
-                s.src = base + '/assets/js/vendor/imgly-bg.js';
-                s.onload = ok; s.onerror = ko;
-                document.head.appendChild(s);
-            });
-        }
-        function lireImage(fichier) {
-            return new Promise(function (ok, ko) {
-                var url = URL.createObjectURL(fichier), img = new Image();
-                img.onload = function () { URL.revokeObjectURL(url); ok(img); };
-                img.onerror = ko; img.src = url;      // l'orientation EXIF est appliquée par le navigateur
-            });
-        }
-        function versBlob(canvas, type) { return new Promise(function (ok) { canvas.toBlob(ok, type, 0.92); }); }
-        function partVisible(blob) {
-            return lireImage(blob).then(function (img) {
-                var c = document.createElement('canvas'); c.width = 64; c.height = 64;
-                var x = c.getContext('2d'); x.drawImage(img, 0, 0, 64, 64);
-                var d = x.getImageData(0, 0, 64, 64).data, t = 0;
-                for (var i = 3; i < d.length; i += 4) { t += d[i]; }
-                return t / (255 * 64 * 64);
-            });
-        }
-        async function detourer(fichier) {
-            var img = await lireImage(fichier);
-            var k = Math.min(1, 1000 / Math.max(img.naturalWidth, img.naturalHeight));
-            var c = document.createElement('canvas');
-            c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
-            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-            var entree = await versBlob(c, 'image/jpeg');
-            await chargerLib();
-            var sortie = await Promise.race([
-                window.ImglyBG.removeBackground(entree, { publicPath: DONNEES, model: 'small', output: { format: 'image/png' } }),
-                new Promise(function (ok, ko) { setTimeout(function () { ko(new Error('delai')); }, 150000); })
-            ]);
-            var part = await partVisible(sortie);
-            if (part < 0.06 || part > 0.97) { return null; }
-            // Personne détourée posée sur un fond BLANC uni (JPEG léger)
-            var det = await lireImage(sortie);
-            var f = document.createElement('canvas'); f.width = det.naturalWidth; f.height = det.naturalHeight;
-            var fx = f.getContext('2d'); fx.fillStyle = '#ffffff'; fx.fillRect(0, 0, f.width, f.height);
-            fx.drawImage(det, 0, 0);
-            return await versBlob(f, 'image/jpeg');
-        }
-
-        var formulaire = input.form, apres = false;
-        if (formulaire) {
-            formulaire.addEventListener('submit', function (ev) {
-                if (occupe) {
-                    ev.preventDefault(); apres = true;
-                    etat.style.color = '#0C5B3A';
-                    etat.textContent = '⏳ Merci de patienter : suppression de l\'arrière-plan en cours. Le formulaire sera envoyé automatiquement ensuite.';
-                }
-            });
-        }
-        input.addEventListener('change', async function () {
-            if (occupe || !input.files || !input.files[0]) { return; }
-            var f = input.files[0];
-            if (f.name.indexOf('detoure_') === 0) { return; }
-            occupe = true;
-            etat.style.color = '#0C5B3A';
-            etat.textContent = '⏳ Suppression de l\'arrière-plan en cours… (la première fois, cela peut prendre une minute)';
-            try {
-                var blob = await detourer(f);
-                if (blob) {
-                    var nouveau = new File([blob], 'detoure_' + Date.now() + '.jpg', { type: 'image/jpeg' });
-                    var dt = new DataTransfer(); dt.items.add(nouveau); input.files = dt.files;
-                    var ap = document.getElementById('apercu-photo');
-                    if (ap) { ap.src = URL.createObjectURL(nouveau); ap.style.display = 'block'; ap.style.background = '#fff'; ap.style.border = '1px solid #ddd'; }
-                    etat.textContent = '✅ Arrière-plan supprimé automatiquement.';
-                } else {
-                    etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (personne non détectée). Utilisez de préférence une photo de face, bien éclairée.';
-                }
-            } catch (e) {
-                etat.style.color = '#8a5a00'; etat.textContent = 'Photo gardée telle quelle (détourage indisponible pour le moment).';
-            }
-            occupe = false;
-            if (apres && formulaire) { apres = false; if (formulaire.requestSubmit) { formulaire.requestSubmit(); } else { formulaire.submit(); } }
-        });
-    });
-})();
-
 /* ---------- Photos légères : réduction automatique (max 1000 px, JPEG) avant l'envoi ---------- */
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
         var input = document.querySelector('input[type=file][name=photo]');
-        if (!input || input.hasAttribute('data-detourage')) { return; }
+        if (!input) { return; }
         var occupe = false;
         input.addEventListener('change', function () {
             var f = input.files && input.files[0];

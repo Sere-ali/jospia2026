@@ -93,7 +93,7 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
                         <img src="<?= BASE_URL ?>/uploads/photos/<?= e($membre['photo']) ?>" style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:2px solid var(--vert);margin-bottom:10px;">
                     <?php endif; ?>
                     <label>Remplacer la photo (facultatif)</label>
-                    <input type="file" name="photo" accept="image/*" data-detourage="1" data-base="<?= BASE_URL ?>">
+                    <input type="file" name="photo" accept="image/*">
                 </div>
             </fieldset>
             <button type="submit" class="btn btn-primaire btn-block">Enregistrer les modifications</button>
