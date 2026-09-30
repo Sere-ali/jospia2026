@@ -284,3 +284,149 @@ document.addEventListener('DOMContentLoaded', function () {
         enveloppe.appendChild(bouton);
     });
 });
+
+/* ---------- Export Excel (.xlsx) des listes admin / finance ---------- */
+(function () {
+    var chemin = location.pathname;
+    if (!/\/(admin|finance)\//.test(chemin) || /\/(dashboard|matieres|questions|config_quiz|scanner|verifier)(\.php)?$/.test(chemin)) { return; }
+
+    var crcTable = (function () {
+        var t = [], c, n, k;
+        for (n = 0; n < 256; n++) { c = n; for (k = 0; k < 8; k++) { c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; } t[n] = c >>> 0; }
+        return t;
+    })();
+    function crc32(b) { var c = 0xFFFFFFFF; for (var i = 0; i < b.length; i++) { c = crcTable[(c ^ b[i]) & 0xFF] ^ (c >>> 8); } return (c ^ 0xFFFFFFFF) >>> 0; }
+    var enc = new TextEncoder();
+    function u16(n) { return [n & 255, (n >>> 8) & 255]; }
+    function u32(n) { return [n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255]; }
+
+    function zip(fichiers) {
+        var morceaux = [], centre = [], offset = 0;
+        fichiers.forEach(function (f) {
+            var nom = enc.encode(f.nom), data = enc.encode(f.contenu), crc = crc32(data);
+            var loc = [].concat(u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(data.length), u32(data.length), u16(nom.length), u16(0));
+            morceaux.push(new Uint8Array(loc), nom, data);
+            var cen = [].concat(u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(data.length), u32(data.length), u16(nom.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset));
+            centre.push(new Uint8Array(cen), nom);
+            offset += loc.length + nom.length + data.length;
+        });
+        var tailleCentre = 0;
+        centre.forEach(function (c) { tailleCentre += c.length; });
+        var fin = [].concat(u32(0x06054b50), u16(0), u16(0), u16(fichiers.length), u16(fichiers.length), u32(tailleCentre), u32(offset), u16(0));
+        return new Blob(morceaux.concat(centre, [new Uint8Array(fin)]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    }
+
+    function xml(s) { return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function colonne(i) { var s = ''; i++; while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+
+    function feuilleXml(lignes) {
+        var out = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="30" width="24" customWidth="1"/></cols><sheetData>';
+        lignes.forEach(function (l, r) {
+            out += '<row r="' + (r + 1) + '">';
+            l.forEach(function (v, c) {
+                out += '<c r="' + colonne(c) + (r + 1) + '" t="inlineStr"' + (r === 0 ? ' s="1"' : '') + '><is><t xml:space="preserve">' + xml(v) + '</t></is></c>';
+            });
+            out += '</row>';
+        });
+        return out + '</sheetData></worksheet>';
+    }
+
+    function construire(feuilles) {
+        var noms = [], f = [];
+        feuilles.forEach(function (fe, i) {
+            var nom = (fe.nom || 'Feuille ' + (i + 1)).replace(/[\[\]:*?\/\\]/g, ' ').trim().substring(0, 31) || 'Feuille ' + (i + 1);
+            var base = nom, n = 2;
+            while (noms.indexOf(nom.toLowerCase()) !== -1) { nom = base.substring(0, 28) + ' ' + n++; }
+            noms.push(nom.toLowerCase());
+            fe.nomFinal = nom;
+        });
+        var ct = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+        var wb = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
+        var rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+        feuilles.forEach(function (fe, i) {
+            var k = i + 1;
+            ct += '<Override PartName="/xl/worksheets/sheet' + k + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+            wb += '<sheet name="' + xml(fe.nomFinal) + '" sheetId="' + k + '" r:id="rId' + k + '"/>';
+            rels += '<Relationship Id="rId' + k + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + k + '.xml"/>';
+            f.push({ nom: 'xl/worksheets/sheet' + k + '.xml', contenu: feuilleXml(fe.lignes) });
+        });
+        ct += '</Types>'; wb += '</sheets></workbook>';
+        rels += '<Relationship Id="rId' + (feuilles.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+        var styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+        return zip([
+            { nom: '[Content_Types].xml', contenu: ct },
+            { nom: '_rels/.rels', contenu: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+            { nom: 'xl/workbook.xml', contenu: wb },
+            { nom: 'xl/_rels/workbook.xml.rels', contenu: rels },
+            { nom: 'xl/styles.xml', contenu: styles }
+        ].concat(f));
+    }
+
+    function texte(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim(); }
+    var IGNORES = ['', 'photo', 'action', 'actions', 'action / info'];
+
+    function lignesTable(table) {
+        var ths = [].slice.call(table.querySelectorAll('thead th'));
+        var garder = [];
+        ths.forEach(function (th, i) { if (IGNORES.indexOf(texte(th).toLowerCase()) === -1) { garder.push(i); } });
+        var lignes = [garder.map(function (i) { return texte(ths[i]); })];
+        [].slice.call(table.querySelectorAll('tbody tr')).forEach(function (tr) {
+            var tds = tr.children;
+            if (tds.length === 1 && tds[0].colSpan > 1) { return; }
+            lignes.push(garder.map(function (i) { return tds[i] ? texte(tds[i]) : ''; }));
+        });
+        return lignes;
+    }
+
+    function titreDe(table) {
+        var carte = table.closest('.carte');
+        var h = carte && carte.querySelector('h2, h3, h4');
+        if (h) { var c = h.cloneNode(true); [].slice.call(c.querySelectorAll('.pill, .tag')).forEach(function (p) { p.remove(); }); return texte(c).replace(/^[^\wÀ-ÿ]+/, ''); }
+        return '';
+    }
+
+    function telecharger(feuilles, nomFichier) {
+        var blob = construire(feuilles);
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = nomFichier + '.xlsx';
+        document.body.appendChild(a); a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    }
+
+    function bouton(libelle, action) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn btn-outline btn-sm no-print btn-export-excel';
+        b.style.margin = '0 0 10px 0';
+        b.textContent = '📥 ' + libelle;
+        b.addEventListener('click', action);
+        return b;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var page = (document.querySelector('h1, h2') || {}).textContent || document.title || 'export';
+        var dateJour = new Date().toISOString().slice(0, 10);
+        var nomPage = texte({ textContent: page }).replace(/[^\wÀ-ÿ]+/g, '_').replace(/^_|_$/g, '').substring(0, 40) || 'export';
+
+        var panneaux = document.querySelectorAll('[data-panneau]');
+        var dejaGeres = [];
+        panneaux.forEach(function (p) {
+            var tables = [].slice.call(p.querySelectorAll('table'));
+            if (!tables.length) { return; }
+            tables.forEach(function (t) { dejaGeres.push(t); });
+            var nom = 'Liste_' + p.getAttribute('data-panneau');
+            p.insertBefore(bouton('Exporter en Excel', function () {
+                telecharger(tables.map(function (t) { return { nom: titreDe(t), lignes: lignesTable(t) }; }), nom + '_' + dateJour);
+            }), p.firstChild);
+        });
+
+        [].slice.call(document.querySelectorAll('main table, section table, .container table')).forEach(function (t, i, tous) {
+            if (dejaGeres.indexOf(t) !== -1 || t.dataset.noExport !== undefined) { return; }
+            var cible = t.closest('.table-wrap') || t;
+            cible.parentNode.insertBefore(bouton('Exporter en Excel', function () {
+                telecharger([{ nom: titreDe(t) || nomPage, lignes: lignesTable(t) }], nomPage + (titreDe(t) ? '_' + titreDe(t).replace(/[^\wÀ-ÿ]+/g, '_') : '') + '_' + dateJour);
+            }), cible);
+        });
+    });
+})();
