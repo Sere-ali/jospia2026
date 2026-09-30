@@ -6,8 +6,7 @@
         <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-sm <?= $pageAdmin==='seminaristes.php'?'btn-primaire':'btn-outline' ?>">🎓 Séminaristes</a>
         <a href="<?= BASE_URL ?>/admin/identifiants" class="btn btn-sm <?= $pageAdmin==='identifiants.php'?'btn-primaire':'btn-outline' ?>">🔑 Identifiants</a>
         <a href="<?= BASE_URL ?>/admin/dortoirs" class="btn btn-sm <?= $pageAdmin==='dortoirs.php'?'btn-primaire':'btn-outline' ?>">🛏️ Dortoirs</a>
-        <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm btn-outline">💳 Paiements Wave</a>
-        <a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-sm btn-outline">📷 Scanner reçus</a>
+        <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm btn-or">💰 Commission finance</a>
         <a href="<?= BASE_URL ?>/admin/listes" class="btn btn-sm <?= $pageAdmin==='listes.php'?'btn-primaire':'btn-outline' ?>">📋 Listes dortoir/niveau</a>
         <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
         <a href="<?= BASE_URL ?>/admin/notes" class="btn btn-sm <?= $pageAdmin==='notes.php'?'btn-primaire':'btn-outline' ?>">📝 Saisie des notes</a>
