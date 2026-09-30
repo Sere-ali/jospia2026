@@ -1,15 +1,47 @@
 services:
+  # Base MariaDB (compatible MySQL), service privé + disque persistant
+  - type: pserv
+    name: jospia2026-db
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    dockerfilePath: ./db/Dockerfile
+    dockerContext: .
+    disk:
+      name: mariadb-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - key: MARIADB_DATABASE
+        value: jospia2026
+      - key: MARIADB_USER
+        value: jospia
+      - key: MARIADB_PASSWORD
+        generateValue: true
+      - key: MARIADB_ROOT_PASSWORD
+        generateValue: true
+
+  # Site PHP
   - type: web
     name: jospia2026
     runtime: docker
     plan: free
+    region: frankfurt
     dockerfilePath: ./Dockerfile
     envVars:
       - key: DB_HOST
-        sync: false
+        fromService:
+          type: pserv
+          name: jospia2026-db
+          property: host
+      - key: DB_PORT
+        value: "3306"
       - key: DB_NAME
-        sync: false
+        value: jospia2026
       - key: DB_USER
-        sync: false
+        value: jospia
       - key: DB_PASS
-        sync: false
+        fromService:
+          type: pserv
+          name: jospia2026-db
+          envVarKey: MARIADB_PASSWORD
