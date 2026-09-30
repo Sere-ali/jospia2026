@@ -196,3 +196,16 @@ function numeroLocal($tel) {
     elseif (strpos($n, '225') === 0 && strlen($n) >= 12) { $n = substr($n, 3); }
     return $n;
 }
+
+function synchroniserIdentifiantContact(PDO $pdo, $colonne, $id, $ancienContact, $nouveauContact) {
+    if ($ancienContact === $nouveauContact || !in_array($colonne, ['membre_id', 'seminariste_id'], true)) { return null; }
+    $st = $pdo->prepare("SELECT id, identifiant FROM comptes WHERE $colonne = ? LIMIT 1");
+    $st->execute([$id]);
+    $c = $st->fetch();
+    if (!$c || $c['identifiant'] !== $ancienContact) { return null; }
+    $st = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ? AND id <> ?");
+    $st->execute([$nouveauContact, $c['id']]);
+    if ($st->fetchColumn() > 0) { return null; }
+    $pdo->prepare("UPDATE comptes SET identifiant = ? WHERE id = ?")->execute([$nouveauContact, $c['id']]);
+    return $nouveauContact;
+}

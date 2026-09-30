@@ -4,6 +4,7 @@
         <a href="<?= BASE_URL ?>/admin/dashboard" class="btn btn-sm <?= $pageAdmin==='dashboard.php'?'btn-primaire':'btn-outline' ?>">📊 Tableau de bord</a>
         <a href="<?= BASE_URL ?>/admin/commissions" class="btn btn-sm <?= $pageAdmin==='commissions.php'?'btn-primaire':'btn-outline' ?>">👥 Membres commission</a>
         <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-sm <?= $pageAdmin==='seminaristes.php'?'btn-primaire':'btn-outline' ?>">🎓 Séminaristes</a>
+        <a href="<?= BASE_URL ?>/admin/identifiants" class="btn btn-sm <?= $pageAdmin==='identifiants.php'?'btn-primaire':'btn-outline' ?>">🔑 Identifiants</a>
         <a href="<?= BASE_URL ?>/admin/dortoirs" class="btn btn-sm <?= $pageAdmin==='dortoirs.php'?'btn-primaire':'btn-outline' ?>">🛏️ Dortoirs</a>
         <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm btn-outline">💳 Paiements Wave</a>
         <a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-sm btn-outline">📷 Scanner reçus</a>

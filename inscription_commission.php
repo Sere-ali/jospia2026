@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($chk->fetchColumn() > 0) $identifiant .= '_' . $membreId;
 
         $hash = password_hash($motDePasse, PASSWORD_DEFAULT);
-        $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, role, membre_id, nom_affiche) VALUES (?,?,?,?,?)")
-            ->execute([$identifiant, $hash, 'membre', $membreId, $nom]);
+        $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, membre_id, nom_affiche) VALUES (?,?,?,?,?,?)")
+            ->execute([$identifiant, $hash, $motDePasse, 'membre', $membreId, $nom]);
 
         $succes = "Inscription réussie ! Votre badge sera généré automatiquement et sera visible sur votre espace personnel (téléchargement réservé aux administrateurs).";
         $identifiantsGeneres = ['id' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule];

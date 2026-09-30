@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
-
-$id = (int)($_GET['id'] ?? 0);
+$modeUser = !empty($modifierMoiMeme);
+if ($modeUser) {
+    exigerConnexion();
+    $uc = utilisateurCourant();
+    if ($uc['role'] !== 'seminariste' || empty($uc['seminariste_id'])) { redirect('/espace/fiche'); }
+    $id = (int)$uc['seminariste_id'];
+} else {
+    exigerRole(['admin', 'superadmin']);
+    $id = (int)($_GET['id'] ?? 0);
+}
+$retour = $modeUser ? '/espace/fiche' : '/admin/seminaristes';
 $stmt = $pdo->prepare("SELECT * FROM seminaristes WHERE id = ?");
 $stmt->execute([$id]);
 $s = $stmt->fetch();
@@ -22,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maladie = $_POST['maladie'] ?? 'Aucune';
     $maladieAutre = trim($_POST['maladie_autre'] ?? '');
     $age = (int)($_POST['age'] ?? 0);
-    $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
+    $contact = numeroLocal($_POST['contact'] ?? '');
     $parentNom = trim($_POST['parent_nom'] ?? '');
     $parentLien = trim($_POST['parent_lien'] ?? '');
     $parentContact = preg_replace('/\D+/', '', $_POST['parent_contact'] ?? '');
@@ -65,6 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id
             ]);
         $pdo->prepare("UPDATE comptes SET nom_affiche=? WHERE seminariste_id=?")->execute([$nom, $id]);
+        $nouvelId = synchroniserIdentifiantContact($pdo, 'seminariste_id', $id, $s['contact'], $contact);
+        if ($modeUser && isset($_SESSION['compte'])) { $_SESSION['compte']['nom_affiche'] = $nom; if ($nouvelId) { $_SESSION['compte']['identifiant'] = $nouvelId; } }
 
         $stmt = $pdo->prepare("SELECT * FROM seminaristes WHERE id = ?");
         $stmt->execute([$id]);
@@ -75,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $titrePage = "Modifier - " . $s['nom_prenoms'];
 require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . '/../includes/admin_nav.php';
+if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
+        <a href="<?= BASE_URL . $retour ?>" class="btn btn-outline btn-sm">&larr; <?= $modeUser ? 'Retour à mon espace' : 'Retour à la liste' ?></a>
 
         <div class="section-titre" style="text-align:left;margin-top:16px;">
             <h2>Modifier - <?= e($s['nom_prenoms']) ?></h2>

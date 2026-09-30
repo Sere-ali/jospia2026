@@ -47,6 +47,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Espace membre</span>
             <h2>Bonjour, <?= e($membre['nom_prenoms']) ?></h2>
+            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a></p>
         </div>
 
         <div class="grid grid-2" style="align-items:start;">
@@ -100,6 +101,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Espace séminariste</span>
             <h2>Bonjour, <?= e($seminariste['nom_prenoms']) ?></h2>
+            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a></p>
         </div>
 
         <div class="fiche" id="ficheImprimable">

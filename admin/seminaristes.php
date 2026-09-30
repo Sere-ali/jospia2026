@@ -93,6 +93,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($s['niveau_affecte'] ?? '-') ?></td>
                         <td style="white-space:nowrap;">
                             <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/identifiants?q=<?= urlencode($s['matricule']) ?>" class="btn btn-sm btn-outline">🔑 Identifiant</a>
                             <a href="<?= BASE_URL ?>/admin/seminariste_detail?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">👁️</a>
                             <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">📄 Fiche</a>
                             <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>

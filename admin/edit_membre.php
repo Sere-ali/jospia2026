@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
-
-$id = (int)($_GET['id'] ?? 0);
+$modeUser = !empty($modifierMoiMeme);
+if ($modeUser) {
+    exigerConnexion();
+    $uc = utilisateurCourant();
+    if ($uc['role'] !== 'membre' || empty($uc['membre_id'])) { redirect('/espace/fiche'); }
+    $id = (int)$uc['membre_id'];
+} else {
+    exigerRole(['admin', 'superadmin']);
+    $id = (int)($_GET['id'] ?? 0);
+}
+$retour = $modeUser ? '/espace/fiche' : '/admin/commissions';
 $stmt = $pdo->prepare("SELECT * FROM membres_commission WHERE id = ?");
 $stmt->execute([$id]);
 $membre = $stmt->fetch();
@@ -14,7 +22,7 @@ $succes = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
     $commission = trim($_POST['commission'] ?? '');
-    $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
+    $contact = numeroLocal($_POST['contact'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir une commission valide.";
@@ -35,21 +43,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ->execute([$nom, $commission, $contact, $nomPhoto, $id]);
         // Garder le compte de connexion synchronisé (nom affiché)
         $pdo->prepare("UPDATE comptes SET nom_affiche=? WHERE membre_id=?")->execute([$nom, $id]);
+        $nouvelId = synchroniserIdentifiantContact($pdo, 'membre_id', $id, $membre['contact'], $contact);
+        if ($modeUser && isset($_SESSION['compte'])) { $_SESSION['compte']['nom_affiche'] = $nom; if ($nouvelId) { $_SESSION['compte']['identifiant'] = $nouvelId; } }
 
         $stmt = $pdo->prepare("SELECT * FROM membres_commission WHERE id = ?");
         $stmt->execute([$id]);
         $membre = $stmt->fetch();
-        $succes = "Les informations ont été mises à jour.";
+        $succes = "Les informations ont été mises à jour." . (!empty($nouvelId) ? " Votre identifiant de connexion est maintenant : " . $nouvelId . "." : "");
     }
 }
 
 $titrePage = "Modifier - " . $membre['nom_prenoms'];
 require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . '/../includes/admin_nav.php';
+if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
 ?>
 <section class="section">
     <div class="container form-wrap">
-        <a href="<?= BASE_URL ?>/admin/commissions" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
+        <a href="<?= BASE_URL . $retour ?>" class="btn btn-outline btn-sm">&larr; <?= $modeUser ? 'Retour à mon espace' : 'Retour à la liste' ?></a>
 
         <div class="section-titre" style="text-align:left;margin-top:16px;">
             <h2>Modifier - <?= e($membre['nom_prenoms']) ?></h2>
@@ -83,7 +93,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <img src="<?= BASE_URL ?>/uploads/photos/<?= e($membre['photo']) ?>" style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:2px solid var(--vert);margin-bottom:10px;">
                     <?php endif; ?>
                     <label>Remplacer la photo (facultatif)</label>
-                    <input type="file" name="photo" accept="image/*">
+                    <input type="file" name="photo" accept="image/*" data-detourage="1" data-base="<?= BASE_URL ?>">
                 </div>
             </fieldset>
             <button type="submit" class="btn btn-primaire btn-block">Enregistrer les modifications</button>
