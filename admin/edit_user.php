@@ -8,7 +8,13 @@ $stmt->execute([$id]);
 $compte = $stmt->fetch();
 if (!$compte) { die("Compte introuvable."); }
 
-$estPrincipal = ($compte['identifiant'] === 'superadmin');
+$estMoi = ((int)$compte['id'] === (int)$_SESSION['compte_id']);
+// Un compte Super Administrateur ne peut être modifié que par son propriétaire
+if ($compte['role'] === 'superadmin' && !$estMoi) {
+    http_response_code(403);
+    die("Accès refusé : un compte Super Administrateur ne peut être modifié que par son propriétaire.");
+}
+$estPrincipal = $estMoi && $compte['role'] === 'superadmin'; // son propre compte : le rôle reste verrouillé (anti-verrouillage)
 $erreurs = [];
 $succes = null;
 
@@ -26,14 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreurs[] = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
     } else {
         if ($estPrincipal) {
-            // Le compte superadmin principal garde son identifiant et son rôle (protection anti-verrouillage)
-            $identifiant = $compte['identifiant'];
+            // Le Super Admin garde son rôle (protection anti-verrouillage), mais peut changer nom, identifiant et mot de passe
             $role = $compte['role'];
-        } else {
-            $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ? AND id != ?");
-            $chk->execute([$identifiant, $id]);
-            if ($chk->fetchColumn() > 0) $erreurs[] = "Cet identifiant est déjà utilisé par un autre compte.";
         }
+        $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ? AND id != ?");
+        $chk->execute([$identifiant, $id]);
+        if ($chk->fetchColumn() > 0) $erreurs[] = "Cet identifiant est déjà utilisé par un autre compte.";
 
         if (empty($erreurs)) {
             if ($nouveauMdp !== '') {
@@ -47,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("SELECT * FROM comptes WHERE id = ?");
             $stmt->execute([$id]);
             $compte = $stmt->fetch();
+            if ($estMoi) { $_SESSION['compte'] = $compte; }
             $succes = "Compte mis à jour.";
         }
     }
@@ -67,7 +72,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
         <?php if ($estPrincipal): ?>
-            <div class="alert alert-info">🔒 Ce compte est le Super Admin principal : son identifiant et son rôle sont protégés (non modifiables) pour éviter de vous verrouiller hors du site.</div>
+            <div class="alert alert-info">👑 Votre compte Super Administrateur : vous seul pouvez le modifier. Le rôle reste verrouillé pour éviter de vous exclure du site.</div>
         <?php endif; ?>
 
         <form method="post">
@@ -80,7 +85,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     </div>
                     <div class="form-group">
                         <label>Identifiant de connexion</label>
-                        <input type="text" name="identifiant" required value="<?= e($compte['identifiant']) ?>" <?= $estPrincipal ? 'disabled' : '' ?>>
+                        <input type="text" name="identifiant" required value="<?= e($compte['identifiant']) ?>">
                     </div>
                 </div>
                 <div class="form-row">

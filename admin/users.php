@@ -6,19 +6,19 @@ $erreurs = [];
 $succes = null;
 
 if (isset($_GET['desactiver'])) {
-    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')")->execute([(int)$_GET['desactiver']]);
+    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','finance','scientifique')")->execute([(int)$_GET['desactiver']]);
     redirect('/admin/users');
 }
 $messageSuppression = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_id'])) {
     $idCible = (int)$_POST['supprimer_id'];
-    $stmt = $pdo->prepare("SELECT id, identifiant, nom_affiche FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')");
+    $stmt = $pdo->prepare("SELECT id, identifiant, nom_affiche, role FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique')");
     $stmt->execute([$idCible]);
     $cible = $stmt->fetch();
     if (!$cible) {
         $erreurs[] = "Compte introuvable.";
-    } elseif ($cible['identifiant'] === 'superadmin') {
-        $erreurs[] = "Le compte principal ne peut pas être supprimé.";
+    } elseif ($cible['role'] === 'superadmin') {
+        $erreurs[] = "Un compte Super Administrateur ne peut pas être supprimé.";
     } elseif ($idCible === (int)$_SESSION['compte_id']) {
         $erreurs[] = "Vous ne pouvez pas supprimer votre propre compte.";
     } else {
@@ -109,15 +109,17 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         ?><span class="pill <?= $c['role'] === 'superadmin' ? 'pill-or' : 'pill-vert' ?>" <?= $c['role'] === 'superadmin' ? 'style="background:#C89A3E;color:#fff;font-weight:800;"' : '' ?>><?= e($lib) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <?php if ($c['identifiant'] !== 'superadmin' && (int)$c['id'] !== (int)$_SESSION['compte_id']): ?>
+                            <?php if ($c['role'] !== 'superadmin' || (int)$c['id'] === (int)$_SESSION['compte_id']): ?>
+                                <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                            <?php endif; ?>
+                            <?php if ($c['role'] !== 'superadmin'): ?>
                                 <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
                                 <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement le compte de <?= e(addslashes($c['nom_affiche'])) ?> ?');">
                                     <input type="hidden" name="supprimer_id" value="<?= (int)$c['id'] ?>">
                                     <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
                                 </form>
                             <?php else: ?>
-                                <span class="help-text"><?= $c['identifiant'] === 'superadmin' ? 'Compte principal' : 'Votre compte' ?></span>
+                                <span class="help-text"><?= (int)$c['id'] === (int)$_SESSION['compte_id'] ? 'Votre compte' : 'Réservé à son propriétaire' ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>
