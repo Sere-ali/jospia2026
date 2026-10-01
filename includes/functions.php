@@ -724,3 +724,79 @@ function blocQrFiche(PDO $pdo, $seminaristeId) {
         . '<script src="' . BASE_URL . '/assets/js/vendor/qrcode.js"></script><script>(function(){var el=document.getElementById("qr-fiche");if(!el||typeof qrcode==="undefined")return;var q=qrcode(0,"M");q.addData(el.getAttribute("data-url"));q.make();el.innerHTML=q.createSvgTag(5,2);})();</script>';
 }
 
+/* ------------------------------------------------------------------ */
+/*  Autorisations de sortie du camp : demande -> MG/MGA -> Sécurité -> retour  */
+/* ------------------------------------------------------------------ */
+function sortiesPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS sorties (
+        id INT AUTO_INCREMENT PRIMARY KEY, compte_id INT NOT NULL, type VARCHAR(20) NOT NULL DEFAULT 'membre', personne_id INT NULL,
+        nom VARCHAR(150) NOT NULL, groupe VARCHAR(100) NOT NULL DEFAULT '', motif VARCHAR(255) NOT NULL,
+        heure_sortie DATETIME NOT NULL, heure_retour DATETIME NOT NULL, statut VARCHAR(20) NOT NULL DEFAULT 'attente_mg',
+        mg_nom VARCHAR(150) NULL, mg_at DATETIME NULL, refus_motif VARCHAR(255) NULL, secu_nom VARCHAR(150) NULL, secu_at DATETIME NULL,
+        rentre_at DATETIME NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_sortie_compte (compte_id), INDEX idx_sortie_statut (statut)) ENGINE=InnoDB");
+}
+
+/** MG / MGA (membres de ces commissions) ou administrateurs : valident les demandes de sortie. */
+function estMG() {
+    static $cache = null;
+    if ($cache !== null) return $cache;
+    $u = utilisateurCourant();
+    if (!$u) return $cache = false;
+    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
+    if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
+        global $pdo;
+        $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
+        $st->execute([$u['membre_id']]);
+        return $cache = in_array(normaliserCommission((string)$st->fetchColumn()), ['MG', 'MGA'], true);
+    }
+    return $cache = false;
+}
+
+/** Identité de la personne connectée pour une demande de sortie : [type, personne_id, nom, groupe]. */
+function sortiePersonne(PDO $pdo, array $u) {
+    if ($u['role'] === 'seminariste' && !empty($u['seminariste_id'])) {
+        $st = $pdo->prepare("SELECT nom_prenoms, dortoir, niveau_affecte FROM seminaristes WHERE id = ?");
+        $st->execute([$u['seminariste_id']]);
+        $r = $st->fetch();
+        return ['seminariste', (int)$u['seminariste_id'], (string)($r['nom_prenoms'] ?? $u['nom_affiche']), 'Séminariste - ' . ($r['niveau_affecte'] ?: ($r['dortoir'] ?? ''))];
+    }
+    if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
+        $st = $pdo->prepare("SELECT nom_prenoms, commission FROM membres_commission WHERE id = ?");
+        $st->execute([$u['membre_id']]);
+        $r = $st->fetch();
+        return ['membre', (int)$u['membre_id'], (string)($r['nom_prenoms'] ?? $u['nom_affiche']), 'Commission ' . ($r['commission'] ?? '')];
+    }
+    $com = commissionPropre($pdo);
+    return ['membre', null, (string)($u['nom_affiche'] ?: $u['identifiant']), $com ? 'Commission ' . $com : ucfirst((string)$u['role'])];
+}
+
+function libelleStatutSortie($st) {
+    return ['attente_mg' => ['⏳ En attente du MG / MGA', 'pill-or'], 'refusee' => ['✖ Refusée', 'pill-gris'], 'attente_securite' => ['⏳ Validée par le MG - en attente de la Sécurité', 'pill-or'],
+            'autorisee' => ['✔ Autorisation accordée', 'pill-vert'], 'rentre' => ['🏠 Rentré sur le camp', 'pill-vert'], 'annulee' => ['Annulée', 'pill-gris']][$st] ?? [$st, 'pill-gris'];
+}
+
+/** Nombre de demandes que la personne connectée doit traiter (pastille du menu). */
+function sortiesATraiter(PDO $pdo) {
+    try {
+        $n = 0;
+        sortiesPreparer($pdo);
+        if (estMG()) $n += (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_mg'")->fetchColumn();
+        if (estSecurite()) $n += (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_securite'")->fetchColumn();
+        return $n;
+    } catch (Throwable $e) { return 0; }
+}
+
+/** Sortie autorisée en cours de la personne (pour l'alerte « heure épuisée »), ou null. */
+function sortieEnCours(PDO $pdo, $compteId) {
+    try {
+        sortiesPreparer($pdo);
+        $st = $pdo->prepare("SELECT * FROM sorties WHERE compte_id = ? AND statut = 'autorisee' ORDER BY id DESC LIMIT 1");
+        $st->execute([(int)$compteId]);
+        return $st->fetch() ?: null;
+    } catch (Throwable $e) { return null; }
+}
+

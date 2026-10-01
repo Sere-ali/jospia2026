@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // ============================================================
 (function () {
     'use strict';
-    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression|rapports)|finance\/paiements|securite\/visiteurs|visiteur|espace\/(fiche|rapport)|paiement)(\.php)?$/;
+    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression|rapports)|finance\/paiements|securite\/(visiteurs|sorties)|visiteur|espace\/(fiche|rapport|sortie|sorties_mg)|paiement)(\.php)?$/;
     var chemin = location.pathname;
     if (!PAGES_LIVE.test(chemin)) return;
     var ACTIONS = ['supprimer', 'desactiver', 'publier', 'nouveau', 'activer', 'reinit'];
@@ -808,4 +808,24 @@ document.addEventListener('DOMContentLoaded', function () {
     window.josRwd = rwd;
     document.addEventListener('jos:maj', rwd);
     if (document.readyState !== 'loading') { rwd(); } else { document.addEventListener('DOMContentLoaded', rwd); }
+})();
+
+
+/* Alerte « heure de sortie épuisée » : s'affiche toute seule à l'heure de retour prévue */
+(function () {
+    function init() {
+        var a = document.getElementById('alerte-sortie');
+        if (!a) return;
+        var retour = parseInt(a.getAttribute('data-retour'), 10) * 1000;
+        var decalage = parseInt(a.getAttribute('data-now'), 10) * 1000 - Date.now(); // horloge du serveur
+        function verifier() {
+            if (Date.now() + decalage >= retour && a.hasAttribute('hidden')) {
+                a.removeAttribute('hidden');
+                if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+            }
+        }
+        verifier();
+        setInterval(verifier, 5000);
+    }
+    if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
 })();

@@ -53,6 +53,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h2>Bonjour, <?= e($membre['nom_prenoms']) ?></h2>
             <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
             <a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">📝 Rapport journalier</a>
+            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a>
             <?php if (estSecurite()): ?> <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-primaire btn-sm">🛡️ Gestion des visiteurs</a><?php endif; ?></p>
         </div>
 
@@ -107,7 +108,8 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Espace séminariste</span>
             <h2>Bonjour, <?= e($seminariste['nom_prenoms']) ?></h2>
-            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a></p>
+            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
+            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a></p>
         </div>
 
         <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez imprimer votre fiche avec son QR code.</div><?php endif; ?>
