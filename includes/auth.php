@@ -8,6 +8,19 @@ function estConnecte() {
 }
 
 function utilisateurCourant() {
+    static $rafraichi = false;
+    // Le rôle et le nom sont relus en base : si un administrateur change le rôle d'un compte,
+    // sa page s'adapte immédiatement, sans reconnexion.
+    if (!$rafraichi && !empty($_SESSION['compte']['id']) && isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
+        $rafraichi = true;
+        try {
+            $st = $GLOBALS['pdo']->prepare("SELECT role, identifiant, nom_affiche FROM comptes WHERE id = ?");
+            $st->execute([(int)$_SESSION['compte']['id']]);
+            if ($r = $st->fetch()) {
+                foreach (['role', 'identifiant', 'nom_affiche'] as $k) { if (isset($r[$k])) $_SESSION['compte'][$k] = $r[$k]; }
+            }
+        } catch (Throwable $e) { /* base indisponible : on garde la session */ }
+    }
     return $_SESSION['compte'] ?? null;
 }
 

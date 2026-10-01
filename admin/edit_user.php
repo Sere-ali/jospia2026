@@ -4,7 +4,7 @@ exigerRole(['superadmin']);
 rolesPreparer($pdo);
 
 $id = (int)($_GET['id'] ?? 0);
-$stmt = $pdo->prepare("SELECT * FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique','securite')");
+$stmt = $pdo->prepare("SELECT * FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique','securite','mg')");
 $stmt->execute([$id]);
 $compte = $stmt->fetch();
 if (!$compte) { die("Compte introuvable."); }
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($nom === '' || $identifiant === '') {
         $erreurs[] = "Le nom et l'identifiant sont obligatoires.";
-    } elseif (!in_array($role, ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) {
+    } elseif (!in_array($role, ['admin', 'superadmin', 'finance', 'scientifique', 'securite', 'mg'], true)) {
         $erreurs[] = "Rôle invalide.";
     } elseif ($nouveauMdp !== '' && strlen($nouveauMdp) < 6) {
         $erreurs[] = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
@@ -102,6 +102,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                             <option value="finance" <?= $compte['role']==='finance'?'selected':'' ?>>Commission Finance</option>
                             <option value="scientifique" <?= $compte['role']==='scientifique'?'selected':'' ?>>Commission scientifique</option>
                             <option value="securite" <?= $compte['role']==='securite'?'selected':'' ?>>Commission sécurité</option>
+                            <option value="mg" <?= $compte['role']==='mg'?'selected':'' ?>>MG / MGA (comité managérial)</option>
                         </select>
                     </div>
                 </div>

@@ -731,12 +731,20 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(urlSurveillee(), { credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, cache: 'no-store' })
             .then(function (r) {
                 if (r.redirected && new URL(r.url).pathname !== chemin) { location.href = r.url; return ''; }
+                if (r.status === 403) { location.reload(); return ''; } // droits modifiés : la page s'adapte
                 return r.ok ? r.text() : '';
             })
             .then(function (h) {
                 if (!h) return;
                 delai = h.length > 400000 ? 5000 : 2000; // grandes listes : un peu moins souvent
-                appliquer(new DOMParser().parseFromString(h, 'text/html'));
+                var doc = new DOMParser().parseFromString(h, 'text/html');
+                // menu du haut : suit le rôle de la personne (changé par un administrateur)
+                var navA = document.getElementById('menu-principal'), navN = doc.getElementById('menu-principal');
+                if (navA && navN) {
+                    var liens = function (n) { return [].map.call(n.querySelectorAll('a'), function (a) { return a.getAttribute('href') + '|' + a.textContent.trim(); }).join(';'); };
+                    if (liens(navA) !== liens(navN)) navA.innerHTML = navN.innerHTML;
+                }
+                appliquer(doc);
             })
             .catch(function () {})
             .then(function () { enCours = false; planifier(); });
