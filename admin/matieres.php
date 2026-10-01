@@ -75,7 +75,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <?php else: ?>
                 <a href="<?= BASE_URL ?>/admin/matieres?publier=1" class="btn btn-primaire" onclick="return confirm('Rendre les bulletins visibles à tous les séminaristes ?')">Publier les résultats</a>
             <?php endif; ?>
-            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-outline">📄 Bulletins en PDF (1/page, paysage)</a>
+            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-outline">📄 Bulletins en PDF (2/feuille A4 paysage)</a>
         </div>
 
         <div class="carte" style="margin-bottom:24px;">

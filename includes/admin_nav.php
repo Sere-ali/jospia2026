@@ -45,7 +45,7 @@ $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansS
             <a href="<?= BASE_URL ?>/admin/notes" class="btn btn-sm <?= $pageAdmin==='notes.php'?'btn-primaire':'btn-outline' ?>">📝 Saisie des notes</a>
             <a href="<?= BASE_URL ?>/admin/test_entree" class="btn btn-sm <?= $pageAdmin==='test_entree.php'?'btn-primaire':'btn-outline' ?>">🧪 Test d'entrée</a>
             <a href="<?= BASE_URL ?>/admin/listes" class="btn btn-sm <?= $pageAdmin==='listes.php'?'btn-primaire':'btn-outline' ?>">📋 Listes dortoir/niveau</a>
-            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-sm <?= in_array($pageAdmin, ['bulletins_impression.php','bulletin.php'], true)?'btn-primaire':'btn-outline' ?>">📄 Bulletins PDF (paysage)</a>
+            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-sm <?= in_array($pageAdmin, ['bulletins_impression.php','bulletin.php'], true)?'btn-primaire':'btn-outline' ?>">📄 Bulletins PDF (2/feuille)</a>
             <?php if (estScientifique()): ?>
                 <a href="<?= BASE_URL ?>/admin/matieres" class="btn btn-sm <?= $pageAdmin==='matieres.php'?'btn-primaire':'btn-outline' ?>">📚 Matières & résultats</a>
                 <a href="<?= BASE_URL ?>/admin/questions" class="btn btn-sm <?= $pageAdmin==='questions.php'?'btn-primaire':'btn-outline' ?>">📝 Questions du test</a>

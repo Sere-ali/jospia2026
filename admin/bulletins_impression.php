@@ -13,7 +13,7 @@ $sql .= " ORDER BY niveau_affecte, nom_prenoms";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $seminaristesListe = $stmt->fetchAll();
-$pages = array_chunk($seminaristesListe, 1);
+$pages = array_chunk($seminaristesListe, 2);
 $niveauxListe = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
 
 $titrePage = "Impression des bulletins";
@@ -31,7 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <a href="<?= BASE_URL ?>/admin/bulletin_pdf?tous=1&niveau=<?= urlencode($filtreNiveau) ?>" class="btn btn-primaire">⬇️ Télécharger en PDF - <?= count($seminaristesListe) ?> bulletin(s), 1 par page</a>
+            <a href="<?= BASE_URL ?>/admin/bulletin_pdf?tous=1&niveau=<?= urlencode($filtreNiveau) ?>" class="btn btn-primaire">⬇️ Télécharger en PDF - <?= count($seminaristesListe) ?> bulletin(s), 2 par feuille</a>
         </div>
 
         <?php if (!$seminaristesListe): ?>
