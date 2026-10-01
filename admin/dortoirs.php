@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/init.php';
 exigerRole(['admin', 'superadmin']);
 
-$dortoirs = $pdo->query("SELECT * FROM dortoirs ORDER BY genre, nom")->fetchAll();
+$dortoirs = $pdo->query("SELECT * FROM dortoirs ORDER BY genre, id")->fetchAll();
 $nbPepiniere = $pdo->query("SELECT COUNT(*) FROM seminaristes WHERE dortoir = 'Pépinière'")->fetchColumn();
 
 $titrePage = "Dortoirs";

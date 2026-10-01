@@ -73,14 +73,14 @@ CREATE TABLE dortoirs (
 ) ENGINE=InnoDB;
 
 INSERT INTO dortoirs (nom, genre, capacite) VALUES
-('Dortoir Hommes 1','Masculin',40),
-('Dortoir Hommes 2','Masculin',40),
-('Dortoir Hommes 3','Masculin',40),
-('Dortoir Hommes 4','Masculin',40),
-('Dortoir Femmes 1','Féminin',40),
-('Dortoir Femmes 2','Féminin',40),
-('Dortoir Femmes 3','Féminin',40),
-('Dortoir Femmes 4','Féminin',40);
+('ABU BAKR AS-SIDDIQ','Masculin',40),
+('OUMAR IBN AL-KHATTAB','Masculin',40),
+('OUTHMAN IBN AFFAN','Masculin',40),
+('ALI IBN ABI TALIB','Masculin',40),
+('KHADÎDJA BINT KHOUWAYLID','Féminin',40),
+('AÏCHA BINT ABOU BAKR','Féminin',40),
+('FATIMA BINT MUHAMMAD','Féminin',40),
+('HAFSA BINT OUMAR','Féminin',40);
 
 -- ---------------------------------------------------------------
 -- Questions du test d'entrée

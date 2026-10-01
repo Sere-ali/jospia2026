@@ -112,14 +112,14 @@ CREATE TABLE `dortoirs` (
 LOCK TABLES `dortoirs` WRITE;
 /*!40000 ALTER TABLE `dortoirs` DISABLE KEYS */;
 INSERT INTO `dortoirs` VALUES
-(1,'Dortoir Hommes 1','Masculin',40,0),
-(2,'Dortoir Hommes 2','Masculin',40,0),
-(3,'Dortoir Hommes 3','Masculin',40,0),
-(4,'Dortoir Hommes 4','Masculin',40,0),
-(5,'Dortoir Femmes 1','Féminin',40,0),
-(6,'Dortoir Femmes 2','Féminin',40,0),
-(7,'Dortoir Femmes 3','Féminin',40,0),
-(8,'Dortoir Femmes 4','Féminin',40,0);
+(1,'ABU BAKR AS-SIDDIQ','Masculin',40,0),
+(2,'OUMAR IBN AL-KHATTAB','Masculin',40,0),
+(3,'OUTHMAN IBN AFFAN','Masculin',40,0),
+(4,'ALI IBN ABI TALIB','Masculin',40,0),
+(5,'KHADÎDJA BINT KHOUWAYLID','Féminin',40,0),
+(6,'AÏCHA BINT ABOU BAKR','Féminin',40,0),
+(7,'FATIMA BINT MUHAMMAD','Féminin',40,0),
+(8,'HAFSA BINT OUMAR','Féminin',40,0);
 /*!40000 ALTER TABLE `dortoirs` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -20,8 +20,7 @@ foreach ($stmt->fetchAll() as $s) {
     $parDortoir[$cle][] = $s;
 }
 // Ordonner : dortoirs Hommes, puis Femmes, puis Pépinière, puis autres
-$ordreDortoirs = ['Dortoir Hommes 1','Dortoir Hommes 2','Dortoir Hommes 3','Dortoir Hommes 4',
-                  'Dortoir Femmes 1','Dortoir Femmes 2','Dortoir Femmes 3','Dortoir Femmes 4','Pépinière'];
+$ordreDortoirs = array_merge(DORTOIRS_FRERES, DORTOIRS_SOEURS, ['Pépinière']);
 uksort($parDortoir, function($a, $b) use ($ordreDortoirs) {
     $ia = array_search($a, $ordreDortoirs); $ia = $ia === false ? 99 : $ia;
     $ib = array_search($b, $ordreDortoirs); $ib = $ib === false ? 99 : $ib;

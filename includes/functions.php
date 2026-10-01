@@ -885,3 +885,28 @@ function photoFocus(PDO $pdo, $nom, $ratio = 1.0) {
         return $cache[$cle] = $pos;
     } catch (Throwable $e) { return $cache[$cle] = $defaut; }
 }
+
+
+/* ------------------------------------------------------------------ */
+/*  Noms des dortoirs : les quatre Califes (frères) et quatre figures féminines (sœurs)  */
+/* ------------------------------------------------------------------ */
+const DORTOIRS_FRERES = ['ABU BAKR AS-SIDDIQ', 'OUMAR IBN AL-KHATTAB', 'OUTHMAN IBN AFFAN', 'ALI IBN ABI TALIB'];
+const DORTOIRS_SOEURS = ['KHADÎDJA BINT KHOUWAYLID', 'AÏCHA BINT ABOU BAKR', 'FATIMA BINT MUHAMMAD', 'HAFSA BINT OUMAR'];
+
+/** Renomme (une seule fois) « Dortoir Hommes 1..4 / Femmes 1..4 » dans la table dortoirs et chez les séminaristes. */
+function dortoirsRenommer(PDO $pdo) {
+    static $fait = false;
+    if ($fait) return;
+    $fait = true;
+    try {
+        $st = $pdo->query("SELECT COUNT(*) FROM dortoirs WHERE nom LIKE 'Dortoir Hommes %' OR nom LIKE 'Dortoir Femmes %'");
+        if ((int)$st->fetchColumn() === 0) return;
+        foreach ([['Hommes', DORTOIRS_FRERES], ['Femmes', DORTOIRS_SOEURS]] as [$groupe, $noms]) {
+            foreach ($noms as $i => $nouveau) {
+                $ancien = 'Dortoir ' . $groupe . ' ' . ($i + 1);
+                $pdo->prepare("UPDATE dortoirs SET nom = ? WHERE nom = ?")->execute([$nouveau, $ancien]);
+                $pdo->prepare("UPDATE seminaristes SET dortoir = ? WHERE dortoir = ?")->execute([$nouveau, $ancien]);
+            }
+        }
+    } catch (Throwable $e) { error_log('Renommage dortoirs : ' . $e->getMessage()); }
+}
