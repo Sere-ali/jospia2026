@@ -34,18 +34,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container">
-        <div class="section-titre"><span class="eyebrow">Sorties du camp</span><h2>Attribuer MG / MGA et Sécurité</h2>
-            <p>Les comptes cochés peuvent traiter les demandes : le <strong>MG / MGA</strong> accepte ou refuse, la <strong>Sécurité</strong> confirme la sortie (bouton OK).</p></div>
+        <div class="section-titre"><span class="eyebrow">Sorties du camp</span><h2>Attribuer le MG / MGA</h2>
+            <p>Les comptes attribués peuvent accepter ou refuser les demandes de sortie. La commission Sécurité confirme ensuite la sortie (bouton OK).</p></div>
         <form method="get" class="form-inline" style="margin-bottom:14px;"><input type="text" name="q" value="<?= e($q) ?>" placeholder="Rechercher un nom ou identifiant"> <button class="btn btn-primaire btn-sm">Rechercher</button></form>
         <div class="table-wrap"><table class="table">
-            <thead><tr><th>Nom</th><th>Identifiant</th><th>Rôle / commission</th><th>MG / MGA</th><th>Sécurité des sorties</th></tr></thead>
+            <thead><tr><th>Nom</th><th>Identifiant</th><th>Rôle / commission</th><th>MG / MGA</th></tr></thead>
             <tbody>
             <?php foreach ($comptes as $c): $cid = (int)$c['id']; ?>
                 <tr>
                     <td><?= e($c['nom_affiche'] ?: '-') ?></td>
                     <td><?= e($c['identifiant']) ?></td>
                     <td><?= e($c['role'] . ($c['commission'] ? ' - ' . $c['commission'] : '')) ?></td>
-                    <?php foreach (['mg', 'securite'] as $rl): $a = !empty($roles[$cid][$rl]); ?>
+                    <?php foreach (['mg'] as $rl): $a = !empty($roles[$cid][$rl]); ?>
                     <td><form method="post" style="margin:0;">
                         <input type="hidden" name="compte_id" value="<?= $cid ?>"><input type="hidden" name="role" value="<?= $rl ?>">
                         <?php if ($a): ?><span class="pill pill-vert">✔ Attribué</span> <button name="action" value="retirer" class="btn btn-outline btn-sm">Retirer</button>
@@ -53,7 +53,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     </form></td>
                     <?php endforeach; ?>
                 </tr>
-            <?php endforeach; if (!$comptes): ?><tr><td colspan="5">Aucun compte.</td></tr><?php endif; ?>
+            <?php endforeach; if (!$comptes): ?><tr><td colspan="4">Aucun compte.</td></tr><?php endif; ?>
             </tbody>
         </table></div>
         <p style="margin-top:12px;font-size:.9em;">Les administrateurs ont déjà accès aux deux pages sans attribution.</p>

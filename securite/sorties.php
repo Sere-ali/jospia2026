@@ -3,7 +3,7 @@ require_once __DIR__ . '/../includes/init.php';
 exigerConnexion();
 date_default_timezone_set('Africa/Abidjan');
 sortiesPreparer($pdo);
-if (!estSortieSecurite()) { http_response_code(403); die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée aux comptes à qui le super administrateur a attribué la Sécurité des sorties.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>'); }
+if (!estSortieSecurite()) { http_response_code(403); die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée à la commission Sécurité.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>'); }
 $u = utilisateurCourant();
 $titrePage = "Commission Sécurité - Sorties du camp";
 

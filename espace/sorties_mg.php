@@ -35,7 +35,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:900px;">
-        <div class="section-titre"><span class="eyebrow">MG / MGA</span><h2>🚪 Demandes de sortie du camp</h2></div>
+        <div class="section-titre"><span class="eyebrow">MG / MGA</span><h2>🚪 Demandes de sortie du camp</h2><?php if (estSuperAdmin()): ?><p><a href="<?= BASE_URL ?>/admin/sorties_roles" class="btn btn-outline btn-sm">👤 Choisir les MG / MGA</a></p><?php endif; ?></div>
         <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 

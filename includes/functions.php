@@ -763,15 +763,9 @@ function estMG() {
     try { return $cache = sortieRoleAttribue($pdo, $u['id'], 'mg'); } catch (Throwable $e) { return $cache = false; }
 }
 
-/** Confirme les sorties (bouton OK) : administrateurs, ou compte à qui le super administrateur a attribué « Sécurité ». */
+/** Confirme les sorties (bouton OK) : commission Sécurité (et administrateurs). */
 function estSortieSecurite() {
-    static $cache = null;
-    if ($cache !== null) return $cache;
-    $u = utilisateurCourant();
-    if (!$u) return $cache = false;
-    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
-    global $pdo;
-    try { return $cache = sortieRoleAttribue($pdo, $u['id'], 'securite'); } catch (Throwable $e) { return $cache = false; }
+    return estSecurite();
 }
 
 /** Identité de la personne connectée pour une demande de sortie : [type, personne_id, nom, groupe]. */
