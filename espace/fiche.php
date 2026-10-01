@@ -114,7 +114,7 @@ require_once __DIR__ . '/../includes/header.php';
             <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a></p>
         </div>
 
-        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez imprimer votre fiche avec son QR code.</div><?php endif; ?>
+        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez télécharger votre fiche (PDF) avec son QR code.</div><?php endif; ?>
         <div class="fiche" id="ficheImprimable">
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">
@@ -146,9 +146,8 @@ require_once __DIR__ . '/../includes/header.php';
             <?= blocQrFiche($pdo, $seminariste['id']) ?>
         </div>
         <div style="text-align:center;margin-top:18px;" class="no-print">
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer ma fiche d'inscription</button>
+            <a href="<?= BASE_URL ?>/espace/download_fiche" class="btn btn-primaire">📄 Télécharger ma fiche d'inscription (PDF)</a>
         </div>
-        <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
 
         <div style="max-width:340px;margin:30px auto 0;">
             <h3 style="text-align:center;">Mon badge</h3>

@@ -15,9 +15,8 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="container">
         <div class="no-print" style="text-align:center;margin-bottom:20px;">
             <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer / Télécharger</button>
+            <a href="<?= BASE_URL ?>/espace/download_fiche?id=<?= (int)$s['id'] ?>" class="btn btn-primaire">📄 Télécharger en PDF</a>
         </div>
-        <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
         <div class="fiche">
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">

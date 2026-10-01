@@ -813,3 +813,66 @@ function pdfRecu(array $s, array $recu, $nomFichier) {
     $pdf->fin();
     exit;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Fiche d'inscription du séminariste : 1 page A4 (entête, photo, informations, dortoir, QR code)  */
+/* ------------------------------------------------------------------ */
+function pdfFiche(PDO $pdo, array $s, $nomFichier) {
+    require_once __DIR__ . '/qrcode_php.php';
+    $W = 1654; $H = 2339; $M = 140; $R = 'tinos-latin-400-normal.ttf'; $B = 'tinos-latin-700-normal.ttf';
+    $im = pdfToile($W, $H); imageantialias($im, true);
+    $vertF = imagecolorallocate($im, 6, 83, 47); $vert = imagecolorallocate($im, 11, 138, 78); $orange = imagecolorallocate($im, 247, 127, 0);
+    $noir = imagecolorallocate($im, 30, 38, 33); $gris = imagecolorallocate($im, 100, 112, 105); $ligne = imagecolorallocate($im, 214, 226, 219);
+    $blanc = imagecolorallocate($im, 255, 255, 255); $rouge = imagecolorallocate($im, 200, 30, 30);
+    imagefilledrectangle($im, 0, 0, (int)($W / 3), 12, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 0, $W, 12, $vert);
+    $ent = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
+    $ew = 1000; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
+    imagecopyresampled($im, $ent, (int)(($W - $ew) / 2), 50, 0, 0, $ew, $eh, imagesx($ent), imagesy($ent)); imagedestroy($ent);
+    $y = 50 + $eh + 28;
+    imagefilledrectangle($im, (int)($W / 2 - 220), $y, (int)($W / 2 - 1), $y + 6, $orange); imagefilledrectangle($im, (int)($W / 2), $y, (int)($W / 2 + 220), $y + 6, $vert);
+    $y += 70;
+    $t = "FICHE D'INSCRIPTION - SÉMINARISTE"; $tw = pdfLargeurTexte(48, $B, $t);
+    pdfEcrire($im, 48, ($W - $tw) / 2, $y + 40, $vertF, $B, $t); $y += 75;
+    $sub = defined('EVENT_FULL') ? EVENT_FULL : 'JOSPIA'; $sw = pdfLargeurTexte(28, $R, $sub);
+    pdfEcrire($im, 28, ($W - $sw) / 2, $y + 20, $gris, $R, $sub); $y += 70;
+    // photo à droite
+    $yDebut = $y; $px = $W - $M - 300;
+    $ph = pdfPhoto($pdo, $s['photo'] ?? '');
+    if ($ph) { pdfCouvrir($im, $ph, $px, $y, 300, 380, 0.5, 0.3); imagedestroy($ph); }
+    else { pdfPlaceholderPhoto($im, $px, $y, 300, 380); }
+    $det = [['Matricule', $s['matricule']], ['Nom et prénoms', $s['nom_prenoms']], ['Genre', $s['genre']], ['Âge', $s['age'] . ' ans'], ["Niveau d'études", $s['niveau_etude']],
+        ['Sous-comité', $s['anyama']], ['Section', $s['section']], ['Lieu de résidence', $s['lieu_residence']], ['Contact', $s['contact']],
+        ['Maladie / allergie', trim($s['maladie'] . ($s['maladie_autre'] ? ' - ' . $s['maladie_autre'] : ''))],
+        ["Contact d'urgence", $s['parent_nom'] . ' (' . $s['parent_lien'] . ') - ' . $s['parent_contact']]];
+    if (!empty($s['test_complete'])) $det[] = ["Test d'entrée", $s['note_test'] . '/20 - Niveau ' . $s['niveau_affecte']];
+    foreach ($det as [$k, $v]) {
+        $y += 62;
+        pdfEcrire($im, 28, $M + 10, $y, $gris, $R, $k);
+        $v = (string)$v; $taille = 31; $maxw = $W - $M - 320 - ($M + 480);
+        if ($y < $yDebut + 400) { $maxw = $px - 30 - ($M + 480); }
+        while ($taille > 18 && pdfLargeurTexte($taille, $B, $v) > $maxw) $taille--;
+        pdfEcrire($im, $taille, $M + 480, $y, $noir, $B, $v);
+        imagefilledrectangle($im, $M, $y + 20, $y < $yDebut + 400 ? $px - 30 : $W - $M, $y + 22, $ligne);
+    }
+    $y += 90;
+    // dortoir
+    imagefilledrectangle($im, $M, $y, $W - $M, $y + 120, $vertF);
+    $l = 'DORTOIR ATTRIBUÉ'; pdfEcrire($im, 26, $M + 30, $y + 45, $blanc, $R, $l);
+    $d = (string)($s['dortoir'] ?: 'Non attribué'); pdfEcrire($im, 48, $M + 30, $y + 100, $blanc, $B, $d);
+    $y += 190;
+    // QR
+    $qr = QRCode::getMinimumQRCode(urlVerificationFiche($pdo, $s['id']), QR_ERROR_CORRECT_LEVEL_M);
+    $nb = $qr->getModuleCount(); $cell = 10; $q = $nb * $cell; $qx = (int)(($W - $q) / 2);
+    for ($r = 0; $r < $nb; $r++) for ($c = 0; $c < $nb; $c++) if ($qr->isDark($r, $c)) imagefilledrectangle($im, $qx + $c * $cell, $y + $r * $cell, $qx + ($c + 1) * $cell - 1, $y + ($r + 1) * $cell - 1, $noir);
+    $y += $q + 55;
+    $nt = 'Scannez ce QR code : vert = payé, rouge = refusé'; $nw = pdfLargeurTexte(26, $R, $nt); pdfEcrire($im, 26, ($W - $nw) / 2, $y, $gris, $R, $nt);
+    $y += 60;
+    $st = statutPaiementSeminariste($pdo, $s['id']);
+    $lab = $st === 'validé' ? 'Paiement validé' : ($st === 'rejeté' ? 'Paiement rejeté' : 'Paiement en attente');
+    $lw = pdfLargeurTexte(32, $B, $lab); pdfEcrire($im, 32, ($W - $lw) / 2, $y, $st === 'validé' ? $vert : $rouge, $B, $lab);
+    $pied = $sub . ' - ' . $s['matricule']; $fw = pdfLargeurTexte(22, $R, $pied); pdfEcrire($im, 22, ($W - $fw) / 2, $H - 60, $gris, $R, $pied);
+    $pdf = new PdfFlux($nomFichier);
+    $pdf->page(595.28, 841.89, [[pdfJpeg($im, 90), $W, $H, 0, 0, 595.28, 841.89]]);
+    $pdf->fin();
+    exit;
+}
