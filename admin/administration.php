@@ -7,6 +7,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 $cartes = [
     ['👥 Membres commission', 'Liste, badges et diplômes des membres de commission.', '/admin/commissions'],
     ['🎓 Séminaristes', 'Liste, fiches, badges et diplômes des séminaristes.', '/admin/seminaristes'],
+    ['🪪 Badges', 'Badges par niveau (séminaristes) et par commission, en PDF.', '/admin/badges'],
+    ['🎓 Diplômes', 'Diplômes par niveau et par commission, en PDF.', '/admin/diplomes'],
     ['🔑 Identifiants', 'Retrouver un identifiant ou réinitialiser un mot de passe.', '/admin/identifiants'],
     ['🛏️ Dortoirs', 'Occupation et capacité des dortoirs.', '/admin/dortoirs'],
     ['📋 Listes dortoir/niveau', 'Listes nominatives par dortoir et par niveau (export Excel).', '/admin/listes'],

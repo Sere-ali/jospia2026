@@ -76,11 +76,27 @@ function affecterDortoir(PDO $pdo, $genre, $age) {
 }
 
 /** Liste des sections par Anyama */
+if (!defined('ANYAMA_EXTERIEUR')) define('ANYAMA_EXTERIEUR', 'Autre (extérieur)');
 function sectionsParAnyama() {
     return [
         'Anyama 1' => ['LYMA', 'SAINT MICHEL', 'ATLAS', 'LYMAO', 'YVAC', 'GAOUSSOU', 'LA PERRUCHE', 'Autre'],
         'Anyama 2' => ['GSAMAT', 'BUTHMAAN', 'SOUNTIATA KEÏTA', 'Autre'],
+        ANYAMA_EXTERIEUR => [], // personnes venant de l'extérieur : section facultative
     ];
+}
+
+/** La colonne seminaristes.anyama était un ENUM (Anyama 1 / 2) : elle devient un texte pour accepter « Autre (extérieur) ». */
+function anyamaPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    try {
+        $col = $pdo->query("SHOW COLUMNS FROM seminaristes LIKE 'anyama'")->fetch();
+        $type = (string)($col['Type'] ?? $col['type'] ?? '');
+        if ($type !== '' && stripos($type, 'enum') !== false) {
+            $pdo->exec("ALTER TABLE seminaristes MODIFY anyama VARCHAR(40) NOT NULL");
+        }
+    } catch (Throwable $e) { error_log('Migration anyama : ' . $e->getMessage()); }
 }
 
 function listeCommissions() {

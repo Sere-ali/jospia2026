@@ -12,6 +12,7 @@ $erreurs = [];
 $succes = null;
 $identifiantsGeneres = null;
 $sections = sectionsParAnyama();
+anyamaPreparer($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
@@ -32,9 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($genre, ['Masculin', 'Féminin'], true)) $erreurs[] = "Veuillez préciser le genre.";
     if ($niveauEtude === '') $erreurs[] = "Le niveau d'études est obligatoire.";
-    if (!isset($sections[$anyama])) $erreurs[] = "Veuillez choisir Anyama 1 ou Anyama 2.";
-    elseif (!in_array($section, $sections[$anyama], true)) $erreurs[] = "Veuillez choisir une section valide.";
-    if ($section === 'Autre' && $sectionAutre === '') $erreurs[] = "Veuillez préciser le nom de la section.";
+    $exterieur = ($anyama === ANYAMA_EXTERIEUR);
+    if (!isset($sections[$anyama])) $erreurs[] = "Veuillez choisir Anyama 1, Anyama 2 ou Autre (extérieur).";
+    elseif (!$exterieur && !in_array($section, $sections[$anyama], true)) $erreurs[] = "Veuillez choisir une section valide.";
+    if (!$exterieur && $section === 'Autre' && $sectionAutre === '') $erreurs[] = "Veuillez préciser le nom de la section.";
     if ($lieuResidence === '') $erreurs[] = "Le lieu de résidence est obligatoire.";
     if ($age < 5 || $age > 100) $erreurs[] = "Veuillez indiquer un âge valide.";
     if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
@@ -49,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($erreurs)) {
-        $sectionFinale = ($section === 'Autre') ? $sectionAutre : $section;
+        $sectionFinale = $exterieur ? ($sectionAutre !== '' ? $sectionAutre : 'Extérieur') : (($section === 'Autre') ? $sectionAutre : $section);
         $sousComiteFinal = $sectionFinale; // le sous-comité n'est jamais modifié automatiquement
         $dortoir = affecterDortoir($pdo, $genre, $age);
         $matricule = genererMatriculeSeminariste($pdo);
@@ -171,9 +173,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <option value="">- Choisir -</option>
                                 <option value="Anyama 1" <?= (($_POST['anyama'] ?? '') === 'Anyama 1') ? 'selected' : '' ?>>Anyama 1</option>
                                 <option value="Anyama 2" <?= (($_POST['anyama'] ?? '') === 'Anyama 2') ? 'selected' : '' ?>>Anyama 2</option>
+                                <option value="<?= e(ANYAMA_EXTERIEUR) ?>" <?= (($_POST['anyama'] ?? '') === ANYAMA_EXTERIEUR) ? 'selected' : '' ?>>Autre (personne venant de l'extérieur)</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="section_groupe">
                             <label>Section <span class="req">*</span></label>
                             <select name="section" id="section" required>
                                 <option value="">- Choisir une section -</option>
@@ -181,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
                     <div class="form-group" id="section_autre_wrap" style="display:none;">
-                        <label>Précisez le nom de la section <span class="req">*</span></label>
+                        <label id="section_autre_label">Précisez le nom de la section <span class="req">*</span></label>
                         <input type="text" name="section_autre" value="<?= e($_POST['section_autre'] ?? '') ?>">
                     </div>
                     <div class="help-text">ℹ️ Le sous-comité choisi ci-dessus n'est jamais modifié automatiquement. En revanche, jusqu'à <?= AGE_PEPINIERE_SEUIL ?> ans inclus, le <strong>dortoir</strong> attribué sera automatiquement <strong>Pépinière</strong> (voir section suivante).</div>

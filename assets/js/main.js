@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
         'Anyama 1': ['LYMA', 'SAINT MICHEL', 'ATLAS', 'LYMAO', 'YVAC', 'GAOUSSOU', 'LA PERRUCHE', 'Autre'],
         'Anyama 2': ['GSAMAT', 'BUTHMAAN', 'SOUNTIATA KEÏTA', 'Autre']
     };
+    var EXT = 'Autre (extérieur)';
+    var sectionGroupe = document.getElementById('section_groupe');
+    var sectionAutreLabel = document.getElementById('section_autre_label');
+    var LIB_AUTRE = sectionAutreLabel ? sectionAutreLabel.innerHTML : '';
     var selAnyama = document.getElementById('anyama');
     var selSection = document.getElementById('section');
     var sectionAutreWrap = document.getElementById('section_autre_wrap');
@@ -22,6 +26,19 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleSectionAutre();
         }
         function toggleSectionAutre() {
+            var champ = sectionAutreWrap ? sectionAutreWrap.querySelector('input') : null;
+            if (selAnyama.value === EXT) {
+                // personne venant de l'extérieur : pas de section à choisir, précision facultative
+                if (sectionGroupe) sectionGroupe.style.display = 'none';
+                selSection.required = false; selSection.value = '';
+                if (sectionAutreWrap) sectionAutreWrap.style.display = 'block';
+                if (sectionAutreLabel) sectionAutreLabel.textContent = "D'où venez-vous ? (ville, association, structure... - facultatif)";
+                if (champ) champ.required = false;
+                return;
+            }
+            if (sectionGroupe) sectionGroupe.style.display = '';
+            selSection.required = true;
+            if (sectionAutreLabel) sectionAutreLabel.innerHTML = LIB_AUTRE;
             if (sectionAutreWrap) sectionAutreWrap.style.display = (selSection.value === 'Autre') ? 'block' : 'none';
         }
         selAnyama.addEventListener('change', majSections);

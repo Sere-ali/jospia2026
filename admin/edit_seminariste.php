@@ -19,6 +19,7 @@ if (!$s) { die("Séminariste introuvable."); }
 $erreurs = [];
 $succes = null;
 $sections = sectionsParAnyama();
+anyamaPreparer($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
@@ -38,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($genre, ['Masculin', 'Féminin'], true)) $erreurs[] = "Veuillez préciser le genre.";
     if ($niveauEtude === '') $erreurs[] = "Le niveau d'études est obligatoire.";
-    if (!isset($sections[$anyama])) $erreurs[] = "Veuillez choisir Anyama 1 ou Anyama 2.";
+    if (!isset($sections[$anyama])) $erreurs[] = "Veuillez choisir Anyama 1, Anyama 2 ou Autre (extérieur).";
+    if ($section === '' && $anyama === ANYAMA_EXTERIEUR) $section = 'Extérieur';
     if ($section === '') $erreurs[] = "La section est obligatoire.";
     if ($lieuResidence === '') $erreurs[] = "Le lieu de résidence est obligatoire.";
     if ($age < 5 || $age > 100) $erreurs[] = "Veuillez indiquer un âge valide.";
@@ -141,11 +143,12 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
                         <select name="anyama" required>
                             <option value="Anyama 1" <?= $s['anyama']==='Anyama 1'?'selected':'' ?>>Anyama 1</option>
                             <option value="Anyama 2" <?= $s['anyama']==='Anyama 2'?'selected':'' ?>>Anyama 2</option>
+                            <option value="<?= e(ANYAMA_EXTERIEUR) ?>" <?= $s['anyama']===ANYAMA_EXTERIEUR?'selected':'' ?>>Autre (extérieur)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Section <span class="req">*</span></label>
-                        <input type="text" name="section" required value="<?= e($s['section']) ?>">
+                        <label>Section <small>(facultative pour un extérieur)</small></label>
+                        <input type="text" name="section" value="<?= e($s['section']) ?>">
                     </div>
                 </div>
                 <div class="help-text">Dortoir actuel : <strong><?= e($s['dortoir']) ?></strong> - recalculé automatiquement à l'enregistrement selon l'âge.</div>
