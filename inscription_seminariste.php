@@ -45,6 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
+    // PAIEMENT : sans paiement, le formulaire ne peut pas être soumis et aucune information n'est enregistrée.
+    $modeApi = waveApiActive();
+    $referenceTx = trim($_POST['reference_transaction'] ?? '');
+    $messageEchec = "Échec : impossible de soumettre vos informations, le paiement n'a pas été effectué. Effectuez d'abord le paiement Wave de " . number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . " FCFA, puis réessayez.";
+    if (!$modeApi) {
+        if ($referenceTx === '') { array_unshift($erreurs, $messageEchec); }
+        elseif (!preg_match('/^[A-Za-z0-9_\-]{6,60}$/', $referenceTx)) { $erreurs[] = "Échec : l'identifiant de transaction Wave est invalide (6 à 60 caractères, lettres et chiffres)."; }
+        else {
+            $dejaUtilisee = $pdo->prepare("SELECT COUNT(*) FROM paiements WHERE reference_transaction = ?");
+            $dejaUtilisee->execute([$referenceTx]);
+            if ($dejaUtilisee->fetchColumn() > 0) $erreurs[] = "Échec : cet identifiant de transaction a déjà été utilisé pour une autre inscription.";
+        }
+    }
+
     if (empty($erreurs)) {
         $nomPhoto = uploadPhoto($_FILES['photo']);
         if (!$nomPhoto) $erreurs[] = "La photo n'a pas pu être enregistrée (formats acceptés : jpg, jpeg, png, webp - 5 Mo max).";
@@ -52,53 +66,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erreurs)) {
         $sectionFinale = $exterieur ? ($sectionAutre !== '' ? $sectionAutre : 'Extérieur') : (($section === 'Autre') ? $sectionAutre : $section);
-        $sousComiteFinal = $sectionFinale; // le sous-comité n'est jamais modifié automatiquement
-        $dortoir = affecterDortoir($pdo, $genre, $age);
-        $matricule = genererMatriculeSeminariste($pdo);
-        // Les séminaristes du dortoir Pépinière ne composent pas de test d'entrée :
-        // leur niveau est directement "Pépinière".
-        $niveauAffecte = ($dortoir === 'Pépinière') ? 'Pépinière' : null;
+        $donnees = ['nom' => $nom, 'genre' => $genre, 'niveauEtude' => $niveauEtude, 'anyama' => $anyama, 'section' => $sectionFinale,
+            'lieuResidence' => $lieuResidence, 'maladie' => $maladie, 'maladieAutre' => $maladieAutre, 'age' => $age, 'contact' => $contact,
+            'parentNom' => $parentNom, 'parentLien' => $parentLien, 'parentContact' => $parentContact];
 
-        $stmt = $pdo->prepare("INSERT INTO seminaristes
-            (nom_prenoms, genre, niveau_etude, anyama, section, sous_comite_final, lieu_residence, maladie, maladie_autre, age, contact, photo, parent_nom, parent_lien, parent_contact, matricule, dortoir, niveau_affecte)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->execute([
-            $nom, $genre, $niveauEtude, $anyama, $sectionFinale, $sousComiteFinal, $lieuResidence,
-            $maladie, $maladie === 'Autre' ? $maladieAutre : null, $age, $contact, $nomPhoto,
-            $parentNom, $parentLien, $parentContact, $matricule, $dortoir, $niveauAffecte
-        ]);
-        $seminaristeId = $pdo->lastInsertId();
-
-        [$identifiant, $motDePasse] = genererIdentifiantMotDePasse($contact);
-        $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ?");
-        $chk->execute([$identifiant]);
-        if ($chk->fetchColumn() > 0) $identifiant .= '_' . $seminaristeId;
-
-        $hash = password_hash($motDePasse, PASSWORD_DEFAULT);
-        $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?,?)")
-            ->execute([$identifiant, $hash, $motDePasse, 'seminariste', $seminaristeId, $nom]);
-
-        // Paiement en attente, avec le numéro Wave du payeur (la Finance le retrouve dans son compte Wave)
-        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, '', 'en attente', ?, ?)")
-            ->execute([$seminaristeId, $contact, FRAIS_PARTICIPATION]);
-
-        // Connexion automatique pour enchaîner directement sur le paiement
-        if (!estConnecte()) {
-            $stC = $pdo->prepare("SELECT * FROM comptes WHERE identifiant = ?");
-            $stC->execute([$identifiant]);
-            if ($compteNew = $stC->fetch()) {
-                session_regenerate_id(true);
-                $_SESSION['compte_id'] = $compteNew['id'];
-                $_SESSION['compte'] = $compteNew;
-            }
+        if ($modeApi) {
+            // Paiement d'abord : le dossier n'est créé qu'après confirmation de Wave (wave_retour_inscription / webhook).
+            $jeton = inscriptionEnAttente($pdo, $donnees, $nomPhoto);
+            redirect('/wave_inscription?t=' . $jeton);
         }
 
-        if (estConnecte()) {
-            redirect('/paiement?nouveau=1');
+        // Mode manuel : le paiement a été fait par la personne, la commission Finance contrôle l'identifiant de transaction.
+        $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx);
+        $stC = $pdo->prepare("SELECT * FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' LIMIT 1");
+        $stC->execute([$r['id']]);
+        if (!estConnecte() && ($compteNew = $stC->fetch())) {
+            session_regenerate_id(true);
+            $_SESSION['compte_id'] = $compteNew['id'];
+            $_SESSION['compte'] = $compteNew;
         }
+        if (estConnecte()) { redirect('/paiement'); }
 
-        $succes = "Inscription réussie ! Votre dortoir a été attribué automatiquement : $dortoir.";
-        $identifiantsGeneres = ['id' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir, 'anyama' => $anyama, 'section' => $sectionFinale];
+        $succes = "Inscription reçue. Votre dortoir a été attribué automatiquement : " . $r['dortoir'] . ".";
+        $identifiantsGeneres = ['id' => $r['identifiant'], 'mdp' => $r['mdp'], 'matricule' => $r['matricule'], 'dortoir' => $r['dortoir'], 'anyama' => $anyama, 'section' => $sectionFinale];
     }
 }
 ?>
@@ -234,8 +224,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </fieldset>
 
-                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Valider mon inscription et payer par Wave</span><i aria-hidden="true">→</i></button>
-                <p class="form-note">💙 Paiement sécurisé par Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</p>
+                <?php if (!waveApiActive()): ?>
+                <fieldset>
+                    <legend>Paiement Wave (obligatoire)</legend>
+                    <div class="help-text" style="margin-bottom:12px;">💙 Payez d'abord <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> par Wave au <strong><?= e(numeroWaveAffiche()) ?></strong><?php if (lienWavePaiement()): ?> - <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener"><strong>cliquer ici pour payer</strong></a><?php endif; ?>, puis recopiez l'identifiant de la transaction ci-dessous. <strong>Sans paiement, le formulaire ne peut pas être soumis.</strong></div>
+                    <div class="form-group">
+                        <label>Identifiant de la transaction Wave <span class="req">*</span></label>
+                        <input type="text" name="reference_transaction" maxlength="60" autocomplete="off" placeholder="Ex : T_XXXXXXXXXXXX" value="<?= e($_POST['reference_transaction'] ?? '') ?>">
+                    </div>
+                </fieldset>
+                <?php endif; ?>
+
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= waveApiActive() ? 'Valider et payer par Wave' : 'Soumettre mon inscription' ?></span><i aria-hidden="true">→</i></button>
+                <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "l'inscription n'est acceptée que si le paiement a été effectué" ?></p>
             </form>
         <?php endif; ?>
         </div>

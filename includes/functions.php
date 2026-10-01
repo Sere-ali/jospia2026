@@ -387,7 +387,18 @@ function waveVerifierEtValider(PDO $pdo, $sessionId) {
     $st = $pdo->prepare("SELECT id FROM paiements WHERE wave_session_id = ? LIMIT 1");
     $st->execute([$sessionId]);
     $pid = (int)$st->fetchColumn();
-    if (!$pid) { return false; }
+    if (!$pid) {
+        // Inscription en attente de paiement : le dossier n'existe pas encore, on le crée maintenant que Wave confirme.
+        try {
+            inscriptionsAttentePreparer($pdo);
+            $sa = $pdo->prepare("SELECT * FROM inscriptions_attente WHERE wave_session_id = ? LIMIT 1");
+            $sa->execute([$sessionId]);
+            if ($att = $sa->fetch()) {
+                return finaliserInscriptionAttente($pdo, $att, $sessionId, (string)($j['transaction_id'] ?? '')) !== null;
+            }
+        } catch (Throwable $e) { error_log('Inscription en attente : ' . $e->getMessage()); }
+        return false;
+    }
     $tx = (string)($j['transaction_id'] ?? '');
     $pdo->prepare("UPDATE paiements SET reference_transaction = ? WHERE id = ?")->execute([$tx !== '' ? $tx : 'WAVE-' . $sessionId, $pid]);
     validerPaiement($pdo, $pid, null);
@@ -581,3 +592,84 @@ function lettreRapportHtml(array $r, $actions = '') {
     if ($actions !== '') $h .= '<div class="lettre-actions no-print">' . $actions . '</div>';
     return $h . '</article>';
 }
+
+/* ------------------------------------------------------------------ */
+/*  Inscription séminariste : création du dossier + inscriptions en attente de paiement  */
+/* ------------------------------------------------------------------ */
+
+/** Crée le séminariste, son compte et sa ligne de paiement. $d : données validées du formulaire. */
+function creerInscriptionSeminariste(PDO $pdo, array $d, $nomPhoto, $referenceTx = '', $waveSessionId = null) {
+    $dortoir = affecterDortoir($pdo, $d['genre'], $d['age']);
+    $matricule = genererMatriculeSeminariste($pdo);
+    $niveauAffecte = ($dortoir === 'Pépinière') ? 'Pépinière' : null;
+    $pdo->prepare("INSERT INTO seminaristes
+        (nom_prenoms, genre, niveau_etude, anyama, section, sous_comite_final, lieu_residence, maladie, maladie_autre, age, contact, photo, parent_nom, parent_lien, parent_contact, matricule, dortoir, niveau_affecte)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")->execute([
+        $d['nom'], $d['genre'], $d['niveauEtude'], $d['anyama'], $d['section'], $d['section'], $d['lieuResidence'],
+        $d['maladie'], $d['maladie'] === 'Autre' ? $d['maladieAutre'] : null, $d['age'], $d['contact'], $nomPhoto,
+        $d['parentNom'], $d['parentLien'], $d['parentContact'], $matricule, $dortoir, $niveauAffecte
+    ]);
+    $sid = (int)$pdo->lastInsertId();
+
+    [$identifiant, $motDePasse] = genererIdentifiantMotDePasse($d['contact']);
+    $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ?");
+    $chk->execute([$identifiant]);
+    if ($chk->fetchColumn() > 0) $identifiant .= '_' . $sid;
+    $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?,?)")
+        ->execute([$identifiant, password_hash($motDePasse, PASSWORD_DEFAULT), $motDePasse, 'seminariste', $sid, $d['nom']]);
+
+    $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, wave_session_id) VALUES (?, ?, 'en attente', ?, ?, ?)")
+        ->execute([$sid, (string)$referenceTx, $d['contact'], FRAIS_PARTICIPATION, $waveSessionId]);
+    $pid = (int)$pdo->lastInsertId();
+    return ['id' => $sid, 'paiement_id' => $pid, 'identifiant' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir];
+}
+
+function inscriptionsAttentePreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS inscriptions_attente (
+        id INT AUTO_INCREMENT PRIMARY KEY, jeton VARCHAR(64) NOT NULL UNIQUE, donnees LONGTEXT NOT NULL, photo VARCHAR(255) NOT NULL,
+        wave_session_id VARCHAR(100) NULL, statut VARCHAR(20) NOT NULL DEFAULT 'attente', seminariste_id INT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_att_session (wave_session_id)) ENGINE=InnoDB");
+}
+
+/** Enregistre une inscription EN ATTENTE de paiement (rien n'est créé dans les séminaristes). Retourne le jeton. */
+function inscriptionEnAttente(PDO $pdo, array $d, $nomPhoto) {
+    inscriptionsAttentePreparer($pdo);
+    $jeton = bin2hex(random_bytes(24));
+    $pdo->prepare("INSERT INTO inscriptions_attente (jeton, donnees, photo) VALUES (?,?,?)")->execute([$jeton, json_encode($d, JSON_UNESCAPED_UNICODE), $nomPhoto]);
+    return $jeton;
+}
+
+/**
+ * Le paiement est confirmé : crée le dossier du séminariste (une seule fois, même si le retour et le webhook arrivent ensemble)
+ * puis valide le paiement. Retourne l'id du séminariste ou null.
+ */
+function finaliserInscriptionAttente(PDO $pdo, array $att, $waveSessionId, $transactionId = '') {
+    inscriptionsAttentePreparer($pdo);
+    if (!empty($att['seminariste_id'])) return (int)$att['seminariste_id'];
+    $claim = $pdo->prepare("UPDATE inscriptions_attente SET statut = 'finalisation' WHERE id = ? AND statut = 'attente'");
+    $claim->execute([$att['id']]);
+    if ($claim->rowCount() < 1) {
+        // déjà pris en charge par une autre requête : on attend brièvement son résultat
+        for ($i = 0; $i < 10; $i++) {
+            usleep(300000);
+            $r = $pdo->prepare("SELECT seminariste_id FROM inscriptions_attente WHERE id = ?"); $r->execute([$att['id']]);
+            if ($sid = (int)$r->fetchColumn()) return $sid;
+        }
+        return null;
+    }
+    try {
+        $d = json_decode($att['donnees'], true);
+        $r = creerInscriptionSeminariste($pdo, $d, $att['photo'], $transactionId !== '' ? $transactionId : 'WAVE-' . $waveSessionId, $waveSessionId);
+        validerPaiement($pdo, $r['paiement_id'], null);
+        $pdo->prepare("UPDATE inscriptions_attente SET statut = 'finalisee', seminariste_id = ? WHERE id = ?")->execute([$r['id'], $att['id']]);
+        return $r['id'];
+    } catch (Throwable $e) {
+        error_log('Finalisation inscription : ' . $e->getMessage());
+        $pdo->prepare("UPDATE inscriptions_attente SET statut = 'attente' WHERE id = ? AND seminariste_id IS NULL")->execute([$att['id']]);
+        return null;
+    }
+}
+
