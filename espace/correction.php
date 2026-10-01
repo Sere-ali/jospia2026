@@ -8,7 +8,7 @@ $stmt->execute([$u['seminariste_id']]);
 $seminariste = $stmt->fetch();
 
 if (!$seminariste) { die("Fiche introuvable."); }
-if (!$seminariste['test_complete']) {
+if (!$seminariste['test_complete'] || !correctionOuverte($pdo)) {
     redirect('/espace/fiche');
 }
 

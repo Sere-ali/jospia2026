@@ -140,6 +140,15 @@ function testOuvert(PDO $pdo) {
     } catch (Throwable $e) { return false; }
 }
 
+/** Correction détaillée du test visible par les séminaristes ? Verrouillée par défaut. */
+function correctionOuverte(PDO $pdo) {
+    try {
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'correction_ouverte'");
+        $st->execute();
+        return $st->fetchColumn() === '1';
+    } catch (Throwable $e) { return false; }
+}
+
 /** La commission scientifique a-t-elle accès au test d'entrée ? (autorisé par le super administrateur ; le super admin y a toujours accès) */
 function accesTestScientifique(PDO $pdo) {
     if (estSuperAdmin()) return true;
@@ -162,7 +171,7 @@ function exigerAccesTest(PDO $pdo) {
 }
 
 function blocFormParametre($cle, $valeurActuelle, $libelleActiver, $libelleDesactiver, $classeActiver = 'btn-primaire') {
-    $retour = strpos($_SERVER['PHP_SELF'], 'dashboard') !== false ? 'dashboard' : '';
+    $retour = strpos($_SERVER['PHP_SELF'], 'dashboard') !== false ? 'dashboard' : (strpos($_SERVER['PHP_SELF'], 'commission_scientifique') !== false ? 'scientifique' : '');
     return '<form method="post" action="' . BASE_URL . '/admin/test_entree" style="display:inline;"><input type="hidden" name="retour" value="' . $retour . '"><input type="hidden" name="cle" value="' . $cle . '"><input type="hidden" name="valeur" value="' . ($valeurActuelle ? '0' : '1') . '">'
         . '<button type="submit" class="btn btn-sm ' . ($valeurActuelle ? 'btn-danger' : $classeActiver) . '">' . ($valeurActuelle ? $libelleDesactiver : $libelleActiver) . '</button></form>';
 }
@@ -185,6 +194,13 @@ function blocTestEntree(PDO $pdo) {
         $h .= '<h3>' . ($ouvert ? '🔓 Test ouvert aux séminaristes' : '🔒 Test fermé aux séminaristes') . '</h3>';
         $h .= '<p>' . ($ouvert ? 'Les séminaristes dont le paiement est validé peuvent composer le test.' : 'Les séminaristes (paiement validé) ne peuvent pas encore composer le test.') . '</p>';
         $h .= blocFormParametre('test_ouvert', $ouvert, '🔓 Ouvrir le test aux séminaristes', '🔒 Fermer le test') . '</div>';
+        if (estScientifique()) {
+            $co = correctionOuverte($pdo);
+            $h .= '<div class="carte" style="border-left:4px solid ' . ($co ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
+            $h .= '<h3>' . ($co ? '🔓 Correction du test visible par les séminaristes' : '🔒 Correction du test verrouillée') . '</h3>';
+            $h .= '<p>' . ($co ? 'Les séminaristes ayant composé le test peuvent voir la correction détaillée de leurs réponses.' : 'Les séminaristes ne peuvent pas voir la correction détaillée de leur test.') . '</p>';
+            $h .= blocFormParametre('correction_ouverte', $co, '🔓 Déverrouiller la correction', '🔒 Verrouiller la correction') . '</div>';
+        }
     }
     return $h;
 }

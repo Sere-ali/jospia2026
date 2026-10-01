@@ -179,7 +179,11 @@ require_once __DIR__ . '/../includes/header.php';
             <?php else: ?>
                 <p><strong>Note obtenue :</strong> <?= e($seminariste['note_test']) ?> / 20<br>
                    <strong>Niveau d'affectation :</strong> <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>
-                <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
+                <?php if (correctionOuverte($pdo)): ?>
+                    <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
+                <?php else: ?>
+                    <div class="acces-restreint">🔒 La correction détaillée du test est verrouillée pour le moment.</div>
+                <?php endif; ?>
 
                 <h3 style="margin-top:26px;">Mon diplôme</h3>
                 <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>

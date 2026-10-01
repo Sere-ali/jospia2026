@@ -6,13 +6,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cle = $_POST['cle'] ?? '';
     $v = ($_POST['valeur'] ?? '0') === '1' ? '1' : '0';
     $permis = ($cle === 'test_acces_scientifique' && estSuperAdmin())
-           || ($cle === 'test_ouvert' && accesTestScientifique($pdo) && estScientifique());
+           || (in_array($cle, ['test_ouvert', 'correction_ouverte'], true) && accesTestScientifique($pdo) && estScientifique());
     if ($permis) {
         $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
         $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([$cle, $v]);
         $_SESSION['flash_succes'] = "Paramètre du test d'entrée mis à jour.";
     }
-    redirect(($_POST['retour'] ?? '') === 'dashboard' ? '/admin/dashboard' : '/admin/test_entree');
+    $rt = $_POST['retour'] ?? '';
+    redirect($rt === 'dashboard' ? '/admin/dashboard' : ($rt === 'scientifique' ? '/admin/commission_scientifique' : '/admin/test_entree'));
 }
 
 // La commission scientifique n'y accède que si le super administrateur a déverrouillé le test
