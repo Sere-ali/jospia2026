@@ -520,6 +520,7 @@ function commissionPropre(PDO $pdo) {
     } elseif ($u['role'] === 'finance') { $cible = 'FINANCE'; }
     elseif ($u['role'] === 'scientifique') { $cible = 'SCIENTIFIQUE'; }
     elseif ($u['role'] === 'securite') { $cible = 'SÉCURITÉ'; }
+    elseif ($u['role'] === 'admin' || $u['role'] === 'superadmin') { $cible = 'ADMINISTRATION'; }
     if (!$cible) return null;
     $n = normaliserCommission($cible);
     foreach (listeCommissions() as $c) { if (normaliserCommission($c) === $n) return $c; }
@@ -531,7 +532,7 @@ function lettreRapportHtml(array $r, $actions = '') {
     $mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
     $fr = function ($d) use ($mois) { $t = strtotime($d); $j = (int)date('j', $t); return $j . ($j === 1 ? 'er' : '') . ' ' . $mois[(int)date('n', $t) - 1] . ' ' . date('Y', $t); };
     $h = '<article class="lettre"><div class="lettre-bande"></div>';
-    $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong><br><small>Responsable : ' . e($r['auteur_nom'] ?: '-') . '</small></div>';
+    $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong>' . (normaliserCommission($r['commission']) === 'ADMINISTRATION' ? '' : '<br><small>Responsable : ' . e($r['auteur_nom'] ?: '-') . '</small>') . '</div>';
     $h .= '<div class="lettre-lieu">Abidjan, le ' . e($fr($r['created_at'] ?: $r['date_rapport'])) . '</div></div>';
     $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Messieurs les Managers généraux</strong></div>';
     $h .= '<div class="lettre-objet">Objet : Rapport journalier du ' . e($fr($r['date_rapport'])) . '</div>';
@@ -543,7 +544,7 @@ function lettreRapportHtml(array $r, $actions = '') {
         foreach (preg_split('/\R+/u', trim((string)$r[$cle])) as $para) { if (trim($para) !== '') $h .= '<p class="lettre-p lettre-j">' . e(trim($para)) . '</p>'; }
     }
     $h .= '<p class="lettre-p lettre-j">Veuillez agréer, Messieurs, l\'expression de nos salutations distinguées.</p>';
-    $h .= '<div class="lettre-sign"><small>Le responsable de la commission ' . e($r['commission']) . ',</small><br><strong>' . e($r['auteur_nom'] ?: ('Commission ' . $r['commission'])) . '</strong></div>';
+    $h .= '<div class="lettre-sign"><small>Le responsable de la commission ' . e($r['commission']) . ',</small>' . (normaliserCommission($r['commission']) === 'ADMINISTRATION' ? '' : '<br><strong>' . e($r['auteur_nom'] ?: '-') . '</strong>') . '</div>';
     $h .= '<div class="lettre-meta">Déposé le ' . e(date('d/m/Y H:i', strtotime($r['created_at']))) . (!empty($r['updated_at']) ? ' · modifié le ' . e(date('d/m/Y H:i', strtotime($r['updated_at']))) : '') . '</div>';
     if ($actions !== '') $h .= '<div class="lettre-actions no-print">' . $actions . '</div>';
     return $h . '</article>';

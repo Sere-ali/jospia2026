@@ -676,8 +676,8 @@ class PdfRapport {
         $com = (string)$r['commission'];
         pdfEcrire($this->im, 30, $m, $this->y + 30, $c['vertF'], $fb, 'Commission ' . $com);
         $this->y += 42;
-        $auteur = 'Responsable : ' . ($r['auteur_nom'] ?: '-');
-        pdfEcrire($this->im, 28, $m, $this->y + 28, $c['gris'], $f, $auteur);
+        $admin = normaliserCommission($com) === 'ADMINISTRATION';
+        if (!$admin) { pdfEcrire($this->im, 28, $m, $this->y + 28, $c['gris'], $f, 'Responsable : ' . ($r['auteur_nom'] ?: '-')); }
         $this->y += 70;
         $dest = ['À l\'attention de', 'Monsieur le Responsable du Comité d\'organisation', 'JOSPIA'];
         $dx = (int)($W / 2) - 20;
@@ -711,8 +711,10 @@ class PdfRapport {
         $sig = (string)($r['auteur_nom'] ?: ('Commission ' . $com));
         $sx = $W - $m - 700;
         pdfEcrire($this->im, 28, $sx, $this->y + 28, $c['gris'], $f, 'Le responsable de la commission ' . $com . ',');
-        pdfEcrire($this->im, 32, $sx, $this->y + 110, $c['noir'], $fb, $sig);
-        imagefilledrectangle($this->im, $sx, $this->y + 124, $sx + 520, $this->y + 128, $c['orange']);
+        if (!$admin) {
+            pdfEcrire($this->im, 32, $sx, $this->y + 110, $c['noir'], $fb, $sig);
+            imagefilledrectangle($this->im, $sx, $this->y + 124, $sx + 520, $this->y + 128, $c['orange']);
+        } else { imagefilledrectangle($this->im, $sx, $this->y + 48, $sx + 520, $this->y + 52, $c['orange']); }
         $this->y += 150;
     }
     public function fin() {
