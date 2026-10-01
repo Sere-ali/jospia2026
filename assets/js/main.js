@@ -642,8 +642,8 @@ document.addEventListener('DOMContentLoaded', function () {
         [].forEach.call(c.querySelectorAll(IGNORES), function (n) { n.remove(); });
         var tous = [c].concat([].slice.call(c.querySelectorAll('*')));
         tous.forEach(function (n) {
-            n.removeAttribute('style');
-            if (n.classList) { n.classList.remove('vu', 'visible', 'rv'); if (!n.getAttribute('class')) n.removeAttribute('class'); }
+            n.removeAttribute('style'); n.removeAttribute('data-label');
+            if (n.classList) { n.classList.remove('vu', 'visible', 'rv', 'rwd'); if (!n.getAttribute('class')) n.removeAttribute('class'); }
         });
         return c.innerHTML !== undefined ? c.outerHTML : '';
     }
@@ -764,4 +764,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
+})();
+
+
+/* Tableaux adaptés aux petits écrans : chaque ligne devient une fiche (libellés repris de l'en-tête) */
+(function () {
+    function rwd() {
+        [].forEach.call(document.querySelectorAll('table'), function (t) {
+            if (t.hasAttribute('data-no-rwd') || t.closest('.no-rwd')) return;
+            var ths = t.querySelectorAll('thead th');
+            if (!ths.length) return;
+            var libs = [].map.call(ths, function (th) { return th.textContent.replace(/\s+/g, ' ').trim(); });
+            [].forEach.call(t.querySelectorAll('tbody tr'), function (tr) {
+                var col = 0;
+                [].forEach.call(tr.children, function (td) {
+                    if (td.tagName !== 'TD') return;
+                    var span = td.colSpan || 1;
+                    if (span > 1) { td.setAttribute('data-label', ''); td.classList.add('rwd-plein'); col += span; return; }
+                    if (td.getAttribute('data-label') !== (libs[col] || '')) td.setAttribute('data-label', libs[col] || '');
+                    col++;
+                });
+            });
+            t.classList.add('rwd');
+        });
+    }
+    window.josRwd = rwd;
+    document.addEventListener('jos:maj', rwd);
+    if (document.readyState !== 'loading') { rwd(); } else { document.addEventListener('DOMContentLoaded', rwd); }
 })();

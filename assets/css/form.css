@@ -225,3 +225,53 @@
 .lettre-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed #dfe9e2}
 @media(max-width:600px){.lettre{padding:26px 18px 20px;font-size:1rem}.lettre-j{text-indent:1.2em}}
 .lettre-entete{text-align:center;margin:0 0 20px;padding-bottom:14px;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#f77f00 0 50%,#0b8a4e 50% 100%) 1}.lettre-entete img{max-width:100%;width:520px;height:auto}
+
+/* ===== Back-office : adaptation à tous les écrans ===== */
+html, body { max-width: 100%; } body { overflow-x: clip; }
+img, video, canvas, svg { max-width: 100%; height: auto; }
+.container { width: 100%; }
+.carte, .table-wrap, fieldset { min-width: 0; }
+pre, code { white-space: pre-wrap; word-break: break-word; }
+.btn { max-width: 100%; }
+@media (max-width: 1100px) {
+    .container > .carte[style*="flex-wrap"] { gap: 6px !important; }
+}
+@media (max-width: 900px) {
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .section-titre h2 { font-size: 1.55rem; }
+}
+@media (max-width: 760px) {
+    .table-wrap { overflow: visible; background: transparent; border: 0; box-shadow: none; }
+    table.rwd { min-width: 0 !important; display: block; width: 100%; background: transparent; }
+    table.rwd thead { display: none; }
+    table.rwd tbody, table.rwd tfoot { display: block; width: 100%; }
+    table.rwd tr { display: block; width: 100%; margin: 0 0 12px; padding: 6px 14px; background: #fff; border: 1px solid var(--bordure); border-left: 4px solid var(--vert); border-radius: 14px; box-shadow: 0 4px 14px rgba(6,83,47,.07); }
+    table.rwd td { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; padding: 8px 0; border: 0; border-bottom: 1px dashed var(--bordure); text-align: right; overflow-wrap: anywhere; min-width: 0; }
+    table.rwd td:last-child { border-bottom: 0; }
+    table.rwd td::before { content: attr(data-label); flex: 0 0 36%; max-width: 36%; text-align: left; font-weight: 700; font-size: .78rem; color: var(--vert-fonce); }
+    table.rwd td[data-label=""]::before { display: none; }
+    table.rwd td[data-label=""] { justify-content: flex-start; flex-wrap: wrap; text-align: left; }
+    table.rwd td form, table.rwd td .btn { margin: 2px 0; }
+    table.rwd td img { max-width: 64px; }
+    .section-titre[style*="display:flex"], .toolbar, .barre-outils { flex-direction: column; align-items: stretch !important; }
+    form[style*="display:flex"] > * { max-width: 100%; }
+    form[style*="display:flex"] input, form[style*="display:flex"] select { max-width: 100% !important; flex: 1 1 100%; }
+    .container > .carte[style*="flex-wrap"] .btn { flex: 1 1 calc(50% - 8px); }
+}
+@media (max-width: 420px) {
+    .container { padding: 0 12px; }
+    .carte, fieldset { padding: 14px; }
+    .container > .carte[style*="flex-wrap"] .btn { flex: 1 1 100%; }
+    .btn-sm { padding: 9px 12px; }
+    .section-titre h2 { font-size: 1.35rem; }
+    table.rwd td::before { flex-basis: 40%; max-width: 40%; }
+}
+@media (min-width: 1500px) { .container { max-width: 1320px; } }
+@media print { table.rwd { display: table !important; } table.rwd thead { display: table-header-group !important; } table.rwd tr { display: table-row !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; } table.rwd td { display: table-cell !important; text-align: left !important; } table.rwd td::before { display: none !important; } }
+table.rwd td { flex-wrap: wrap; }
+table.rwd td .btn { white-space: nowrap; flex: none; }
+@media (max-width: 1400px) and (min-width: 1001px) {
+    .navbar .container { gap: 8px; }
+    .nav-links a { padding: 8px 8px; font-size: .8rem; }
+    .brand-text .titre { font-size: 1.05rem; }
+}
