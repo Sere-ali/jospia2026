@@ -11,14 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
     $admin_id = $_SESSION['compte_id'];
 
     if ($action === 'valider') {
-        $stR = $pdo->prepare("SELECT reference_transaction FROM paiements WHERE id = ?");
-        $stR->execute([$paiement_id]);
-        if (trim((string)$stR->fetchColumn()) === '') {
-            $_SESSION['flash_succes'] = "Impossible de valider : aucun ID de transaction (paiement non effectué).";
-        } else {
-            validerPaiement($pdo, $paiement_id, (int)$admin_id);
-            $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
-        }
+        validerPaiement($pdo, $paiement_id, (int)$admin_id);
+        $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
     } elseif ($action === 'supprimer') {
         if (estSuperAdmin()) {
             $pdo->prepare("DELETE FROM paiements WHERE id = ?")->execute([$paiement_id]);
@@ -48,8 +42,7 @@ $tous = $pdo->query($query)->fetchAll();
 $paiements = [];
 $sansId = [];
 foreach ($tous as $p) {
-    if ($p['statut'] === 'en attente' && trim((string)$p['reference_transaction']) === '') $sansId[] = $p;
-    else $paiements[] = $p;
+    $paiements[] = $p;
 }
 
 require_once __DIR__ . '/../includes/header.php';
