@@ -21,6 +21,7 @@ $page = basename($_SERVER['PHP_SELF']);
 <body>
 <nav class="navbar">
     <div class="container">
+        <a href="<?= BASE_URL ?>/" class="brand-aeemci" title="AEEMCI"><img src="<?= BASE_URL ?>/assets/img/logo_aeemci.jpg" alt="Logo AEEMCI"></a>
         <a href="<?= BASE_URL ?>/" class="brand">
             <img src="<?= BASE_URL ?>/assets/img/logo.jpg" alt="Logo JOSPIA">
             <div class="brand-text">

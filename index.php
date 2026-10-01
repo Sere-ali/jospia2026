@@ -3,6 +3,7 @@ $titrePage = "Accueil";
 require_once __DIR__ . '/includes/header.php';
 $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2, '0', STR_PAD_LEFT) . 'T08:00:00';
 ?>
+<?php require __DIR__ . '/includes/bandeau_aeemci.php'; ?>
 <header class="hero">
     <div class="hero-motif" aria-hidden="true"></div>
     <div class="container hero-grid">
