@@ -24,12 +24,10 @@ $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null
 [$mentionGenerale, $couleurMention] = $moyenneGenerale !== null ? appreciationNote($moyenneGenerale) : ['-', 'gris'];
 ?>
 <div class="fiche-doc bulletin-doc" style="max-width:680px;">
-    <div class="entete-fiche">
-        <img src="<?= BASE_URL ?>/assets/img/logo.jpg" alt="Logo">
-        <div>
-            <h3 style="margin:0;">Bulletin de notes</h3>
-            <div style="color:var(--texte-doux);font-size:.85rem;"><?= e(EVENT_FULL) ?></div>
-        </div>
+    <div class="bulletin-entete">
+        <img src="<?= BASE_URL ?>/assets/img/bulletin_entete.png" alt="AEEMCI - JOSPIA">
+        <h3>Bulletin de notes</h3>
+        <div class="sous"><?= e(EVENT_FULL) ?></div>
     </div>
 
     <?php if ($seminariste['photo']): ?>

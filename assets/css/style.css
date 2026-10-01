@@ -1092,3 +1092,9 @@ footer a { color: #fff; font-weight: 600; }
 .mdp-oeil:hover { color: var(--vert, #0C5B3A); }
 .mdp-oeil.actif { color: var(--vert, #0C5B3A); }
 .mdp-oeil.actif::after { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 2px; background: currentColor; transform: rotate(-40deg); }
+
+/* En-tête du bulletin = en-tête du badge (logos AEEMCI + JOSPIA) */
+.bulletin-entete { text-align: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 3px solid transparent; border-image: var(--tricolore, linear-gradient(90deg,#F77F00,#0B8A4E)) 1; }
+.bulletin-entete img { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto 10px; }
+.bulletin-entete h3 { margin: 0; font-size: 1.35rem; text-transform: uppercase; letter-spacing: .04em; }
+.bulletin-entete .sous { color: var(--texte-doux); font-size: .85rem; }
