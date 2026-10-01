@@ -577,18 +577,13 @@ class PdfRapport {
         $c = $this->c; $W = $this->W;
         imagefilledrectangle($this->im, 0, 0, (int)($W / 3), 12, $c['orange']);
         imagefilledrectangle($this->im, (int)($W * 2 / 3), 0, $W, 12, $c['vert']);
-        if ($this->page === 1) {
+        if ($this->debut) {
+            $this->debut = false;
             $ent = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
-            $ew = 900; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
+            $ew = 1000; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
             imagecopyresampled($this->im, $ent, (int)(($W - $ew) / 2), 50, 0, 0, $ew, $eh, imagesx($ent), imagesy($ent));
             imagedestroy($ent);
-            $this->y = 50 + $eh + 30;
-            pdfTexteBoite($this->im, 1, 'barlow-latin-800-normal.ttf', 54, 0.92, $this->titre, self::MARGE, $this->y, $W - 2 * self::MARGE, 70, $c['vertF'], true, 2);
-            $this->y += 78;
-            if ($this->sous !== '') {
-                pdfTexteBoite($this->im, 1, 'tinos-latin-400-normal.ttf', 30, 0.92, $this->sous, self::MARGE, $this->y, $W - 2 * self::MARGE, 44, $c['gris'], true);
-                $this->y += 56;
-            }
+            $this->y = 50 + $eh + 28;
             imagefilledrectangle($this->im, (int)($W / 2 - 220), $this->y, (int)($W / 2 - 1), $this->y + 6, $c['orange']);
             imagefilledrectangle($this->im, (int)($W / 2), $this->y, (int)($W / 2 + 220), $this->y + 6, $c['vert']);
             $this->y += 50;
@@ -625,7 +620,7 @@ class PdfRapport {
         }
         return $res;
     }
-    private $nb = 0;
+    private $nb = 0; private $debut = true;
     private function dateFr($d) {
         $m = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
         $t = strtotime($d);
@@ -666,7 +661,7 @@ class PdfRapport {
     /** Un rapport = une lettre (une nouvelle page pour chaque rapport suivant). */
     public function rapport(array $r, $avecCommission = false) {
         $W = $this->W; $m = 170; $lw = $W - 2 * $m;
-        if ($this->nb++ > 0) { $this->nouvellePage(); }
+        if ($this->nb++ > 0) { $this->debut = true; $this->nouvellePage(); }
         $c = $this->c; $f = 'tinos-latin-400-normal.ttf'; $fb = 'tinos-latin-700-normal.ttf';
         // lieu et date, à droite
         $lieu = 'Abidjan, le ' . $this->dateFr($r['created_at'] ?: $r['date_rapport']);

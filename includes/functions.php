@@ -531,7 +531,7 @@ function commissionPropre(PDO $pdo) {
 function lettreRapportHtml(array $r, $actions = '') {
     $mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
     $fr = function ($d) use ($mois) { $t = strtotime($d); $j = (int)date('j', $t); return $j . ($j === 1 ? 'er' : '') . ' ' . $mois[(int)date('n', $t) - 1] . ' ' . date('Y', $t); };
-    $h = '<article class="lettre"><div class="lettre-bande"></div>';
+    $h = '<article class="lettre"><div class="lettre-bande"></div><div class="lettre-entete"><img src="' . BASE_URL . '/assets/img/bulletin_entete.png" alt="AEEMCI - JOSPIA"></div>';
     $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong>' . (normaliserCommission($r['commission']) === 'ADMINISTRATION' ? '' : '<br><small>Responsable : ' . e($r['auteur_nom'] ?: '-') . '</small>') . '</div>';
     $h .= '<div class="lettre-lieu">Abidjan, le ' . e($fr($r['created_at'] ?: $r['date_rapport'])) . '</div></div>';
     $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Messieurs les Managers généraux</strong></div>';
