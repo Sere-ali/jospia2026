@@ -8,7 +8,7 @@ $erreurs = []; $succes = null; $mode = $_POST['mode'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = numeroLocal($_POST['contact'] ?? '');
-    if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) {
+    if ($mode === 'arrivee' && ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact))) {
         $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
     }
     if ($mode === 'arrivee' && !$erreurs) {
@@ -20,20 +20,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st = $pdo->prepare("SELECT heure_arrivee FROM visiteurs WHERE contact = ? AND heure_sortie IS NULL ORDER BY heure_arrivee DESC LIMIT 1");
         $st->execute([$contact]);
         if ($ouverte = $st->fetchColumn()) {
-            $erreurs[] = "Une visite est déjà en cours pour ce numéro (arrivée le " . dateHeureAffiche($ouverte) . "). Déclarez d'abord votre sortie.";
+            $erreurs[] = "Une visite est déjà en cours pour ce numéro (arrivée le " . dateHeureAffiche($ouverte) . "). Validez d'abord sa sortie dans « Je pars ».";
         }
         if (!$erreurs) {
             $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, motif, heure_arrivee) VALUES (?,?,?,?)")->execute([$nom, $contact, $motif, $arrivee]);
-            $succes = "Arrivée enregistrée à " . dateHeureAffiche($arrivee) . ". Votre identifiant de sortie est votre numéro : $contact. À votre départ, utilisez « Déclarer ma sortie » ci-dessous.";
+            $succes = "Arrivée enregistrée à " . dateHeureAffiche($arrivee) . ". À votre départ, trouvez votre nom dans « Je pars » et validez votre sortie.";
             $_POST = [];
         }
-    } elseif ($mode === 'sortie' && !$erreurs) {
+    }
+    if ($mode === 'sortie') {
+        $erreurs = [];
+        $idV = (int)($_POST['id'] ?? 0);
         $sortie = dateHeureSaisie($_POST['heure_sortie'] ?? '') ?: date('Y-m-d H:i:s');
-        $st = $pdo->prepare("SELECT id, nom_prenoms, heure_arrivee FROM visiteurs WHERE contact = ? AND heure_sortie IS NULL ORDER BY heure_arrivee DESC LIMIT 1");
-        $st->execute([$contact]);
+        $st = $pdo->prepare("SELECT id, nom_prenoms, heure_arrivee FROM visiteurs WHERE id = ? AND heure_sortie IS NULL");
+        $st->execute([$idV]);
         $v = $st->fetch();
         if (!$v) {
-            $erreurs[] = "Aucune visite en cours pour ce numéro. Vérifiez le numéro utilisé à l'arrivée.";
+            $erreurs[] = "Cette visite n'est plus en cours.";
         } elseif (strtotime($sortie) < strtotime($v['heure_arrivee'])) {
             $erreurs[] = "L'heure de sortie ne peut pas être avant l'heure d'arrivée (" . dateHeureAffiche($v['heure_arrivee']) . ").";
         } else {
@@ -44,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 $maintenant = date('Y-m-d\TH:i');
+$presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visiteurs WHERE heure_sortie IS NULL ORDER BY heure_arrivee DESC LIMIT 200")->fetchAll();
 ?>
 <section class="section form-page">
     <div class="container" style="max-width:1000px;">
         <div class="section-titre form-titre" style="text-align:center;">
             <span class="eyebrow">Accueil des visiteurs</span>
             <h2>Visiteurs - arrivée et sortie</h2>
-            <p class="form-intro">Enregistrez votre arrivée, puis déclarez votre sortie avec votre numéro de téléphone. Suivi assuré par la commission Sécurité.</p>
+            <p class="form-intro">Enregistrez votre arrivée, puis validez votre sortie en un clic dans la liste. Suivi assuré par la commission Sécurité.</p>
         </div>
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
@@ -69,7 +73,7 @@ $maintenant = date('Y-m-d\TH:i');
                         <input type="text" name="motif" required maxlength="255" placeholder="Ex : Visite à un séminariste, livraison, rendez-vous..." value="<?= e($mode === 'arrivee' ? ($_POST['motif'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Heure d'arrivée</label>
                         <input type="datetime-local" name="heure_arrivee" value="<?= e($maintenant) ?>"></div>
-                    <div class="help-text">Votre numéro de téléphone sert d'identifiant pour déclarer votre sortie.</div>
+                    <div class="help-text">À votre départ, vous validerez simplement votre sortie dans la liste « Je pars ».</div>
                 </fieldset>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Enregistrer mon arrivée</span><i aria-hidden="true">→</i></button>
             </form>
@@ -78,15 +82,38 @@ $maintenant = date('Y-m-d\TH:i');
                 <input type="hidden" name="mode" value="sortie">
                 <fieldset>
                     <legend data-ico="🚪">Je pars</legend>
-                    <div class="form-group"><label>Mon identifiant (numéro de téléphone) <span class="req">*</span></label>
-                        <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" required placeholder="Le numéro donné à l'arrivée" value="<?= e($mode === 'sortie' ? ($_POST['contact'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Heure de sortie</label>
                         <input type="datetime-local" name="heure_sortie" value="<?= e($maintenant) ?>"></div>
-                    <div class="help-text">L'heure de sortie est enregistrée sur votre visite en cours.</div>
+                    <?php if ($presents): ?>
+                        <div class="form-group"><label>Trouvez votre nom, puis validez votre sortie</label>
+                            <input type="text" id="filtre-visiteurs" placeholder="Rechercher mon nom..." autocomplete="off"></div>
+                        <div class="liste-sortie">
+                            <?php foreach ($presents as $v): ?>
+                                <div class="ligne-sortie" data-nom="<?= e(mb_strtolower($v['nom_prenoms'], 'UTF-8')) ?>">
+                                    <div><strong><?= e($v['nom_prenoms']) ?></strong>
+                                        <small>Arrivé à <?= e(dateHeureAffiche($v['heure_arrivee'])) ?><?= $v['motif'] !== '' ? ' · ' . e($v['motif']) : '' ?></small></div>
+                                    <button type="submit" name="id" value="<?= (int)$v['id'] ?>" class="btn btn-sm btn-or">Valider ma sortie</button>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="help-text">Aucun visiteur n'est présent actuellement.</div>
+                    <?php endif; ?>
                 </fieldset>
-                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Déclarer ma sortie</span><i aria-hidden="true">→</i></button>
             </form>
         </div>
     </div>
 </section>
+<script>
+(function () {
+    var champ = document.getElementById('filtre-visiteurs');
+    if (!champ) return;
+    champ.addEventListener('input', function () {
+        var q = this.value.trim().toLowerCase();
+        document.querySelectorAll('.ligne-sortie').forEach(function (l) {
+            l.style.display = (!q || l.getAttribute('data-nom').indexOf(q) !== -1) ? '' : 'none';
+        });
+    });
+})();
+</script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
