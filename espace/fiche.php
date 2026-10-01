@@ -169,8 +169,8 @@ require_once __DIR__ . '/../includes/header.php';
         <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; else: ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border-left:5px solid var(--orange);">
             <h3>⏳ Paiement en attente</h3>
-            <p>Votre inscription est enregistrée mais elle ne sera <strong>validée</strong> qu'après paiement des frais de <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> par Wave. Tant que le paiement n'est pas effectué, votre QR code s'affiche en <strong style="color:#c81e1e;">rouge (refusé)</strong>.</p>
-            <a href="<?= BASE_URL ?>/paiement" class="btn btn-or">💙 Payer / saisir mon identifiant de transaction</a>
+            <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas validé.</p>
+            <a href="<?= lienWavePaiement() ? e(lienWavePaiement()) : BASE_URL . '/paiement' ?>" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
         </div>
         <?php endif; ?>
 

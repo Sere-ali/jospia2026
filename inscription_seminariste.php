@@ -83,6 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['compte_id'] = $compteNew['id'];
             $_SESSION['compte'] = $compteNew;
         }
+        // Inscription + paiement en un seul geste : envoi direct vers Wave (sauf si l'ID de transaction a déjà été saisi).
+        if (estConnecte() && $referenceTx === '' && lienWavePaiement()) { header('Location: ' . lienWavePaiement()); exit; }
         if (estConnecte()) { redirect('/espace/fiche?inscrit=1'); }
 
         $succes = "Inscription reçue. Votre dortoir a été attribué automatiquement : " . $r['dortoir'] . ".";
@@ -233,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </fieldset>
                 <?php endif; ?>
 
-                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= waveApiActive() ? 'Valider et payer par Wave' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= (waveApiActive() || lienWavePaiement()) ? '💙 Valider et payer par Wave' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
                 <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
             </form>
         <?php endif; ?>
