@@ -70,7 +70,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
             <div class="carte" style="text-align:center;"><div class="label">Total des visites</div><div class="valeur" style="font-size:2rem;color:var(--vert);"><?= (int)$stats['total'] ?></div></div>
         </div>
 
-        <p class="no-print" style="text-align:center;margin-bottom:16px;">Page publique des visiteurs : <a href="<?= BASE_URL ?>/visiteur"><?= e((isset($_SERVER['HTTP_HOST']) ? 'https://' . $_SERVER['HTTP_HOST'] : '') . BASE_URL) ?>/visiteur</a></p>
+        <p class="no-print" style="text-align:center;margin-bottom:16px;"><a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">&larr; Retour à la page publique</a></p>
 
         <form method="post" class="carte form-pro" style="margin-bottom:20px;">
             <input type="hidden" name="action" value="<?= $edit ? 'modifier' : 'ajouter' ?>">
