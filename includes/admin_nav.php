@@ -32,7 +32,6 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
     <?php elseif (!estSuperAdmin()): ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
         <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm btn-primaire">🗂️ Administration</a>
-        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm btn-outline">👔 Comité managérial</a>
     </div>
     <?php else: ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
