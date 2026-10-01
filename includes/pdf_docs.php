@@ -859,7 +859,20 @@ function pdfFiche(PDO $pdo, array $s, $nomFichier) {
     imagefilledrectangle($im, $M, $y, $W - $M, $y + 120, $vertF);
     $l = 'DORTOIR ATTRIBUÉ'; pdfEcrire($im, 26, $M + 30, $y + 45, $blanc, $R, $l);
     $d = (string)($s['dortoir'] ?: 'Non attribué'); pdfEcrire($im, 48, $M + 30, $y + 100, $blanc, $B, $d);
-    $y += 190;
+    $y += 160;
+    // identifiants de connexion (tant que le mot de passe initial n'a pas été changé)
+    try {
+        $stI = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' AND mdp_initial IS NOT NULL LIMIT 1");
+        $stI->execute([$s['id']]);
+        if ($ids = $stI->fetch()) {
+            imagefilledrectangle($im, $M, $y, $W - $M, $y + 3, $ligne);
+            pdfEcrire($im, 28, $M + 10, $y + 55, $gris, $R, 'Identifiant de connexion'); pdfEcrire($im, 34, $M + 480, $y + 55, $noir, $B, (string)$ids['identifiant']);
+            pdfEcrire($im, 28, $M + 10, $y + 115, $gris, $R, 'Mot de passe'); pdfEcrire($im, 34, $M + 480, $y + 115, $noir, $B, (string)$ids['mdp_initial']);
+            imagefilledrectangle($im, $M, $y + 135, $W - $M, $y + 138, $ligne);
+            $y += 175;
+        }
+    } catch (Throwable $e) {}
+    $y += 30;
     // QR
     $qr = QRCode::getMinimumQRCode(urlVerificationFiche($pdo, $s['id']), QR_ERROR_CORRECT_LEVEL_M);
     $nb = $qr->getModuleCount(); $cell = 10; $q = $nb * $cell; $qx = (int)(($W - $q) / 2);

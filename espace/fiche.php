@@ -64,7 +64,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>🔑 Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
-            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
+            <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans le PDF de votre fiche) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
         </div>
         <?php endif; ?>
 
@@ -171,7 +171,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>🔑 Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
-            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
+            <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans le PDF de votre fiche) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
         </div>
         <?php endif; ?>
 
