@@ -620,12 +620,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ============================================================
 // Mise à jour automatique (toutes les 2 s) et opérations sans rechargement
-// Pages concernées : tableaux de bord / listes (voir PAGES_LIVE), page visiteurs, espace séminariste.
+// Pages concernées : tout le back-office, la commission finance/sécurité, l espace personnel et les visiteurs (voir PAGES_LIVE).
 // Seules les parties modifiées sont remplacées ; ce que vous tapez n'est jamais effacé.
 // ============================================================
 (function () {
     'use strict';
-    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression|rapports)|finance\/paiements|securite\/(visiteurs|sorties)|visiteur|espace\/(fiche|rapport|sortie|sorties_mg)|paiement)(\.php)?$/;
+    var PAGES_LIVE = /\/(admin|finance|securite|espace)\/(?!edit_|modifier|critiquer|download|pdf|rapport_pdf|bulletin\b|bulletin_pdf|quiz|compte|migrer|correction|parametres)[a-z_]+(\.php)?$|\/(visiteur|paiement|statut)(\.php)?$/;
     var chemin = location.pathname;
     if (!PAGES_LIVE.test(chemin)) return;
     var ACTIONS = ['supprimer', 'desactiver', 'publier', 'nouveau', 'activer', 'reinit'];
