@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerSecurite();
+exigerConnexion();
 date_default_timezone_set('Africa/Abidjan');
 sortiesPreparer($pdo);
+if (!estSortieSecurite()) { http_response_code(403); die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée aux comptes à qui le super administrateur a attribué la Sécurité des sorties.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>'); }
 $u = utilisateurCourant();
 $titrePage = "Commission Sécurité - Sorties du camp";
 
@@ -19,12 +20,12 @@ $rentres = $pdo->query("SELECT * FROM sorties WHERE statut = 'rentre' ORDER BY r
 $maintenant = time();
 
 require_once __DIR__ . '/../includes/header.php';
-if (!estAdmin()) { /* barre de navigation propre à la Sécurité */ }
+if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:960px;">
         <div class="section-titre"><span class="eyebrow">Commission Sécurité</span><h2>🚪 Sorties du camp</h2></div>
-        <p class="no-print" style="text-align:center;margin-bottom:16px;"><a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-outline btn-sm">&larr; Visiteurs</a></p>
+        
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
         <div data-live="secu">

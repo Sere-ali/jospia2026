@@ -15,8 +15,11 @@ $cartes = [
     ['🔬 Commission scientifique', 'Notes, bulletins, test d\'entrée.', '/admin/commission_scientifique'],
     ['🛡️ Commission sécurité', 'Visiteurs : arrivées, sorties et suivi.', '/securite/visiteurs'],
     ['📝 Rapports journaliers', 'Rapport du jour de chaque commission.', '/admin/rapports'],
+    ['🚪 Sorties - MG / MGA', 'Accepter ou refuser les demandes de sortie du camp.', '/espace/sorties_mg'],
+    ['🚪 Sorties - Sécurité', 'Confirmer les sorties (OK) et suivre les retours.', '/securite/sorties'],
     ['💰 Commission finance', 'Paiements Wave, validation et scanner de reçus.', '/finance/paiements'],
 ];
+if (estSuperAdmin()) array_splice($cartes, count($cartes) - 1, 0, [['👤 Attribuer les sorties', 'Choisir qui est MG / MGA et qui est Sécurité pour les sorties.', '/admin/sorties_roles']]);
 ?>
 <section class="section">
     <div class="container">

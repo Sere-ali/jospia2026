@@ -46,10 +46,7 @@ $page = basename($_SERVER['PHP_SELF']);
                     <a href="<?= BASE_URL ?>/admin/commission_scientifique">Commission scientifique</a>
                 <?php endif; ?>
                 <?php if (commissionPropre($pdo)): ?><a href="<?= BASE_URL ?>/espace/rapport">Rapports</a><?php endif; ?>
-                <?php $nbSortiesMenu = sortiesATraiter($pdo); ?>
                 <?php if (!estAdmin() || !empty($u['membre_id']) || !empty($u['seminariste_id'])): ?><a href="<?= BASE_URL ?>/espace/sortie">Sortie camp</a><?php endif; ?>
-                <?php if (estMG()): ?><a href="<?= BASE_URL ?>/espace/sorties_mg">Sorties MG<?= ($nbSortiesMenu && estMG()) ? ' <span class="pastille-menu">' . (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_mg'")->fetchColumn() . '</span>' : '' ?></a><?php endif; ?>
-                <?php if (estSecurite()): ?><a href="<?= BASE_URL ?>/securite/sorties">Sorties sécurité<?= $nbSortiesMenu ? ' <span class="pastille-menu">' . (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_securite'")->fetchColumn() . '</span>' : '' ?></a><?php endif; ?>
                 <a href="<?= BASE_URL ?>/compte">Mon compte</a>
                 <a href="<?= BASE_URL ?>/logout" class="btn-nav">Déconnexion</a>
             <?php else: ?>
@@ -59,9 +56,17 @@ $page = basename($_SERVER['PHP_SELF']);
     </div>
 </nav>
 <?php if ($u && ($seCours = sortieEnCours($pdo, $u['id']))): $seRetard = strtotime($seCours['heure_retour']) < time(); ?>
+<?php if (!$seRetard): ?>
+<div class="alerte-sortie alerte-ok" id="info-sortie"><span>✅ <strong>Vous êtes autorisé à sortir.</strong> S'il vous plaît, rentrez avant <?= e(date('H:i', strtotime($seCours['heure_retour']))) ?> (<?= e(date('d/m/Y', strtotime($seCours['heure_retour']))) ?>).</span></div>
+<?php endif; ?>
 <div id="alerte-sortie" class="alerte-sortie" data-retour="<?= (int)strtotime($seCours['heure_retour']) ?>" data-now="<?= time() ?>" <?= $seRetard ? '' : 'hidden' ?>>
     <span>⏰ <strong>Votre heure de sortie est épuisée. Veuillez retourner sur le camp, s'il vous plaît.</strong></span>
     <form method="post" action="<?= BASE_URL ?>/espace/sortie"><input type="hidden" name="action" value="rentre"><input type="hidden" name="id" value="<?= (int)$seCours['id'] ?>"><button class="btn btn-sm">🏠 Je suis rentré</button></form>
+</div>
+<?php elseif ($u && ($seRefus = sortieRefusee($pdo, $u['id']))): ?>
+<div class="alerte-sortie">
+    <span>✖ <strong>Votre requête de sortie a été refusée.</strong><?= $seRefus['refus_motif'] ? ' Motif : ' . e($seRefus['refus_motif']) : '' ?></span>
+    <form method="post" action="<?= BASE_URL ?>/espace/sortie"><input type="hidden" name="action" value="vu"><input type="hidden" name="id" value="<?= (int)$seRefus['id'] ?>"><button class="btn btn-sm">OK</button></form>
 </div>
 <?php endif; ?>
 <div id="contenu-page">

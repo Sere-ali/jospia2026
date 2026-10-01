@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'annuler' && $id) {
         $pdo->prepare("UPDATE sorties SET statut = 'annulee' WHERE id = ? AND compte_id = ? AND statut IN ('attente_mg','attente_securite')")->execute([$id, $u['id']]);
         redirect('/espace/sortie');
+    } elseif ($action === 'vu' && $id) {
+        $pdo->prepare("UPDATE sorties SET refus_vu = 1 WHERE id = ? AND compte_id = ?")->execute([$id, $u['id']]);
+        redirect('/espace/sortie');
     } elseif ($action === 'rentre' && $id) {
         $pdo->prepare("UPDATE sorties SET statut = 'rentre', rentre_at = ? WHERE id = ? AND compte_id = ? AND statut = 'autorisee'")->execute([date('Y-m-d H:i:s'), $id, $u['id']]);
         journaliser($pdo, 'Retour sur le camp', $nomPersonne);
@@ -77,10 +80,10 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
                         <span class="pill <?= $cls ?>"><?= e($lib) ?></span>
                     </div>
                     <p style="margin:8px 0;color:var(--texte-doux);">Sortie : <strong><?= e(dateHeureAffiche($r['heure_sortie'])) ?></strong> · Retour prévu : <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong></p>
-                    <?php if ($r['statut'] === 'refusee'): ?><p style="color:#b42318;">Refusée par <?= e($r['mg_nom']) ?><?= $r['refus_motif'] ? ' : ' . e($r['refus_motif']) : '' ?></p><?php endif; ?>
+                    <?php if ($r['statut'] === 'refusee'): ?><div class="alert alert-erreur" style="margin:8px 0;">✖ <strong>Votre requête a été refusée.</strong><?= $r['refus_motif'] ? ' Motif : ' . e($r['refus_motif']) : '' ?></div><?php endif; ?>
                     <?php if ($r['statut'] === 'attente_securite'): ?><p>✔ Acceptée par <?= e($r['mg_nom']) ?>. La commission Sécurité a été avertie.</p><?php endif; ?>
                     <?php if ($r['statut'] === 'autorisee'): ?>
-                        <div class="alert alert-succes" style="margin:8px 0;">✅ <strong>Vous avez l'autorisation de sortir</strong> entre <?= e(dateHeureAffiche($r['heure_sortie'])) ?> et <?= e(dateHeureAffiche($r['heure_retour'])) ?>. Autorisé par <?= e($r['mg_nom']) ?>, confirmé par la Sécurité (<?= e($r['secu_nom']) ?>).</div>
+                        <div class="alert alert-succes" style="margin:8px 0;">✅ <strong>Vous êtes autorisé à sortir.</strong> S'il vous plaît, rentrez dans le délai : avant <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong>. (Accepté par <?= e($r['mg_nom']) ?>, confirmé par la Sécurité.)</div>
                         <?php if ($retard): ?><div class="alert alert-erreur" style="margin:8px 0;">⏰ <strong>Votre heure de sortie est épuisée. Veuillez retourner sur le camp, s'il vous plaît.</strong></div><?php endif; ?>
                         <form method="post"><input type="hidden" name="action" value="rentre"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-primaire">🏠 Je suis rentré sur le camp</button></form>
                     <?php elseif ($r['statut'] === 'rentre'): ?><p>Retour signalé le <?= e(dateHeureAffiche($r['rentre_at'])) ?>.</p>

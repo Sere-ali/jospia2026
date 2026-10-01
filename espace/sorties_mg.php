@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
 exigerConnexion();
-if (!estMG()) { http_response_code(403); die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée au MG et au MGA.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>'); }
+if (!estMG()) { http_response_code(403); die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée aux comptes à qui le super administrateur a attribué le MG / MGA.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>'); }
 date_default_timezone_set('Africa/Abidjan');
 sortiesPreparer($pdo);
 $u = utilisateurCourant();
@@ -31,6 +31,7 @@ $attente = $pdo->query("SELECT * FROM sorties WHERE statut = 'attente_mg' ORDER 
 $recentes = $pdo->query("SELECT * FROM sorties WHERE statut <> 'attente_mg' AND statut <> 'annulee' ORDER BY id DESC LIMIT 15")->fetchAll();
 
 require_once __DIR__ . '/../includes/header.php';
+if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:900px;">

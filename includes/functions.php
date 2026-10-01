@@ -738,22 +738,40 @@ function sortiesPreparer(PDO $pdo) {
         mg_nom VARCHAR(150) NULL, mg_at DATETIME NULL, refus_motif VARCHAR(255) NULL, secu_nom VARCHAR(150) NULL, secu_at DATETIME NULL,
         rentre_at DATETIME NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_sortie_compte (compte_id), INDEX idx_sortie_statut (statut)) ENGINE=InnoDB");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS sorties_roles (compte_id INT NOT NULL, role VARCHAR(10) NOT NULL, PRIMARY KEY (compte_id, role)) ENGINE=InnoDB");
+    try {
+        if (!$pdo->query("SHOW COLUMNS FROM sorties LIKE 'refus_vu'")->fetch()) { $pdo->exec("ALTER TABLE sorties ADD COLUMN refus_vu TINYINT NOT NULL DEFAULT 0"); }
+    } catch (Throwable $e) { error_log('Migration sorties : ' . $e->getMessage()); }
 }
 
-/** MG / MGA (membres de ces commissions) ou administrateurs : valident les demandes de sortie. */
+/** Le super administrateur attribue le rôle « mg » (validation) ou « securite » (confirmation) à des comptes. */
+function sortieRoleAttribue(PDO $pdo, $compteId, $role) {
+    sortiesPreparer($pdo);
+    $st = $pdo->prepare("SELECT COUNT(*) FROM sorties_roles WHERE compte_id = ? AND role = ?");
+    $st->execute([(int)$compteId, $role]);
+    return $st->fetchColumn() > 0;
+}
+
+/** Valide les demandes de sortie : administrateurs, ou compte à qui le super administrateur a attribué « MG / MGA ». */
 function estMG() {
     static $cache = null;
     if ($cache !== null) return $cache;
     $u = utilisateurCourant();
     if (!$u) return $cache = false;
     if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
-    if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
-        global $pdo;
-        $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
-        $st->execute([$u['membre_id']]);
-        return $cache = in_array(normaliserCommission((string)$st->fetchColumn()), ['MG', 'MGA'], true);
-    }
-    return $cache = false;
+    global $pdo;
+    try { return $cache = sortieRoleAttribue($pdo, $u['id'], 'mg'); } catch (Throwable $e) { return $cache = false; }
+}
+
+/** Confirme les sorties (bouton OK) : administrateurs, ou compte à qui le super administrateur a attribué « Sécurité ». */
+function estSortieSecurite() {
+    static $cache = null;
+    if ($cache !== null) return $cache;
+    $u = utilisateurCourant();
+    if (!$u) return $cache = false;
+    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
+    global $pdo;
+    try { return $cache = sortieRoleAttribue($pdo, $u['id'], 'securite'); } catch (Throwable $e) { return $cache = false; }
 }
 
 /** Identité de la personne connectée pour une demande de sortie : [type, personne_id, nom, groupe]. */
@@ -785,7 +803,7 @@ function sortiesATraiter(PDO $pdo) {
         $n = 0;
         sortiesPreparer($pdo);
         if (estMG()) $n += (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_mg'")->fetchColumn();
-        if (estSecurite()) $n += (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_securite'")->fetchColumn();
+        if (estSortieSecurite()) $n += (int)$pdo->query("SELECT COUNT(*) FROM sorties WHERE statut = 'attente_securite'")->fetchColumn();
         return $n;
     } catch (Throwable $e) { return 0; }
 }
@@ -795,6 +813,16 @@ function sortieEnCours(PDO $pdo, $compteId) {
     try {
         sortiesPreparer($pdo);
         $st = $pdo->prepare("SELECT * FROM sorties WHERE compte_id = ? AND statut = 'autorisee' ORDER BY id DESC LIMIT 1");
+        $st->execute([(int)$compteId]);
+        return $st->fetch() ?: null;
+    } catch (Throwable $e) { return null; }
+}
+
+/** Dernière demande refusée que la personne n'a pas encore « vue » (message de refus), ou null. */
+function sortieRefusee(PDO $pdo, $compteId) {
+    try {
+        sortiesPreparer($pdo);
+        $st = $pdo->prepare("SELECT * FROM sorties WHERE compte_id = ? AND statut = 'refusee' AND refus_vu = 0 ORDER BY id DESC LIMIT 1");
         $st->execute([(int)$compteId]);
         return $st->fetch() ?: null;
     } catch (Throwable $e) { return null; }

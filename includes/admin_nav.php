@@ -4,7 +4,7 @@ $pageAdmin = basename($_SERVER['PHP_SELF']);
 $pagesScientifique = ['commission_scientifique.php', 'notes.php', 'bulletins_impression.php', 'bulletin.php', 'test_entree.php', 'matieres.php', 'questions.php', 'config_quiz.php'];
 $dansScientifique = in_array($pageAdmin, $pagesScientifique, true) || ($pageAdmin === 'listes.php' && !estAdmin());
 // Pages regroupées sous le bouton « Administration »
-$pagesAdministration = ['administration.php', 'commissions.php', 'edit_membre.php', 'seminaristes.php', 'edit_seminariste.php', 'seminariste_detail.php', 'identifiants.php', 'dortoirs.php', 'listes.php', 'badges_commission.php', 'badges.php', 'diplomes.php', 'apercu_documents.php', 'badges_seminaristes.php', 'download_badge.php', 'download_badge_seminariste.php', 'download_diplome.php', 'download_diplome_membre.php'];
+$pagesAdministration = ['administration.php', 'commissions.php', 'edit_membre.php', 'seminaristes.php', 'edit_seminariste.php', 'seminariste_detail.php', 'identifiants.php', 'dortoirs.php', 'listes.php', 'badges_commission.php', 'badges.php', 'diplomes.php', 'apercu_documents.php', 'badges_seminaristes.php', 'download_badge.php', 'download_badge_seminariste.php', 'download_diplome.php', 'download_diplome_membre.php', 'sorties_roles.php', 'sorties_mg.php', 'sorties.php'];
 $dansFinance = strpos($_SERVER['PHP_SELF'], '/finance/') !== false;
 $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansScientifique || $dansFinance;
 // Barre complète seulement sur le tableau de bord ; ailleurs un simple bouton « Retour ».

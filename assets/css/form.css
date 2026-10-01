@@ -282,3 +282,4 @@ table.rwd td .btn { white-space: nowrap; flex: none; }
 .alerte-sortie[hidden] { display: none; }
 .alerte-sortie form { margin: 0; } .alerte-sortie .btn { background: #fff; color: #c81e1e; border: 0; }
 @keyframes alerte-pulse { 50% { background: #a31515; } }
+.alerte-ok { background: #0a8f3c; box-shadow: 0 6px 20px rgba(10,143,60,.3); animation: none; }
