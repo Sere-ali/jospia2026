@@ -730,3 +730,86 @@ function pdfRapportsDocument(array $rapports, $titre, $sousTitre, $nomFichier, $
     $pdf->fin();
     exit;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Reçu de paiement : 1 page A4 (entête, attestation justifiée, détails, QR code)  */
+/* ------------------------------------------------------------------ */
+function pdfRecu(array $s, array $recu, $nomFichier) {
+    require_once __DIR__ . '/qrcode_php.php';
+    $W = 1654; $H = 2339; $M = 140; $R = 'tinos-latin-400-normal.ttf'; $B = 'tinos-latin-700-normal.ttf';
+    $im = pdfToile($W, $H); imageantialias($im, true);
+    $vertF = imagecolorallocate($im, 6, 83, 47); $vert = imagecolorallocate($im, 11, 138, 78); $orange = imagecolorallocate($im, 247, 127, 0);
+    $noir = imagecolorallocate($im, 30, 38, 33); $gris = imagecolorallocate($im, 100, 112, 105); $ligne = imagecolorallocate($im, 214, 226, 219); $blanc = imagecolorallocate($im, 255, 255, 255);
+    imagefilledrectangle($im, 0, 0, (int)($W / 3), 12, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 0, $W, 12, $vert);
+    // entête
+    $ent = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
+    $ew = 1000; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
+    imagecopyresampled($im, $ent, (int)(($W - $ew) / 2), 50, 0, 0, $ew, $eh, imagesx($ent), imagesy($ent)); imagedestroy($ent);
+    $y = 50 + $eh + 28;
+    imagefilledrectangle($im, (int)($W / 2 - 220), $y, (int)($W / 2 - 1), $y + 6, $orange); imagefilledrectangle($im, (int)($W / 2), $y, (int)($W / 2 + 220), $y + 6, $vert);
+    $y += 70;
+    // titre
+    $t = 'REÇU DE PAIEMENT'; $tw = pdfLargeurTexte(60, $B, $t);
+    pdfEcrire($im, 60, ($W - $tw) / 2, $y + 50, $vertF, $B, $t); $y += 85;
+    $sub = defined('EVENT_FULL') ? EVENT_FULL : 'JOSPIA'; $sw = pdfLargeurTexte(28, $R, $sub);
+    pdfEcrire($im, 28, ($W - $sw) / 2, $y + 20, $gris, $R, $sub); $y += 55;
+    $numRecu = 'R-' . str_pad((string)$recu['id'], 5, '0', STR_PAD_LEFT);
+    $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
+    $dateTxt = date('d/m/Y à H:i', strtotime($dateRecu));
+    $montant = number_format((int)$recu['montant'], 0, ',', ' ') . ' FCFA';
+    // pastille PAYÉ
+    $pt = 'PAYÉ'; $pw = pdfLargeurTexte(34, $B, $pt);
+    imagefilledrectangle($im, (int)(($W - $pw) / 2 - 40), $y, (int)(($W + $pw) / 2 + 40), $y + 70, $vert);
+    pdfEcrire($im, 34, ($W - $pw) / 2, $y + 50, $blanc, $B, $pt); $y += 130;
+    // attestation justifiée (segments en gras possibles via ** )
+    $texte = "La commission Finance atteste avoir reçu de **" . $s['nom_prenoms'] . "**, matricule **" . $s['matricule'] . "**, la somme de **" . $montant
+        . "** au titre des frais d'inscription à la " . $sub . ". Ce paiement a été vérifié et validé le " . $dateTxt . ". Le présent reçu est délivré pour servir et valoir ce que de droit.";
+    $taille = 34; $largeur = $W - 2 * $M; $inter = 58;
+    $mots = []; $gras = false;
+    foreach (preg_split('/(\*\*)/', $texte, -1, PREG_SPLIT_DELIM_CAPTURE) as $morceau) {
+        if ($morceau === '**') { $gras = !$gras; continue; }
+        foreach (preg_split('/\s+/u', trim($morceau), -1, PREG_SPLIT_NO_EMPTY) as $m) { $mots[] = [$m, $gras ? $B : $R]; }
+    }
+    $lignes = []; $cour = []; $cw = 0; $esp = pdfLargeurTexte($taille, $R, 'a a') - pdfLargeurTexte($taille, $R, 'aa');
+    foreach ($mots as $m) {
+        $w = pdfLargeurTexte($taille, $m[1], $m[0]);
+        if ($cour && $cw + $esp + $w > $largeur) { $lignes[] = [$cour, false]; $cour = []; $cw = 0; }
+        $cw += ($cour ? $esp : 0) + $w; $cour[] = [$m[0], $m[1], $w];
+    }
+    if ($cour) $lignes[] = [$cour, true];
+    foreach ($lignes as [$l, $derniere]) {
+        $tot = 0; foreach ($l as $m) $tot += $m[2];
+        $n = count($l); $gap = ($derniere || $n < 2) ? $esp : ($largeur - $tot) / ($n - 1);
+        $x = $M;
+        foreach ($l as $m) { pdfEcrire($im, $taille, $x, $y + 40, $noir, $m[1], $m[0]); $x += $m[2] + $gap; }
+        $y += $inter;
+    }
+    $y += 40;
+    // détails
+    $det = [['N° de reçu', $numRecu], ['Date de validation', $dateTxt], ['Nom et prénoms', $s['nom_prenoms']], ['Matricule', $s['matricule']],
+        ['Sous-comité / Section', trim(($s['anyama'] ?? '') . ' - ' . ($s['section'] ?? ''), ' -')], ['Dortoir', (string)($s['dortoir'] ?? '')], ['Contact', (string)($s['contact'] ?? '')],
+        ['Payé depuis (Wave)', (string)($recu['numero_wave'] ?: '-')]];
+    if (($recu['reference_transaction'] ?? '') !== '') $det[] = ['ID transaction', $recu['reference_transaction']];
+    $det[] = ['Montant payé', $montant]; $det[] = ['Validé par', (string)($recu['valideur'] ?? '') ?: 'Commission Finance'];
+    imagefilledrectangle($im, $M, $y, $W - $M, $y + 3, $ligne);
+    foreach ($det as [$k, $v]) {
+        $y += 66;
+        pdfEcrire($im, 30, $M + 10, $y, $gris, $R, $k); pdfEcrire($im, 32, $M + 520, $y, $noir, $B, (string)$v);
+        imagefilledrectangle($im, $M, $y + 22, $W - $M, $y + 24, $ligne);
+    }
+    $y += 90;
+    // QR code
+    $qr = QRCode::getMinimumQRCode('JOSPIA:' . $recu['code_recu'], QR_ERROR_CORRECT_LEVEL_M);
+    $nb = $qr->getModuleCount(); $cell = 12; $q = $nb * $cell; $qx = (int)(($W - $q) / 2);
+    imagefilledrectangle($im, $qx - 20, $y - 20, $qx + $q + 20, $y + $q + 20, $blanc);
+    for ($r = 0; $r < $nb; $r++) for ($c = 0; $c < $nb; $c++) if ($qr->isDark($r, $c)) imagefilledrectangle($im, $qx + $c * $cell, $y + $r * $cell, $qx + ($c + 1) * $cell - 1, $y + ($r + 1) * $cell - 1, $noir);
+    $y += $q + 60;
+    $nt = 'Présentez ce QR code à la commission Finance pour vérification.'; $nw = pdfLargeurTexte(26, $R, $nt);
+    pdfEcrire($im, 26, ($W - $nw) / 2, $y, $gris, $R, $nt);
+    $pied = $sub . ' - ' . $numRecu; $fw = pdfLargeurTexte(22, $R, $pied);
+    pdfEcrire($im, 22, ($W - $fw) / 2, $H - 60, $gris, $R, $pied);
+    $pdf = new PdfFlux($nomFichier);
+    $pdf->page(595.28, 841.89, [[pdfJpeg($im, 90), $W, $H, 0, 0, 595.28, 841.89]]);
+    $pdf->fin();
+    exit;
+}
