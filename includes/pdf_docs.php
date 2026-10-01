@@ -418,3 +418,135 @@ function pdfDiplomesA4(array $lignes, callable $generateur, $nomFichier) {
     $pdf->fin();
     exit;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Bulletin de notes : 2 par page A4 (cases A5 paysage, 1240 x 877 px)  */
+/* ------------------------------------------------------------------ */
+function pdfBulletin(PDO $pdo, array $s) {
+    $W = 1240; $H = 877;
+    $im = pdfToile($W, $H);
+    imageantialias($im, true);
+    $orange = imagecolorallocate($im, 247, 127, 0); $vert = imagecolorallocate($im, 11, 138, 78);
+    $vertF = imagecolorallocate($im, 6, 83, 47); $noir = imagecolorallocate($im, 30, 38, 33);
+    $gris = imagecolorallocate($im, 100, 112, 105); $blanc = imagecolorallocate($im, 255, 255, 255);
+    $teinte = imagecolorallocate($im, 235, 247, 240); $ligne = imagecolorallocate($im, 214, 226, 219);
+    $rouge = imagecolorallocate($im, 192, 57, 43); $or = imagecolorallocate($im, 214, 140, 20);
+
+    // cadre + bandes tricolores
+    imagesetthickness($im, 3); imagerectangle($im, 14, 14, $W - 15, $H - 15, $vert); imagesetthickness($im, 1);
+    imagefilledrectangle($im, 14, 14, 14 + 3, 14 + 3, $vert);
+    imagefilledrectangle($im, 17, 17, (int)($W / 3), 23, $orange);
+    imagefilledrectangle($im, (int)($W * 2 / 3), 17, $W - 18, 23, $vert);
+
+    // en-tête du badge (logos AEEMCI + JOSPIA)
+    $ent = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
+    $ew = 560; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
+    imagecopyresampled($im, $ent, (int)(($W - $ew) / 2), 34, 0, 0, $ew, $eh, imagesx($ent), imagesy($ent));
+    imagedestroy($ent);
+
+    $y = 34 + $eh + 12;
+    pdfTexteBoite($im, 1, 'barlow-latin-800-normal.ttf', 40, 0.9, 'BULLETIN DE NOTES', 0, $y, $W, 50, $vertF, true, 3);
+    $y += 54;
+    imagefilledrectangle($im, (int)($W / 2 - 150), $y, (int)($W / 2 - 1), $y + 4, $orange);
+    imagefilledrectangle($im, (int)($W / 2), $y, (int)($W / 2 + 150), $y + 4, $vert);
+    $y += 20;
+
+    // identité
+    $px = 52; $ph = 150; $pw = 120;
+    $photo = pdfPhoto($pdo, $s['photo'] ?? '');
+    if ($photo) { pdfCouvrir($im, $photo, $px, $y, $pw, $ph, 0.5, 0.25); imagedestroy($photo); } else { pdfPlaceholderPhoto($im, $px, $y, $pw, $ph); }
+    imagesetthickness($im, 3); imagerectangle($im, $px, $y, $px + $pw, $y + $ph, $orange); imagesetthickness($im, 1);
+
+    $test = ($s['dortoir'] ?? '') === 'Pépinière' ? 'Non applicable (Pépinière)'
+        : (!empty($s['test_complete']) ? (str_replace('.', ',', (string)$s['note_test']) . ' / 20 - Niveau ' . $s['niveau_affecte']) : 'Non composé');
+    $champs = [
+        ['Nom et prénoms', $s['nom_prenoms']], ['Matricule', $s['matricule']],
+        ['Sous-comité', $s['anyama'] . ' - ' . $s['section']], ['Dortoir', $s['dortoir']], ['Test d\'entrée', $test],
+    ];
+    $tx = $px + $pw + 34; $ty = $y + 26;
+    foreach ($champs as [$lib, $val]) {
+        pdfEcrire($im, 19, $tx, $ty, $gris, 'tinos-latin-400-normal.ttf', $lib . ' :');
+        $taille = 23; $maxw = $W - 60 - ($tx + 235);
+        while ($taille > 14 && pdfLargeurTexte($taille, 'tinos-latin-700-normal.ttf', (string)$val) > $maxw) $taille -= 1;
+        pdfEcrire($im, $taille, $tx + 235, $ty, $noir, 'tinos-latin-700-normal.ttf', (string)$val);
+        $ty += 31;
+    }
+    $y += $ph + 22;
+
+    // notes
+    $st = $pdo->prepare("SELECT m.nom, m.note_max, n.note FROM matieres m LEFT JOIN notes n ON n.matiere_id = m.id AND n.seminariste_id = ? ORDER BY m.ordre, m.nom");
+    $st->execute([$s['id']]);
+    $lignes = $st->fetchAll();
+    $somme = 0; $nb = 0;
+    foreach ($lignes as $l) { if ($l['note'] !== null) { $somme += ((float)$l['note'] / (float)$l['note_max']) * 20; $nb++; } }
+    $moy = $nb ? round($somme / $nb, 2) : null;
+
+    $bas = $H - 130; // zone moyenne
+    $dispo = $bas - $y - 8;
+    $n = max(1, count($lignes)) + 1;
+    $rh = (int)max(20, min(36, floor($dispo / $n)));
+    $fs = $rh >= 30 ? 21 : ($rh >= 25 ? 18 : 15);
+    $x0 = 52; $x1 = $W - 52; $cols = [$x0, $x0 + 520, $x0 + 700, $x0 + 860, $x1];
+    imagefilledrectangle($im, $x0, $y, $x1, $y + $rh, $vert);
+    foreach (['Matière', 'Note', 'Barème', 'Appréciation'] as $i => $t) {
+        pdfEcrire($im, $fs, $cols[$i] + 14, pdfBaseline('barlow-latin-700-normal.ttf', $fs, $y + $rh / 2), $blanc, 'barlow-latin-700-normal.ttf', $t);
+    }
+    $yy = $y + $rh;
+    foreach ($lignes as $k => $l) {
+        if ($k % 2 === 0) imagefilledrectangle($im, $x0, $yy, $x1, $yy + $rh, $teinte);
+        imageline($im, $x0, $yy + $rh, $x1, $yy + $rh, $ligne);
+        $cy = $yy + $rh / 2; $base = pdfBaseline('tinos-latin-700-normal.ttf', $fs, $cy);
+        pdfEcrire($im, $fs, $cols[0] + 14, $base, $noir, 'tinos-latin-700-normal.ttf', $l['nom']);
+        if ($l['note'] !== null) {
+            [$app, $coul] = appreciationNote(((float)$l['note'] / (float)$l['note_max']) * 20);
+            $c = $coul === 'vert' ? $vert : ($coul === 'or' ? $or : $rouge);
+            pdfEcrire($im, $fs, $cols[1] + 14, $base, $noir, 'tinos-latin-700-normal.ttf', rtrim(rtrim(number_format((float)$l['note'], 2, ',', ''), '0'), ','));
+            pdfEcrire($im, $fs, $cols[3] + 14, $base, $c, 'tinos-latin-700-normal.ttf', $app);
+        } else {
+            pdfEcrire($im, $fs, $cols[1] + 14, $base, $gris, 'tinos-latin-400-normal.ttf', '-');
+            pdfEcrire($im, $fs, $cols[3] + 14, $base, $gris, 'tinos-latin-400-normal.ttf', 'Non noté');
+        }
+        pdfEcrire($im, $fs, $cols[2] + 14, $base, $gris, 'tinos-latin-400-normal.ttf', '/ ' . rtrim(rtrim(number_format((float)$l['note_max'], 2, ',', ''), '0'), ','));
+        $yy += $rh;
+    }
+    if (!$lignes) { pdfEcrire($im, $fs, $x0 + 14, pdfBaseline('tinos-latin-400-normal.ttf', $fs, $yy + $rh / 2), $gris, 'tinos-latin-400-normal.ttf', 'Aucune matière définie.'); }
+
+    // moyenne générale
+    $by = $H - 120; $bh = 66;
+    imagefilledrectangle($im, $x0, $by, $x1, $by + $bh, $orange);
+    imagefilledrectangle($im, $x0, $by, $x0 + 8, $by + $bh, $vertF);
+    $txt = $moy !== null ? 'Moyenne générale : ' . number_format($moy, 2, ',', ' ') . ' / 20' : 'Moyenne générale : en attente de notes';
+    pdfEcrire($im, 28, $x0 + 34, pdfBaseline('barlow-latin-800-normal.ttf', 28, $by + $bh / 2), $blanc, 'barlow-latin-800-normal.ttf', $txt);
+    if ($moy !== null) {
+        $mention = 'Mention : ' . appreciationNote($moy)[0];
+        $lw = pdfLargeurTexte(28, 'barlow-latin-800-normal.ttf', $mention);
+        pdfEcrire($im, 28, $x1 - 34 - $lw, pdfBaseline('barlow-latin-800-normal.ttf', 28, $by + $bh / 2), $blanc, 'barlow-latin-800-normal.ttf', $mention);
+    }
+    $pied = EVENT_FULL . ' - bulletin généré automatiquement';
+    $fw = pdfLargeurTexte(15, 'tinos-latin-400-normal.ttf', $pied);
+    pdfEcrire($im, 15, ($W - $fw) / 2, $H - 25, $gris, 'tinos-latin-400-normal.ttf', $pied);
+    return $im;
+}
+
+/** Bulletins : 2 par page A4 portrait (une moitié chacun), repère de découpe au milieu. */
+function pdfBulletinsA4(PDO $pdo, array $lignes, $nomFichier) {
+    @set_time_limit(600);
+    @ini_set('memory_limit', '512M');
+    $pdf = new PdfFlux($nomFichier);
+    $A4w = 595.28; $A4h = 841.89; $ch = $A4h / 2; $marge = 10;
+    foreach (array_chunk($lignes, 2) as $groupe) {
+        $images = [];
+        foreach ($groupe as $i => $s) {
+            $im = pdfBulletin($pdo, $s);
+            $wpx = imagesx($im); $hpx = imagesy($im);
+            $jpeg = pdfJpeg($im, 90); imagedestroy($im);
+            $w = $A4w - 2 * $marge; $h = $w * $hpx / $wpx;
+            if ($h > $ch - 2 * $marge) { $h = $ch - 2 * $marge; $w = $h * $wpx / $hpx; }
+            $images[] = [$jpeg, $wpx, $hpx, ($A4w - $w) / 2, $i * $ch + ($ch - $h) / 2, $w, $h];
+        }
+        $pdf->page($A4w, $A4h, $images, count($groupe) > 1 ? [[0, $ch, $A4w, $ch]] : []);
+    }
+    if (!$lignes) { $pdf->page($A4w, $A4h, []); }
+    $pdf->fin();
+    exit;
+}

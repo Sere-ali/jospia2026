@@ -188,7 +188,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Bulletin de notes</h3>
             <?php if (resultatsPublies($pdo)): ?>
                 <p style="color:var(--texte-doux);">Les résultats des compositions du séminaire sont disponibles.</p>
-                <a href="<?= BASE_URL ?>/espace/bulletin" class="btn btn-primaire">📄 Voir et imprimer mon bulletin</a>
+                <a href="<?= BASE_URL ?>/espace/bulletin" class="btn btn-primaire">📄 Voir et télécharger mon bulletin</a>
             <?php else: ?>
                 <p style="color:var(--texte-doux);">Le bulletin de notes des compositions sera disponible ici dès que le comité d'organisation aura publié les résultats.</p>
             <?php endif; ?>
