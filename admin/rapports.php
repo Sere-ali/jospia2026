@@ -38,6 +38,7 @@ $q = function ($com, $jour = '') { return BASE_URL . '/admin/rapport_pdf?commiss
 <section class="section">
     <div class="container">
         <div class="section-titre"><span class="eyebrow">Back-office</span><h2>📝 Rapports journaliers des commissions</h2></div>
+        <p class="no-print" style="text-align:center;margin-bottom:14px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-outline btn-sm">✍️ Rédiger le rapport de l'administration</a></p>
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
