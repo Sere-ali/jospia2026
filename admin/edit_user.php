@@ -10,10 +10,10 @@ $compte = $stmt->fetch();
 if (!$compte) { die("Compte introuvable."); }
 
 $estMoi = ((int)$compte['id'] === (int)$_SESSION['compte_id']);
-// Un compte Super Administrateur ne peut être modifié que par son propriétaire
-if ($compte['role'] === 'superadmin' && !$estMoi) {
+// Un compte Super Administrateur ne peut être modifié que par son propriétaire ou par le super administrateur principal
+if ($compte['role'] === 'superadmin' && !$estMoi && !estSuperAdminPrincipal()) {
     http_response_code(403);
-    die("Accès refusé : un compte Super Administrateur ne peut être modifié que par son propriétaire.");
+    die("Accès refusé : un compte Super Administrateur ne peut être modifié que par son propriétaire ou par le super administrateur principal.");
 }
 $estPrincipal = $estMoi && $compte['role'] === 'superadmin'; // son propre compte : le rôle reste verrouillé (anti-verrouillage)
 $erreurs = [];

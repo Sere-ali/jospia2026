@@ -7,7 +7,7 @@ $erreurs = [];
 $succes = null;
 
 if (isset($_GET['desactiver'])) {
-    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','finance','scientifique','securite','mg')")->execute([(int)$_GET['desactiver']]);
+    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND id <> ? AND (role IN ('admin','finance','scientifique','securite','mg') OR (role = 'superadmin' AND ?))")->execute([(int)$_GET['desactiver'], (int)$_SESSION['compte_id'], estSuperAdminPrincipal() ? 1 : 0]);
     redirect('/admin/users');
 }
 $messageSuppression = null;
@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_id'])) {
     $cible = $stmt->fetch();
     if (!$cible) {
         $erreurs[] = "Compte introuvable.";
-    } elseif ($cible['role'] === 'superadmin') {
-        $erreurs[] = "Un compte Super Administrateur ne peut pas être supprimé.";
+    } elseif ($cible['role'] === 'superadmin' && !estSuperAdminPrincipal()) {
+        $erreurs[] = "Seul le super administrateur principal peut supprimer un compte Super Administrateur.";
     } elseif ($idCible === (int)$_SESSION['compte_id']) {
         $erreurs[] = "Vous ne pouvez pas supprimer votre propre compte.";
     } else {
@@ -112,17 +112,18 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         ?><span class="pill <?= $c['role'] === 'superadmin' ? 'pill-or' : 'pill-vert' ?>" <?= $c['role'] === 'superadmin' ? 'style="background:#C89A3E;color:#fff;font-weight:800;"' : '' ?>><?= e($lib) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>
                         <td style="white-space:nowrap;">
-                            <?php if ($c['role'] !== 'superadmin' || (int)$c['id'] === (int)$_SESSION['compte_id']): ?>
+                            <?php $moi = (int)$c['id'] === (int)$_SESSION['compte_id']; $gerable = $c['role'] !== 'superadmin' || $moi || estSuperAdminPrincipal(); ?>
+                            <?php if ($gerable): ?>
                                 <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
                             <?php endif; ?>
-                            <?php if ($c['role'] !== 'superadmin'): ?>
+                            <?php if ($gerable && !$moi): ?>
                                 <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
                                 <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement le compte de <?= e(addslashes($c['nom_affiche'])) ?> ?');">
                                     <input type="hidden" name="supprimer_id" value="<?= (int)$c['id'] ?>">
                                     <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
                                 </form>
                             <?php else: ?>
-                                <span class="help-text"><?= (int)$c['id'] === (int)$_SESSION['compte_id'] ? 'Votre compte' : 'Réservé à son propriétaire' ?></span>
+                                <span class="help-text"><?= $moi ? 'Votre compte' : 'Réservé à son propriétaire et au super administrateur principal' ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>

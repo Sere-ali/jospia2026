@@ -73,6 +73,17 @@ function estAdmin() {
     return $u && in_array($u['role'], ['admin', 'superadmin'], true);
 }
 
+/** Super administrateur principal = le plus ancien compte Super Administrateur : il gère les autres super administrateurs qu'il a nommés. */
+function estSuperAdminPrincipal() {
+    static $cache = null;
+    if ($cache !== null) return $cache;
+    $u = utilisateurCourant();
+    if (!$u || $u['role'] !== 'superadmin') return $cache = false;
+    global $pdo;
+    try { return $cache = ((int)$pdo->query("SELECT MIN(id) FROM comptes WHERE role = 'superadmin'")->fetchColumn() === (int)$u['id']); }
+    catch (Throwable $e) { return $cache = false; }
+}
+
 function estSuperAdmin() {
     $u = utilisateurCourant();
     return $u && $u['role'] === 'superadmin';
