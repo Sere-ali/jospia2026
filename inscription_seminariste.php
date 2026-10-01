@@ -83,8 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['compte_id'] = $compteNew['id'];
             $_SESSION['compte'] = $compteNew;
         }
-        // Inscription + paiement en un seul geste : envoi direct vers Wave (sauf si l'ID de transaction a déjà été saisi).
-        if (estConnecte() && $referenceTx === '' && lienWavePaiement()) { header('Location: ' . lienWavePaiement()); exit; }
         if (estConnecte()) { redirect('/espace/fiche?inscrit=1'); }
 
         $succes = "Inscription reçue. Votre dortoir a été attribué automatiquement : " . $r['dortoir'] . ".";

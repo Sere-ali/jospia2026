@@ -42,6 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, membre_id, nom_affiche) VALUES (?,?,?,?,?,?)")
             ->execute([$identifiant, $hash, $motDePasse, 'membre', $membreId, $nom]);
 
+        // Connexion automatique : la page personnelle s'ouvre tout de suite avec les identifiants.
+        $stC = $pdo->prepare("SELECT * FROM comptes WHERE identifiant = ? LIMIT 1");
+        $stC->execute([$identifiant]);
+        if (!estConnecte() && ($compteNew = $stC->fetch())) {
+            session_regenerate_id(true);
+            $_SESSION['compte_id'] = $compteNew['id'];
+            $_SESSION['compte'] = $compteNew;
+            redirect('/espace/fiche?inscrit=1');
+        }
         $succes = "Inscription réussie ! Votre badge sera généré automatiquement et sera visible sur votre espace personnel (téléchargement réservé aux administrateurs).";
         $identifiantsGeneres = ['id' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule];
     }

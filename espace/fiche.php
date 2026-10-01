@@ -24,6 +24,9 @@ if ($u['role'] === 'membre' && $u['membre_id']) {
     $stmt->execute([$u['membre_id']]);
     $membre = $stmt->fetch();
 }
+$stI0 = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE id = ? AND mdp_initial IS NOT NULL");
+$stI0->execute([$u['id']]);
+$idsInitiaux = $stI0->fetch() ?: null;
 $critiquesRecues = [];
 if ($membre) {
     $stmt = $pdo->prepare("SELECT * FROM critiques WHERE commission = ? ORDER BY created_at DESC");
@@ -37,9 +40,6 @@ if ($u['role'] === 'seminariste' && $u['seminariste_id']) {
     $stR = $pdo->prepare("SELECT p.*, c.nom_affiche AS valideur FROM paiements p LEFT JOIN comptes c ON c.id = p.admin_validateur_id WHERE p.seminariste_id = ? AND p.statut = 'validé' ORDER BY p.id DESC LIMIT 1");
     $stR->execute([$u['seminariste_id']]);
     $recu = $stR->fetch() ?: null;
-    $stI = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE id = ? AND mdp_initial IS NOT NULL");
-    $stI->execute([$u['id']]);
-    $idsInitiaux = $stI->fetch() ?: null;
 }
 $titrePage = "Mon espace";
 require_once __DIR__ . '/../includes/header.php';
@@ -58,6 +58,15 @@ require_once __DIR__ . '/../includes/header.php';
             <?php if (estSortieSecurite()): ?> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire btn-sm">🛡️ Sorties sécurité</a><?php endif; ?>
             <?php if (estSecurite()): ?> <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-primaire btn-sm">🛡️ Gestion des visiteurs</a><?php endif; ?></p>
         </div>
+        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion : notez-les.</div><?php endif; ?>
+        <?php if ($idsInitiaux): ?>
+        <div class="carte" style="max-width:720px;margin:0 auto 20px;border:2px solid var(--primaire,#1b7a3d);">
+            <h3>🔑 Vos identifiants de connexion</h3>
+            <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
+               <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
+            <p style="color:var(--texte-doux);">Conservez-les. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
+        </div>
+        <?php endif; ?>
 
         <div class="grid grid-2" style="align-items:start;">
             <div class="carte">
