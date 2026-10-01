@@ -531,19 +531,19 @@ function lettreRapportHtml(array $r, $actions = '') {
     $mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
     $fr = function ($d) use ($mois) { $t = strtotime($d); $j = (int)date('j', $t); return $j . ($j === 1 ? 'er' : '') . ' ' . $mois[(int)date('n', $t) - 1] . ' ' . date('Y', $t); };
     $h = '<article class="lettre"><div class="lettre-bande"></div>';
-    $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong><br><small>Rapporteur : ' . e($r['auteur_nom'] ?: '-') . '</small></div>';
+    $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong><br><small>Responsable : ' . e($r['auteur_nom'] ?: '-') . '</small></div>';
     $h .= '<div class="lettre-lieu">Abidjan, le ' . e($fr($r['created_at'] ?: $r['date_rapport'])) . '</div></div>';
-    $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Le Comité d\'organisation<br>JOSPIA</strong></div>';
+    $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Messieurs les Managers généraux<br>Commission administration</strong></div>';
     $h .= '<div class="lettre-objet">Objet : Rapport journalier du ' . e($fr($r['date_rapport'])) . '</div>';
-    $h .= '<p class="lettre-p">Madame, Monsieur,</p>';
+    $h .= '<p class="lettre-p">Messieurs,</p>';
     $h .= '<p class="lettre-p lettre-j">Nous avons l\'honneur de vous rendre compte des activités de la commission ' . e($r['commission']) . ' pour la journée du ' . e($fr($r['date_rapport'])) . '.</p>';
     foreach ([['1. Activités réalisées', 'activites'], ['2. Difficultés rencontrées', 'difficultes'], ['3. Prévisions et besoins', 'previsions']] as [$lib, $cle]) {
         if (trim((string)($r[$cle] ?? '')) === '') continue;
         $h .= '<h4 class="lettre-titre">' . e($lib) . '</h4>';
         foreach (preg_split('/\R+/u', trim((string)$r[$cle])) as $para) { if (trim($para) !== '') $h .= '<p class="lettre-p lettre-j">' . e(trim($para)) . '</p>'; }
     }
-    $h .= '<p class="lettre-p lettre-j">Veuillez agréer, Madame, Monsieur, l\'expression de nos salutations distinguées.</p>';
-    $h .= '<div class="lettre-sign"><small>Le rapporteur,</small><br><strong>' . e($r['auteur_nom'] ?: ('Commission ' . $r['commission'])) . '</strong></div>';
+    $h .= '<p class="lettre-p lettre-j">Veuillez agréer, Messieurs, l\'expression de nos salutations distinguées.</p>';
+    $h .= '<div class="lettre-sign"><small>Le responsable de la commission ' . e($r['commission']) . ',</small><br><strong>' . e($r['auteur_nom'] ?: ('Commission ' . $r['commission'])) . '</strong></div>';
     $h .= '<div class="lettre-meta">Déposé le ' . e(date('d/m/Y H:i', strtotime($r['created_at']))) . (!empty($r['updated_at']) ? ' · modifié le ' . e(date('d/m/Y H:i', strtotime($r['updated_at']))) : '') . '</div>';
     if ($actions !== '') $h .= '<div class="lettre-actions no-print">' . $actions . '</div>';
     return $h . '</article>';

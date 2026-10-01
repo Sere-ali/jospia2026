@@ -676,14 +676,14 @@ class PdfRapport {
         $com = (string)$r['commission'];
         pdfEcrire($this->im, 30, $m, $this->y + 30, $c['vertF'], $fb, 'Commission ' . $com);
         $this->y += 42;
-        $auteur = 'Rapporteur : ' . ($r['auteur_nom'] ?: '-');
+        $auteur = 'Responsable : ' . ($r['auteur_nom'] ?: '-');
         pdfEcrire($this->im, 28, $m, $this->y + 28, $c['gris'], $f, $auteur);
         $this->y += 70;
         $dest = ['À l\'attention de', 'Monsieur le Responsable du Comité d\'organisation', 'JOSPIA'];
-        $dx = (int)($W / 2) + 60;
+        $dx = (int)($W / 2) - 20;
         pdfEcrire($this->im, 26, $dx, $this->y + 26, $c['gris'], $f, $dest[0]);
-        pdfEcrire($this->im, 28, $dx, $this->y + 70, $c['noir'], $fb, 'Le Comité d\'organisation');
-        pdfEcrire($this->im, 28, $dx, $this->y + 106, $c['noir'], $fb, 'JOSPIA');
+        pdfEcrire($this->im, 28, $dx, $this->y + 70, $c['noir'], $fb, 'Messieurs les Managers généraux');
+        pdfEcrire($this->im, 28, $dx, $this->y + 106, $c['noir'], $fb, 'Commission administration');
         $this->y += 160;
         // objet
         $obj = 'Objet : Rapport journalier du ' . $this->dateFr($r['date_rapport']);
@@ -692,7 +692,7 @@ class PdfRapport {
         $this->y += 56 + 14;
         imageline($this->im, $m, $this->y, $W - $m, $this->y, $c['ligne']);
         $this->y += 40;
-        pdfEcrire($this->im, 30, $m, $this->y + 30, $c['noir'], $f, 'Madame, Monsieur,');
+        pdfEcrire($this->im, 30, $m, $this->y + 30, $c['noir'], $f, 'Messieurs,');
         $this->y += 66;
         $this->paragrapheJustifie('Nous avons l\'honneur de vous rendre compte du déroulement des activités de la commission ' . $com . ' pour la journée du ' . $this->dateFr($r['date_rapport']) . '.', 30, $m, $lw, 90);
         $this->y += 10;
@@ -706,14 +706,14 @@ class PdfRapport {
             $this->y += 8;
         }
         $this->y += 10;
-        $this->paragrapheJustifie('Veuillez agréer, Madame, Monsieur, l\'expression de nos salutations distinguées.', 30, $m, $lw, 90);
+        $this->paragrapheJustifie('Veuillez agréer, Messieurs, l\'expression de nos salutations distinguées.', 30, $m, $lw, 90);
         $this->place(170);
         $this->y += 24;
         $sig = (string)($r['auteur_nom'] ?: ('Commission ' . $com));
-        $sx = $W - $m - 460;
-        pdfEcrire($this->im, 28, $sx, $this->y + 28, $c['gris'], $f, 'Le rapporteur,');
+        $sx = $W - $m - 700;
+        pdfEcrire($this->im, 28, $sx, $this->y + 28, $c['gris'], $f, 'Le responsable de la commission ' . $com . ',');
         pdfEcrire($this->im, 32, $sx, $this->y + 110, $c['noir'], $fb, $sig);
-        imagefilledrectangle($this->im, $sx, $this->y + 124, $sx + 380, $this->y + 128, $c['orange']);
+        imagefilledrectangle($this->im, $sx, $this->y + 124, $sx + 520, $this->y + 128, $c['orange']);
         $this->y += 150;
     }
     public function fin() {
