@@ -237,23 +237,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"<?= $lienW ? ' data-etape="1"' : '' ?>><span><?= $lienW ? 'Valider mon inscription' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
                 <?php if ($lienW): ?>
                 <div id="bloc-wave" style="display:none;margin-top:14px;text-align:center;">
-                    <p style="margin:0 0 8px;">Étape finale : payez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> avec Wave, puis revenez ici et appuyez sur « J'ai payé : terminer mon inscription ».</p>
+                    <p style="margin:0 0 8px;">Étape finale : payez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> avec Wave, puis revenez ici : un bouton apparaîtra pour accéder à votre page (identifiants, fiche, reçu).</p>
                     <a href="<?= e($lienW) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave btn-block">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+                    <button type="submit" id="btn-acces" class="btn btn-primaire btn-block btn-envoi" style="display:none;margin-top:12px;"><span>✔ Paiement effectué : accéder à ma page</span><i aria-hidden="true">→</i></button>
                 </div>
                 <script>
                 (function () {
                     var btn = document.getElementById('btn-valider'), bloc = document.getElementById('bloc-wave');
                     if (!btn || !bloc) return;
                     var form = btn.form;
+                    var acces = document.getElementById('btn-acces'), wave = bloc.querySelector('a.btn-wave');
                     btn.addEventListener('click', function (e) {
-                        if (btn.getAttribute('data-etape') !== '1') return; // 2e clic : envoi normal
+                        if (btn.getAttribute('data-etape') !== '1') return;
                         e.preventDefault();
                         if (form.reportValidity && !form.reportValidity()) return;
                         bloc.style.display = 'block';
-                        btn.setAttribute('data-etape', '2');
-                        btn.querySelector('span').textContent = "✔ J'ai payé : terminer mon inscription";
+                        btn.style.display = 'none';
                         bloc.scrollIntoView({behavior: 'smooth', block: 'center'});
                     });
+                    // Dès que Wave est ouvert : le bouton d'accès à la page personnelle apparaît juste en dessous
+                    wave.addEventListener('click', function () { setTimeout(function () { acces.style.display = 'flex'; }, 400); });
+                    acces.addEventListener('click', function () { btn.setAttribute('data-etape', '2'); });
                 })();
                 </script>
                 <?php endif; ?>
