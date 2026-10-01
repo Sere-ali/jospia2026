@@ -115,7 +115,7 @@ function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 1.25) {
     $W = (int)round(904 * $S); $H = (int)round(1280 * $S);
     $im = pdfToile($W, $H);
     $ph = pdfPhoto($pdo, $s['photo'] ?? '');
-    if ($ph) { pdfCouvrir($im, $ph, 238.5 * $S, 470 * $S, 424 * $S, 424 * $S, 0.5, 0.2); imagedestroy($ph); }
+    if ($ph) { [$fx, $fy] = photoFocus($pdo, $s['photo'] ?? '', 1.0); pdfCouvrir($im, $ph, 238.5 * $S, 470 * $S, 424 * $S, 424 * $S, $fx, $fy); imagedestroy($ph); }
     else { pdfPlaceholderPhoto($im, 238.5 * $S, 470 * $S, 424 * $S, 424 * $S); }
     pdfModele($im, 'badge_seminariste.webp', $W, $H);
     $blanc = imagecolorallocate($im, 255, 255, 255);
@@ -167,7 +167,7 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 1.25) {
     $W = (int)round(904 * $S); $H = (int)round(1280 * $S);
     $im = pdfToile($W, $H);
     $ph = pdfPhoto($pdo, $m['photo'] ?? '');
-    if ($ph) { pdfCouvrir($im, $ph, 496 * $S, 10 * $S, 400 * $S, 660 * $S, 0.5, 0.18); imagedestroy($ph); }
+    if ($ph) { [$fx, $fy] = photoFocus($pdo, $m['photo'] ?? '', 400 / 660); pdfCouvrir($im, $ph, 496 * $S, 10 * $S, 400 * $S, 660 * $S, $fx, $fy); imagedestroy($ph); }
     else { pdfPlaceholderPhoto($im, 496 * $S, 10 * $S, 400 * $S, 660 * $S); }
     pdfModele($im, 'badge_commission.webp', $W, $H);
     $blanc = imagecolorallocate($im, 255, 255, 255);

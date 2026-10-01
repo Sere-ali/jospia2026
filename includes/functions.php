@@ -822,3 +822,66 @@ function sortieRefusee(PDO $pdo, $compteId) {
     } catch (Throwable $e) { return null; }
 }
 
+
+/* ------------------------------------------------------------------ */
+/*  Cadrage automatique des photos (visage centré dans le cercle / cadre du badge)  */
+/* ------------------------------------------------------------------ */
+/**
+ * Position (px, py) entre 0 et 1 pour un affichage « cover » dans une fenêtre de rapport $ratio (largeur / hauteur) :
+ * on repère les pixels « couleur de peau » et on centre la fenêtre sur le visage. Repli : [0.5, 0.25].
+ */
+function photoFocus(PDO $pdo, $nom, $ratio = 1.0) {
+    static $cache = [];
+    $cle = $nom . '|' . round($ratio, 3);
+    if (isset($cache[$cle])) return $cache[$cle];
+    $defaut = [0.5, 0.25];
+    if (!$nom || !function_exists('imagecreatefromstring') || !preg_match('/^[A-Za-z0-9._-]{1,120}$/', $nom)) return $cache[$cle] = $defaut;
+    try {
+        $donnees = null;
+        $f = __DIR__ . '/../uploads/photos/' . $nom;
+        if (is_file($f)) $donnees = @file_get_contents($f);
+        if (!$donnees) {
+            photoTableBase($pdo);
+            $st = $pdo->prepare("SELECT donnees FROM photos_stockees WHERE nom = ?");
+            $st->execute([$nom]);
+            $donnees = $st->fetchColumn();
+        }
+        $im = $donnees ? @imagecreatefromstring($donnees) : null;
+        if (!$im) return $cache[$cle] = $defaut;
+        $w0 = imagesx($im); $h0 = imagesy($im);
+        $w = min(80, $w0); $h = max(1, (int)round($h0 * $w / $w0));
+        $p = imagecreatetruecolor($w, $h);
+        imagecopyresampled($p, $im, 0, 0, 0, 0, $w, $h, $w0, $h0);
+        imagedestroy($im);
+        $xs = []; $ys = [];
+        for ($y = 0; $y < $h; $y++) for ($x = 0; $x < $w; $x++) {
+            $c = imagecolorat($p, $x, $y);
+            $r = ($c >> 16) & 255; $g = ($c >> 8) & 255; $b = $c & 255;
+            $Y = 0.299 * $r + 0.587 * $g + 0.114 * $b;
+            $cb = 128 - 0.168736 * $r - 0.331264 * $g + 0.5 * $b;
+            $cr = 128 + 0.5 * $r - 0.418688 * $g - 0.081312 * $b;
+            // pixel de peau (large pour couvrir les peaux foncées), pondéré vers le centre de l'image
+            if ($Y > 35 && $Y < 235 && $cb > 80 && $cb < 125 && $cr > 143 && $cr < 178 && $r > $b) {
+                $dx = abs($x / $w - 0.5); if ($dx > 0.42) continue;
+                $xs[] = $x; $ys[] = $y;
+            }
+        }
+        imagedestroy($p);
+        if (count($xs) < max(30, $w * $h * 0.03)) return $cache[$cle] = $defaut;
+        sort($xs); sort($ys);
+        $n = count($xs);
+        $fx = $xs[(int)($n * 0.5)] / $w;
+        $fy = $ys[(int)($n * 0.38)] / $h; // plutôt vers le haut de la zone de peau : le visage, pas le cou
+        $ia = $w0 / $h0;
+        $pos = [0.5, 0.5];
+        if ($ia > $ratio) { // image plus large que la fenêtre : on décale horizontalement
+            $vis = $ratio / $ia; // part visible de la largeur
+            $pos[0] = $vis >= 1 ? 0.5 : max(0, min(1, ($fx - $vis / 2) / (1 - $vis)));
+            $pos[1] = 0.5;
+        } else { // image plus haute : on décale verticalement
+            $vis = $ia / $ratio; // part visible de la hauteur
+            $pos[1] = $vis >= 1 ? 0.5 : max(0, min(1, ($fy - $vis * 0.46) / (1 - $vis)));
+        }
+        return $cache[$cle] = $pos;
+    } catch (Throwable $e) { return $cache[$cle] = $defaut; }
+}

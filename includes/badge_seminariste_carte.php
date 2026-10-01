@@ -5,11 +5,12 @@
  */
 $__avatar = BASE_URL . '/assets/img/avatar.svg';
 $__photo = !empty($s['photo']) ? BASE_URL . '/uploads/photos/' . rawurlencode($s['photo']) : $__avatar;
+$__f = photoFocus($GLOBALS['pdo'], $s['photo'] ?? '', 1.0);
 $__nom = mb_strtoupper((string)$s['nom_prenoms'], 'UTF-8');
 ?>
 <div class="jos-doc jos-badge jos-badge-sem">
     <div class="jos-doc__stage">
-        <img class="jos-badge-sem__photo" src="<?= e($__photo) ?>" alt="" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
+        <img class="jos-badge-sem__photo" src="<?= e($__photo) ?>" alt="" style="object-position:<?= round($__f[0]*100) ?>% <?= round($__f[1]*100) ?>%;" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
         <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_seminariste.webp" alt="Badge JOSPIA 2026 - Séminariste">
         <div class="jos-badge-sem__nom" data-fit="0.98"><span><?= e($__nom) ?></span></div>
         <div class="jos-badge-sem__val v1" data-fit="0.97"><span><?= e($s['dortoir']) ?></span></div>

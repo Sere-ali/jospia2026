@@ -233,7 +233,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </fieldset>
                 <?php endif; ?>
 
-                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= (waveApiActive() || lienWavePaiement()) ? '💙 Valider et payer par Wave' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
+                <?php $lienW = lienWavePaiement(); ?>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"<?= $lienW ? ' data-etape="1"' : '' ?>><span><?= $lienW ? 'Valider mon inscription' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
+                <?php if ($lienW): ?>
+                <div id="bloc-wave" style="display:none;margin-top:14px;text-align:center;">
+                    <p style="margin:0 0 8px;">Étape finale : payez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> avec Wave, puis revenez ici et appuyez sur « J'ai payé : terminer mon inscription ».</p>
+                    <a href="<?= e($lienW) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave btn-block">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+                </div>
+                <script>
+                (function () {
+                    var btn = document.getElementById('btn-valider'), bloc = document.getElementById('bloc-wave');
+                    if (!btn || !bloc) return;
+                    var form = btn.form;
+                    btn.addEventListener('click', function (e) {
+                        if (btn.getAttribute('data-etape') !== '1') return; // 2e clic : envoi normal
+                        e.preventDefault();
+                        if (form.reportValidity && !form.reportValidity()) return;
+                        bloc.style.display = 'block';
+                        btn.setAttribute('data-etape', '2');
+                        btn.querySelector('span').textContent = "✔ J'ai payé : terminer mon inscription";
+                        bloc.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    });
+                })();
+                </script>
+                <?php endif; ?>
                 <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
             </form>
         <?php endif; ?>
