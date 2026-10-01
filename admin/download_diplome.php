@@ -6,7 +6,7 @@ $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare("SELECT * FROM seminaristes WHERE id = ?");
 $stmt->execute([$id]);
 $s = $stmt->fetch();
-if (!$s || !$s['test_complete']) { die("Diplôme indisponible (test d'entrée non complété)."); }
+if (!$s) { die("Séminariste introuvable."); }
 
 $titrePage = "Diplôme - " . $s['nom_prenoms'];
 require_once __DIR__ . '/../includes/header.php';

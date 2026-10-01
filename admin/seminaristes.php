@@ -97,8 +97,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                             <a href="<?= BASE_URL ?>/admin/seminariste_detail?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">👁️</a>
                             <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">📄 Fiche</a>
                             <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🎖️ Diplôme</a>
                             <?php if ($s['test_complete']): ?>
-                                <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🎖️ Diplôme</a>
                                 <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">🔍 Correction</a>
                             <?php endif; ?>
                             <?php if (estSuperAdmin()): ?>

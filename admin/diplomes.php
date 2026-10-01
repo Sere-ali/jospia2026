@@ -6,7 +6,7 @@ $estBadge = ($MODE === 'badges');
 $niveaux = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
 
 // Effectifs par niveau (séminaristes) et par commission (membres)
-$condSem = $estBadge ? '1=1' : "(test_complete = 1 OR niveau_affecte = 'Pépinière')";
+$condSem = '1=1';
 $parNiveau = [];
 foreach ($pdo->query("SELECT COALESCE(NULLIF(niveau_affecte,''),'none') n, COUNT(*) c FROM seminaristes WHERE $condSem GROUP BY n")->fetchAll() as $r) { $parNiveau[$r['n']] = (int)$r['c']; }
 $parCom = [];
@@ -38,9 +38,9 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <?php else: ?><span class="pill pill-gris">Aucun</span><?php endif; ?>
                 </div>
             <?php endforeach; ?>
-            <?php if ($estBadge && !empty($parNiveau['none'])): ?>
-                <div class="carte"><h3>Niveau non affecté</h3><p><strong><?= $parNiveau['none'] ?></strong> badge(s)</p>
-                    <a href="<?= BASE_URL ?>/admin/apercu_documents?doc=badges&groupe=sem&valeur=none" class="btn btn-primaire btn-sm">👁️ Voir</a> <a href="<?= BASE_URL ?>/admin/pdf?type=badge_sem&tous=1&niveau=none" class="btn btn-outline btn-sm">⬇️ PDF</a></div>
+            <?php if (!empty($parNiveau['none'])): ?>
+                <div class="carte"><h3>Niveau non affecté</h3><p><strong><?= $parNiveau['none'] ?></strong> <?= $mot ?>(s)</p>
+                    <a href="<?= BASE_URL ?>/admin/apercu_documents?doc=<?= $MODE ?>&groupe=sem&valeur=none" class="btn btn-primaire btn-sm">👁️ Voir</a> <a href="<?= BASE_URL ?>/admin/pdf?type=<?= $typeSem ?>&tous=1&niveau=none" class="btn btn-outline btn-sm">⬇️ PDF</a></div>
             <?php endif; ?>
             <div class="carte" style="border-left:4px solid var(--orange);">
                 <h3>Tous les niveaux</h3>

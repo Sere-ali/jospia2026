@@ -38,10 +38,11 @@ switch ($type) {
         $suffixe = ($_GET['commission'] ?? '') !== '' ? '_' . preg_replace('/[^A-Za-z0-9]+/', '_', $_GET['commission']) : '';
         pdfBadgesA4($l, function ($m) use ($pdo) { return pdfBadgeCommission($pdo, $m); }, 'badges_commission' . $suffixe . '.pdf');
     case 'diplome_sem':
-        $w = " AND (test_complete = 1 OR niveau_affecte = 'Pépinière')"; $p = [];
-        if (($_GET['niveau'] ?? '') !== '') { $w .= ' AND niveau_affecte = ?'; $p[] = $_GET['niveau']; }
-        $l = array_values(array_filter(lignesPar($pdo, 'seminaristes', $ids, $tous, $w, $p), function ($s) { return !empty($s['test_complete']) || $s['niveau_affecte'] === 'Pépinière'; }));
-        if (!$l) { die("Aucun diplôme disponible (test d'entrée non complété)."); }
+        $w = ''; $p = [];
+        if (($_GET['niveau'] ?? '') === 'none') { $w .= " AND (niveau_affecte IS NULL OR niveau_affecte = '')"; }
+        elseif (($_GET['niveau'] ?? '') !== '') { $w .= ' AND niveau_affecte = ?'; $p[] = $_GET['niveau']; }
+        $l = lignesPar($pdo, 'seminaristes', $ids, $tous, $w, $p, 'dortoir, nom_prenoms');
+        if (!$l) { die("Aucun diplôme disponible."); }
         $nomF = $tous ? 'diplomes_seminaristes' . (($_GET['niveau'] ?? '') !== '' ? '_' . preg_replace('/[^A-Za-z0-9]+/', '_', $_GET['niveau']) : '') : 'diplome_' . preg_replace('/[^A-Za-z0-9]+/', '_', $l[0]['nom_prenoms']);
         pdfDiplomesA4($l, function ($s) { return pdfDiplomeSeminariste($s['nom_prenoms']); }, $nomF . '.pdf');
     case 'diplome_com':

@@ -7,7 +7,7 @@ $valeur = trim($_GET['valeur'] ?? '');
 $estBadge = ($doc === 'badges');
 
 if ($groupe === 'sem') {
-    $w = $estBadge ? '1=1' : "(test_complete = 1 OR niveau_affecte = 'Pépinière')"; $p = [];
+    $w = '1=1'; $p = [];
     if ($valeur === 'none') { $w .= " AND (niveau_affecte IS NULL OR niveau_affecte = '')"; }
     elseif ($valeur !== '') { $w .= ' AND niveau_affecte = ?'; $p[] = $valeur; }
     $st = $pdo->prepare("SELECT * FROM seminaristes WHERE $w ORDER BY dortoir, nom_prenoms");

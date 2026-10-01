@@ -185,12 +185,15 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="acces-restreint">🔒 La correction détaillée du test est verrouillée pour le moment.</div>
                 <?php endif; ?>
 
-                <h3 style="margin-top:26px;">Mon diplôme</h3>
-                <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
-                <div class="acces-restreint" style="margin-top:14px;">
-                    🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
-                </div>
             <?php endif; ?>
+        </div>
+
+        <div class="carte" style="max-width:900px;margin:24px auto 0;">
+            <h3>Mon diplôme</h3>
+            <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
+            <div class="acces-restreint" style="margin-top:14px;">
+                🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
+            </div>
         </div>
 
         <div class="carte" style="max-width:720px;margin:24px auto 0;">
