@@ -401,7 +401,7 @@ function journaliser(PDO $pdo, $action, $cible = '', $compte = null) {
  */
 function journalAutomatique(PDO $pdo) {
     $u = $_SESSION['compte'] ?? null;
-    if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique'], true)) return;
+    if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) return;
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
     if (in_array($script, ['login', 'logout', 'wave_webhook', 'wave_retour', 'wave_pay'], true)) return;
     $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -459,6 +459,7 @@ function visiteursPreparer(PDO $pdo) {
     static $ok = false;
     if ($ok) return;
     $ok = true;
+    rolesPreparer($pdo);
     $pdo->exec("CREATE TABLE IF NOT EXISTS visiteurs (
         id INT AUTO_INCREMENT PRIMARY KEY, nom_prenoms VARCHAR(150) NOT NULL, contact VARCHAR(20) NOT NULL,
         motif VARCHAR(255) NOT NULL DEFAULT '', heure_arrivee DATETIME NOT NULL, heure_sortie DATETIME NULL,
@@ -478,3 +479,14 @@ function dateHeureSaisie($v) {
 }
 function dateHeureAffiche($v) { return $v ? date('d/m/Y H:i', strtotime($v)) : '-'; }
 function dateHeureChamp($v) { return $v ? date('Y-m-d\TH:i', strtotime($v)) : ''; }
+
+/** Ajoute le rôle « securite » à la colonne comptes.role si elle ne l'accepte pas encore (migration automatique). */
+function rolesPreparer(PDO $pdo) {
+    try {
+        $col = $pdo->query("SHOW COLUMNS FROM comptes LIKE 'role'")->fetch();
+        $type = (string)($col['Type'] ?? $col['type'] ?? '');
+        if ($type !== '' && stripos($type, "'securite'") === false) {
+            $pdo->exec("ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin','finance','scientifique','securite') NOT NULL DEFAULT 'membre'");
+        }
+    } catch (Throwable $e) { error_log('Migration rôle sécurité : ' . $e->getMessage()); }
+}

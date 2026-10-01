@@ -20,7 +20,7 @@ $st->execute($p);
 $resume = $st->fetchAll();
 
 $acteurs = $pdo->query("SELECT compte_id, MAX(nom) nom FROM journal_activite WHERE compte_id IS NOT NULL GROUP BY compte_id ORDER BY nom")->fetchAll();
-$roles = ['superadmin' => 'Super admin', 'admin' => 'Admin', 'finance' => 'Commission finance', 'scientifique' => 'Commission scientifique'];
+$roles = ['superadmin' => 'Super admin', 'admin' => 'Admin', 'finance' => 'Commission finance', 'scientifique' => 'Commission scientifique', 'securite' => 'Commission sécurité'];
 
 $titrePage = "Activité journalière";
 require_once __DIR__ . '/../includes/header.php';

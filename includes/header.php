@@ -40,6 +40,8 @@ $page = basename($_SERVER['PHP_SELF']);
                     <a href="<?= BASE_URL ?>/admin/dashboard">Tableau de bord</a>
                 <?php elseif (estFinance()): ?>
                     <a href="<?= BASE_URL ?>/finance/paiements">Commission finance</a>
+                <?php elseif (($u['role'] ?? '') === 'securite'): ?>
+                    <a href="<?= BASE_URL ?>/securite/visiteurs">Commission sécurité</a>
                 <?php elseif (estScientifique()): ?>
                     <a href="<?= BASE_URL ?>/admin/commission_scientifique">Commission scientifique</a>
                 <?php endif; ?>
