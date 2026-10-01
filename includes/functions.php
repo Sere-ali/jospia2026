@@ -461,8 +461,12 @@ function visiteursPreparer(PDO $pdo) {
     $ok = true;
     $pdo->exec("CREATE TABLE IF NOT EXISTS visiteurs (
         id INT AUTO_INCREMENT PRIMARY KEY, nom_prenoms VARCHAR(150) NOT NULL, contact VARCHAR(20) NOT NULL,
-        heure_arrivee DATETIME NOT NULL, heure_sortie DATETIME NULL,
+        motif VARCHAR(255) NOT NULL DEFAULT '', heure_arrivee DATETIME NOT NULL, heure_sortie DATETIME NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_vis_contact (contact), INDEX idx_vis_arrivee (heure_arrivee)) ENGINE=InnoDB");
+    // table créée avant l'ajout du motif : on ajoute la colonne
+    if (!$pdo->query("SHOW COLUMNS FROM visiteurs LIKE 'motif'")->fetch()) {
+        $pdo->exec("ALTER TABLE visiteurs ADD COLUMN motif VARCHAR(255) NOT NULL DEFAULT '' AFTER contact");
+    }
 }
 
 /** « 2026-12-24T14:30 » (champ datetime-local) -> « 2026-12-24 14:30:00 », ou null si invalide. */

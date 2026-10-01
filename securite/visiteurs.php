@@ -18,22 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         journaliser($pdo, 'Visiteur supprimé', '#' . $id);
         $succes = "Visiteur supprimé.";
     } elseif ($action === 'modifier' && $id) {
-        $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? '');
+        $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? ''); $motif = mb_substr(trim($_POST['motif'] ?? ''), 0, 255);
         $arr = dateHeureSaisie($_POST['heure_arrivee'] ?? ''); $sor = dateHeureSaisie($_POST['heure_sortie'] ?? '');
         if ($nom === '' || !preg_match('/^[0-9]{8,15}$/', $contact) || !$arr) { $erreurs[] = "Nom, contact (8 à 15 chiffres) et heure d'arrivée sont obligatoires."; }
         elseif ($sor && strtotime($sor) < strtotime($arr)) { $erreurs[] = "L'heure de sortie ne peut pas être avant l'arrivée."; }
         else {
-            $pdo->prepare("UPDATE visiteurs SET nom_prenoms=?, contact=?, heure_arrivee=?, heure_sortie=? WHERE id=?")->execute([$nom, $contact, $arr, $sor, $id]);
+            $pdo->prepare("UPDATE visiteurs SET nom_prenoms=?, contact=?, motif=?, heure_arrivee=?, heure_sortie=? WHERE id=?")->execute([$nom, $contact, $motif, $arr, $sor, $id]);
             journaliser($pdo, 'Visiteur modifié', $nom);
             $succes = "Visiteur modifié.";
         }
     } elseif ($action === 'ajouter') {
-        $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? '');
+        $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? ''); $motif = mb_substr(trim($_POST['motif'] ?? ''), 0, 255);
         $arr = dateHeureSaisie($_POST['heure_arrivee'] ?? '') ?: date('Y-m-d H:i:s'); $sor = dateHeureSaisie($_POST['heure_sortie'] ?? '');
         if ($nom === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) { $erreurs[] = "Nom et contact (8 à 15 chiffres) obligatoires."; }
         elseif ($sor && strtotime($sor) < strtotime($arr)) { $erreurs[] = "L'heure de sortie ne peut pas être avant l'arrivée."; }
         else {
-            $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, heure_arrivee, heure_sortie) VALUES (?,?,?,?)")->execute([$nom, $contact, $arr, $sor]);
+            $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, motif, heure_arrivee, heure_sortie) VALUES (?,?,?,?,?)")->execute([$nom, $contact, $motif, $arr, $sor]);
             journaliser($pdo, 'Visiteur ajouté', $nom);
             $succes = "Visiteur ajouté.";
         }
@@ -46,7 +46,7 @@ $jour = trim($_GET['jour'] ?? '');
 $where = ['1=1']; $params = [];
 if ($filtre === 'presents') $where[] = 'heure_sortie IS NULL';
 if ($filtre === 'sortis') $where[] = 'heure_sortie IS NOT NULL';
-if ($q !== '') { $where[] = '(nom_prenoms LIKE ? OR contact LIKE ?)'; $params[] = "%$q%"; $params[] = "%$q%"; }
+if ($q !== '') { $where[] = '(nom_prenoms LIKE ? OR contact LIKE ? OR motif LIKE ?)'; $params[] = "%$q%"; $params[] = "%$q%"; $params[] = "%$q%"; }
 if ($jour !== '' && strtotime($jour)) { $where[] = 'DATE(heure_arrivee) = ?'; $params[] = date('Y-m-d', strtotime($jour)); }
 $st = $pdo->prepare("SELECT * FROM visiteurs WHERE " . implode(' AND ', $where) . " ORDER BY heure_arrivee DESC LIMIT 1000");
 $st->execute($params);
@@ -80,6 +80,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
                 <div class="form-group"><label>Nom et prénoms</label><input type="text" name="nom_prenoms" required value="<?= e($edit['nom_prenoms'] ?? '') ?>"></div>
                 <div class="form-group"><label>Contact</label><input type="tel" name="contact" inputmode="numeric" maxlength="15" required value="<?= e($edit['contact'] ?? '') ?>"></div>
             </div>
+            <div class="form-group"><label>Motif de la visite</label><input type="text" name="motif" maxlength="255" value="<?= e($edit['motif'] ?? '') ?>"></div>
             <div class="form-row">
                 <div class="form-group"><label>Heure d'arrivée</label><input type="datetime-local" name="heure_arrivee" value="<?= e($edit ? dateHeureChamp($edit['heure_arrivee']) : date('Y-m-d\TH:i')) ?>"></div>
                 <div class="form-group"><label>Heure de sortie (vide = encore présent)</label><input type="datetime-local" name="heure_sortie" value="<?= e($edit ? dateHeureChamp($edit['heure_sortie']) : '') ?>"></div>
@@ -95,19 +96,20 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
                 <option value="sortis" <?= $filtre==='sortis'?'selected':'' ?>>Sortis</option>
             </select>
             <input type="date" name="jour" value="<?= e($jour) ?>" onchange="this.form.submit()" style="max-width:170px;">
-            <input type="text" name="q" placeholder="Nom ou contact..." value="<?= e($q) ?>" style="max-width:240px;">
+            <input type="text" name="q" placeholder="Nom, contact ou motif..." value="<?= e($q) ?>" style="max-width:240px;">
             <button class="btn btn-outline btn-sm">Rechercher</button>
         </form>
 
         <div class="table-wrap">
             <table>
                 <caption style="display:none;">Visiteurs</caption>
-                <thead><tr><th>Nom et prénoms</th><th>Contact</th><th>Arrivée</th><th>Sortie</th><th>Statut</th><th class="no-print">Actions</th></tr></thead>
+                <thead><tr><th>Nom et prénoms</th><th>Contact</th><th>Motif</th><th>Arrivée</th><th>Sortie</th><th>Statut</th><th class="no-print">Actions</th></tr></thead>
                 <tbody>
                 <?php foreach ($visiteurs as $v): ?>
                     <tr>
                         <td><strong><?= e($v['nom_prenoms']) ?></strong></td>
                         <td class="mono"><?= e($v['contact']) ?></td>
+                        <td><?= e($v['motif'] ?? '') ?></td>
                         <td><?= e(dateHeureAffiche($v['heure_arrivee'])) ?></td>
                         <td><?= e(dateHeureAffiche($v['heure_sortie'])) ?></td>
                         <td><?= $v['heure_sortie'] ? '<span class="pill pill-gris">Sorti</span>' : '<span class="pill pill-vert">Présent</span>' ?></td>
@@ -120,7 +122,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
                         </td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (!$visiteurs): ?><tr><td colspan="6">Aucun visiteur.</td></tr><?php endif; ?>
+                <?php if (!$visiteurs): ?><tr><td colspan="7">Aucun visiteur.</td></tr><?php endif; ?>
                 </tbody>
             </table>
         </div>

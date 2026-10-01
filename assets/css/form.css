@@ -188,3 +188,4 @@
 .form-pro input[type=datetime-local]:focus { border-color: var(--orange); box-shadow: 0 0 0 5px rgba(247,127,0,.15); outline: 0; }
 .form-pro input[name=heure_arrivee], .form-pro input[name=heure_sortie] { padding-left: 16px; }
 .form-pro legend[data-ico]::before { content: attr(data-ico); font-size: 1.2rem; transform: none; }
+.form-pro input[name=motif] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B8A4E' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 21V4M5 4h11l-2 4 2 4H5'/%3E%3C/svg%3E"); }

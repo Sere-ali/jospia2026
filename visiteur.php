@@ -13,15 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($mode === 'arrivee' && !$erreurs) {
         $nom = trim($_POST['nom_prenoms'] ?? '');
+        $motif = mb_substr(trim($_POST['motif'] ?? ''), 0, 255);
         $arrivee = dateHeureSaisie($_POST['heure_arrivee'] ?? '') ?: date('Y-m-d H:i:s');
         if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
+        if ($motif === '') $erreurs[] = "Le motif de la visite est obligatoire.";
         $st = $pdo->prepare("SELECT heure_arrivee FROM visiteurs WHERE contact = ? AND heure_sortie IS NULL ORDER BY heure_arrivee DESC LIMIT 1");
         $st->execute([$contact]);
         if ($ouverte = $st->fetchColumn()) {
             $erreurs[] = "Une visite est déjà en cours pour ce numéro (arrivée le " . dateHeureAffiche($ouverte) . "). Déclarez d'abord votre sortie.";
         }
         if (!$erreurs) {
-            $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, heure_arrivee) VALUES (?,?,?)")->execute([$nom, $contact, $arrivee]);
+            $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, motif, heure_arrivee) VALUES (?,?,?,?)")->execute([$nom, $contact, $motif, $arrivee]);
             $succes = "Arrivée enregistrée à " . dateHeureAffiche($arrivee) . ". Votre identifiant de sortie est votre numéro : $contact. À votre départ, utilisez « Déclarer ma sortie » ci-dessous.";
             $_POST = [];
         }
@@ -63,6 +65,8 @@ $maintenant = date('Y-m-d\TH:i');
                         <input type="text" name="nom_prenoms" required value="<?= e($mode === 'arrivee' ? ($_POST['nom_prenoms'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Contact (téléphone) <span class="req">*</span></label>
                         <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" required placeholder="Ex : 0700000000" value="<?= e($mode === 'arrivee' ? ($_POST['contact'] ?? '') : '') ?>"></div>
+                    <div class="form-group"><label>Motif de la visite <span class="req">*</span></label>
+                        <input type="text" name="motif" required maxlength="255" placeholder="Ex : Visite à un séminariste, livraison, rendez-vous..." value="<?= e($mode === 'arrivee' ? ($_POST['motif'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Heure d'arrivée</label>
                         <input type="datetime-local" name="heure_arrivee" value="<?= e($maintenant) ?>"></div>
                     <div class="help-text">Votre numéro de téléphone sert d'identifiant pour déclarer votre sortie.</div>
