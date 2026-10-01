@@ -528,8 +528,8 @@ function rolesPreparer(PDO $pdo) {
     try {
         $col = $pdo->query("SHOW COLUMNS FROM comptes LIKE 'role'")->fetch();
         $type = (string)($col['Type'] ?? $col['type'] ?? '');
-        if ($type !== '' && stripos($type, "'securite'") === false) {
-            $pdo->exec("ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin','finance','scientifique','securite') NOT NULL DEFAULT 'membre'");
+        if ($type !== '' && (stripos($type, "'securite'") === false || stripos($type, "'mg'") === false)) {
+            $pdo->exec("ALTER TABLE comptes MODIFY role ENUM('membre','seminariste','admin','superadmin','finance','scientifique','securite','mg') NOT NULL DEFAULT 'membre'");
         }
     } catch (Throwable $e) { error_log('Migration rôle sécurité : ' . $e->getMessage()); }
 }
@@ -758,7 +758,7 @@ function estMG() {
     if ($cache !== null) return $cache;
     $u = utilisateurCourant();
     if (!$u) return $cache = false;
-    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
+    if (in_array($u['role'], ['admin', 'superadmin', 'mg'], true)) return $cache = true;
     global $pdo;
     try { return $cache = sortieRoleAttribue($pdo, $u['id'], 'mg'); } catch (Throwable $e) { return $cache = false; }
 }

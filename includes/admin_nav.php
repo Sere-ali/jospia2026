@@ -8,9 +8,10 @@ $pagesAdministration = ['administration.php', 'commissions.php', 'edit_membre.ph
 $dansFinance = strpos($_SERVER['PHP_SELF'], '/finance/') !== false;
 $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansScientifique || $dansFinance;
 // Barre complète seulement sur le tableau de bord ; ailleurs un simple bouton « Retour ».
-$accueilNav = estAdmin() ? 'dashboard.php' : 'commission_scientifique.php';
+$roleMg = (utilisateurCourant()['role'] ?? '') === 'mg';
+$accueilNav = $roleMg ? 'comite_manageriale.php' : (estAdmin() ? 'dashboard.php' : 'commission_scientifique.php');
 $surAccueil = ($pageAdmin === $accueilNav);
-if (in_array($pageAdmin, ['sorties_mg.php', 'rapports.php', 'rapport_pdf.php'], true) && estAdmin()) { $urlRetour = BASE_URL . '/admin/comite_manageriale'; }
+if (in_array($pageAdmin, ['sorties_mg.php', 'rapports.php', 'rapport_pdf.php'], true) && estComiteManagerial()) { $urlRetour = BASE_URL . '/admin/comite_manageriale'; }
 elseif ($pageAdmin === 'sorties_roles.php') { $urlRetour = BASE_URL . '/espace/sorties_mg'; }
 elseif ($pageAdmin === 'sorties.php') { $urlRetour = BASE_URL . '/securite/visiteurs'; }
 elseif ($dansScientifique && $pageAdmin !== 'commission_scientifique.php') { $urlRetour = BASE_URL . '/admin/commission_scientifique'; }
@@ -20,6 +21,10 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
 <div class="container" style="margin-top:18px;">
     <?php if (!$surAccueil): ?>
         <p class="no-print" style="margin:0 0 4px;"><a href="<?= e($urlRetour) ?>" class="btn btn-outline btn-sm">&larr; Retour</a></p>
+    <?php elseif ($roleMg): ?>
+    <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm btn-primaire">👔 Comité managérial</a>
+    </div>
     <?php elseif (!estAdmin()): ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
         <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm btn-primaire">🔬 Commission scientifique</a>

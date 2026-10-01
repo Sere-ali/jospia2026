@@ -31,7 +31,7 @@ $attente = $pdo->query("SELECT * FROM sorties WHERE statut = 'attente_mg' ORDER 
 $recentes = $pdo->query("SELECT * FROM sorties WHERE statut <> 'attente_mg' AND statut <> 'annulee' ORDER BY id DESC LIMIT 15")->fetchAll();
 
 require_once __DIR__ . '/../includes/header.php';
-if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
+if (estComiteManagerial()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:900px;">

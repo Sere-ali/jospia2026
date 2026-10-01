@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+exigerRole(['admin', 'superadmin', 'mg']);
 require_once __DIR__ . '/../includes/pdf_docs.php';
 date_default_timezone_set('Africa/Abidjan');
 rapportsPreparer($pdo);

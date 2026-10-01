@@ -3,7 +3,7 @@ $titrePage = "Connexion";
 require_once __DIR__ . '/includes/header.php';
 
 if (estConnecte()) {
-    redirect(estAdmin() ? '/admin/dashboard' : '/espace/fiche');
+    redirect(estAdmin() ? '/admin/dashboard' : (($_SESSION['compte']['role'] ?? '') === 'mg' ? '/admin/comite_manageriale' : '/espace/fiche'));
 }
 
 $erreur = null;
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['compte_id'] = $compte['id'];
         $_SESSION['compte'] = $compte;
         if (in_array($compte['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) { journaliser($pdo, 'Connexion', '', $compte); }
-        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard' : ($compte['role'] === 'finance' ? '/finance/paiements' : ($compte['role'] === 'scientifique' ? '/admin/commission_scientifique' : ($compte['role'] === 'securite' ? '/securite/visiteurs' : '/espace/fiche'))));
+        redirect(in_array($compte['role'], ['admin','superadmin'], true) ? '/admin/dashboard' : ($compte['role'] === 'finance' ? '/finance/paiements' : ($compte['role'] === 'scientifique' ? '/admin/commission_scientifique' : ($compte['role'] === 'mg' ? '/admin/comite_manageriale' : ($compte['role'] === 'securite' ? '/securite/visiteurs' : '/espace/fiche')))));
     } else {
         $erreur = "Identifiant ou mot de passe incorrect.";
     }

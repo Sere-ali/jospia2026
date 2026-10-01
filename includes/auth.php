@@ -49,6 +49,12 @@ function exigerRole(array $rolesAutorises) {
     }
 }
 
+/** Comité managérial : administrateurs et comptes MG / MGA. */
+function estComiteManagerial() {
+    $u = utilisateurCourant();
+    return $u && in_array($u['role'], ['admin', 'superadmin', 'mg'], true);
+}
+
 function estAdmin() {
     $u = utilisateurCourant();
     return $u && in_array($u['role'], ['admin', 'superadmin'], true);

@@ -7,13 +7,13 @@ $erreurs = [];
 $succes = null;
 
 if (isset($_GET['desactiver'])) {
-    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','finance','scientifique','securite')")->execute([(int)$_GET['desactiver']]);
+    $pdo->prepare("UPDATE comptes SET actif = 1 - actif WHERE id = ? AND role IN ('admin','finance','scientifique','securite','mg')")->execute([(int)$_GET['desactiver']]);
     redirect('/admin/users');
 }
 $messageSuppression = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_id'])) {
     $idCible = (int)$_POST['supprimer_id'];
-    $stmt = $pdo->prepare("SELECT id, identifiant, nom_affiche, role FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique','securite')");
+    $stmt = $pdo->prepare("SELECT id, identifiant, nom_affiche, role FROM comptes WHERE id = ? AND role IN ('admin','superadmin','finance','scientifique','securite','mg')");
     $stmt->execute([$idCible]);
     $cible = $stmt->fetch();
     if (!$cible) {
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['supprimer_id'])) {
 
     if ($nom === '' || $identifiant === '' || strlen($mdp) < 6) {
         $erreurs[] = "Nom, identifiant obligatoires. Le mot de passe doit contenir au moins 6 caractères.";
-    } elseif (!in_array($role, ['admin','superadmin','finance','scientifique','securite'], true)) {
+    } elseif (!in_array($role, ['admin','superadmin','finance','scientifique','securite','mg'], true)) {
         $erreurs[] = "Rôle invalide.";
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM comptes WHERE identifiant = ?");
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['supprimer_id'])) {
     }
 }
 
-$comptes = $pdo->query("SELECT * FROM comptes WHERE role IN ('admin','superadmin','finance','scientifique','securite') ORDER BY role, nom_affiche")->fetchAll();
+$comptes = $pdo->query("SELECT * FROM comptes WHERE role IN ('admin','superadmin','finance','scientifique','securite','mg') ORDER BY role, nom_affiche")->fetchAll();
 
 $titrePage = "Comptes administrateurs";
 require_once __DIR__ . '/../includes/header.php';
@@ -89,7 +89,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                             <option value="superadmin">Super Administrateur</option>
                             <option value="finance">Commission finance (valide les paiements, scanner)</option>
                             <option value="scientifique">Commission scientifique (notes, bulletins, quiz)</option>
-                            <option value="securite">Commission sécurité (visiteurs)</option>
+                            <option value="securite">Commission sécurité (visiteurs, sorties du camp)</option>
+                            <option value="mg">MG / MGA (comité managérial : sorties, rapports journaliers)</option>
                         </select>
                     </div>
                 </div>
@@ -106,7 +107,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($c['nom_affiche']) ?></td>
                         <td class="mono"><?= e($c['identifiant']) ?></td>
                         <td><?php
-                            $libelles = ['superadmin' => '👑 Super Administrateur', 'admin' => 'Administrateur', 'finance' => '💰 Commission finance', 'scientifique' => '🔬 Commission scientifique', 'securite' => '🛡️ Commission sécurité'];
+                            $libelles = ['superadmin' => '👑 Super Administrateur', 'admin' => 'Administrateur', 'finance' => '💰 Commission finance', 'scientifique' => '🔬 Commission scientifique', 'securite' => '🛡️ Commission sécurité', 'mg' => '👔 MG / MGA'];
                             $lib = $libelles[$c['role']] ?? $c['role'];
                         ?><span class="pill <?= $c['role'] === 'superadmin' ? 'pill-or' : 'pill-vert' ?>" <?= $c['role'] === 'superadmin' ? 'style="background:#C89A3E;color:#fff;font-weight:800;"' : '' ?>><?= e($lib) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>

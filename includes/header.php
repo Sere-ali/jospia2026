@@ -39,6 +39,8 @@ $page = basename($_SERVER['PHP_SELF']);
                 <a href="<?= BASE_URL ?>/espace/fiche">Mon espace</a>
                 <?php if (estAdmin()): ?>
                     <a href="<?= BASE_URL ?>/admin/dashboard">Tableau de bord</a>
+                <?php elseif (($u['role'] ?? '') === 'mg'): ?>
+                    <a href="<?= BASE_URL ?>/admin/comite_manageriale">Comité managérial</a>
                 <?php elseif (estFinance()): ?>
                     <a href="<?= BASE_URL ?>/finance/paiements">Commission finance</a>
                 <?php elseif (($u['role'] ?? '') === 'securite'): ?>
