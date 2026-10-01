@@ -203,3 +203,6 @@
     background: linear-gradient(135deg, var(--vert-vif), var(--vert-fonce)); box-shadow: 0 18px 40px -14px rgba(6,83,47,.7); transform: translateX(120%); opacity: 0; transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .4s; }
 .jos-toast.erreur { background: linear-gradient(135deg, #e5484d, #b3262b); }
 .jos-toast.visible { transform: none; opacity: 1; }
+
+.form-pro textarea { width: 100%; padding: 13px 16px; border: 2px solid #E4ECE7; border-radius: 14px; background: #FAFCFB; font-size: 1rem; font-family: inherit; color: #16261d; resize: vertical; min-height: 90px; transition: border-color .2s, box-shadow .25s; }
+.form-pro textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 5px rgba(247,127,0,.15); outline: 0; background: #fff; }

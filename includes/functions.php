@@ -490,3 +490,39 @@ function rolesPreparer(PDO $pdo) {
         }
     } catch (Throwable $e) { error_log('Migration rôle sécurité : ' . $e->getMessage()); }
 }
+
+/* ---------- Rapports journaliers des commissions ---------- */
+function rapportsPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS rapports_journaliers (
+        id INT AUTO_INCREMENT PRIMARY KEY, commission VARCHAR(100) NOT NULL, date_rapport DATE NOT NULL,
+        activites TEXT NOT NULL, difficultes TEXT NULL, previsions TEXT NULL,
+        auteur_id INT NULL, auteur_nom VARCHAR(150) NOT NULL DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME NULL,
+        INDEX idx_rapport_com (commission), INDEX idx_rapport_date (date_rapport)) ENGINE=InnoDB");
+}
+
+function normaliserCommission($c) {
+    return strtr(mb_strtoupper(trim((string)$c), 'UTF-8'), ['É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Î' => 'I', 'Ô' => 'O', 'À' => 'A', 'Ç' => 'C']);
+}
+
+/** Commissions pour lesquelles le compte connecté peut rédiger / consulter les rapports. */
+function commissionsRapports(PDO $pdo) {
+    $u = utilisateurCourant();
+    if (!$u) return [];
+    $toutes = listeCommissions();
+    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $toutes;
+    $cible = null;
+    if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
+        $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
+        $st->execute([$u['membre_id']]);
+        $cible = (string)$st->fetchColumn();
+    } elseif ($u['role'] === 'finance') { $cible = 'FINANCE'; }
+    elseif ($u['role'] === 'scientifique') { $cible = 'SCIENTIFIQUE'; }
+    elseif ($u['role'] === 'securite') { $cible = 'SÉCURITÉ'; }
+    if (!$cible) return [];
+    $n = normaliserCommission($cible);
+    return array_values(array_filter($toutes, function ($c) use ($n) { return normaliserCommission($c) === $n; }));
+}

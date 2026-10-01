@@ -45,6 +45,7 @@ $page = basename($_SERVER['PHP_SELF']);
                 <?php elseif (estScientifique()): ?>
                     <a href="<?= BASE_URL ?>/admin/commission_scientifique">Commission scientifique</a>
                 <?php endif; ?>
+                <?php if (!estAdmin() && commissionsRapports($pdo)): ?><a href="<?= BASE_URL ?>/admin/rapports">Rapports</a><?php endif; ?>
                 <a href="<?= BASE_URL ?>/compte">Mon compte</a>
                 <a href="<?= BASE_URL ?>/logout" class="btn-nav">Déconnexion</a>
             <?php else: ?>

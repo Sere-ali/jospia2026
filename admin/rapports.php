@@ -1,0 +1,142 @@
+<?php
+require_once __DIR__ . '/../includes/init.php';
+exigerConnexion();
+$autorisees = commissionsRapports($pdo);
+if (!$autorisees) {
+    http_response_code(403);
+    die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Les rapports journaliers sont réservés aux membres des commissions.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>');
+}
+date_default_timezone_set('Africa/Abidjan');
+rapportsPreparer($pdo);
+$u = utilisateurCourant();
+$estAdminRapport = estAdmin();
+$titrePage = "Rapports journaliers";
+$erreurs = []; $succes = null;
+
+$commission = $_GET['commission'] ?? (count($autorisees) === 1 ? $autorisees[0] : '');
+if ($commission !== '' && !in_array($commission, $autorisees, true)) { $commission = ''; }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $commission !== '') {
+    $action = $_POST['action'] ?? '';
+    $id = (int)($_POST['id'] ?? 0);
+    $peutModifier = function ($r) use ($estAdminRapport, $u) { return $estAdminRapport || ((int)$r['auteur_id'] === (int)$u['id']); };
+    if ($action === 'supprimer' && $id) {
+        $st = $pdo->prepare("SELECT * FROM rapports_journaliers WHERE id = ? AND commission = ?"); $st->execute([$id, $commission]); $r = $st->fetch();
+        if ($r && $peutModifier($r)) { $pdo->prepare("DELETE FROM rapports_journaliers WHERE id = ?")->execute([$id]); journaliser($pdo, 'Rapport supprimé', $commission . ' ' . $r['date_rapport']); $succes = "Rapport supprimé."; }
+        else { $erreurs[] = "Suppression non autorisée."; }
+    } elseif ($action === 'enregistrer') {
+        $date = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['date_rapport'] ?? '') ? $_POST['date_rapport'] : date('Y-m-d');
+        $act = trim($_POST['activites'] ?? ''); $dif = trim($_POST['difficultes'] ?? ''); $pre = trim($_POST['previsions'] ?? '');
+        if ($act === '') { $erreurs[] = "Décrivez les activités réalisées."; }
+        if (!$erreurs) {
+            if ($id) {
+                $st = $pdo->prepare("SELECT * FROM rapports_journaliers WHERE id = ? AND commission = ?"); $st->execute([$id, $commission]); $r = $st->fetch();
+                if ($r && $peutModifier($r)) {
+                    $pdo->prepare("UPDATE rapports_journaliers SET date_rapport=?, activites=?, difficultes=?, previsions=?, updated_at=? WHERE id=?")->execute([$date, $act, $dif, $pre, date('Y-m-d H:i:s'), $id]);
+                    journaliser($pdo, 'Rapport modifié', $commission . ' ' . $date); $succes = "Rapport modifié.";
+                } else { $erreurs[] = "Modification non autorisée."; }
+            } else {
+                $pdo->prepare("INSERT INTO rapports_journaliers (commission, date_rapport, activites, difficultes, previsions, auteur_id, auteur_nom) VALUES (?,?,?,?,?,?,?)")
+                    ->execute([$commission, $date, $act, $dif, $pre, $u['id'], (string)($u['nom_affiche'] ?? $u['identifiant'] ?? '')]);
+                journaliser($pdo, 'Rapport journalier ajouté', $commission . ' ' . $date); $succes = "Rapport du " . date('d/m/Y', strtotime($date)) . " enregistré.";
+            }
+        }
+    }
+}
+
+// Résumé par commission (page d'accueil des rapports)
+$resume = [];
+$st = $pdo->query("SELECT commission, COUNT(*) total, MAX(date_rapport) dernier FROM rapports_journaliers GROUP BY commission");
+foreach ($st->fetchAll() as $r) { $resume[$r['commission']] = $r; }
+$aujourdhui = date('Y-m-d');
+$faitsAujourdhui = [];
+$st = $pdo->prepare("SELECT DISTINCT commission FROM rapports_journaliers WHERE date_rapport = ?"); $st->execute([$aujourdhui]);
+foreach ($st->fetchAll() as $r) { $faitsAujourdhui[$r['commission']] = true; }
+
+$rapports = []; $edit = null;
+if ($commission !== '') {
+    $filtreDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['jour'] ?? '') ? $_GET['jour'] : '';
+    $sql = "SELECT * FROM rapports_journaliers WHERE commission = ?" . ($filtreDate ? " AND date_rapport = ?" : "") . " ORDER BY date_rapport DESC, id DESC LIMIT 300";
+    $st = $pdo->prepare($sql); $st->execute($filtreDate ? [$commission, $filtreDate] : [$commission]);
+    $rapports = $st->fetchAll();
+    if (isset($_GET['modifier'])) {
+        $se = $pdo->prepare("SELECT * FROM rapports_journaliers WHERE id = ? AND commission = ?"); $se->execute([(int)$_GET['modifier'], $commission]);
+        $edit = $se->fetch();
+        if ($edit && !($estAdminRapport || (int)$edit['auteur_id'] === (int)$u['id'])) $edit = null;
+    }
+}
+
+require_once __DIR__ . '/../includes/header.php';
+if ($estAdminRapport) require_once __DIR__ . '/../includes/admin_nav.php';
+?>
+<section class="section">
+    <div class="container">
+        <div class="section-titre"><span class="eyebrow">Commissions</span><h2>📝 Rapports journaliers</h2></div>
+        <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
+        <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
+
+        <?php if ($commission === ''): ?>
+            <p style="text-align:center;color:var(--texte-doux);margin-bottom:20px;">Choisissez une commission pour rédiger ou consulter ses rapports du jour. La pastille indique si le rapport d'aujourd'hui (<?= date('d/m/Y') ?>) est déposé.</p>
+            <div class="grid grid-3" data-live="cartes">
+                <?php foreach ($autorisees as $c): $r = $resume[$c] ?? null; $fait = !empty($faitsAujourdhui[$c]); ?>
+                    <div class="carte">
+                        <h3><?= e($c) ?></h3>
+                        <?php if (nomCommissionComplet($c) !== $c): ?><p style="color:var(--texte-doux);font-size:.88rem;margin:0 0 8px;"><?= e(nomCommissionComplet($c)) ?></p><?php endif; ?>
+                        <p><?= $fait ? '<span class="pill pill-vert">✔ Rapport du jour déposé</span>' : '<span class="pill pill-or">⏳ Rapport du jour à faire</span>' ?></p>
+                        <p style="font-size:.85rem;color:var(--texte-doux);"><?= (int)($r['total'] ?? 0) ?> rapport(s)<?= !empty($r['dernier']) ? ' · dernier le ' . e(date('d/m/Y', strtotime($r['dernier']))) : '' ?></p>
+                        <a href="?commission=<?= urlencode($c) ?>" class="btn btn-primaire btn-sm">Ouvrir</a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="no-print" style="margin-bottom:14px;">
+                <?php if (count($autorisees) > 1): ?><a href="<?= BASE_URL ?>/admin/rapports" class="btn btn-outline btn-sm">&larr; Toutes les commissions</a><?php endif; ?>
+            </p>
+            <h3 style="text-align:center;margin-bottom:16px;">Commission <?= e($commission) ?> <?php if (nomCommissionComplet($commission) !== $commission): ?><small style="color:var(--texte-doux);font-weight:400;">- <?= e(nomCommissionComplet($commission)) ?></small><?php endif; ?></h3>
+
+            <form method="post" class="carte form-pro" style="margin-bottom:22px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
+                <input type="hidden" name="action" value="enregistrer">
+                <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>"><?php endif; ?>
+                <h3><?= $edit ? '✏️ Modifier le rapport' : '➕ Nouveau rapport' ?></h3>
+                <div class="form-group"><label>Date du rapport</label>
+                    <input type="date" name="date_rapport" required value="<?= e($edit['date_rapport'] ?? $aujourdhui) ?>" style="max-width:220px;"></div>
+                <div class="form-group"><label>Activités réalisées <span class="req">*</span></label>
+                    <textarea name="activites" rows="5" required placeholder="Ce qui a été fait aujourd'hui..."><?= e($edit['activites'] ?? '') ?></textarea></div>
+                <div class="form-group"><label>Difficultés rencontrées</label>
+                    <textarea name="difficultes" rows="3" placeholder="Problèmes, manques, incidents..."><?= e($edit['difficultes'] ?? '') ?></textarea></div>
+                <div class="form-group"><label>Prévisions / besoins pour demain</label>
+                    <textarea name="previsions" rows="3" placeholder="Ce qui est prévu, matériel ou aide nécessaire..."><?= e($edit['previsions'] ?? '') ?></textarea></div>
+                <button class="btn btn-primaire"><?= $edit ? 'Enregistrer les modifications' : 'Déposer le rapport' ?></button>
+                <?php if ($edit): ?><a href="?commission=<?= urlencode($commission) ?>" class="btn btn-outline">Annuler</a><?php endif; ?>
+            </form>
+
+            <form method="get" class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                <input type="hidden" name="commission" value="<?= e($commission) ?>">
+                <input type="date" name="jour" value="<?= e($filtreDate) ?>" onchange="this.form.submit()" style="max-width:200px;">
+                <?php if ($filtreDate): ?><a href="?commission=<?= urlencode($commission) ?>" class="btn btn-outline btn-sm">Tous les jours</a><?php endif; ?>
+            </form>
+
+            <div data-live="rapports">
+                <?php foreach ($rapports as $r): $mien = $estAdminRapport || (int)$r['auteur_id'] === (int)$u['id']; ?>
+                    <div class="carte" style="margin-bottom:14px;">
+                        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;">
+                            <h3 style="margin:0;">📅 <?= e(date('d/m/Y', strtotime($r['date_rapport']))) ?></h3>
+                            <small style="color:var(--texte-doux);">par <?= e($r['auteur_nom'] ?: '-') ?> · déposé le <?= e(date('d/m/Y H:i', strtotime($r['created_at']))) ?><?= $r['updated_at'] ? ' · modifié le ' . e(date('d/m/Y H:i', strtotime($r['updated_at']))) : '' ?></small>
+                        </div>
+                        <p><strong>Activités réalisées</strong><br><?= nl2br(e($r['activites'])) ?></p>
+                        <?php if (trim((string)$r['difficultes']) !== ''): ?><p><strong>Difficultés rencontrées</strong><br><?= nl2br(e($r['difficultes'])) ?></p><?php endif; ?>
+                        <?php if (trim((string)$r['previsions']) !== ''): ?><p><strong>Prévisions / besoins</strong><br><?= nl2br(e($r['previsions'])) ?></p><?php endif; ?>
+                        <?php if ($mien): ?>
+                            <div class="no-print" style="display:flex;gap:8px;">
+                                <a href="?commission=<?= urlencode($commission) ?>&modifier=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                <form method="post" onsubmit="return confirm('Supprimer ce rapport ?');"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-sm btn-danger">🗑️ Supprimer</button></form>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+                <?php if (!$rapports): ?><div class="carte" style="text-align:center;color:var(--texte-doux);">Aucun rapport pour le moment.</div><?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

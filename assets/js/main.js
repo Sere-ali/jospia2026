@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // ============================================================
 (function () {
     'use strict';
-    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression)|finance\/paiements|securite\/visiteurs|visiteur|espace\/fiche|paiement)(\.php)?$/;
+    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression|rapports)|finance\/paiements|securite\/visiteurs|visiteur|espace\/fiche|paiement)(\.php)?$/;
     var chemin = location.pathname;
     if (!PAGES_LIVE.test(chemin)) return;
     var ACTIONS = ['supprimer', 'desactiver', 'publier', 'nouveau', 'activer', 'reinit'];
