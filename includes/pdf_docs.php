@@ -683,7 +683,6 @@ class PdfRapport {
         $dx = (int)($W / 2) - 20;
         pdfEcrire($this->im, 26, $dx, $this->y + 26, $c['gris'], $f, $dest[0]);
         pdfEcrire($this->im, 28, $dx, $this->y + 70, $c['noir'], $fb, 'Messieurs les Managers généraux');
-        pdfEcrire($this->im, 28, $dx, $this->y + 106, $c['noir'], $fb, 'Commission administration');
         $this->y += 160;
         // objet
         $obj = 'Objet : Rapport journalier du ' . $this->dateFr($r['date_rapport']);

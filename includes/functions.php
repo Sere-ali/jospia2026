@@ -533,7 +533,7 @@ function lettreRapportHtml(array $r, $actions = '') {
     $h = '<article class="lettre"><div class="lettre-bande"></div>';
     $h .= '<div class="lettre-tete"><div><strong>Commission ' . e($r['commission']) . '</strong><br><small>Responsable : ' . e($r['auteur_nom'] ?: '-') . '</small></div>';
     $h .= '<div class="lettre-lieu">Abidjan, le ' . e($fr($r['created_at'] ?: $r['date_rapport'])) . '</div></div>';
-    $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Messieurs les Managers généraux<br>Commission administration</strong></div>';
+    $h .= '<div class="lettre-dest"><small>À l\'attention de</small><br><strong>Messieurs les Managers généraux</strong></div>';
     $h .= '<div class="lettre-objet">Objet : Rapport journalier du ' . e($fr($r['date_rapport'])) . '</div>';
     $h .= '<p class="lettre-p">Messieurs,</p>';
     $h .= '<p class="lettre-p lettre-j">Nous avons l\'honneur de vous rendre compte des activités de la commission ' . e($r['commission']) . ' pour la journée du ' . e($fr($r['date_rapport'])) . '.</p>';
