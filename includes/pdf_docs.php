@@ -528,25 +528,19 @@ function pdfBulletin(PDO $pdo, array $s) {
     return $im;
 }
 
-/** Bulletins : 2 par page A4 portrait (une moitié chacun), repère de découpe au milieu. */
+/** Bulletins : 1 par page A4 paysage (image plein cadre). */
 function pdfBulletinsA4(PDO $pdo, array $lignes, $nomFichier) {
     @set_time_limit(600);
     @ini_set('memory_limit', '512M');
     $pdf = new PdfFlux($nomFichier);
-    $A4w = 595.28; $A4h = 841.89; $ch = $A4h / 2; $marge = 10;
-    foreach (array_chunk($lignes, 2) as $groupe) {
-        $images = [];
-        foreach ($groupe as $i => $s) {
-            $im = pdfBulletin($pdo, $s);
-            $wpx = imagesx($im); $hpx = imagesy($im);
-            $jpeg = pdfJpeg($im, 90); imagedestroy($im);
-            $w = $A4w - 2 * $marge; $h = $w * $hpx / $wpx;
-            if ($h > $ch - 2 * $marge) { $h = $ch - 2 * $marge; $w = $h * $wpx / $hpx; }
-            $images[] = [$jpeg, $wpx, $hpx, ($A4w - $w) / 2, $i * $ch + ($ch - $h) / 2, $w, $h];
-        }
-        $pdf->page($A4w, $A4h, $images, count($groupe) > 1 ? [[0, $ch, $A4w, $ch]] : []);
+    $w = 841.89; $h = 595.28;
+    foreach ($lignes as $s) {
+        $im = pdfBulletin($pdo, $s);
+        $wpx = imagesx($im); $hpx = imagesy($im);
+        $jpeg = pdfJpeg($im, 90); imagedestroy($im);
+        $pdf->page($w, $h, [[$jpeg, $wpx, $hpx, 0, 0, $w, $h]]);
     }
-    if (!$lignes) { $pdf->page($A4w, $A4h, []); }
+    if (!$lignes) { $pdf->page($w, $h, []); }
     $pdf->fin();
     exit;
 }
