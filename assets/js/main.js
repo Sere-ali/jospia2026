@@ -602,15 +602,25 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // ============================================================
-// Mise à jour automatique des listes (sans actualiser la page)
-//  - zones [data-live="nom"] : rafraîchies toutes les 7 s ;
-//  - formulaires [data-ajax] (ou dans une zone live) : envoyés en arrière-plan,
-//    message en haut à droite, zones mises à jour aussitôt.
+// Mise à jour automatique (toutes les 2 s) et opérations sans rechargement
+// Pages concernées : tableaux de bord / listes (voir PAGES_LIVE), page visiteurs, espace séminariste.
+// Seules les parties modifiées sont remplacées ; ce que vous tapez n'est jamais effacé.
 // ============================================================
 (function () {
     'use strict';
-    if (!document.querySelector('[data-live], form[data-ajax]') && document.readyState !== 'loading') { return; }
-    var enCours = false;
+    var PAGES_LIVE = /\/(admin\/(dashboard|administration|commissions|seminaristes|seminariste_detail|identifiants|dortoirs|listes|users|activite|critiques|commission_scientifique|bulletins_impression)|finance\/paiements|securite\/visiteurs|visiteur|espace\/fiche|paiement)(\.php)?$/;
+    var chemin = location.pathname;
+    if (!PAGES_LIVE.test(chemin)) return;
+    var ACTIONS = ['supprimer', 'desactiver', 'publier', 'nouveau', 'activer', 'reinit'];
+    var enCours = false, delai = 2000, minuteur = null;
+
+    function zone() { return document.getElementById('contenu-page'); }
+
+    function urlSurveillee() {
+        var u = new URL(location.href);
+        ACTIONS.forEach(function (a) { u.searchParams.delete(a); });
+        return u.toString();
+    }
 
     function toast(texte, erreur) {
         if (!texte) return;
@@ -622,64 +632,135 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () { t.classList.remove('visible'); setTimeout(function () { t.remove(); }, 400); }, erreur ? 6000 : 4000);
     }
 
-    function appliquer(html, forcer) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var change = false;
-        document.querySelectorAll('[data-live]').forEach(function (zone) {
-            var nouvelle = doc.querySelector('[data-live="' + zone.getAttribute('data-live') + '"]');
-            if (!nouvelle || nouvelle.innerHTML === zone.innerHTML) return;
-            if (!forcer && zone.contains(document.activeElement) && /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
-            zone.innerHTML = nouvelle.innerHTML;
-            change = true;
+    var IGNORES = '.btn-export-excel, .alert-succes, .alert-erreur, .jos-toast, script, style, noscript';
+    function enfants(el) {
+        return [].filter.call(el.children, function (c) { return !c.matches(IGNORES); });
+    }
+    // signature de contenu, insensible aux ajouts faits par le JavaScript (classes d'animation, styles...)
+    function sig(el) {
+        var c = el.cloneNode(true);
+        [].forEach.call(c.querySelectorAll(IGNORES), function (n) { n.remove(); });
+        var tous = [c].concat([].slice.call(c.querySelectorAll('*')));
+        tous.forEach(function (n) {
+            n.removeAttribute('style');
+            if (n.classList) { n.classList.remove('vu', 'visible', 'rv'); if (!n.getAttribute('class')) n.removeAttribute('class'); }
         });
-        if (change) {
+        return c.innerHTML !== undefined ? c.outerHTML : '';
+    }
+    function aSaisie(el) {
+        if (el.contains(document.activeElement) && /^(INPUT|SELECT|TEXTAREA)$/.test((document.activeElement || {}).tagName || '')) return true;
+        var champs = el.querySelectorAll('input, select, textarea');
+        for (var i = 0; i < champs.length; i++) {
+            var c = champs[i];
+            if (c.type === 'checkbox' || c.type === 'radio') { if (c.checked !== c.defaultChecked) return true; }
+            else if (c.tagName === 'SELECT') { if (c.selectedIndex !== -1 && !c.options[c.selectedIndex].defaultSelected) return true; }
+            else if (c.type !== 'hidden' && c.type !== 'submit' && c.type !== 'button' && c.value !== c.defaultValue) return true;
+        }
+        return false;
+    }
+    function figee(el) { return !!el.querySelector('input[type=password], input[type=file], #apercu-photo'); }
+    function sansRv(n) {
+        if (n.classList) n.classList.remove('rv');
+        [].forEach.call(n.querySelectorAll('.rv'), function (x) { x.classList.remove('rv'); });
+        return n;
+    }
+
+    function remplacer(ancien, nouveau) {
+        if (aSaisie(ancien) || figee(ancien)) return false;
+        ancien.parentNode.replaceChild(sansRv(document.importNode(nouveau, true)), ancien);
+        return true;
+    }
+
+    function comparer(ancien, nouveau) {
+        var a = enfants(ancien), n = enfants(nouveau), change = false;
+        if (a.length !== n.length || !a.length) {
+            if (ancien.innerHTML !== nouveau.innerHTML && sig(ancien) !== sig(nouveau) && !aSaisie(ancien) && !figee(ancien)) {
+                [].slice.call(ancien.children).filter(function (c) { return !c.matches(IGNORES); }).forEach(function (c) { c.remove(); });
+                [].slice.call(ancien.childNodes).forEach(function (t) { if (t.nodeType === 3) t.remove(); });
+                [].slice.call(nouveau.childNodes).forEach(function (c) {
+                    if (c.nodeType === 1 && c.matches(IGNORES)) return;
+                    ancien.appendChild(sansRv(document.importNode(c, true)));
+                });
+                return true;
+            }
+            return false;
+        }
+        for (var i = 0; i < a.length; i++) {
+            if (sig(a[i]) === sig(n[i])) continue;
+            if (a[i].tagName === n[i].tagName && enfants(a[i]).length && enfants(n[i]).length === enfants(a[i]).length) {
+                if (comparer(a[i], n[i])) change = true;
+            } else if (remplacer(a[i], n[i])) { change = true; }
+        }
+        return change;
+    }
+
+    function appliquer(doc) {
+        var z = zone(), nz = doc.getElementById('contenu-page');
+        if (!z || !nz) return false;
+        if (sig(z) === sig(nz)) return false;
+        var c = comparer(z, nz);
+        if (c) {
             if (window.josExcelInit) window.josExcelInit();
             document.dispatchEvent(new CustomEvent('jos:maj'));
         }
-        return doc;
+        return c;
     }
+
+    function planifier() { clearTimeout(minuteur); minuteur = setTimeout(actualiser, delai); }
 
     function actualiser() {
-        if (enCours || document.hidden || !document.querySelector('[data-live]')) return;
+        if (enCours || document.hidden) { planifier(); return; }
         enCours = true;
-        fetch(location.href, { credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, cache: 'no-store' })
-            .then(function (r) { return r.ok ? r.text() : ''; })
-            .then(function (h) { if (h) appliquer(h, false); })
+        fetch(urlSurveillee(), { credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, cache: 'no-store' })
+            .then(function (r) {
+                if (r.redirected && new URL(r.url).pathname !== chemin) { location.href = r.url; return ''; }
+                return r.ok ? r.text() : '';
+            })
+            .then(function (h) {
+                if (!h) return;
+                delai = h.length > 400000 ? 5000 : 2000; // grandes listes : un peu moins souvent
+                appliquer(new DOMParser().parseFromString(h, 'text/html'));
+            })
             .catch(function () {})
-            .then(function () { enCours = false; });
-    }
-
-    function init() {
-        if (!document.querySelector('[data-live], form[data-ajax]')) return;
-        setInterval(actualiser, 7000);
-        document.addEventListener('visibilitychange', function () { if (!document.hidden) actualiser(); });
-
-        document.addEventListener('submit', function (e) {
-            var f = e.target;
-            if (e.defaultPrevented || !f.matches || f.method.toLowerCase() !== 'post') return;
-            if (!(f.hasAttribute('data-ajax') || f.closest('[data-live]')) || f.querySelector('input[type=file]')) return;
-            e.preventDefault();
-            var data;
-            try { data = new FormData(f, e.submitter || undefined); } catch (x) { data = new FormData(f); }
-            var boutons = f.querySelectorAll('button[type=submit], button:not([type])');
-            boutons.forEach(function (b) { b.disabled = true; });
-            fetch(f.getAttribute('action') || location.href, { method: 'POST', body: data, credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' } })
-                .then(function (r) { return r.text(); })
-                .then(function (h) {
-                    var doc = appliquer(h, true);
-                    var ok = doc.querySelector('.alert-succes'), ko = doc.querySelectorAll('.alert-erreur');
-                    if (ko.length) { toast([].map.call(ko, function (a) { return a.textContent.trim(); }).join(' '), true); }
-                    else if (ok) { toast(ok.textContent.trim(), false); if (f.hasAttribute('data-ajax')) { f.reset(); majHeures(f); } }
-                })
-                .catch(function () { toast('Connexion impossible : réessayez.', true); })
-                .then(function () { boutons.forEach(function (b) { b.disabled = false; }); });
-        });
+            .then(function () { enCours = false; planifier(); });
     }
 
     function majHeures(f) {
         var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
         var v = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes());
         f.querySelectorAll('input[type=datetime-local]').forEach(function (i) { i.value = v; });
+    }
+
+    function init() {
+        planifier();
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) actualiser(); });
+
+        document.addEventListener('submit', function (e) {
+            var f = e.target;
+            if (e.defaultPrevented || !f.matches || (f.method || '').toLowerCase() !== 'post') return;
+            if (f.hasAttribute('data-no-ajax') || f.querySelector('input[type=file]') || (f.target && f.target !== '_self')) return;
+            e.preventDefault();
+            var data;
+            try { data = new FormData(f, e.submitter || undefined); } catch (x) { data = new FormData(f); }
+            var boutons = f.querySelectorAll('button[type=submit], button:not([type])');
+            boutons.forEach(function (b) { b.disabled = true; });
+            fetch(f.getAttribute('action') || location.href, { method: 'POST', body: data, credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' } })
+                .then(function (r) {
+                    var type = r.headers.get('Content-Type') || '';
+                    if ((r.redirected && new URL(r.url).pathname !== chemin) || type.indexOf('text/html') === -1) { location.href = r.redirected ? r.url : location.href; return null; }
+                    return r.text();
+                })
+                .then(function (h) {
+                    if (h === null) return;
+                    var doc = new DOMParser().parseFromString(h, 'text/html');
+                    var ok = doc.querySelector('.alert-succes'), ko = doc.querySelectorAll('.alert-erreur');
+                    if (ko.length) { toast([].map.call(ko, function (a) { return a.textContent.trim(); }).join(' '), true); }
+                    else if (ok) { toast(ok.textContent.trim(), false); if (f.hasAttribute('data-ajax')) { f.reset(); majHeures(f); } }
+                    appliquer(doc);
+                })
+                .catch(function () { toast('Connexion impossible : réessayez.', true); })
+                .then(function () { boutons.forEach(function (b) { b.disabled = false; }); });
+        });
     }
 
     if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }

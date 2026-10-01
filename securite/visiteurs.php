@@ -72,7 +72,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
 
         <p class="no-print" style="text-align:center;margin-bottom:16px;"><a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">&larr; Retour à la page publique</a></p>
 
-        <form method="post" class="carte form-pro" style="margin-bottom:20px;">
+        <form method="post" class="carte form-pro" style="margin-bottom:20px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
             <input type="hidden" name="action" value="<?= $edit ? 'modifier' : 'ajouter' ?>">
             <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>"><?php endif; ?>
             <h3><?= $edit ? '✏️ Modifier le visiteur' : '➕ Ajouter un visiteur' ?></h3>

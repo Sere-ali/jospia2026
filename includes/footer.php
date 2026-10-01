@@ -1,3 +1,4 @@
+</div><!-- /contenu-page -->
 <footer>
     <div class="container">
         <div class="pied-grille">
