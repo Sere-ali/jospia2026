@@ -508,12 +508,10 @@ function normaliserCommission($c) {
     return strtr(mb_strtoupper(trim((string)$c), 'UTF-8'), ['É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Î' => 'I', 'Ô' => 'O', 'À' => 'A', 'Ç' => 'C']);
 }
 
-/** Commissions pour lesquelles le compte connecté peut rédiger / consulter les rapports. */
-function commissionsRapports(PDO $pdo) {
+/** Commission du compte connecté (membre de commission ou compte Finance / Scientifique / Sécurité), ou null. */
+function commissionPropre(PDO $pdo) {
     $u = utilisateurCourant();
-    if (!$u) return [];
-    $toutes = listeCommissions();
-    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $toutes;
+    if (!$u) return null;
     $cible = null;
     if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
         $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
@@ -522,7 +520,8 @@ function commissionsRapports(PDO $pdo) {
     } elseif ($u['role'] === 'finance') { $cible = 'FINANCE'; }
     elseif ($u['role'] === 'scientifique') { $cible = 'SCIENTIFIQUE'; }
     elseif ($u['role'] === 'securite') { $cible = 'SÉCURITÉ'; }
-    if (!$cible) return [];
+    if (!$cible) return null;
     $n = normaliserCommission($cible);
-    return array_values(array_filter($toutes, function ($c) use ($n) { return normaliserCommission($c) === $n; }));
+    foreach (listeCommissions() as $c) { if (normaliserCommission($c) === $n) return $c; }
+    return null;
 }

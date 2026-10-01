@@ -11,6 +11,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <span class="eyebrow">Commission scientifique</span>
             <h2>Notes, bulletins et test d'entrée</h2>
         </div>
+        <p style="margin-bottom:16px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or">📝 Rapport journalier</a></p>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
         <?php if (estSuperAdmin()) echo blocTestEntree($pdo); ?>
         <div class="grid grid-2">

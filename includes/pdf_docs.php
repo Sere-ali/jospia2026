@@ -548,3 +548,126 @@ function pdfBulletinsA4(PDO $pdo, array $lignes, $nomFichier) {
     $pdf->fin();
     exit;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Rapports journaliers : PDF A4 portrait (pagination automatique)      */
+/* ------------------------------------------------------------------ */
+class PdfRapport {
+    private $W = 1654; private $H = 2339; // A4 à 200 dpi
+    private $im; private $y; private $pdf; private $page = 0; private $titre; private $sous;
+    private $c = [];
+    const MARGE = 120;
+
+    public function __construct(PdfFlux $pdf, $titre, $sousTitre) {
+        $this->pdf = $pdf; $this->titre = $titre; $this->sous = $sousTitre;
+        $this->nouvellePage();
+    }
+    private function couleurs() {
+        $i = $this->im;
+        $this->c = ['vertF' => imagecolorallocate($i, 6, 83, 47), 'vert' => imagecolorallocate($i, 11, 138, 78), 'orange' => imagecolorallocate($i, 247, 127, 0),
+            'noir' => imagecolorallocate($i, 30, 38, 33), 'gris' => imagecolorallocate($i, 100, 112, 105), 'ligne' => imagecolorallocate($i, 214, 226, 219),
+            'teinte' => imagecolorallocate($i, 235, 247, 240), 'blanc' => imagecolorallocate($i, 255, 255, 255)];
+    }
+    private function nouvellePage() {
+        if ($this->im) { $this->cloturer(); }
+        $this->im = pdfToile($this->W, $this->H);
+        imageantialias($this->im, true);
+        $this->couleurs();
+        $this->page++;
+        $c = $this->c; $W = $this->W;
+        imagefilledrectangle($this->im, 0, 0, (int)($W / 3), 12, $c['orange']);
+        imagefilledrectangle($this->im, (int)($W * 2 / 3), 0, $W, 12, $c['vert']);
+        if ($this->page === 1) {
+            $ent = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
+            $ew = 900; $eh = (int)round($ew * imagesy($ent) / imagesx($ent));
+            imagecopyresampled($this->im, $ent, (int)(($W - $ew) / 2), 50, 0, 0, $ew, $eh, imagesx($ent), imagesy($ent));
+            imagedestroy($ent);
+            $this->y = 50 + $eh + 30;
+            pdfTexteBoite($this->im, 1, 'barlow-latin-800-normal.ttf', 54, 0.92, $this->titre, self::MARGE, $this->y, $W - 2 * self::MARGE, 70, $c['vertF'], true, 2);
+            $this->y += 78;
+            if ($this->sous !== '') {
+                pdfTexteBoite($this->im, 1, 'tinos-latin-400-normal.ttf', 30, 0.92, $this->sous, self::MARGE, $this->y, $W - 2 * self::MARGE, 44, $c['gris'], true);
+                $this->y += 56;
+            }
+            imagefilledrectangle($this->im, (int)($W / 2 - 220), $this->y, (int)($W / 2 - 1), $this->y + 6, $c['orange']);
+            imagefilledrectangle($this->im, (int)($W / 2), $this->y, (int)($W / 2 + 220), $this->y + 6, $c['vert']);
+            $this->y += 50;
+        } else {
+            pdfEcrire($this->im, 24, self::MARGE, 70, $c['gris'], 'tinos-latin-400-normal.ttf', $this->titre . ($this->sous !== '' ? ' - ' . $this->sous : ''));
+            $this->y = 120;
+        }
+    }
+    private function cloturer() {
+        $c = $this->c;
+        $pied = (defined('EVENT_FULL') ? EVENT_FULL : 'JOSPIA') . ' - page ' . $this->page;
+        $fw = pdfLargeurTexte(22, 'tinos-latin-400-normal.ttf', $pied);
+        pdfEcrire($this->im, 22, ($this->W - $fw) / 2, $this->H - 60, $c['gris'], 'tinos-latin-400-normal.ttf', $pied);
+        $this->pdf->page(595.28, 841.89, [[pdfJpeg($this->im, 88), $this->W, $this->H, 0, 0, 595.28, 841.89]]);
+        imagedestroy($this->im);
+        $this->im = null;
+    }
+    private function place($h) {
+        if ($this->y + $h > $this->H - 130) { $this->nouvellePage(); }
+    }
+    /** Découpe un texte (avec retours à la ligne) en lignes tenant dans $largeur. */
+    private function lignes($texte, $police, $taille, $largeur) {
+        $res = [];
+        foreach (preg_split('/\R/u', (string)$texte) as $para) {
+            $mots = preg_split('/\s+/u', trim($para), -1, PREG_SPLIT_NO_EMPTY);
+            if (!$mots) { $res[] = ''; continue; }
+            $ligne = '';
+            foreach ($mots as $m) {
+                $test = $ligne === '' ? $m : $ligne . ' ' . $m;
+                if (pdfLargeurTexte($taille, $police, $test) <= $largeur) { $ligne = $test; }
+                else { if ($ligne !== '') $res[] = $ligne; $ligne = $m; }
+            }
+            $res[] = $ligne;
+        }
+        return $res;
+    }
+    public function rapport(array $r, $avecCommission = false) {
+        $c = $this->c; $W = $this->W; $m = self::MARGE;
+        $this->place(260);
+        $c = $this->c;
+        // bandeau de date
+        $titre = date('d/m/Y', strtotime($r['date_rapport'])) . ($avecCommission ? '  -  ' . $r['commission'] : '');
+        imagefilledrectangle($this->im, $m, $this->y, $W - $m, $this->y + 64, $c['vert']);
+        imagefilledrectangle($this->im, $m, $this->y, $m + 12, $this->y + 64, $c['orange']);
+        pdfEcrire($this->im, 34, $m + 34, pdfBaseline('barlow-latin-700-normal.ttf', 34, $this->y + 32), $c['blanc'], 'barlow-latin-700-normal.ttf', $titre);
+        $meta = 'par ' . ($r['auteur_nom'] ?: '-') . ' - déposé le ' . date('d/m/Y H:i', strtotime($r['created_at']));
+        $mw = pdfLargeurTexte(22, 'tinos-latin-400-normal.ttf', $meta);
+        pdfEcrire($this->im, 22, $W - $m - 20 - $mw, pdfBaseline('tinos-latin-400-normal.ttf', 22, $this->y + 32), $c['blanc'], 'tinos-latin-400-normal.ttf', $meta);
+        $this->y += 64 + 28;
+        foreach ([['Activités réalisées', 'activites'], ['Difficultés rencontrées', 'difficultes'], ['Prévisions / besoins', 'previsions']] as [$lib, $cle]) {
+            if (trim((string)($r[$cle] ?? '')) === '') continue;
+            $this->place(120);
+            pdfEcrire($this->im, 30, $m, $this->y + 28, $this->c['vertF'], 'tinos-latin-700-normal.ttf', $lib);
+            $this->y += 50;
+            foreach ($this->lignes($r[$cle], 'tinos-latin-400-normal.ttf', 30, $W - 2 * $m - 20) as $l) {
+                $this->place(46);
+                if ($l !== '') pdfEcrire($this->im, 30, $m + 20, $this->y + 30, $this->c['noir'], 'tinos-latin-400-normal.ttf', $l);
+                $this->y += 44;
+            }
+            $this->y += 16;
+        }
+        imageline($this->im, $m, $this->y, $W - $m, $this->y, $this->c['ligne']);
+        $this->y += 40;
+    }
+    public function fin() {
+        if (!$this->im) return;
+        $this->cloturer();
+    }
+}
+
+/** Télécharge un PDF de rapports : $rapports = lignes de rapports_journaliers (chaque ligne contient 'commission'). */
+function pdfRapportsDocument(array $rapports, $titre, $sousTitre, $nomFichier, $avecCommission = false) {
+    @set_time_limit(300);
+    @ini_set('memory_limit', '512M');
+    $pdf = new PdfFlux($nomFichier);
+    $doc = new PdfRapport($pdf, $titre, $sousTitre);
+    foreach ($rapports as $r) { $doc->rapport($r, $avecCommission); }
+    if (!$rapports) { /* page vide avec message */ }
+    $doc->fin();
+    $pdf->fin();
+    exit;
+}

@@ -54,7 +54,7 @@ require_once __DIR__ . '/../includes/header.php';
             <span class="eyebrow">Espace membre</span>
             <h2>Bonjour, <?= e($membre['nom_prenoms']) ?></h2>
             <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
-            <a href="<?= BASE_URL ?>/admin/rapports" class="btn btn-or btn-sm">📝 Rapport journalier</a>
+            <a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">📝 Rapport journalier</a>
             <?php if (estSecurite()): ?> <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-primaire btn-sm">🛡️ Gestion des visiteurs</a><?php endif; ?></p>
         </div>
 
