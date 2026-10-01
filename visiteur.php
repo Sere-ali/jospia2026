@@ -61,7 +61,7 @@ $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visit
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
         <div class="grid grid-2" style="align-items:start;">
-            <form method="post" class="form-pro" novalidate>
+            <form method="post" class="form-pro" novalidate data-ajax>
                 <input type="hidden" name="mode" value="arrivee">
                 <fieldset>
                     <legend data-ico="🚶">Je suis arrivé</legend>
@@ -78,12 +78,13 @@ $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visit
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Enregistrer mon arrivée</span><i aria-hidden="true">→</i></button>
             </form>
 
-            <form method="post" class="form-pro" novalidate>
+            <form method="post" class="form-pro" novalidate data-ajax>
                 <input type="hidden" name="mode" value="sortie">
                 <fieldset>
                     <legend data-ico="🚪">Je pars</legend>
                     <div class="form-group"><label>Heure de sortie</label>
                         <input type="datetime-local" name="heure_sortie" value="<?= e($maintenant) ?>"></div>
+                    <div data-live="presents">
                     <?php if ($presents): ?>
                         <div class="form-group"><label>Trouvez votre nom, puis validez votre sortie</label>
                             <input type="text" id="filtre-visiteurs" placeholder="Rechercher mon nom..." autocomplete="off"></div>
@@ -99,6 +100,7 @@ $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visit
                     <?php else: ?>
                         <div class="help-text">Aucun visiteur n'est présent actuellement.</div>
                     <?php endif; ?>
+                    </div>
                 </fieldset>
             </form>
         </div>
@@ -106,14 +108,15 @@ $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visit
 </section>
 <script>
 (function () {
-    var champ = document.getElementById('filtre-visiteurs');
-    if (!champ) return;
-    champ.addEventListener('input', function () {
-        var q = this.value.trim().toLowerCase();
+    function filtrer() {
+        var champ = document.getElementById('filtre-visiteurs');
+        var q = champ ? champ.value.trim().toLowerCase() : '';
         document.querySelectorAll('.ligne-sortie').forEach(function (l) {
             l.style.display = (!q || l.getAttribute('data-nom').indexOf(q) !== -1) ? '' : 'none';
         });
-    });
+    }
+    document.addEventListener('input', function (e) { if (e.target && e.target.id === 'filtre-visiteurs') filtrer(); });
+    document.addEventListener('jos:maj', filtrer);
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

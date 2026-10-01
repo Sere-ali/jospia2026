@@ -64,7 +64,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
-        <div class="grid grid-3" style="margin-bottom:20px;">
+        <div class="grid grid-3" style="margin-bottom:20px;" data-live="stats">
             <div class="carte" style="text-align:center;"><div class="label">Présents actuellement</div><div class="valeur" style="font-size:2rem;color:var(--orange-fonce);"><?= (int)$stats['presents'] ?></div></div>
             <div class="carte" style="text-align:center;"><div class="label">Visites aujourd'hui</div><div class="valeur" style="font-size:2rem;"><?= (int)$stats['aujourdhui'] ?></div></div>
             <div class="carte" style="text-align:center;"><div class="label">Total des visites</div><div class="valeur" style="font-size:2rem;color:var(--vert);"><?= (int)$stats['total'] ?></div></div>
@@ -100,7 +100,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
             <button class="btn btn-outline btn-sm">Rechercher</button>
         </form>
 
-        <div class="table-wrap">
+        <div class="table-wrap" data-live="liste">
             <table>
                 <caption style="display:none;">Visiteurs</caption>
                 <thead><tr><th>Nom et prénoms</th><th>Contact</th><th>Motif</th><th>Arrivée</th><th>Sortie</th><th>Statut</th><th class="no-print">Actions</th></tr></thead>

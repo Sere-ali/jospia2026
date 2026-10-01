@@ -74,6 +74,12 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
         $montantTotal = $stats['valides'] * FRAIS_PARTICIPATION;
         ?>
 
+        <?php if (!empty($_SESSION['flash_succes'])): ?>
+            <div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div>
+            <?php unset($_SESSION['flash_succes']); ?>
+        <?php endif; ?>
+
+        <div data-live="paiements">
         <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 30px;">
             <div class="carte text-center" style="border-left: 4px solid #1cc6f4;">
                 <div style="font-size: 2rem; font-weight: bold; color: #1cc6f4;"><?= number_format($montantTotal, 0, ',', ' ') ?> FCFA</div>
@@ -92,11 +98,6 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                 <div style="color: var(--texte-doux); font-size: 0.9rem;">Rejetés</div>
             </div>
         </div>
-
-        <?php if (!empty($_SESSION['flash_succes'])): ?>
-            <div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div>
-            <?php unset($_SESSION['flash_succes']); ?>
-        <?php endif; ?>
 
         <div class="carte" style="overflow-x:auto;">
             <table>
@@ -168,6 +169,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                 <?php endif; ?>
                 </tbody>
             </table>
+        </div>
         </div>
 
     </div>

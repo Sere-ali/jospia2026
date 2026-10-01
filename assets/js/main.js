@@ -421,7 +421,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return b;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function initExcel() {
+        [].slice.call(document.querySelectorAll('.btn-export-excel')).forEach(function (b) { b.remove(); });
         var page = (document.querySelector('h1, h2') || {}).textContent || document.title || 'export';
         var dateJour = new Date().toISOString().slice(0, 10);
         var nomPage = texte({ textContent: page }).replace(/[^\wÀ-ÿ]+/g, '_').replace(/^_|_$/g, '').substring(0, 40) || 'export';
@@ -445,7 +446,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 telecharger([{ nom: titreDe(t) || nomPage, lignes: lignesTable(t) }], nomPage + (titreDe(t) ? '_' + titreDe(t).replace(/[^\wÀ-ÿ]+/g, '_') : '') + '_' + dateJour);
             }), cible);
         });
-    });
+    }
+    window.josExcelInit = initExcel;
+    if (document.readyState !== 'loading') { initExcel(); } else { document.addEventListener('DOMContentLoaded', initExcel); }
 })();
 
 /* =====================================================================
@@ -597,3 +600,87 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('change', maj);
     setTimeout(maj, 50);
 });
+
+// ============================================================
+// Mise à jour automatique des listes (sans actualiser la page)
+//  - zones [data-live="nom"] : rafraîchies toutes les 7 s ;
+//  - formulaires [data-ajax] (ou dans une zone live) : envoyés en arrière-plan,
+//    message en haut à droite, zones mises à jour aussitôt.
+// ============================================================
+(function () {
+    'use strict';
+    if (!document.querySelector('[data-live], form[data-ajax]') && document.readyState !== 'loading') { return; }
+    var enCours = false;
+
+    function toast(texte, erreur) {
+        if (!texte) return;
+        var t = document.createElement('div');
+        t.className = 'jos-toast' + (erreur ? ' erreur' : '');
+        t.textContent = texte;
+        document.body.appendChild(t);
+        setTimeout(function () { t.classList.add('visible'); }, 20);
+        setTimeout(function () { t.classList.remove('visible'); setTimeout(function () { t.remove(); }, 400); }, erreur ? 6000 : 4000);
+    }
+
+    function appliquer(html, forcer) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var change = false;
+        document.querySelectorAll('[data-live]').forEach(function (zone) {
+            var nouvelle = doc.querySelector('[data-live="' + zone.getAttribute('data-live') + '"]');
+            if (!nouvelle || nouvelle.innerHTML === zone.innerHTML) return;
+            if (!forcer && zone.contains(document.activeElement) && /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+            zone.innerHTML = nouvelle.innerHTML;
+            change = true;
+        });
+        if (change) {
+            if (window.josExcelInit) window.josExcelInit();
+            document.dispatchEvent(new CustomEvent('jos:maj'));
+        }
+        return doc;
+    }
+
+    function actualiser() {
+        if (enCours || document.hidden || !document.querySelector('[data-live]')) return;
+        enCours = true;
+        fetch(location.href, { credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' }, cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .then(function (h) { if (h) appliquer(h, false); })
+            .catch(function () {})
+            .then(function () { enCours = false; });
+    }
+
+    function init() {
+        if (!document.querySelector('[data-live], form[data-ajax]')) return;
+        setInterval(actualiser, 7000);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) actualiser(); });
+
+        document.addEventListener('submit', function (e) {
+            var f = e.target;
+            if (e.defaultPrevented || !f.matches || f.method.toLowerCase() !== 'post') return;
+            if (!(f.hasAttribute('data-ajax') || f.closest('[data-live]')) || f.querySelector('input[type=file]')) return;
+            e.preventDefault();
+            var data;
+            try { data = new FormData(f, e.submitter || undefined); } catch (x) { data = new FormData(f); }
+            var boutons = f.querySelectorAll('button[type=submit], button:not([type])');
+            boutons.forEach(function (b) { b.disabled = true; });
+            fetch(f.getAttribute('action') || location.href, { method: 'POST', body: data, credentials: 'same-origin', headers: { 'X-Requested-With': 'fetch' } })
+                .then(function (r) { return r.text(); })
+                .then(function (h) {
+                    var doc = appliquer(h, true);
+                    var ok = doc.querySelector('.alert-succes'), ko = doc.querySelectorAll('.alert-erreur');
+                    if (ko.length) { toast([].map.call(ko, function (a) { return a.textContent.trim(); }).join(' '), true); }
+                    else if (ok) { toast(ok.textContent.trim(), false); if (f.hasAttribute('data-ajax')) { f.reset(); majHeures(f); } }
+                })
+                .catch(function () { toast('Connexion impossible : réessayez.', true); })
+                .then(function () { boutons.forEach(function (b) { b.disabled = false; }); });
+        });
+    }
+
+    function majHeures(f) {
+        var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+        var v = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+        f.querySelectorAll('input[type=datetime-local]').forEach(function (i) { i.value = v; });
+    }
+
+    if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
+})();
