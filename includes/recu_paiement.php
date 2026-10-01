@@ -39,7 +39,6 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
     </div>
     <div class="no-print" style="text-align:center;margin-top:14px;">
         <a href="<?= BASE_URL ?>/espace/download_recu?id=<?= (int)$recu['id'] ?>" class="btn btn-or">📄 Télécharger le reçu en PDF</a>
-        <button type="button" class="btn btn-outline" onclick="document.body.classList.add('imprimer-recu');window.print();setTimeout(function(){document.body.classList.remove('imprimer-recu');},500);">🖨️ Imprimer / enregistrer le reçu</button>
     </div>
 </div>
 <script src="<?= BASE_URL ?>/assets/js/vendor/qrcode.js"></script>
