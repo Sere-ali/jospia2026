@@ -625,33 +625,96 @@ class PdfRapport {
         }
         return $res;
     }
-    public function rapport(array $r, $avecCommission = false) {
-        $c = $this->c; $W = $this->W; $m = self::MARGE;
-        $this->place(260);
-        $c = $this->c;
-        // bandeau de date
-        $titre = date('d/m/Y', strtotime($r['date_rapport'])) . ($avecCommission ? '  -  ' . $r['commission'] : '');
-        imagefilledrectangle($this->im, $m, $this->y, $W - $m, $this->y + 64, $c['vert']);
-        imagefilledrectangle($this->im, $m, $this->y, $m + 12, $this->y + 64, $c['orange']);
-        pdfEcrire($this->im, 34, $m + 34, pdfBaseline('barlow-latin-700-normal.ttf', 34, $this->y + 32), $c['blanc'], 'barlow-latin-700-normal.ttf', $titre);
-        $meta = 'par ' . ($r['auteur_nom'] ?: '-') . ' - déposé le ' . date('d/m/Y H:i', strtotime($r['created_at']));
-        $mw = pdfLargeurTexte(22, 'tinos-latin-400-normal.ttf', $meta);
-        pdfEcrire($this->im, 22, $W - $m - 20 - $mw, pdfBaseline('tinos-latin-400-normal.ttf', 22, $this->y + 32), $c['blanc'], 'tinos-latin-400-normal.ttf', $meta);
-        $this->y += 64 + 28;
-        foreach ([['Activités réalisées', 'activites'], ['Difficultés rencontrées', 'difficultes'], ['Prévisions / besoins', 'previsions']] as [$lib, $cle]) {
-            if (trim((string)($r[$cle] ?? '')) === '') continue;
-            $this->place(120);
-            pdfEcrire($this->im, 30, $m, $this->y + 28, $this->c['vertF'], 'tinos-latin-700-normal.ttf', $lib);
-            $this->y += 50;
-            foreach ($this->lignes($r[$cle], 'tinos-latin-400-normal.ttf', 30, $W - 2 * $m - 20) as $l) {
-                $this->place(46);
-                if ($l !== '') pdfEcrire($this->im, 30, $m + 20, $this->y + 30, $this->c['noir'], 'tinos-latin-400-normal.ttf', $l);
-                $this->y += 44;
+    private $nb = 0;
+    private function dateFr($d) {
+        $m = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        $t = strtotime($d);
+        return (int)date('j', $t) . ((int)date('j', $t) === 1 ? 'er' : '') . ' ' . $m[(int)date('n', $t) - 1] . ' ' . date('Y', $t);
+    }
+    /** Écrit un paragraphe justifié (dernière ligne alignée à gauche). */
+    private function paragrapheJustifie($texte, $taille, $x, $largeur, $retrait = 0, $interligne = 1.55) {
+        $police = 'tinos-latin-400-normal.ttf'; $pas = (int)round($taille * 1.5 * $interligne / 1.5 * 1.0);
+        foreach (preg_split('/\R/u', (string)$texte) as $para) {
+            $mots = preg_split('/\s+/u', trim($para), -1, PREG_SPLIT_NO_EMPTY);
+            if (!$mots) { $this->y += (int)($pas / 2); continue; }
+            $lignes = []; $cur = []; $premiere = true;
+            foreach ($mots as $m) {
+                $lw = $largeur - ($premiere ? $retrait : 0);
+                $test = $cur ? implode(' ', $cur) . ' ' . $m : $m;
+                if ($cur && pdfLargeurTexte($taille, $police, $test) > $lw) { $lignes[] = [$cur, $premiere]; $cur = [$m]; $premiere = false; }
+                else { $cur[] = $m; }
             }
-            $this->y += 16;
+            if ($cur) { $lignes[] = [$cur, $premiere]; }
+            $n = count($lignes);
+            foreach ($lignes as $i => [$ws, $prem]) {
+                $this->place($pas + 10);
+                $x0 = $x + ($prem ? $retrait : 0); $lw = $largeur - ($prem ? $retrait : 0);
+                $base = $this->y + $taille;
+                if ($i < $n - 1 && count($ws) > 1) {
+                    $tot = 0; $wl = [];
+                    foreach ($ws as $w) { $l = pdfLargeurTexte($taille, $police, $w); $wl[] = $l; $tot += $l; }
+                    $gap = ($lw - $tot) / (count($ws) - 1); $cx = $x0;
+                    foreach ($ws as $k => $w) { pdfEcrire($this->im, $taille, $cx, $base, $this->c['noir'], $police, $w); $cx += $wl[$k] + $gap; }
+                } else {
+                    pdfEcrire($this->im, $taille, $x0, $base, $this->c['noir'], $police, implode(' ', $ws));
+                }
+                $this->y += $pas;
+            }
+            $this->y += (int)($pas * 0.35);
         }
-        imageline($this->im, $m, $this->y, $W - $m, $this->y, $this->c['ligne']);
+    }
+    /** Un rapport = une lettre (une nouvelle page pour chaque rapport suivant). */
+    public function rapport(array $r, $avecCommission = false) {
+        $W = $this->W; $m = 170; $lw = $W - 2 * $m;
+        if ($this->nb++ > 0) { $this->nouvellePage(); }
+        $c = $this->c; $f = 'tinos-latin-400-normal.ttf'; $fb = 'tinos-latin-700-normal.ttf';
+        // lieu et date, à droite
+        $lieu = 'Abidjan, le ' . $this->dateFr($r['created_at'] ?: $r['date_rapport']);
+        pdfEcrire($this->im, 30, $W - $m - pdfLargeurTexte(30, $f, $lieu), $this->y + 30, $c['noir'], $f, $lieu);
+        $this->y += 70;
+        // expéditeur / destinataire
+        $com = (string)$r['commission'];
+        pdfEcrire($this->im, 30, $m, $this->y + 30, $c['vertF'], $fb, 'Commission ' . $com);
+        $this->y += 42;
+        $auteur = 'Rapporteur : ' . ($r['auteur_nom'] ?: '-');
+        pdfEcrire($this->im, 28, $m, $this->y + 28, $c['gris'], $f, $auteur);
+        $this->y += 70;
+        $dest = ['À l\'attention de', 'Monsieur le Responsable du Comité d\'organisation', 'JOSPIA'];
+        $dx = (int)($W / 2) + 60;
+        pdfEcrire($this->im, 26, $dx, $this->y + 26, $c['gris'], $f, $dest[0]);
+        pdfEcrire($this->im, 28, $dx, $this->y + 70, $c['noir'], $fb, 'Le Comité d\'organisation');
+        pdfEcrire($this->im, 28, $dx, $this->y + 106, $c['noir'], $fb, 'JOSPIA');
+        $this->y += 160;
+        // objet
+        $obj = 'Objet : Rapport journalier du ' . $this->dateFr($r['date_rapport']);
+        imagefilledrectangle($this->im, $m, $this->y, $m + 8, $this->y + 56, $c['orange']);
+        pdfEcrire($this->im, 32, $m + 26, pdfBaseline('barlow-latin-700-normal.ttf', 32, $this->y + 28), $c['vertF'], 'barlow-latin-700-normal.ttf', $obj);
+        $this->y += 56 + 14;
+        imageline($this->im, $m, $this->y, $W - $m, $this->y, $c['ligne']);
         $this->y += 40;
+        pdfEcrire($this->im, 30, $m, $this->y + 30, $c['noir'], $f, 'Madame, Monsieur,');
+        $this->y += 66;
+        $this->paragrapheJustifie('Nous avons l\'honneur de vous rendre compte du déroulement des activités de la commission ' . $com . ' pour la journée du ' . $this->dateFr($r['date_rapport']) . '.', 30, $m, $lw, 90);
+        $this->y += 10;
+        foreach ([['1. Activités réalisées', 'activites'], ['2. Difficultés rencontrées', 'difficultes'], ['3. Prévisions et besoins', 'previsions']] as [$lib, $cle]) {
+            $t = trim((string)($r[$cle] ?? ''));
+            if ($t === '') continue;
+            $this->place(150);
+            pdfEcrire($this->im, 31, $m, $this->y + 31, $c['vertF'], $fb, $lib);
+            $this->y += 58;
+            $this->paragrapheJustifie($t, 30, $m, $lw, 90);
+            $this->y += 8;
+        }
+        $this->y += 10;
+        $this->paragrapheJustifie('Veuillez agréer, Madame, Monsieur, l\'expression de nos salutations distinguées.', 30, $m, $lw, 90);
+        $this->place(170);
+        $this->y += 24;
+        $sig = (string)($r['auteur_nom'] ?: ('Commission ' . $com));
+        $sx = $W - $m - 460;
+        pdfEcrire($this->im, 28, $sx, $this->y + 28, $c['gris'], $f, 'Le rapporteur,');
+        pdfEcrire($this->im, 32, $sx, $this->y + 110, $c['noir'], $fb, $sig);
+        imagefilledrectangle($this->im, $sx, $this->y + 124, $sx + 380, $this->y + 128, $c['orange']);
+        $this->y += 150;
     }
     public function fin() {
         if (!$this->im) return;

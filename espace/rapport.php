@@ -74,7 +74,7 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
             </p>
             <h3 style="text-align:center;margin-bottom:16px;">Commission <?= e($commission) ?> <?php if (nomCommissionComplet($commission) !== $commission): ?><small style="color:var(--texte-doux);font-weight:400;">- <?= e(nomCommissionComplet($commission)) ?></small><?php endif; ?></h3>
 
-            <form method="post" class="carte form-pro" style="margin-bottom:22px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
+            <form method="post" id="formulaire" class="carte form-pro" style="margin-bottom:22px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
                 <input type="hidden" name="action" value="enregistrer">
                 <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>"><?php endif; ?>
                 <h3><?= $edit ? '✏️ Modifier le rapport' : '➕ Nouveau rapport' ?></h3>
@@ -96,23 +96,12 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
             </form>
 
             <div data-live="rapports">
-                <?php foreach ($rapports as $r): $mien = $estAdminRapport || (int)$r['auteur_id'] === (int)$u['id']; ?>
-                    <div class="carte" style="margin-bottom:14px;">
-                        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;">
-                            <h3 style="margin:0;">📅 <?= e(date('d/m/Y', strtotime($r['date_rapport']))) ?></h3>
-                            <small style="color:var(--texte-doux);">par <?= e($r['auteur_nom'] ?: '-') ?> · déposé le <?= e(date('d/m/Y H:i', strtotime($r['created_at']))) ?><?= $r['updated_at'] ? ' · modifié le ' . e(date('d/m/Y H:i', strtotime($r['updated_at']))) : '' ?></small>
-                        </div>
-                        <p><strong>Activités réalisées</strong><br><?= nl2br(e($r['activites'])) ?></p>
-                        <?php if (trim((string)$r['difficultes']) !== ''): ?><p><strong>Difficultés rencontrées</strong><br><?= nl2br(e($r['difficultes'])) ?></p><?php endif; ?>
-                        <?php if (trim((string)$r['previsions']) !== ''): ?><p><strong>Prévisions / besoins</strong><br><?= nl2br(e($r['previsions'])) ?></p><?php endif; ?>
-                        <?php if ($mien): ?>
-                            <div class="no-print" style="display:flex;gap:8px;">
-                                <a href="?modifier=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                                <form method="post" onsubmit="return confirm('Supprimer ce rapport ?');"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-sm btn-danger">🗑️ Supprimer</button></form>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
+                <?php foreach ($rapports as $r): $mien = $estAdminRapport || (int)$r['auteur_id'] === (int)$u['id'];
+                    $act = '';
+                    if ($mien) $act = '<a href="?modifier=' . (int)$r['id'] . '#formulaire" class="btn btn-primaire btn-sm">✏️ Modifier ce rapport</a>'
+                        . '<form method="post" onsubmit="return confirm(\'Supprimer ce rapport ?\');" style="display:inline;"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="' . (int)$r['id'] . '"><button class="btn btn-sm btn-danger">🗑️ Supprimer</button></form>';
+                    echo lettreRapportHtml($r, $act);
+                endforeach; ?>
                 <?php if (!$rapports): ?><div class="carte" style="text-align:center;color:var(--texte-doux);">Aucun rapport pour le moment.</div><?php endif; ?>
             </div>
     </div>
