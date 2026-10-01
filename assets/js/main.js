@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /* ---------- Export Excel (.xlsx) des listes admin / finance ---------- */
 (function () {
     var chemin = location.pathname;
-    if (!/\/(admin|finance)\//.test(chemin) || /\/(dashboard|matieres|questions|config_quiz|scanner|verifier)(\.php)?$/.test(chemin)) { return; }
+    if (!/\/(admin|finance|securite)\//.test(chemin) || /\/(dashboard|matieres|questions|config_quiz|scanner|verifier)(\.php)?$/.test(chemin)) { return; }
 
     var crcTable = (function () {
         var t = [], c, n, k;
