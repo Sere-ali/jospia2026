@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, ?, 'en attente', ?, ?)");
             $stmt->execute([$seminariste_id, $reference, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
         }
-        $succes = "Votre référence de paiement a été soumise avec succès. Elle est en attente de validation par la commission Finance.";
+        $succes = "Votre référence de paiement a été soumise avec succès. Elle est en attente de validation par la commission Finance."; $_POST = [];
         
         // Recharger le paiement
         $stmt = $pdo->prepare("SELECT * FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");

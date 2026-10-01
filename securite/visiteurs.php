@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         else {
             $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, motif, heure_arrivee, heure_sortie) VALUES (?,?,?,?,?)")->execute([$nom, $contact, $motif, $arr, $sor]);
             journaliser($pdo, 'Visiteur ajouté', $nom);
-            $succes = "Visiteur ajouté.";
+            $succes = "Visiteur ajouté."; $_POST = [];
         }
     }
 }

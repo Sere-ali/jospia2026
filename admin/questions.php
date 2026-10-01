@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $pdo->prepare("INSERT INTO questions (banque, categorie, enonce, option_a, option_b, option_c, option_d, bonne_reponse) VALUES (?,?,?,?,?,?,?,?)")
                 ->execute([$banque, $categorie, $enonce, $a, $b, $c, $d, $bonne]);
-            $succes = "Question ajoutée.";
+            $succes = "Question ajoutée."; $_POST = [];
         }
     }
 }

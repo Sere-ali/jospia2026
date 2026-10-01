@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['supprimer_id'])) {
             $hash = password_hash($mdp, PASSWORD_DEFAULT);
             $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, role, nom_affiche) VALUES (?,?,?,?)")
                 ->execute([$identifiant, $hash, $role, $nom]);
-            $succes = "Compte $role créé pour $nom.";
+            $succes = "Compte $role créé pour $nom."; $_POST = [];
         }
     }
 }

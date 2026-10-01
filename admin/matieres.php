@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $succes = "Matière modifiée.";
         } else {
             $pdo->prepare("INSERT INTO matieres (nom, note_max, ordre) VALUES (?,?,?)")->execute([$nom, $noteMax, $ordre]);
-            $succes = "Matière ajoutée.";
+            $succes = "Matière ajoutée."; $_POST = [];
         }
     }
 }

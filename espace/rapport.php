@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $commission !== '') {
             } else {
                 $pdo->prepare("INSERT INTO rapports_journaliers (commission, date_rapport, activites, difficultes, previsions, auteur_id, auteur_nom) VALUES (?,?,?,?,?,?,?)")
                     ->execute([$commission, $date, $act, $dif, $pre, $u['id'], (string)($u['nom_affiche'] ?? $u['identifiant'] ?? '')]);
-                journaliser($pdo, 'Rapport journalier ajouté', $commission . ' ' . $date); $succes = "Rapport du " . date('d/m/Y', strtotime($date)) . " enregistré.";
+                journaliser($pdo, 'Rapport journalier ajouté', $commission . ' ' . $date); $succes = "Rapport du " . date('d/m/Y', strtotime($date)) . " enregistré."; $_POST = [];
             }
         }
     }

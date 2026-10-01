@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($erreurs)) {
         $pdo->prepare("INSERT INTO critiques (seminariste_id, commission, contenu) VALUES (?,?,?)")
             ->execute([$seminariste['id'], $commission, $contenu]);
-        $succes = "Votre critique a été envoyée à la commission $commission. Merci pour votre retour !";
+        $succes = "Votre critique a été envoyée à la commission $commission. Merci pour votre retour !"; $_POST = [];
     }
 }
 
