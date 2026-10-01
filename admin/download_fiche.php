@@ -47,6 +47,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="label">Dortoir attribué</div>
                 <div class="valeur"><?= e($s['dortoir']) ?></div>
             </div>
+            <?= blocQrFiche($pdo, $s['id']) ?>
         </div>
     </div>
 </section>

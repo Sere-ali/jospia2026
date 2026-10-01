@@ -37,11 +37,9 @@ if ($u['role'] === 'seminariste' && $u['seminariste_id']) {
     $stR = $pdo->prepare("SELECT p.*, c.nom_affiche AS valideur FROM paiements p LEFT JOIN comptes c ON c.id = p.admin_validateur_id WHERE p.seminariste_id = ? AND p.statut = 'validé' ORDER BY p.id DESC LIMIT 1");
     $stR->execute([$u['seminariste_id']]);
     $recu = $stR->fetch() ?: null;
-    if ($recu) {
-        $stI = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE id = ? AND mdp_initial IS NOT NULL");
-        $stI->execute([$u['id']]);
-        $idsInitiaux = $stI->fetch() ?: null;
-    }
+    $stI = $pdo->prepare("SELECT identifiant, mdp_initial FROM comptes WHERE id = ? AND mdp_initial IS NOT NULL");
+    $stI->execute([$u['id']]);
+    $idsInitiaux = $stI->fetch() ?: null;
 }
 $titrePage = "Mon espace";
 require_once __DIR__ . '/../includes/header.php';
@@ -112,6 +110,7 @@ require_once __DIR__ . '/../includes/header.php';
             <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a></p>
         </div>
 
+        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez imprimer votre fiche avec son QR code.</div><?php endif; ?>
         <div class="fiche" id="ficheImprimable">
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">
@@ -140,6 +139,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="label">Dortoir attribué</div>
                 <div class="valeur"><?= e($seminariste['dortoir']) ?></div>
             </div>
+            <?= blocQrFiche($pdo, $seminariste['id']) ?>
         </div>
         <div style="text-align:center;margin-top:18px;" class="no-print">
             <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer ma fiche d'inscription</button>
@@ -163,7 +163,13 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <?php endif; ?>
 
-        <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; endif; ?>
+        <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; else: ?>
+        <div class="carte" style="max-width:720px;margin:30px auto 0;border-left:5px solid var(--orange);">
+            <h3>⏳ Paiement en attente</h3>
+            <p>Votre inscription est enregistrée mais elle ne sera <strong>validée</strong> qu'après paiement des frais de <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> par Wave. Tant que le paiement n'est pas effectué, votre QR code s'affiche en <strong style="color:#c81e1e;">rouge (refusé)</strong>.</p>
+            <a href="<?= BASE_URL ?>/paiement" class="btn btn-or">💙 Payer / saisir mon identifiant de transaction</a>
+        </div>
+        <?php endif; ?>
 
         <div class="carte" style="max-width:720px;margin:30px auto 0;">
             <h3>Test d'entrée</h3>

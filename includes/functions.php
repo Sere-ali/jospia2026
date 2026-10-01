@@ -673,3 +673,54 @@ function finaliserInscriptionAttente(PDO $pdo, array $att, $waveSessionId, $tran
     }
 }
 
+/* ------------------------------------------------------------------ */
+/*  QR code de la fiche d'inscription : vérification publique (vert = payé, rouge = refusé)  */
+/* ------------------------------------------------------------------ */
+function codeFichePreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    try {
+        $col = $pdo->query("SHOW COLUMNS FROM seminaristes LIKE 'code_fiche'")->fetch();
+        if (!$col) { $pdo->exec("ALTER TABLE seminaristes ADD COLUMN code_fiche VARCHAR(40) NULL, ADD UNIQUE INDEX uniq_code_fiche (code_fiche)"); }
+    } catch (Throwable $e) { error_log('Migration code_fiche : ' . $e->getMessage()); }
+}
+
+/** Code secret (non devinable) du séminariste pour son QR code ; créé à la première demande. */
+function codeFiche(PDO $pdo, $seminaristeId) {
+    codeFichePreparer($pdo);
+    $st = $pdo->prepare("SELECT code_fiche FROM seminaristes WHERE id = ?");
+    $st->execute([(int)$seminaristeId]);
+    $code = (string)$st->fetchColumn();
+    if ($code === '') {
+        $code = bin2hex(random_bytes(10));
+        $pdo->prepare("UPDATE seminaristes SET code_fiche = ? WHERE id = ? AND (code_fiche IS NULL OR code_fiche = '')")->execute([$code, (int)$seminaristeId]);
+        $st->execute([(int)$seminaristeId]);
+        $code = (string)$st->fetchColumn();
+    }
+    return $code;
+}
+
+/** Statut de paiement d'un séminariste : 'validé' | 'en attente' | 'rejeté' | 'aucun'. */
+function statutPaiementSeminariste(PDO $pdo, $seminaristeId) {
+    $st = $pdo->prepare("SELECT statut FROM paiements WHERE seminariste_id = ? ORDER BY (statut = 'validé') DESC, id DESC LIMIT 1");
+    $st->execute([(int)$seminaristeId]);
+    $v = $st->fetchColumn();
+    return $v === false ? 'aucun' : (string)$v;
+}
+
+/** Adresse lue par le QR code de la fiche. */
+function urlVerificationFiche(PDO $pdo, $seminaristeId) {
+    return urlSite() . '/verification?c=' . codeFiche($pdo, $seminaristeId);
+}
+
+/** Bloc HTML « QR code de la fiche » (nécessite assets/js/vendor/qrcode.js). */
+function blocQrFiche(PDO $pdo, $seminaristeId) {
+    $url = urlVerificationFiche($pdo, $seminaristeId);
+    $statut = statutPaiementSeminariste($pdo, $seminaristeId);
+    $badge = $statut === 'validé' ? '<span class="pill pill-vert">✔ Paiement validé</span>' : ($statut === 'rejeté' ? '<span class="pill" style="background:#fde8e8;color:#b42318;">✖ Paiement rejeté</span>' : '<span class="pill pill-or">⏳ Paiement en attente</span>');
+    return '<div class="fiche-qr" style="text-align:center;margin:18px 0 6px;"><div id="qr-fiche" data-url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;"></div>'
+        . '<div style="font-size:.82rem;color:var(--texte-doux);margin:6px 0;">Scannez ce QR code : <strong style="color:#0a8f3c;">vert = payé</strong>, <strong style="color:#c81e1e;">rouge = refusé</strong></div>' . $badge . '</div>'
+        . '<script src="' . BASE_URL . '/assets/js/vendor/qrcode.js"></script><script>(function(){var el=document.getElementById("qr-fiche");if(!el||typeof qrcode==="undefined")return;var q=qrcode(0,"M");q.addData(el.getAttribute("data-url"));q.make();el.innerHTML=q.createSvgTag(5,2);})();</script>';
+}
+

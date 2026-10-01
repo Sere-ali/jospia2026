@@ -45,17 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
-    // PAIEMENT : sans paiement, le formulaire ne peut pas être soumis et aucune information n'est enregistrée.
+    // PAIEMENT : l'identifiant de transaction est facultatif. Sans identifiant, le paiement reste « en attente » (non validable par la Finance).
     $modeApi = waveApiActive();
     $referenceTx = trim($_POST['reference_transaction'] ?? '');
-    $messageEchec = "Échec : impossible de soumettre vos informations, le paiement n'a pas été effectué. Effectuez d'abord le paiement Wave de " . number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . " FCFA, puis réessayez.";
-    if (!$modeApi) {
-        if ($referenceTx === '') { array_unshift($erreurs, $messageEchec); }
-        elseif (!preg_match('/^[A-Za-z0-9_\-]{6,60}$/', $referenceTx)) { $erreurs[] = "Échec : l'identifiant de transaction Wave est invalide (6 à 60 caractères, lettres et chiffres)."; }
+    if ($referenceTx !== '') {
+        if (!preg_match('/^[A-Za-z0-9_\-]{6,60}$/', $referenceTx)) { $erreurs[] = "L'identifiant de transaction Wave est invalide (6 à 60 caractères, lettres et chiffres) - laissez vide si vous n'avez pas encore payé."; }
         else {
             $dejaUtilisee = $pdo->prepare("SELECT COUNT(*) FROM paiements WHERE reference_transaction = ?");
             $dejaUtilisee->execute([$referenceTx]);
-            if ($dejaUtilisee->fetchColumn() > 0) $erreurs[] = "Échec : cet identifiant de transaction a déjà été utilisé pour une autre inscription.";
+            if ($dejaUtilisee->fetchColumn() > 0) $erreurs[] = "Cet identifiant de transaction a déjà été utilisé pour une autre inscription.";
         }
     }
 
@@ -85,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['compte_id'] = $compteNew['id'];
             $_SESSION['compte'] = $compteNew;
         }
-        if (estConnecte()) { redirect('/paiement'); }
+        if (estConnecte()) { redirect('/espace/fiche?inscrit=1'); }
 
         $succes = "Inscription reçue. Votre dortoir a été attribué automatiquement : " . $r['dortoir'] . ".";
         $identifiantsGeneres = ['id' => $r['identifiant'], 'mdp' => $r['mdp'], 'matricule' => $r['matricule'], 'dortoir' => $r['dortoir'], 'anyama' => $anyama, 'section' => $sectionFinale];
@@ -226,17 +224,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <?php if (!waveApiActive()): ?>
                 <fieldset>
-                    <legend>Paiement Wave (obligatoire)</legend>
-                    <div class="help-text" style="margin-bottom:12px;">💙 Payez d'abord <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> par Wave au <strong><?= e(numeroWaveAffiche()) ?></strong><?php if (lienWavePaiement()): ?> - <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener"><strong>cliquer ici pour payer</strong></a><?php endif; ?>, puis recopiez l'identifiant de la transaction ci-dessous. <strong>Sans paiement, le formulaire ne peut pas être soumis.</strong></div>
+                    <legend>Paiement Wave</legend>
+                    <div class="help-text" style="margin-bottom:12px;">💙 Frais de participation : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à payer par Wave au <strong><?= e(numeroWaveAffiche()) ?></strong><?php if (lienWavePaiement()): ?> - <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener"><strong>cliquer ici pour payer</strong></a><?php endif; ?>. Si vous avez déjà payé, recopiez l'identifiant de la transaction. <strong>Sans paiement, votre inscription reste « paiement en attente » et ne peut pas être validée.</strong></div>
                     <div class="form-group">
-                        <label>Identifiant de la transaction Wave <span class="req">*</span></label>
+                        <label>Identifiant de la transaction Wave <small>(si vous avez déjà payé)</small></label>
                         <input type="text" name="reference_transaction" maxlength="60" autocomplete="off" placeholder="Ex : T_XXXXXXXXXXXX" value="<?= e($_POST['reference_transaction'] ?? '') ?>">
                     </div>
                 </fieldset>
                 <?php endif; ?>
 
-                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= waveApiActive() ? 'Valider et payer par Wave' : 'Soumettre mon inscription' ?></span><i aria-hidden="true">→</i></button>
-                <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "l'inscription n'est acceptée que si le paiement a été effectué" ?></p>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span><?= waveApiActive() ? 'Valider et payer par Wave' : 'Valider mon inscription' ?></span><i aria-hidden="true">→</i></button>
+                <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
             </form>
         <?php endif; ?>
         </div>
