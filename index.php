@@ -13,6 +13,7 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
             <div class="hero-actions">
                 <a href="<?= BASE_URL ?>/inscription_seminariste" class="btn btn-or">🎓 M'inscrire comme séminariste</a>
                 <a href="<?= BASE_URL ?>/inscription_commission" class="btn btn-outline">👥 Rejoindre une commission</a>
+                <a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">🚶 Espace visiteurs</a>
             </div>
             <div class="compte-rebours" data-cible="<?= e($dateEvenement) ?>" aria-live="off">
                 <p class="compte-legende">Ouverture dans</p>

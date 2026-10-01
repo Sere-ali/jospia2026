@@ -33,6 +33,7 @@ $page = basename($_SERVER['PHP_SELF']);
             <a href="<?= BASE_URL ?>/" class="<?= $page === 'index.php' ? 'actif' : '' ?>">Accueil</a>
             <a href="<?= BASE_URL ?>/inscription_commission" class="<?= $page === 'inscription_commission.php' ? 'actif' : '' ?>">Commission</a>
             <a href="<?= BASE_URL ?>/inscription_seminariste" class="<?= $page === 'inscription_seminariste.php' ? 'actif' : '' ?>">Séminariste</a>
+            <a href="<?= BASE_URL ?>/visiteur" class="<?= $page === 'visiteur.php' ? 'actif' : '' ?>">Visiteur</a>
             <?php if ($u): ?>
                 <a href="<?= BASE_URL ?>/espace/fiche">Mon espace</a>
                 <?php if (estAdmin()): ?>
