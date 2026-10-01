@@ -183,3 +183,8 @@
 .login-page { padding: 40px 0 70px; min-height: 70vh; display: flex; align-items: center; }
 .login-page .container { width: 100%; }
 .login-page .login-box, .form-page .carte.form-pro { background: rgba(255,255,255,.95); box-shadow: 0 30px 60px -28px rgba(6,83,47,.5); }
+
+.form-pro input[type=datetime-local], .form-pro input[type=date] { width: 100%; height: 52px; padding: 0 16px; border: 2px solid #E4ECE7; border-radius: 14px; background-color: #FAFCFB; font-size: 1rem; font-family: inherit; color: #16261d; }
+.form-pro input[type=datetime-local]:focus { border-color: var(--orange); box-shadow: 0 0 0 5px rgba(247,127,0,.15); outline: 0; }
+.form-pro input[name=heure_arrivee], .form-pro input[name=heure_sortie] { padding-left: 16px; }
+.form-pro legend[data-ico]::before { content: attr(data-ico); font-size: 1.2rem; transform: none; }

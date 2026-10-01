@@ -65,6 +65,31 @@ function estFinance() {
     return $u && in_array($u['role'], ['finance', 'admin', 'superadmin'], true);
 }
 
+/** Commission sécurité : gestion des visiteurs (membres de la commission SÉCURITÉ, admins, super admin). */
+function estSecurite() {
+    static $cache = null;
+    if ($cache !== null) return $cache;
+    $u = utilisateurCourant();
+    if (!$u) return $cache = false;
+    if (in_array($u['role'], ['admin', 'superadmin'], true)) return $cache = true;
+    if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
+        global $pdo;
+        $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
+        $st->execute([$u['membre_id']]);
+        $c = mb_strtoupper(strtr((string)$st->fetchColumn(), ['É' => 'E', 'È' => 'E', 'é' => 'E', 'è' => 'E']), 'UTF-8');
+        return $cache = (trim($c) === 'SECURITE');
+    }
+    return $cache = false;
+}
+
+function exigerSecurite() {
+    exigerConnexion();
+    if (!estSecurite()) {
+        http_response_code(403);
+        die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>Cette page est réservée à la commission Sécurité.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>');
+    }
+}
+
 /** Commission scientifique : notes, bulletins, matières, questions et quiz (rôle « scientifique », super admin). */
 function estScientifique() {
     $u = utilisateurCourant();

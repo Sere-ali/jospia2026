@@ -13,6 +13,7 @@
                 <a href="<?= BASE_URL ?>/inscription_seminariste">Séminariste</a>
                 <a href="<?= BASE_URL ?>/inscription_commission">Membre de commission</a>
                 <a href="<?= BASE_URL ?>/statut">Suivre mon paiement</a>
+                <a href="<?= BASE_URL ?>/visiteur">Visiteurs (arrivée / sortie)</a>
             </div>
             <div>
                 <h4>Mon espace</h4>

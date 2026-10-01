@@ -453,3 +453,24 @@ function journalAutomatique(PDO $pdo) {
     $compte = $u;
     register_shutdown_function(function () use ($pdo, $libelle, $cible, $compte) { journaliser($pdo, $libelle, $cible, $compte); });
 }
+
+/* ---------- Visiteurs (gérés par la commission Sécurité) ---------- */
+function visiteursPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS visiteurs (
+        id INT AUTO_INCREMENT PRIMARY KEY, nom_prenoms VARCHAR(150) NOT NULL, contact VARCHAR(20) NOT NULL,
+        heure_arrivee DATETIME NOT NULL, heure_sortie DATETIME NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_vis_contact (contact), INDEX idx_vis_arrivee (heure_arrivee)) ENGINE=InnoDB");
+}
+
+/** « 2026-12-24T14:30 » (champ datetime-local) -> « 2026-12-24 14:30:00 », ou null si invalide. */
+function dateHeureSaisie($v) {
+    $v = trim((string)$v);
+    if ($v === '') return null;
+    $t = strtotime(str_replace('T', ' ', $v));
+    return $t ? date('Y-m-d H:i:s', $t) : null;
+}
+function dateHeureAffiche($v) { return $v ? date('d/m/Y H:i', strtotime($v)) : '-'; }
+function dateHeureChamp($v) { return $v ? date('Y-m-d\TH:i', strtotime($v)) : ''; }

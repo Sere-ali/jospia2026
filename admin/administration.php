@@ -11,6 +11,7 @@ $cartes = [
     ['🛏️ Dortoirs', 'Occupation et capacité des dortoirs.', '/admin/dortoirs'],
     ['📋 Listes dortoir/niveau', 'Listes nominatives par dortoir et par niveau (export Excel).', '/admin/listes'],
     ['🔬 Commission scientifique', 'Notes, bulletins, test d\'entrée.', '/admin/commission_scientifique'],
+    ['🛡️ Commission sécurité', 'Visiteurs : arrivées, sorties et suivi.', '/securite/visiteurs'],
     ['💰 Commission finance', 'Paiements Wave, validation et scanner de reçus.', '/finance/paiements'],
 ];
 ?>
