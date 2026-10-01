@@ -911,6 +911,10 @@ footer a { color: #fff; font-weight: 600; }
 /* ---------- Reçu de paiement ---------- */
 .recu { border: 2px solid var(--primaire, #1b7a3d); border-radius: 12px; overflow: hidden; background: #fff; }
 .recu-entete { display: flex; align-items: center; gap: 14px; background: var(--primaire, #1b7a3d); color: #fff; padding: 14px 18px; }
+.recu-bandeau { background: #fff; padding: 10px 14px 0; text-align: center; }
+.recu-bandeau img { max-width: 100%; height: auto; max-height: 90px; }
+.recu-texte { text-align: justify; text-justify: inter-word; hyphens: auto; line-height: 1.6; margin: 0; padding: 14px 18px 0; }
+.recu-infos { text-align: justify; }
 .recu-logo { width: 54px; height: 54px; border-radius: 50%; background: #fff; object-fit: cover; }
 .recu-titre { font-size: 1.3rem; font-weight: 800; }
 .recu-sous { font-size: .8rem; opacity: .9; }
