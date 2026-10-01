@@ -13,7 +13,7 @@ $sql .= " ORDER BY niveau_affecte, nom_prenoms";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $seminaristesListe = $stmt->fetchAll();
-$pages = array_chunk($seminaristesListe, 2);
+$pages = array_chunk($seminaristesListe, 1);
 $niveauxListe = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
 
 $titrePage = "Impression des bulletins";
@@ -31,7 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer <?= count($seminaristesListe) ?> bulletin(s) - <?= count($pages) ?> page(s)</button>
+            <button onclick="window.print()" class="btn btn-primaire">📄 Enregistrer en PDF - <?= count($seminaristesListe) ?> bulletin(s), 1 par page</button>
         </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
 

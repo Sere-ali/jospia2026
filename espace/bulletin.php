@@ -29,7 +29,7 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <?php require __DIR__ . '/../includes/bulletin_rendu.php'; ?>
             <div style="text-align:center;margin-top:18px;" class="no-print">
-                <button onclick="window.print()" class="btn btn-primaire">🖨️ Imprimer mon bulletin</button>
+                <button onclick="window.print()" class="btn btn-primaire">📄 Enregistrer en PDF</button>
             </div>
         <?php require __DIR__ . '/../includes/astuce_impression.php'; ?>
         <?php endif; ?>

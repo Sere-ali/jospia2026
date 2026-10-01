@@ -54,8 +54,8 @@ $moyenneGenerale = $nbNotees > 0 ? round($sommeNormalisee / $nbNotees, 2) : null
 
     <div style="clear:both;"></div>
 
-    <div class="table-wrap" style="box-shadow:none;margin-top:18px;">
-        <table>
+    <div class="table-wrap" data-no-export style="box-shadow:none;margin-top:18px;">
+        <table data-no-export>
             <thead><tr><th>Matière</th><th>Note</th><th>Barème</th><th>Appréciation</th></tr></thead>
             <tbody>
             <?php foreach ($lignesBulletin as $l): ?>
