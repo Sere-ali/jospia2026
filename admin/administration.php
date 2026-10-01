@@ -12,8 +12,6 @@ $cartes = [
     ['🔑 Identifiants', 'Retrouver un identifiant ou réinitialiser un mot de passe.', '/admin/identifiants'],
     ['🛏️ Dortoirs', 'Occupation et capacité des dortoirs.', '/admin/dortoirs'],
     ['📋 Listes dortoir/niveau', 'Listes nominatives par dortoir et par niveau (export Excel).', '/admin/listes'],
-    ['🛡️ Commission sécurité', 'Visiteurs : arrivées, sorties et suivi.', '/securite/visiteurs'],
-    ['📝 Rapports journaliers', 'Rapport du jour de chaque commission.', '/admin/rapports'],
     ['🚪 Sorties - MG / MGA', 'Accepter ou refuser les demandes de sortie du camp.', '/espace/sorties_mg'],
 ];
 ?>
