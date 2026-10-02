@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/init.php';
 try {
     programmePreparer($pdo);
     $id = (int)($_GET['id'] ?? 0);
-    $st = $pdo->prepare("SELECT * FROM programmes_journaliers WHERE id = ?" . (estAdmin() || estScientifique() ? '' : ' AND publie = 1'));
+    $st = $pdo->prepare("SELECT * FROM programmes_journaliers WHERE id = ?" . (estSuperAdmin() || estScientifique() ? '' : ' AND publie = 1'));
     $st->execute([$id]);
     $p = $st->fetch();
 } catch (Throwable $e) { $p = false; }

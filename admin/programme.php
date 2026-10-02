@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['scientifique', 'admin', 'superadmin']);
+exigerRole(['scientifique', 'superadmin']);
 programmePreparer($pdo);
 $erreurs = []; $succes = null;
 

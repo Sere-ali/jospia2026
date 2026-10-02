@@ -11,11 +11,13 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <span class="eyebrow">Commission scientifique</span>
             <h2>Notes, bulletins et test d'entrée</h2>
         </div>
-        <p style="margin-bottom:16px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or">📝 Rapport journalier</a> <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or">🚪 Sortie du camp</a> <a href="<?= BASE_URL ?>/admin/programme" class="btn btn-or">📅 Programme journalier</a></p>
+        <p style="margin-bottom:16px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or">📝 Rapport journalier</a> <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or">🚪 Sortie du camp</a> <?php if (estScientifique() || estSuperAdmin()): ?><a href="<?= BASE_URL ?>/admin/programme" class="btn btn-or">📅 Programme journalier</a><?php endif; ?></p>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
         <?php if (estScientifique()) echo blocTestEntree($pdo); ?>
         <div class="grid grid-2">
+            <?php if (estScientifique() || estSuperAdmin()): ?>
             <div class="carte"><h3>📅 Programme journalier</h3><p>Ajouter le fichier du programme et le publier pour tout le monde.</p><a href="<?= BASE_URL ?>/admin/programme" class="btn btn-primaire btn-sm">Ouvrir</a></div>
+            <?php endif; ?>
             <div class="carte"><h3>📝 Saisie des notes</h3><p>Saisir les notes des séminaristes par matière.</p><a href="<?= BASE_URL ?>/admin/notes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🖨️ Bulletins</h3><p>Télécharger les bulletins en PDF (2 par feuille).</p><a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🧪 Test d'entrée</h3><p>Verrouiller / déverrouiller le test, suivre les résultats (durée et notation sur 20).</p><a href="<?= BASE_URL ?>/admin/test_entree" class="btn btn-primaire btn-sm">Ouvrir</a></div>
