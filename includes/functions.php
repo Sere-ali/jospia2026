@@ -938,3 +938,27 @@ function programmeBandeau(PDO $pdo) {
         . '<a class="btn btn-or btn-sm" href="' . $u . '" target="_blank" rel="noopener">Voir</a> '
         . '<a class="btn btn-outline btn-sm" href="' . $u . '&dl=1">Télécharger</a></div>';
 }
+
+/** Colonne « responsable de commission » sur les membres (cochée par les administrateurs). */
+function responsablePreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    try {
+        if (!$pdo->query("SHOW COLUMNS FROM membres_commission LIKE 'responsable'")->fetch()) {
+            $pdo->exec("ALTER TABLE membres_commission ADD responsable TINYINT(1) NOT NULL DEFAULT 0");
+        }
+    } catch (Throwable $e) { error_log('Migration responsable : ' . $e->getMessage()); }
+}
+
+/** Le compte connecté est-il membre ET responsable de sa commission ? */
+function estResponsableCommission(PDO $pdo) {
+    $u = utilisateurCourant();
+    if (!$u || $u['role'] !== 'membre' || empty($u['membre_id'])) return false;
+    responsablePreparer($pdo);
+    try {
+        $st = $pdo->prepare("SELECT responsable FROM membres_commission WHERE id = ?");
+        $st->execute([$u['membre_id']]);
+        return (int)$st->fetchColumn() === 1;
+    } catch (Throwable $e) { return false; }
+}

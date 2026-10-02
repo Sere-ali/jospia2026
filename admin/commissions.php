@@ -8,6 +8,12 @@ if (isset($_GET['supprimer']) && estSuperAdmin()) {
     redirect('/admin/commissions');
 }
 
+responsablePreparer($pdo);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maj_responsable'])) {
+    $pdo->prepare("UPDATE membres_commission SET responsable = ? WHERE id = ?")->execute([isset($_POST['responsable']) ? 1 : 0, (int)$_POST['id']]);
+    journaliser($pdo, 'Responsable de commission', 'membre ' . (int)$_POST['id'] . ' : ' . (isset($_POST['responsable']) ? 'oui' : 'non'));
+}
+
 $recherche = trim($_GET['q'] ?? '');
 $filtreCommission = $_GET['commission'] ?? '';
 
@@ -59,7 +65,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="table-wrap">
             <table>
                 <thead>
-                    <tr><th>Photo</th><th>Matricule</th><th>Nom et prénoms</th><th>Commission</th><th>Contact</th><th>Actions</th></tr>
+                    <tr><th>Photo</th><th>Matricule</th><th>Nom et prénoms</th><th>Commission</th><th>Contact</th><th>Responsable de commission</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                 <?php foreach ($membres as $m): ?>
@@ -69,6 +75,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($m['nom_prenoms']) ?></td>
                         <td><span class="pill pill-vert"><?= e($m['commission']) ?></span></td>
                         <td><?= e($m['contact']) ?></td>
+                        <td style="text-align:center;"><form method="post" data-ajax><input type="hidden" name="maj_responsable" value="1"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>"><input type="checkbox" name="responsable" value="1" style="width:22px;height:22px;" <?= !empty($m['responsable']) ? 'checked' : '' ?> onchange="this.form.requestSubmit()" aria-label="Responsable de commission"></form></td>
                         <td style="white-space:nowrap;">
                             <a href="<?= BASE_URL ?>/admin/edit_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
                             <a href="<?= BASE_URL ?>/admin/download_badge?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
@@ -80,7 +87,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         </td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (!$membres): ?><tr><td colspan="6">Aucun membre trouvé.</td></tr><?php endif; ?>
+                <?php if (!$membres): ?><tr><td colspan="7">Aucun membre trouvé.</td></tr><?php endif; ?>
                 </tbody>
             </table>
         </div>

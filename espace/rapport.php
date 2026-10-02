@@ -2,10 +2,10 @@
 require_once __DIR__ . '/../includes/init.php';
 exigerConnexion();
 $propre = commissionPropre($pdo);
-$autorisees = $propre ? [$propre] : [];
+$autorisees = ($propre && (estResponsableCommission($pdo) || estAdmin())) ? [$propre] : [];
 if (!$autorisees) {
     http_response_code(403);
-    die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>La saisie des rapports journaliers est réservée aux membres des commissions.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>');
+    die('<div style="font-family:sans-serif;padding:40px;text-align:center;color:#8a1f1f;"><h2>Accès refusé</h2><p>La saisie des rapports journaliers est réservée aux responsables de commission.</p><a href="' . BASE_URL . '/index">Retour à l\'accueil</a></div>');
 }
 date_default_timezone_set('Africa/Abidjan');
 rapportsPreparer($pdo);

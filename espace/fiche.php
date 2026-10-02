@@ -53,7 +53,7 @@ require_once __DIR__ . '/../includes/header.php';
             <span class="eyebrow">Espace membre</span>
             <h2>Bonjour, <?= e($membre['nom_prenoms']) ?></h2>
             <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
-            <a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">📝 Rapport journalier</a>
+            <?php if (estResponsableCommission($pdo)): ?><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">📝 Rapport journalier</a><?php endif; ?>
             <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a>
             <?php if (estMG()): ?> <a href="<?= BASE_URL ?>/espace/sorties_mg" class="btn btn-primaire btn-sm">🚪 Valider les sorties (MG)</a><?php endif; ?>
             <?php if (estSortieSecurite()): ?> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire btn-sm">🛡️ Sorties sécurité</a><?php endif; ?>
