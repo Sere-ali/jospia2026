@@ -340,3 +340,6 @@ table.rwd td .btn { white-space: nowrap; flex: none; }
 .la-medaillon img { width: 80%; height: 80%; border-radius: 0; }
 .la-droite .la-medaillon img { width: 100%; height: 100%; border-radius: 50%; }
 .brand-aeemci img { padding: 5px; }
+
+.programme-bandeau{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff8e6;border:1px solid #e0b64a;border-left:6px solid #c9971c;border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.programme-bandeau>div{flex:1;min-width:160px}.programme-bandeau .pb-ico{font-size:1.8rem}

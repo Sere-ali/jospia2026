@@ -46,6 +46,7 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="section">
     <div class="container">
+    <?= programmeBandeau($pdo) ?>
 
     <?php if ($membre): ?>
         <div class="section-titre">

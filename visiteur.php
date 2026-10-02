@@ -50,6 +50,7 @@ $maintenant = date('Y-m-d\TH:i');
 $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visiteurs WHERE heure_sortie IS NULL ORDER BY heure_arrivee DESC LIMIT 200")->fetchAll();
 ?>
 <section class="section form-page">
+<div class="container"><?= programmeBandeau($pdo) ?></div>
     <div class="container" style="max-width:1000px;">
         <div class="section-titre form-titre" style="text-align:center;">
             <span class="eyebrow">Accueil des visiteurs</span>

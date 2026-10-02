@@ -910,3 +910,31 @@ function dortoirsRenommer(PDO $pdo) {
         }
     } catch (Throwable $e) { error_log('Renommage dortoirs : ' . $e->getMessage()); }
 }
+
+
+/** Table des programmes journaliers (fichier stocké en base : disque éphémère sur Render). */
+function programmePreparer(PDO $pdo) {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS programmes_journaliers (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        titre VARCHAR(160) NOT NULL,
+        nom_fichier VARCHAR(160) NOT NULL,
+        mime VARCHAR(60) NOT NULL,
+        donnees LONGBLOB NOT NULL,
+        publie TINYINT(1) NOT NULL DEFAULT 0,
+        auteur VARCHAR(120) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+/** Bandeau affiché à tout le monde quand un programme journalier est publié. */
+function programmeBandeau(PDO $pdo) {
+    try {
+        programmePreparer($pdo);
+        $p = $pdo->query("SELECT id, titre, created_at FROM programmes_journaliers WHERE publie = 1 ORDER BY id DESC LIMIT 1")->fetch();
+    } catch (Throwable $e) { return ''; }
+    if (!$p) return '';
+    $u = BASE_URL . '/programme?id=' . (int)$p['id'];
+    return '<div class="programme-bandeau"><span class="pb-ico">📅</span><div><strong>Programme journalier</strong><br><small>' . e($p['titre']) . '</small></div>'
+        . '<a class="btn btn-or btn-sm" href="' . $u . '" target="_blank" rel="noopener">Voir</a> '
+        . '<a class="btn btn-outline btn-sm" href="' . $u . '&dl=1">Télécharger</a></div>';
+}
