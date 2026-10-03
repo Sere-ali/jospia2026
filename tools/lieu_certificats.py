@@ -52,5 +52,7 @@ def run(c):
     im.save('assets/img/modeles/' + c['f'], quality=95, subsampling=0, optimize=True)
     print(c['f'], 'taille finale', round(size, 1))
 
+import sys
 for c in CONFIG:
-    run(c)
+    if len(sys.argv) < 2 or c['f'] == sys.argv[1]:
+        run(c)
