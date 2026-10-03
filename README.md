@@ -7,7 +7,7 @@ Identité graphique **Vert & Blanc**, conforme au cahier des charges et à la ma
 ## 1. Fonctionnalités incluses
 
 - **Inscription des membres de commission** (nom, commission parmi les 13 proposées, contact, photo) → **badge généré automatiquement**, visible uniquement sur la page personnelle du membre, **téléchargeable/imprimable uniquement par Admin/Super Admin**.
-- **Inscription des séminaristes** : identité, genre, niveau d'études, Anyama 1/2 + sections dynamiques (LYMA, SAINT MICHEL, ATLAS, LYMAO, YVAC, GAOUSSOU, LA PERRUCHE / GSAMAT, BUTHMAAN, SOUNTIATA KEÏTA), lieu de résidence, maladie (paludisme, asthme, allergie, autre à préciser), âge, contact, photo, **contact d'urgence parent/tuteur**.
+- **Inscription des séminaristes** : identité, genre, niveau d'études, Anyama 1/2 + sections dynamiques (LYMA, SAINT MICHEL, ATLAS, LYMAO, YVAC, GAOUSSOU, LA PERRUCHE / GSAMAT, BUTHMAAN, SOUNDJATA KEÏTA), lieu de résidence, maladie (paludisme, asthme, allergie, autre à préciser), âge, contact, photo, **contact d'urgence parent/tuteur**.
 - **Affectation automatique du dortoir** : 4 dortoirs Hommes + 4 dortoirs Femmes (répartition équilibrée), plus un dortoir **Pépinière** dédié pour les séminaristes de `AGE_PEPINIERE_SEUIL` ans (9 par défaut) et moins. **Le sous-comité (Anyama) et la section choisis ne sont jamais modifiés automatiquement**, quel que soit l'âge - seul le dortoir en dépend.
 - **Matricule séquentiel des séminaristes** : format `JOS-001`, `JOS-002`, etc. (incrémental automatique).
 - **Section "Autre"** disponible dans la liste déroulante des sections, avec champ de précision.

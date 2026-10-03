@@ -80,7 +80,7 @@ if (!defined('ANYAMA_EXTERIEUR')) define('ANYAMA_EXTERIEUR', 'Autre (extérieur)
 function sectionsParAnyama() {
     return [
         'Anyama 1' => ['LYMA', 'SAINT MICHEL', 'ATLAS', 'LYMAO', 'YVAC', 'GAOUSSOU', 'LA PERRUCHE', 'Autre'],
-        'Anyama 2' => ['GSAMAT', 'BUTHMAAN', 'SOUNTIATA KEÏTA', 'Autre'],
+        'Anyama 2' => ['GSAMAT', 'BUTHMAAN', 'SOUNDJATA KEÏTA', 'Autre'],
         ANYAMA_EXTERIEUR => [], // personnes venant de l'extérieur : section facultative
     ];
 }
@@ -953,4 +953,15 @@ function estResponsableCommission(PDO $pdo) {
         $st->execute([$u['membre_id']]);
         return (int)$st->fetchColumn() === 1;
     } catch (Throwable $e) { return false; }
+}
+
+/** Renomme la section « SOUNTIATA KEÏTA » en « SOUNDJATA KEÏTA » pour les inscriptions déjà enregistrées. */
+function sectionsRenommer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    try {
+        $st = $pdo->prepare("UPDATE seminaristes SET section = 'SOUNDJATA KEÏTA' WHERE section = 'SOUNTIATA KEÏTA'");
+        $st->execute();
+    } catch (Throwable $e) { error_log('Renommage section : ' . $e->getMessage()); }
 }

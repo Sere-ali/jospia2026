@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var sections = {
         'Anyama 1': ['LYMA', 'SAINT MICHEL', 'ATLAS', 'LYMAO', 'YVAC', 'GAOUSSOU', 'LA PERRUCHE', 'Autre'],
-        'Anyama 2': ['GSAMAT', 'BUTHMAAN', 'SOUNTIATA KEÏTA', 'Autre']
+        'Anyama 2': ['GSAMAT', 'BUTHMAAN', 'SOUNDJATA KEÏTA', 'Autre']
     };
     var EXT = 'Autre (extérieur)';
     var sectionGroupe = document.getElementById('section_groupe');

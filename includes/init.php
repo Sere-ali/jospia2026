@@ -11,4 +11,5 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/functions.php';
 
 dortoirsRenommer($pdo);
+sectionsRenommer($pdo);
 journalAutomatique($pdo);
