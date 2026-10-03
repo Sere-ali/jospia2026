@@ -167,6 +167,7 @@ function correctionOuverte(PDO $pdo) {
 
 /** La commission scientifique a-t-elle accès au test d'entrée ? (autorisé par le super administrateur ; le super admin y a toujours accès) */
 function accesTestScientifique(PDO $pdo) {
+    return true; // plus de verrouillage par le super admin : la commission scientifique gère le test
     if (estSuperAdmin()) return true;
     try {
         $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'test_acces_scientifique'");
@@ -195,15 +196,6 @@ function blocFormParametre($cle, $valeurActuelle, $libelleActiver, $libelleDesac
 /** Blocs de verrouillage du test d'entrée (super admin : accès commission scientifique + test des séminaristes). */
 function blocTestEntree(PDO $pdo) {
     $h = '';
-    if (estSuperAdmin()) {
-        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'test_acces_scientifique'");
-        $st->execute();
-        $acces = $st->fetchColumn() === '1';
-        $h .= '<div class="carte" style="border-left:4px solid ' . ($acces ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:16px;">';
-        $h .= '<h3>' . ($acces ? '🔓 Commission scientifique : accès au test autorisé' : '🔒 Commission scientifique : accès au test verrouillé') . '</h3>';
-        $h .= '<p>' . ($acces ? 'La commission scientifique peut gérer le test d\'entrée (questions, configuration, ouverture aux séminaristes).' : 'Tant que vous ne déverrouillez pas, la commission scientifique ne peut pas utiliser le test d\'entrée.') . '</p>';
-        $h .= blocFormParametre('test_acces_scientifique', $acces, '🔓 Déverrouiller pour la commission scientifique', '🔒 Reverrouiller pour la commission scientifique') . '</div>';
-    }
     if (accesTestScientifique($pdo)) {
         $ouvert = testOuvert($pdo);
         $h .= '<div class="carte" style="border-left:4px solid ' . ($ouvert ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
