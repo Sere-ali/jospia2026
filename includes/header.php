@@ -10,6 +10,11 @@ $page = basename($_SERVER['PHP_SELF']);
 <title><?= isset($titrePage) ? e($titrePage) . ' - ' : '' ?><?= EVENT_NAME ?></title>
 <link rel="icon" href="<?= BASE_URL ?>/assets/img/logo.jpg">
 <meta name="theme-color" content="#0B8A4E">
+<link rel="manifest" href="<?= BASE_URL ?>/manifest">
+<link rel="apple-touch-icon" href="<?= BASE_URL ?>/assets/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JOSPIA 2026">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">

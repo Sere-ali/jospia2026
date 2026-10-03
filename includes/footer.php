@@ -27,5 +27,6 @@
     </div>
 </footer>
 <script src="<?= BASE_URL ?>/assets/js/main.js?v=<?= @filemtime(__DIR__ . "/../assets/js/main.js") ?>" defer></script>
+<script src="<?= BASE_URL ?>/assets/js/pwa.js" data-base="<?= BASE_URL ?>" defer></script>
 </body>
 </html>
