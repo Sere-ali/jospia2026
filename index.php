@@ -40,7 +40,6 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
     </div>
 </header>
 <div class="separateur-tricolore"></div>
-<?php $pb = programmeBandeau($pdo); if ($pb): ?><div class="container" style="margin-top:18px;"><?= $pb ?></div><?php endif; ?>
 
 <section class="section">
     <div class="container">
