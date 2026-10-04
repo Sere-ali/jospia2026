@@ -2,6 +2,22 @@
 require_once __DIR__ . '/../includes/init.php';
 exigerRole(['admin', 'superadmin']);
 
+// Lien secret « niveaux selon les notes » : géré uniquement par le super administrateur
+$succesLien = null;
+if (estSuperAdmin()) {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lien_action'])) {
+        if ($_POST['lien_action'] === 'generer') {
+            $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES ('lien_niveaux', ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([bin2hex(random_bytes(16))]);
+            $succesLien = "Lien créé : copiez-le puis envoyez-le à la commission scientifique.";
+        } elseif ($_POST['lien_action'] === 'desactiver') {
+            $pdo->exec("DELETE FROM parametres WHERE cle = 'lien_niveaux'");
+            $succesLien = "Lien désactivé : il ne fonctionne plus.";
+        }
+    }
+    $tokenLien = (string)$pdo->query("SELECT valeur FROM parametres WHERE cle = 'lien_niveaux'")->fetchColumn();
+}
+
 $nbMembres = $pdo->query("SELECT COUNT(*) FROM membres_commission")->fetchColumn();
 $nbSeminaristes = $pdo->query("SELECT COUNT(*) FROM seminaristes")->fetchColumn();
 $nbTestsFaits = $pdo->query("SELECT COUNT(*) FROM seminaristes WHERE test_complete = 1")->fetchColumn();
@@ -37,6 +53,23 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </div>
 
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
+        <?php if (estSuperAdmin()): ?>
+        <div class="carte" style="margin-bottom:24px;">
+            <h3>🔗 Lien à envoyer à la commission scientifique</h3>
+            <?php if ($succesLien): ?><div class="alert alert-succes"><?= e($succesLien) ?></div><?php endif; ?>
+            <p>Avec ce lien, la commission scientifique remplit la page « Niveaux selon les notes » sans compte. Réservé au super administrateur : ne l'envoyez qu'à la commission scientifique.</p>
+            <?php if ($tokenLien !== ''): ?>
+                <input type="text" readonly value="<?= e(urlSite() . '/niveaux?t=' . $tokenLien) ?>" onclick="this.select()" style="font-family:monospace;">
+                <form method="post" data-no-ajax style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='✔ Copié'">📋 Copier le lien</button>
+                    <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">🔄 Nouveau lien</button>
+                    <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver le lien ?')">⛔ Désactiver</button>
+                </form>
+            <?php else: ?>
+                <form method="post" data-no-ajax><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">🔗 Créer le lien</button></form>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
         <?php if (estSuperAdmin()) echo blocTestEntree($pdo); ?>
 
         <div class="grid grid-3" style="margin-bottom:30px;">

@@ -7,17 +7,7 @@ $erreurs = []; $succes = null;
 $reg = reglageNiveaux();
 $anciensNoms = $reg['noms'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$PARTAGE && isset($_POST['lien_action'])) {
-    if (estSuperAdmin()) {
-        if ($_POST['lien_action'] === 'generer') {
-            $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES ('lien_niveaux', ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([bin2hex(random_bytes(16))]);
-            $succes = "Lien créé : copiez-le puis envoyez-le à la commission scientifique.";
-        } elseif ($_POST['lien_action'] === 'desactiver') {
-            $pdo->exec("DELETE FROM parametres WHERE cle = 'lien_niveaux'");
-            $succes = "Lien désactivé : il ne fonctionne plus.";
-        }
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $noms = []; $anc = []; $fins = [];
     foreach ((array)($_POST['nom'] ?? []) as $i => $n) {
         $noms[] = trim(preg_replace('/\s+/', ' ', (string)$n));
@@ -73,30 +63,12 @@ if ($erreurs && isset($_POST['nom'])) {
 $titrePage = "Niveaux selon les notes";
 require_once __DIR__ . '/../includes/header.php';
 if (!$PARTAGE) require_once __DIR__ . '/../includes/admin_nav.php';
-$tokenLien = (string)$pdo->query("SELECT valeur FROM parametres WHERE cle = 'lien_niveaux'")->fetchColumn();
 ?>
 <section class="section">
     <div class="container">
         <div class="section-titre"><span class="eyebrow">Commission scientifique</span><h2>Niveaux selon les notes</h2></div>
         <?php foreach ($erreurs as $er): ?><div class="alert alert-erreur"><?= e($er) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
-        <?php if (!$PARTAGE && estSuperAdmin()): ?>
-        <div class="carte" style="margin-bottom:16px;">
-            <h3>🔗 Lien à envoyer à la commission scientifique</h3>
-            <?php if ($tokenLien !== ''): $lien = urlSite() . '/niveaux?t=' . $tokenLien; ?>
-                <p>Toute personne qui a ce lien peut modifier les niveaux, sans compte. Ne l'envoyez qu'à la commission scientifique.</p>
-                <input type="text" readonly value="<?= e($lien) ?>" onclick="this.select()" style="font-family:monospace;">
-                <form method="post" data-no-ajax style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='✔ Copié'">📋 Copier le lien</button>
-                    <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">🔄 Nouveau lien</button>
-                    <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver le lien ?')">⛔ Désactiver</button>
-                </form>
-            <?php else: ?>
-                <p>Aucun lien actif. Créez-en un pour que la commission scientifique remplisse les niveaux sans compte.</p>
-                <form method="post" data-no-ajax><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">🔗 Créer le lien</button></form>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
         <form method="post" id="form-niveaux" data-no-ajax>
             <p style="margin-bottom:14px;">Le niveau du séminariste dépend de sa note au test d'entrée (sur 20). Modifiez le <strong>nom</strong> et l'<strong>intervalle</strong> de chaque niveau, ou ajoutez-en un.</p>
             <div class="grid grid-2" id="liste-niveaux"></div>
