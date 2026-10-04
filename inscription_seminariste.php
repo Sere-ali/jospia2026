@@ -45,17 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
-    // PAIEMENT : l'identifiant de transaction est facultatif. Sans identifiant, le paiement reste « en attente » (non validable par la Finance).
+    // PAIEMENT : la commission Finance joue le rôle de l'API (pas d'identifiant de transaction demandé).
     $modeApi = waveApiActive();
-    $referenceTx = trim($_POST['reference_transaction'] ?? '');
-    if ($referenceTx !== '') {
-        if (!preg_match('/^[A-Za-z0-9_\-]{6,60}$/', $referenceTx)) { $erreurs[] = "L'identifiant de transaction Wave est invalide (6 à 60 caractères, lettres et chiffres) - laissez vide si vous n'avez pas encore payé."; }
-        else {
-            $dejaUtilisee = $pdo->prepare("SELECT COUNT(*) FROM paiements WHERE reference_transaction = ?");
-            $dejaUtilisee->execute([$referenceTx]);
-            if ($dejaUtilisee->fetchColumn() > 0) $erreurs[] = "Cet identifiant de transaction a déjà été utilisé pour une autre inscription.";
-        }
-    }
+    $referenceTx = '';
 
     if (empty($erreurs)) {
         $nomPhoto = uploadPhoto($_FILES['photo']);
@@ -226,10 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <fieldset>
                     <legend>Paiement Wave</legend>
                     <div class="help-text" style="margin-bottom:12px;">💙 Frais de participation : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à payer par Wave au <strong><?= e(numeroWaveAffiche()) ?></strong><?php if (lienWavePaiement()): ?> - <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener"><strong>cliquer ici pour payer</strong></a><?php endif; ?>. Si vous avez déjà payé, recopiez l'identifiant de la transaction. <strong>Sans paiement, votre inscription reste « paiement en attente » et ne peut pas être validée.</strong></div>
-                    <div class="form-group">
-                        <label>Identifiant de la transaction Wave <small>(si vous avez déjà payé)</small></label>
-                        <input type="text" name="reference_transaction" maxlength="60" autocomplete="off" placeholder="Ex : T_XXXXXXXXXXXX" value="<?= e($_POST['reference_transaction'] ?? '') ?>">
-                    </div>
                 </fieldset>
                 <?php endif; ?>
 

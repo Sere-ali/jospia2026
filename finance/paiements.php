@@ -53,7 +53,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
     <div class="container">
         <div class="section-titre">
             <h2>Commission Finance - Paiements Wave</h2>
-            <p>Vérifiez chaque référence dans le compte Wave (<?= e(numeroWaveAffiche()) ?>) puis validez ou rejetez. La validation génère le reçu avec QR code du séminariste.</p>
+            <p>Vérifiez chaque paiement dans le compte Wave (<?= e(numeroWaveAffiche()) ?>) puis validez ou rejetez. La validation génère le reçu avec QR code du séminariste.</p>
             <p><a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-primaire">📷 Scanner un reçu</a></p>
         </div>
 
@@ -100,7 +100,6 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <th>Séminariste (Matricule)</th>
                         <th>Contact</th>
                         <th>N° du payeur (contact)</th>
-                        <th>ID transaction</th>
                         <th>Statut</th>
                         <th>Action / Info</th>
                     </tr>
@@ -115,7 +114,6 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         </td>
                         <td><?= e($p['contact']) ?></td>
                         <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
-                        <td style="font-family: monospace;"><?= $p['reference_transaction'] !== '' ? '<strong>' . e($p['reference_transaction']) . '</strong>' : '-' ?></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente</span>
@@ -158,7 +156,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$paiements): ?>
-                    <tr><td colspan="7" class="text-center">Aucun paiement trouvé.</td></tr>
+                    <tr><td colspan="6" class="text-center">Aucun paiement trouvé.</td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>

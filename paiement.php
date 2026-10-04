@@ -39,27 +39,17 @@ $erreur = null;
 $succes = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $reference = trim($_POST['reference_transaction'] ?? '');
-    
-    if (empty($reference)) {
-        $erreur = "Veuillez saisir l'ID de transaction, ou attendez la validation de la commission Finance.";
-    } else {
-        if ($paiement && $paiement['statut'] === 'en attente') {
-            // Mise à jour de la référence
-            $stmt = $pdo->prepare("UPDATE paiements SET reference_transaction = ?, updated_at = NOW() WHERE id = ?");
-            $stmt->execute([$reference, $paiement['id']]);
-        } else {
-            // Nouveau paiement
-            $stmt = $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, ?, 'en attente', ?, ?)");
-            $stmt->execute([$seminariste_id, $reference, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
-        }
-        $succes = "Votre référence de paiement a été soumise avec succès. Elle est en attente de validation par la commission Finance."; $_POST = [];
-        
-        // Recharger le paiement
-        $stmt = $pdo->prepare("SELECT * FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");
-        $stmt->execute([$seminariste_id]);
-        $paiement = $stmt->fetch();
+    // Le paiement est signalé sans identifiant de transaction : la commission Finance vérifie sur son compte Wave et valide.
+    if ($paiement && $paiement['statut'] === 'en attente') {
+        $pdo->prepare("UPDATE paiements SET updated_at = NOW() WHERE id = ?")->execute([$paiement['id']]);
+    } elseif (!$paiement || $paiement['statut'] === 'rejeté') {
+        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, '', 'en attente', ?, ?)")
+            ->execute([$seminariste_id, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
     }
+    if (!$paiement || $paiement['statut'] !== 'validé') { $succes = "Paiement signalé. Il est en attente de validation par la commission Finance."; }
+    $stmt = $pdo->prepare("SELECT * FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");
+    $stmt->execute([$seminariste_id]);
+    $paiement = $stmt->fetch();
 }
 ?>
 
@@ -87,16 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($paiement && $paiement['statut'] === 'rejeté'): ?>
                 <div class="alert alert-erreur text-center">
                     <strong>Paiement rejeté.</strong><br>
-                    Motif : <?= e($paiement['motif_rejet'] ?: 'Référence invalide ou introuvable.') ?>
+                    Motif : <?= e($paiement['motif_rejet'] ?: 'Paiement introuvable sur le compte Wave.') ?>
                 </div>
             <?php elseif ($paiement && $paiement['statut'] === 'en attente'): ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
                     <strong>Paiement en attente de validation.</strong><br>
-                    Numéro Wave du payeur : <strong><?= e($paiement['numero_wave'] ?: '-') ?></strong><?php if ($paiement['reference_transaction'] !== ''): ?><br>ID de transaction : <strong><?= e($paiement['reference_transaction']) ?></strong><?php endif; ?>
+                    Numéro Wave du payeur : <strong><?= e($paiement['numero_wave'] ?: '-') ?></strong>
                 </div>
             <?php else: ?>
                 <div class="alert alert-info text-center" style="background-color: #e2f3f5; color: #0056b3; border: 1px solid #b8daff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                    Afin d'accéder à votre espace et passer le test d'entrée, vous devez d'abord régler les frais de participation de <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> via Wave, puis renseigner la référence de transaction ci-dessous.
+                    Afin d'accéder à votre espace et passer le test d'entrée, vous devez d'abord régler les frais de participation de <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> via Wave, puis cliquer sur « J'ai effectué le paiement » ci-dessous.
                 </div>
             <?php endif; ?>
 

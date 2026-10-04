@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php elseif ($resultat['statut'] === 'en attente'): ?>
                     <div class="alert alert-info" style="background:#fff8e1;border:1px solid #ffe08a;padding:12px;border-radius:8px;">⏳ Paiement en attente de validation par la commission Finance. Revenez un peu plus tard.</div>
                 <?php elseif ($resultat['statut'] === 'rejeté'): ?>
-                    <div class="alert alert-erreur">Paiement rejeté. Reconnectez-vous pour soumettre une nouvelle référence.</div>
+                    <div class="alert alert-erreur">Paiement rejeté. Reconnectez-vous pour refaire le paiement.</div>
                 <?php else: ?>
                     <div class="alert alert-erreur">Aucun paiement enregistré. Vos identifiants seront disponibles après paiement et validation.</div>
                 <?php endif; ?>
