@@ -995,3 +995,24 @@ function sectionsRenommer(PDO $pdo) {
         $st->execute();
     } catch (Throwable $e) { error_log('Renommage section : ' . $e->getMessage()); }
 }
+
+
+/** Liens courts partageables (/l/CODE), créés uniquement par le super administrateur. */
+const LIENS_COURTS = [
+    'seminariste' => ['📚 Formulaire des séminaristes', '/inscription_seminariste', 6],
+    'commission'  => ['👥 Formulaire des membres de commission', '/inscription_commission', 6],
+    'visiteur'    => ['🚶 Formulaire des visiteurs', '/visiteur', 6],
+    'niveaux'     => ['🎚️ Niveaux selon les notes (commission scientifique)', null, 10],
+];
+function liensCourtsPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS liens_courts (cible VARCHAR(20) NOT NULL PRIMARY KEY, code VARCHAR(20) NOT NULL UNIQUE, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB");
+}
+function codeCourt($longueur) {
+    $alpha = 'abcdefghjkmnpqrstuvwxyz23456789';
+    $c = '';
+    for ($i = 0; $i < $longueur; $i++) { $c .= $alpha[random_int(0, strlen($alpha) - 1)]; }
+    return $c;
+}

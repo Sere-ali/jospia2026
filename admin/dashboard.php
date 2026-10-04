@@ -2,20 +2,24 @@
 require_once __DIR__ . '/../includes/init.php';
 exigerRole(['admin', 'superadmin']);
 
-// Lien secret « niveaux selon les notes » : géré uniquement par le super administrateur
-$succesLien = null;
+// Liens courts à partager : créés uniquement par le super administrateur
+$succesLien = null; $liensCourts = [];
 if (estSuperAdmin()) {
-    $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lien_action'])) {
+    liensCourtsPreparer($pdo);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['lien_action'], $_POST['cible']) && isset(LIENS_COURTS[$_POST['cible']])) {
+        $cible = $_POST['cible'];
         if ($_POST['lien_action'] === 'generer') {
-            $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES ('lien_niveaux', ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")->execute([bin2hex(random_bytes(16))]);
-            $succesLien = "Lien créé : copiez-le puis envoyez-le à la commission scientifique.";
+            $pdo->prepare("DELETE FROM liens_courts WHERE cible = ?")->execute([$cible]);
+            for ($t = 0; $t < 5; $t++) {
+                try { $pdo->prepare("INSERT INTO liens_courts (cible, code) VALUES (?, ?)")->execute([$cible, codeCourt(LIENS_COURTS[$cible][2])]); break; } catch (Throwable $e) {}
+            }
+            $succesLien = "Lien prêt : copiez-le puis envoyez-le.";
         } elseif ($_POST['lien_action'] === 'desactiver') {
-            $pdo->exec("DELETE FROM parametres WHERE cle = 'lien_niveaux'");
+            $pdo->prepare("DELETE FROM liens_courts WHERE cible = ?")->execute([$cible]);
             $succesLien = "Lien désactivé : il ne fonctionne plus.";
         }
     }
-    $tokenLien = (string)$pdo->query("SELECT valeur FROM parametres WHERE cle = 'lien_niveaux'")->fetchColumn();
+    foreach ($pdo->query("SELECT cible, code FROM liens_courts")->fetchAll() as $r) { $liensCourts[$r['cible']] = $r['code']; }
 }
 
 $nbMembres = $pdo->query("SELECT COUNT(*) FROM membres_commission")->fetchColumn();
@@ -55,19 +59,24 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
         <?php if (estSuperAdmin()): ?>
         <div class="carte" style="margin-bottom:24px;">
-            <h3>🔗 Lien à envoyer à la commission scientifique</h3>
+            <h3>🔗 Liens à partager</h3>
             <?php if ($succesLien): ?><div class="alert alert-succes"><?= e($succesLien) ?></div><?php endif; ?>
-            <p>Avec ce lien, la commission scientifique remplit la page « Niveaux selon les notes » sans compte. Réservé au super administrateur : ne l'envoyez qu'à la commission scientifique.</p>
-            <?php if ($tokenLien !== ''): ?>
-                <input type="text" readonly value="<?= e(urlSite() . '/niveaux?t=' . $tokenLien) ?>" onclick="this.select()" style="font-family:monospace;">
-                <form method="post" data-no-ajax style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='✔ Copié'">📋 Copier le lien</button>
-                    <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">🔄 Nouveau lien</button>
-                    <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver le lien ?')">⛔ Désactiver</button>
-                </form>
-            <?php else: ?>
-                <form method="post" data-no-ajax><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">🔗 Créer le lien</button></form>
-            <?php endif; ?>
+            <p>Liens courts créés et gérés uniquement par le super administrateur. Le lien « Niveaux selon les notes » permet à la commission scientifique de remplir la page sans compte : ne l'envoyez qu'à elle.</p>
+            <?php foreach (LIENS_COURTS as $cle => $def): $code = $liensCourts[$cle] ?? ''; ?>
+            <div style="border-top:1px solid #e5e5e5;padding:12px 0;">
+                <strong><?= e($def[0]) ?></strong>
+                <?php if ($code !== ''): ?>
+                    <input type="text" readonly value="<?= e(urlSite() . '/l/' . $code) ?>" onclick="this.select()" style="font-family:monospace;margin:6px 0;">
+                    <form method="post" data-no-ajax style="display:flex;gap:8px;flex-wrap:wrap;"><input type="hidden" name="cible" value="<?= e($cle) ?>">
+                        <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='✔ Copié'">📋 Copier</button>
+                        <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">🔄 Nouveau</button>
+                        <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver ce lien ?')">⛔ Désactiver</button>
+                    </form>
+                <?php else: ?>
+                    <form method="post" data-no-ajax style="margin-top:6px;"><input type="hidden" name="cible" value="<?= e($cle) ?>"><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">🔗 Créer le lien</button></form>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
         </div>
         <?php endif; ?>
         <?php if (estSuperAdmin()) echo blocTestEntree($pdo); ?>
