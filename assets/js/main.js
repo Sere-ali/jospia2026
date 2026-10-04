@@ -837,3 +837,71 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
 })();
+
+
+/* Envoi de fichiers fiable sur téléphone : le fichier choisi est copié en mémoire (et les photos réduites) dès la sélection,
+   puis c'est cette copie qui est envoyée. Évite l'erreur Chrome « ERR_UPLOAD_FILE_CHANGED ». */
+(function () {
+    if (!window.fetch || !window.FormData || !window.Promise) return;
+    var copies = new WeakMap();
+
+    function copier(file) {
+        var lireBrut = function () { return new Promise(function (ok, ko) {
+            var r = new FileReader();
+            r.onload = function () { ok({ blob: new Blob([r.result], { type: file.type }), nom: file.name }); };
+            r.onerror = function () { ko(r.error); };
+            r.readAsArrayBuffer(file);
+        }); };
+        if (!/^image\/(jpeg|png|webp)$/i.test(file.type) || !window.createImageBitmap) return lireBrut();
+        return lireBrut().then(function (brut) {
+            return createImageBitmap(brut.blob).then(function (img) {
+                var max = 1600, k = Math.min(1, max / Math.max(img.width, img.height));
+                if (k === 1 && brut.blob.size < 1500000) return brut;
+                var c = document.createElement('canvas');
+                c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                return new Promise(function (ok) {
+                    c.toBlob(function (b) { ok(b ? { blob: b, nom: file.name.replace(/\.[^.]+$/, '') + '.jpg' } : brut); }, 'image/jpeg', 0.88);
+                });
+            }).catch(function () { return brut; });
+        });
+    }
+
+    document.addEventListener('change', function (e) {
+        var i = e.target;
+        if (!i || i.type !== 'file') return;
+        if (!i.files || !i.files[0]) { copies.delete(i); return; }
+        var p = copier(i.files[0]); p.catch(function () {});
+        copies.set(i, p);
+    });
+
+    document.addEventListener('submit', function (e) {
+        var f = e.target;
+        if (!f || !f.matches || (f.method || '').toLowerCase() !== 'post' || f.hasAttribute('data-no-file-fix')) return;
+        var champs = [].filter.call(f.querySelectorAll('input[type=file]'), function (i) { return i.files && i.files.length; });
+        if (!champs.length) return;
+        e.preventDefault();
+        var sub = e.submitter;
+        var boutons = f.querySelectorAll('button[type=submit], button:not([type])');
+        var textes = [].map.call(boutons, function (b) { return b.innerHTML; });
+        boutons.forEach(function (b) { b.disabled = true; });
+        if (sub) sub.innerHTML = 'Envoi en cours…';
+        var rendre = function () { boutons.forEach(function (b, k) { b.disabled = false; b.innerHTML = textes[k]; }); };
+        Promise.all(champs.map(function (i) {
+            var p = copies.get(i) || copier(i.files[0]);
+            return p.then(function (c) { return { input: i, c: c }; });
+        })).then(function (liste) {
+            var fd;
+            try { fd = new FormData(f, sub || undefined); } catch (x) { fd = new FormData(f); }
+            liste.forEach(function (x) { fd.delete(x.input.name); fd.append(x.input.name, x.c.blob, x.c.nom); });
+            return fetch(f.getAttribute('action') || location.href, { method: 'POST', body: fd, credentials: 'same-origin' });
+        }).then(function (r) {
+            if (r.redirected) { location.href = r.url; return; }
+            return r.text().then(function (h) { document.open(); document.write(h); document.close(); });
+        }).catch(function () {
+            rendre();
+            alert("Envoi impossible. Choisissez à nouveau le fichier (depuis « Fichiers » ou « Galerie ») puis réessayez.");
+            champs.forEach(function (i) { i.value = ''; copies.delete(i); });
+        });
+    }, true);
+})();

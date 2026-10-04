@@ -78,29 +78,4 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </div>
     </div>
 </section>
-<script>
-/* Android : copie le fichier en mémoire dès qu'il est choisi (évite ERR_UPLOAD_FILE_CHANGED), puis envoie la copie */
-(function () {
-    var f = document.getElementById('form-prog'); if (!f) return;
-    var inp = f.querySelector('input[type=file]'), copie = null, nom = '', type = '';
-    inp.addEventListener('change', function () {
-        copie = null;
-        var fi = inp.files[0]; if (!fi) return;
-        nom = fi.name; type = fi.type;
-        var rd = new FileReader();
-        rd.onload = function () { copie = new Blob([rd.result], { type: type }); };
-        rd.readAsArrayBuffer(fi);
-    });
-    f.addEventListener('submit', function (e) {
-        if (!window.fetch || !window.FormData) return;
-        e.preventDefault();
-        if (!copie) { alert("Choisissez le fichier à nouveau (sélectionnez-le depuis « Fichiers » ou « Téléchargements »)."); inp.value = ''; return; }
-        var b = f.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Envoi…';
-        var d = new FormData(); d.append('titre', f.titre.value); d.append('fichier', copie, nom);
-        fetch(location.href, { method: 'POST', body: d, credentials: 'same-origin' })
-            .then(function () { location.reload(); })
-            .catch(function () { b.disabled = false; b.textContent = 'Ajouter le fichier'; alert('Envoi impossible : réessayez.'); });
-    });
-})();
-</script>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
