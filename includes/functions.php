@@ -132,36 +132,42 @@ function nomCommissionComplet($commission) {
     return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
 }
 
-/** Réglage des niveaux (noms + notes), modifiable par la commission scientifique. Défaut : Primaire <5, Secondaire <9, Universitaire <13, Leader. */
-function reglageNiveaux() {
+/** Réglage des niveaux (noms + notes de passage), modifiable par la commission scientifique. Défaut : Primaire <5, Secondaire <9, Universitaire <13, Leader. */
+function reglageNiveaux($relire = false) {
     static $c = null;
-    if ($c !== null) return $c;
+    if ($c !== null && !$relire) return $c;
     $c = ['seuils' => [5.0, 9.0, 13.0], 'noms' => ['Primaire', 'Secondaire', 'Universitaire', 'Leader']];
     try {
         global $pdo;
-        foreach (['seuils_niveaux' => 'seuils', 'noms_niveaux' => 'noms'] as $cle => $k) {
+        $lire = function ($cle) use ($pdo) {
             $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = ?");
             $st->execute([$cle]);
-            $j = json_decode((string)$st->fetchColumn(), true);
-            if ($k === 'seuils' && is_array($j) && count($j) === 3 && $j[0] > 0 && $j[0] < $j[1] && $j[1] < $j[2] && $j[2] <= 20) $c['seuils'] = array_map('floatval', $j);
-            if ($k === 'noms' && is_array($j) && count($j) === 4 && count(array_filter($j, 'strlen')) === 4) $c['noms'] = array_map('strval', $j);
+            return json_decode((string)$st->fetchColumn(), true);
+        };
+        $se = $lire('seuils_niveaux'); $no = $lire('noms_niveaux');
+        if (is_array($se) && is_array($no) && count($no) >= 2 && count($no) <= 12 && count($se) === count($no) - 1
+            && count(array_filter($no, 'strlen')) === count($no)) {
+            $ok = $se[0] > 0 && end($se) <= 20;
+            for ($i = 1; $i < count($se); $i++) { if (!($se[$i - 1] < $se[$i])) $ok = false; }
+            if ($ok) { $c = ['seuils' => array_map('floatval', $se), 'noms' => array_map('strval', $no)]; }
         }
     } catch (Throwable $e) {}
     return $c;
 }
 function seuilsNiveaux() { return reglageNiveaux()['seuils']; }
 function nomsNiveaux() { return reglageNiveaux()['noms']; }
-/** Liste ordonnée des niveaux pour les filtres : Pépinière + les 4 niveaux. */
+/** Liste ordonnée des niveaux pour les filtres : Pépinière + les niveaux définis. */
 function listeNiveaux() { return array_merge(['Pépinière'], nomsNiveaux()); }
+
+/** Niveau correspondant à une note /20 selon des noms et seuils donnés */
+function niveauPourNote($note, array $noms, array $seuils) {
+    foreach ($seuils as $i => $seuil) { if ($note < $seuil) return $noms[$i]; }
+    return end($noms);
+}
 
 /** Calcule le niveau d'affectation à partir de la note /20 (noms et notes réglables) */
 function determinerNiveauTest($note) {
-    list($a, $b, $c) = seuilsNiveaux();
-    $n = nomsNiveaux();
-    if ($note < $a) return $n[0];
-    if ($note < $b) return $n[1];
-    if ($note < $c) return $n[2];
-    return $n[3];
+    return niveauPourNote($note, nomsNiveaux(), seuilsNiveaux());
 }
 
 /** Indique si le Super Admin / Admin a publié les résultats (bulletins visibles par les séminaristes) */
