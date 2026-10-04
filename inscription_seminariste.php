@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Mode manuel : le paiement a été fait par la personne, la commission Finance contrôle l'identifiant de transaction.
-        $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx);
+        $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx, null, (($_POST['paye'] ?? 'non') === 'oui') ? 1 : 0);
         $stC = $pdo->prepare("SELECT * FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' LIMIT 1");
         $stC->execute([$r['id']]);
         if (!estConnecte() && ($compteNew = $stC->fetch())) {
@@ -227,7 +227,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div id="bloc-wave" style="display:none;margin-top:14px;text-align:center;">
                     <p style="margin:0 0 8px;">Étape finale : payez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> avec Wave, puis revenez ici : un bouton apparaîtra pour accéder à votre page (identifiants, fiche, reçu).</p>
                     <a href="<?= e($lienW) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave btn-block">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
-                    <button type="submit" id="btn-acces" class="btn btn-primaire btn-block btn-envoi" style="display:none;margin-top:12px;"><span>✔ Paiement effectué : accéder à ma page</span><i aria-hidden="true">→</i></button>
+                    <button type="submit" id="btn-acces" name="paye" value="oui" class="btn btn-primaire btn-block btn-envoi" style="display:none;margin-top:12px;"><span>✔ Paiement effectué : accéder à ma page</span><i aria-hidden="true">→</i></button>
+                    <button type="submit" id="btn-plustard" name="paye" value="non" class="btn btn-outline btn-block" style="margin-top:10px;">⏳ Je n'ai pas pu payer maintenant : accéder à ma page</button>
                 </div>
                 <script>
                 (function () {

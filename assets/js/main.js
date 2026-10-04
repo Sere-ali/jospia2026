@@ -881,7 +881,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var champs = [].filter.call(f.querySelectorAll('input[type=file]'), function (i) { return i.files && i.files.length; });
         if (!champs.length) return;
         e.preventDefault();
-        var sub = e.submitter;
+        var sub = e.submitter, fd0;
+        try { fd0 = new FormData(f, sub || undefined); } catch (x) { fd0 = new FormData(f); } // avant de désactiver les boutons (sinon le bouton cliqué est perdu)
         var boutons = f.querySelectorAll('button[type=submit], button:not([type])');
         var textes = [].map.call(boutons, function (b) { return b.innerHTML; });
         boutons.forEach(function (b) { b.disabled = true; });
@@ -891,8 +892,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var p = copies.get(i) || copier(i.files[0]);
             return p.then(function (c) { return { input: i, c: c }; });
         })).then(function (liste) {
-            var fd;
-            try { fd = new FormData(f, sub || undefined); } catch (x) { fd = new FormData(f); }
+            var fd = fd0;
             liste.forEach(function (x) { fd.delete(x.input.name); fd.append(x.input.name, x.c.blob, x.c.nom); });
             return fetch(f.getAttribute('action') || location.href, { method: 'POST', body: fd, credentials: 'same-origin' });
         }).then(function (r) {

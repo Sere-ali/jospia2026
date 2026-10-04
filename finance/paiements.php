@@ -35,7 +35,7 @@ $query = "SELECT p.*, s.nom_prenoms, s.matricule, s.contact, s.anyama, s.section
           FROM paiements p
           JOIN seminaristes s ON p.seminariste_id = s.id
           LEFT JOIN comptes c ON p.admin_validateur_id = c.id
-          ORDER BY FIELD(p.statut, 'en attente') DESC, p.created_at DESC";
+          ORDER BY (p.statut = 'en attente' AND p.paye_declare = 1) DESC, (p.statut = 'en attente') DESC, p.created_at DESC";
 $tous = $pdo->query($query)->fetchAll();
 // Liste principale : paiements avec ID de transaction (ou déjà traités).
 // Sans ID = paiement non effectué / échoué (solde insuffisant...) : jamais validable.
@@ -58,10 +58,10 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
         </div>
 
         <?php
-        $stats = ['total' => count($paiements), 'valides' => 0, 'en_attente' => 0, 'rejetes' => 0];
+        $stats = ['total' => count($paiements), 'valides' => 0, 'payes' => 0, 'en_attente' => 0, 'rejetes' => 0];
         foreach ($paiements as $p) {
             if ($p['statut'] === 'validé') $stats['valides']++;
-            elseif ($p['statut'] === 'en attente') $stats['en_attente']++;
+            elseif ($p['statut'] === 'en attente') { if (!empty($p['paye_declare'])) $stats['payes']++; else $stats['en_attente']++; }
             elseif ($p['statut'] === 'rejeté') $stats['rejetes']++;
         }
         $montantTotal = $stats['valides'] * FRAIS_PARTICIPATION;
@@ -82,9 +82,13 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                 <div style="font-size: 2rem; font-weight: bold; color: var(--couleur-succes);"><?= $stats['valides'] ?></div>
                 <div style="color: var(--texte-doux); font-size: 0.9rem;">Paiements Validés</div>
             </div>
+            <div class="carte text-center" style="border-left: 4px solid #1cc6f4;">
+                <div style="font-size: 2rem; font-weight: bold; color: #1cc6f4;"><?= $stats['payes'] ?></div>
+                <div style="color: var(--texte-doux); font-size: 0.9rem;">Payés (à valider)</div>
+            </div>
             <div class="carte text-center" style="border-left: 4px solid #f39c12;">
                 <div style="font-size: 2rem; font-weight: bold; color: #f39c12;"><?= $stats['en_attente'] ?></div>
-                <div style="color: var(--texte-doux); font-size: 0.9rem;">En Attente</div>
+                <div style="color: var(--texte-doux); font-size: 0.9rem;">En attente de paiement</div>
             </div>
             <div class="carte text-center" style="border-left: 4px solid var(--couleur-erreur);">
                 <div style="font-size: 2rem; font-weight: bold; color: var(--couleur-erreur);"><?= $stats['rejetes'] ?></div>
@@ -116,7 +120,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
-                                <span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente</span>
+                                <?php if (!empty($p['paye_declare'])): ?><span class="tag tag-vert" style="background:#1cc6f4;color:#00323f;">💙 Payé : à valider</span><?php else: ?><span class="tag tag-vert" style="background:#ffc107;color:#000;">⏳ En attente de paiement</span><?php endif; ?>
                             <?php elseif ($p['statut'] === 'validé'): ?>
                                 <span class="tag tag-vert">Validé</span>
                             <?php else: ?>
@@ -126,7 +130,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <div style="display: flex; gap: 5px;">
-                                    <form method="post" onsubmit="return confirm('Confirmer que les 5 100 FCFA ont bien été reçus sur Wave ?');">
+                                    <form method="post" onsubmit="return confirm('<?= !empty($p['paye_declare']) ? 'Confirmer que les' : 'Paiement non signalé par la personne. Valider quand même si les' ?> 5 100 FCFA ont bien été reçus sur Wave ?');">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="valider">
                                         <button type="submit" class="btn btn-primaire btn-sm">Valider</button>

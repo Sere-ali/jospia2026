@@ -620,7 +620,7 @@ function lettreRapportHtml(array $r, $actions = '') {
 /* ------------------------------------------------------------------ */
 
 /** Crée le séminariste, son compte et sa ligne de paiement. $d : données validées du formulaire. */
-function creerInscriptionSeminariste(PDO $pdo, array $d, $nomPhoto, $referenceTx = '', $waveSessionId = null) {
+function creerInscriptionSeminariste(PDO $pdo, array $d, $nomPhoto, $referenceTx = '', $waveSessionId = null, $payeDeclare = 1) {
     $dortoir = affecterDortoir($pdo, $d['genre'], $d['age']);
     $matricule = genererMatriculeSeminariste($pdo);
     $niveauAffecte = ($dortoir === 'Pépinière') ? 'Pépinière' : null;
@@ -640,8 +640,9 @@ function creerInscriptionSeminariste(PDO $pdo, array $d, $nomPhoto, $referenceTx
     $pdo->prepare("INSERT INTO comptes (identifiant, mot_de_passe, mdp_initial, role, seminariste_id, nom_affiche) VALUES (?,?,?,?,?,?)")
         ->execute([$identifiant, password_hash($motDePasse, PASSWORD_DEFAULT), $motDePasse, 'seminariste', $sid, $d['nom']]);
 
-    $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, wave_session_id) VALUES (?, ?, 'en attente', ?, ?, ?)")
-        ->execute([$sid, (string)$referenceTx, $d['contact'], FRAIS_PARTICIPATION, $waveSessionId]);
+    paiementsPreparer($pdo);
+    $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, wave_session_id, paye_declare) VALUES (?, ?, 'en attente', ?, ?, ?, ?)")
+        ->execute([$sid, (string)$referenceTx, $d['contact'], FRAIS_PARTICIPATION, $waveSessionId, $payeDeclare ? 1 : 0]);
     $pid = (int)$pdo->lastInsertId();
     return ['id' => $sid, 'paiement_id' => $pid, 'identifiant' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir];
 }
@@ -1015,4 +1016,19 @@ function codeCourt($longueur) {
     $c = '';
     for ($i = 0; $i < $longueur; $i++) { $c .= $alpha[random_int(0, strlen($alpha) - 1)]; }
     return $c;
+}
+
+
+/** Colonne « paye_declare » : 1 = la personne a indiqué avoir payé (à valider par la Finance), 0 = en attente de paiement. */
+function paiementsPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    try {
+        if (!$pdo->query("SHOW COLUMNS FROM paiements LIKE 'paye_declare'")->fetch()) {
+            $pdo->exec("ALTER TABLE paiements ADD paye_declare TINYINT(1) NOT NULL DEFAULT 0");
+            // Paiements déjà en attente avant cette évolution : le parcours impliquait que la personne avait payé
+            $pdo->exec("UPDATE paiements SET paye_declare = 1 WHERE statut = 'en attente'");
+        }
+    } catch (Throwable $e) { error_log('Migration paye_declare : ' . $e->getMessage()); }
 }

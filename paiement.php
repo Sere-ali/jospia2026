@@ -41,9 +41,9 @@ $succes = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Le paiement est signalé sans identifiant de transaction : la commission Finance vérifie sur son compte Wave et valide.
     if ($paiement && $paiement['statut'] === 'en attente') {
-        $pdo->prepare("UPDATE paiements SET updated_at = NOW() WHERE id = ?")->execute([$paiement['id']]);
+        $pdo->prepare("UPDATE paiements SET paye_declare = 1, updated_at = NOW() WHERE id = ?")->execute([$paiement['id']]);
     } elseif (!$paiement || $paiement['statut'] === 'rejeté') {
-        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant) VALUES (?, '', 'en attente', ?, ?)")
+        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, paye_declare) VALUES (?, '', 'en attente', ?, ?, 1)")
             ->execute([$seminariste_id, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
     }
     if (!$paiement || $paiement['statut'] !== 'validé') { $succes = "Paiement signalé. Il est en attente de validation par la commission Finance."; }
