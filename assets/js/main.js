@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // ============================================================
 (function () {
     'use strict';
-    var PAGES_LIVE = /\/(admin|finance|securite|espace)\/(?!edit_|modifier|critiquer|download|pdf|rapport_pdf|bulletin\b|bulletin_pdf|quiz|compte|migrer|correction|parametres|seuils_niveaux|programme)[a-z_]+(\.php)?$|\/(visiteur|paiement|statut)(\.php)?$/;
+    var PAGES_LIVE = /\/(admin|finance|securite|espace)\/(?!edit_|modifier|critiquer|download|pdf|rapport_pdf|bulletin\b|bulletin_pdf|quiz|compte|migrer|correction|parametres|seuils_niveaux|programme|liens)[a-z_]+(\.php)?$|\/(visiteur|paiement|statut)(\.php)?$/;
     var chemin = location.pathname;
     if (!PAGES_LIVE.test(chemin)) return;
     var ACTIONS = ['supprimer', 'desactiver', 'publier', 'nouveau', 'activer', 'reinit'];

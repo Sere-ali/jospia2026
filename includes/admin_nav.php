@@ -42,6 +42,7 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
         <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-sm <?= strpos($_SERVER['PHP_SELF'], '/securite/') !== false ? 'btn-primaire' : 'btn-outline' ?>">🛡️ Commission sécurité</a>
         <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm <?= in_array($pageAdmin, ['comite_manageriale.php','rapports.php','sorties_mg.php'], true) ? 'btn-primaire' : 'btn-or' ?>">👔 Comité managérial</a>
         <?php if (estSuperAdmin()): ?>
+            <a href="<?= BASE_URL ?>/admin/liens" class="btn btn-sm <?= $pageAdmin==='liens.php'?'btn-primaire':'btn-or' ?>">🔗 Liens</a>
             <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
             <a href="<?= BASE_URL ?>/admin/users" class="btn btn-sm <?= $pageAdmin==='users.php'?'btn-primaire':'btn-outline' ?>">🔑 Comptes admin</a>
             <a href="<?= BASE_URL ?>/admin/activite" class="btn btn-sm <?= $pageAdmin==='activite.php'?'btn-primaire':'btn-outline' ?>">📋 Activité journalière</a>
