@@ -132,11 +132,27 @@ function nomCommissionComplet($commission) {
     return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
 }
 
+/** Seuils de niveau (note /20) : modifiables par la commission scientifique. Défaut : 5 / 9 / 13. */
+function seuilsNiveaux() {
+    static $c = null;
+    if ($c !== null) return $c;
+    $c = [5.0, 9.0, 13.0];
+    try {
+        global $pdo;
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'seuils_niveaux'");
+        $st->execute();
+        $j = json_decode((string)$st->fetchColumn(), true);
+        if (is_array($j) && count($j) === 3 && $j[0] > 0 && $j[0] < $j[1] && $j[1] < $j[2] && $j[2] <= 20) $c = array_map('floatval', $j);
+    } catch (Throwable $e) {}
+    return $c;
+}
+
 /** Calcule le niveau d'affectation académique/spirituel à partir de la note /20 */
 function determinerNiveauTest($note) {
-    if ($note < 5)  return 'Primaire';
-    if ($note < 9)  return 'Secondaire';
-    if ($note < 13) return 'Universitaire';
+    list($a, $b, $c) = seuilsNiveaux();
+    if ($note < $a) return 'Primaire';
+    if ($note < $b) return 'Secondaire';
+    if ($note < $c) return 'Universitaire';
     return 'Leader';
 }
 

@@ -16,6 +16,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="grid grid-2">
             <?php if (estScientifique() || estSuperAdmin()): ?>
             <div class="carte"><h3>📅 Programme journalier</h3><p>Ajouter le fichier du programme et le publier pour tout le monde.</p><a href="<?= BASE_URL ?>/admin/programme" class="btn btn-primaire btn-sm">Ouvrir</a></div>
+            <div class="carte"><h3>🎚️ Niveaux selon les notes</h3><p>Modifier les notes qui déterminent le niveau (Primaire, Secondaire, Universitaire, Leader).</p><a href="<?= BASE_URL ?>/admin/seuils_niveaux" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <?php endif; ?>
             <div class="carte"><h3>📝 Saisie des notes</h3><p>Saisir les notes des séminaristes par matière.</p><a href="<?= BASE_URL ?>/admin/notes" class="btn btn-primaire btn-sm">Ouvrir</a></div>
             <div class="carte"><h3>🖨️ Bulletins</h3><p>Télécharger les bulletins en PDF (2 par feuille).</p><a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-primaire btn-sm">Ouvrir</a></div>
