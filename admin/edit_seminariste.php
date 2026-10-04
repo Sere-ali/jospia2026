@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = numeroLocal($_POST['contact'] ?? '');
     $parentNom = trim($_POST['parent_nom'] ?? '');
     $parentLien = trim($_POST['parent_lien'] ?? '');
-    $parentContact = preg_replace('/\D+/', '', $_POST['parent_contact'] ?? '');
+    $parentContact = numeroLocal($_POST['parent_contact'] ?? '');
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($genre, ['Masculin', 'Féminin'], true)) $erreurs[] = "Veuillez préciser le genre.";
@@ -44,10 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($section === '') $erreurs[] = "La section est obligatoire.";
     if ($lieuResidence === '') $erreurs[] = "Le lieu de résidence est obligatoire.";
     if ($age < 5 || $age > 100) $erreurs[] = "Veuillez indiquer un âge valide.";
-    if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
+    if ($contact === '' || !preg_match('/^[0-9]{10}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (10 chiffres).";
     if ($maladie === 'Autre' && $maladieAutre === '') $erreurs[] = "Veuillez préciser la maladie.";
     if ($parentNom === '') $erreurs[] = "Le nom du parent/tuteur est obligatoire.";
-    if ($parentContact === '' || !preg_match('/^[0-9]{8,15}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (8 à 15).";
+    if ($parentContact === '' || !preg_match('/^[0-9]{10}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (10 chiffres).";
 
     $nomPhoto = $s['photo'];
     if (!empty($_FILES['photo']['name'])) {
@@ -131,7 +131,7 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
                 </div>
                 <div class="form-group">
                     <label>Contact <span class="req">*</span></label>
-                    <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($s['contact']) ?>">
+                    <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" title="Chiffres uniquement (10 chiffres)" required value="<?= e($s['contact']) ?>">
                 </div>
             </fieldset>
 
@@ -184,7 +184,7 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
                 </div>
                 <div class="form-group">
                     <label>Contact du parent/tuteur <span class="req">*</span></label>
-                    <input type="tel" name="parent_contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($s['parent_contact']) ?>">
+                    <input type="tel" name="parent_contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" title="Chiffres uniquement (10 chiffres)" required value="<?= e($s['parent_contact']) ?>">
                 </div>
             </fieldset>
 

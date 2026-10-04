@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'modifier' && $id) {
         $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? ''); $motif = mb_substr(trim($_POST['motif'] ?? ''), 0, 255);
         $arr = dateHeureSaisie($_POST['heure_arrivee'] ?? ''); $sor = dateHeureSaisie($_POST['heure_sortie'] ?? '');
-        if ($nom === '' || !preg_match('/^[0-9]{8,15}$/', $contact) || !$arr) { $erreurs[] = "Nom, contact (8 à 15 chiffres) et heure d'arrivée sont obligatoires."; }
+        if ($nom === '' || !preg_match('/^[0-9]{10}$/', $contact) || !$arr) { $erreurs[] = "Nom, contact (10 chiffres) et heure d'arrivée sont obligatoires."; }
         elseif ($sor && strtotime($sor) < strtotime($arr)) { $erreurs[] = "L'heure de sortie ne peut pas être avant l'arrivée."; }
         else {
             $pdo->prepare("UPDATE visiteurs SET nom_prenoms=?, contact=?, motif=?, heure_arrivee=?, heure_sortie=? WHERE id=?")->execute([$nom, $contact, $motif, $arr, $sor, $id]);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'ajouter') {
         $nom = trim($_POST['nom_prenoms'] ?? ''); $contact = numeroLocal($_POST['contact'] ?? ''); $motif = mb_substr(trim($_POST['motif'] ?? ''), 0, 255);
         $arr = dateHeureSaisie($_POST['heure_arrivee'] ?? '') ?: date('Y-m-d H:i:s'); $sor = dateHeureSaisie($_POST['heure_sortie'] ?? '');
-        if ($nom === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) { $erreurs[] = "Nom et contact (8 à 15 chiffres) obligatoires."; }
+        if ($nom === '' || !preg_match('/^[0-9]{10}$/', $contact)) { $erreurs[] = "Nom et contact (10 chiffres) obligatoires."; }
         elseif ($sor && strtotime($sor) < strtotime($arr)) { $erreurs[] = "L'heure de sortie ne peut pas être avant l'arrivée."; }
         else {
             $pdo->prepare("INSERT INTO visiteurs (nom_prenoms, contact, motif, heure_arrivee, heure_sortie) VALUES (?,?,?,?,?)")->execute([$nom, $contact, $motif, $arr, $sor]);
@@ -78,7 +78,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
             <h3><?= $edit ? '✏️ Modifier le visiteur' : '➕ Ajouter un visiteur' ?></h3>
             <div class="form-row">
                 <div class="form-group"><label>Nom et prénoms</label><input type="text" name="nom_prenoms" required value="<?= e($edit['nom_prenoms'] ?? '') ?>"></div>
-                <div class="form-group"><label>Contact</label><input type="tel" name="contact" inputmode="numeric" maxlength="15" required value="<?= e($edit['contact'] ?? '') ?>"></div>
+                <div class="form-group"><label>Contact</label><input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required value="<?= e($edit['contact'] ?? '') ?>"></div>
             </div>
             <div class="form-group"><label>Motif de la visite</label><input type="text" name="motif" maxlength="255" value="<?= e($edit['motif'] ?? '') ?>"></div>
             <div class="form-row">

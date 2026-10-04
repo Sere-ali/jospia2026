@@ -8,8 +8,8 @@ $erreurs = []; $succes = null; $mode = $_POST['mode'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = numeroLocal($_POST['contact'] ?? '');
-    if ($mode === 'arrivee' && ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact))) {
-        $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
+    if ($mode === 'arrivee' && ($contact === '' || !preg_match('/^[0-9]{10}$/', $contact))) {
+        $erreurs[] = "Le contact doit contenir uniquement des chiffres (10 chiffres).";
     }
     if ($mode === 'arrivee' && !$erreurs) {
         $nom = trim($_POST['nom_prenoms'] ?? '');
@@ -69,7 +69,7 @@ $presents = $pdo->query("SELECT id, nom_prenoms, motif, heure_arrivee FROM visit
                     <div class="form-group"><label>Nom et prénoms <span class="req">*</span></label>
                         <input type="text" name="nom_prenoms" required value="<?= e($mode === 'arrivee' ? ($_POST['nom_prenoms'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Contact (téléphone) <span class="req">*</span></label>
-                        <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" required placeholder="Ex : 0700000000" value="<?= e($mode === 'arrivee' ? ($_POST['contact'] ?? '') : '') ?>"></div>
+                        <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="Ex : 0700000000" value="<?= e($mode === 'arrivee' ? ($_POST['contact'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Motif de la visite <span class="req">*</span></label>
                         <input type="text" name="motif" required maxlength="255" placeholder="Ex : Visite à un séminariste, livraison, rendez-vous..." value="<?= e($mode === 'arrivee' ? ($_POST['motif'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Heure d'arrivée</label>

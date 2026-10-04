@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($nom === '') $erreurs[] = "Le nom et prénoms sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir une commission valide.";
-    if ($contact === '' || !preg_match('/^[0-9]{8,15}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (8 à 15).";
+    if ($contact === '' || !preg_match('/^[0-9]{10}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (10 chiffres).";
 
     $nomPhoto = $membre['photo'];
     if (!empty($_FILES['photo']['name'])) {
@@ -85,7 +85,7 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
                 </div>
                 <div class="form-group">
                     <label>Contact (téléphone) <span class="req">*</span></label>
-                    <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" autocomplete="tel" title="Chiffres uniquement (8 à 15)" required value="<?= e($membre['contact']) ?>">
+                    <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" title="Chiffres uniquement (10 chiffres)" required value="<?= e($membre['contact']) ?>">
                 </div>
                 <div class="form-group">
                     <label>Photo actuelle</label><br>

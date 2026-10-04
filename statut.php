@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreur = "Trop de tentatives. Réessayez plus tard.";
     } else {
         $matricule = strtoupper(trim($_POST['matricule'] ?? ''));
-        $contact = preg_replace('/\D+/', '', $_POST['contact'] ?? '');
+        $contact = numeroLocal($_POST['contact'] ?? '');
         $st = $pdo->prepare("SELECT s.id, s.nom_prenoms, s.matricule FROM seminaristes s WHERE s.matricule = ? AND s.contact = ? LIMIT 1");
         $st->execute([$matricule, $contact]);
         $sem = $st->fetch();
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group">
                 <label>Numéro de téléphone utilisé à l'inscription</label>
-                <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{8,15}" maxlength="15" required value="<?= e($_POST['contact'] ?? '') ?>">
+                <input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required value="<?= e($_POST['contact'] ?? '') ?>">
             </div>
             <button class="btn btn-primaire btn-block btn-envoi"><span>Vérifier</span><i aria-hidden="true">→</i></button>
         </form>

@@ -905,3 +905,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, true);
 })();
+
+
+/* Champs téléphone : « +225 » fixe devant le champ, chiffres uniquement, 10 chiffres maximum (collage « +225… » accepté) */
+(function () {
+    function nettoyer(v) {
+        var n = String(v).replace(/\D+/g, '');
+        if (n.indexOf('00225') === 0) n = n.slice(5);
+        else if (n.indexOf('225') === 0 && n.length >= 11) n = n.slice(3);
+        return n.slice(0, 10);
+    }
+    function preparer(i) {
+        if (i.getAttribute('data-tel') === '1' || i.type !== 'tel') return;
+        i.setAttribute('data-tel', '1');
+        i.setAttribute('maxlength', '10'); i.setAttribute('inputmode', 'numeric'); i.setAttribute('pattern', '[0-9]{10}');
+        i.setAttribute('title', '10 chiffres, sans le +225');
+        if (!i.getAttribute('placeholder')) i.setAttribute('placeholder', 'Ex : 0700000000');
+        var w = document.createElement('span'); w.className = 'tel-wrap';
+        var p = document.createElement('span'); p.className = 'tel-pref'; p.textContent = '+225'; p.setAttribute('aria-hidden', 'true');
+        i.parentNode.insertBefore(w, i); w.appendChild(p); w.appendChild(i);
+        i.value = nettoyer(i.value);
+        i.addEventListener('input', function () { var n = nettoyer(i.value); if (n !== i.value) i.value = n; });
+        i.addEventListener('paste', function (e) {
+            var t = (e.clipboardData || window.clipboardData || {}).getData ? (e.clipboardData || window.clipboardData).getData('text') : null;
+            if (t === null) return;
+            e.preventDefault(); i.value = nettoyer(t); i.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+    }
+    function tous() { [].forEach.call(document.querySelectorAll('input[type=tel]'), preparer); }
+    if (document.readyState !== 'loading') tous(); else document.addEventListener('DOMContentLoaded', tous);
+    document.addEventListener('jos:maj', tous);
+})();
