@@ -3,7 +3,7 @@ require_once __DIR__ . '/../includes/init.php';
 exigerRole(['admin', 'superadmin']);
 $MODE = 'diplomes'; // badges | diplomes
 $estBadge = ($MODE === 'badges');
-$niveaux = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
+$niveaux = listeNiveaux();
 
 // Effectifs par niveau (séminaristes) et par commission (membres)
 $condSem = '1=1';

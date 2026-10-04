@@ -14,7 +14,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $seminaristesListe = $stmt->fetchAll();
 $pages = array_chunk($seminaristesListe, 2);
-$niveauxListe = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
+$niveauxListe = listeNiveaux();
 
 $titrePage = "Impression des bulletins";
 require_once __DIR__ . '/../includes/header.php';

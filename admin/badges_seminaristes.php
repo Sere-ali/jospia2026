@@ -13,7 +13,7 @@ $st = $pdo->prepare($sql);
 $st->execute($params);
 $liste = $st->fetchAll();
 $dortoirs = $pdo->query("SELECT DISTINCT dortoir FROM seminaristes WHERE dortoir IS NOT NULL AND dortoir <> '' ORDER BY dortoir")->fetchAll(PDO::FETCH_COLUMN);
-$niveaux = ['Pépinière', 'Primaire', 'Secondaire', 'Universitaire', 'Leader'];
+$niveaux = listeNiveaux();
 $nbPages = (int)ceil(count($liste) / 4);
 $qs = http_build_query(['type' => 'badge_sem', 'tous' => 1, 'dortoir' => $dortoir, 'niveau' => $niveau]);
 

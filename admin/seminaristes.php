@@ -66,7 +66,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <label>Niveau</label>
                 <select name="niveau">
                     <option value="">Tous</option>
-                    <?php foreach (['Pépinière','Primaire','Secondaire','Universitaire','Leader'] as $n): ?>
+                    <?php foreach (listeNiveaux() as $n): ?>
                         <option value="<?= $n ?>" <?= $filtreNiveau===$n?'selected':'' ?>><?= $n ?></option>
                     <?php endforeach; ?>
                 </select>

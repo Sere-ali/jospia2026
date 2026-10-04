@@ -189,7 +189,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php if ($seminariste['dortoir'] === 'Pépinière'): ?>
                 <p style="color:var(--texte-doux);">Les séminaristes du sous-comité <strong>Pépinière</strong> ne composent pas de test d'entrée. Niveau : <span class="pill pill-vert">Pépinière</span></p>
             <?php elseif (!$seminariste['test_complete']): ?>
-                <p>Vous n'avez pas encore composé le test d'entrée en ligne. Il détermine automatiquement votre niveau d'affectation (Primaire, Secondaire, Universitaire, Leader).</p>
+                <p>Vous n'avez pas encore composé le test d'entrée en ligne. Il détermine automatiquement votre niveau d'affectation (<?= e(implode(', ', nomsNiveaux())) ?>).</p>
                 <?php if (testOuvert($pdo)): ?>
                     <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
                 <?php else: ?>

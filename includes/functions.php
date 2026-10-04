@@ -132,28 +132,36 @@ function nomCommissionComplet($commission) {
     return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
 }
 
-/** Seuils de niveau (note /20) : modifiables par la commission scientifique. Défaut : 5 / 9 / 13. */
-function seuilsNiveaux() {
+/** Réglage des niveaux (noms + notes), modifiable par la commission scientifique. Défaut : Primaire <5, Secondaire <9, Universitaire <13, Leader. */
+function reglageNiveaux() {
     static $c = null;
     if ($c !== null) return $c;
-    $c = [5.0, 9.0, 13.0];
+    $c = ['seuils' => [5.0, 9.0, 13.0], 'noms' => ['Primaire', 'Secondaire', 'Universitaire', 'Leader']];
     try {
         global $pdo;
-        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'seuils_niveaux'");
-        $st->execute();
-        $j = json_decode((string)$st->fetchColumn(), true);
-        if (is_array($j) && count($j) === 3 && $j[0] > 0 && $j[0] < $j[1] && $j[1] < $j[2] && $j[2] <= 20) $c = array_map('floatval', $j);
+        foreach (['seuils_niveaux' => 'seuils', 'noms_niveaux' => 'noms'] as $cle => $k) {
+            $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = ?");
+            $st->execute([$cle]);
+            $j = json_decode((string)$st->fetchColumn(), true);
+            if ($k === 'seuils' && is_array($j) && count($j) === 3 && $j[0] > 0 && $j[0] < $j[1] && $j[1] < $j[2] && $j[2] <= 20) $c['seuils'] = array_map('floatval', $j);
+            if ($k === 'noms' && is_array($j) && count($j) === 4 && count(array_filter($j, 'strlen')) === 4) $c['noms'] = array_map('strval', $j);
+        }
     } catch (Throwable $e) {}
     return $c;
 }
+function seuilsNiveaux() { return reglageNiveaux()['seuils']; }
+function nomsNiveaux() { return reglageNiveaux()['noms']; }
+/** Liste ordonnée des niveaux pour les filtres : Pépinière + les 4 niveaux. */
+function listeNiveaux() { return array_merge(['Pépinière'], nomsNiveaux()); }
 
-/** Calcule le niveau d'affectation académique/spirituel à partir de la note /20 */
+/** Calcule le niveau d'affectation à partir de la note /20 (noms et notes réglables) */
 function determinerNiveauTest($note) {
     list($a, $b, $c) = seuilsNiveaux();
-    if ($note < $a) return 'Primaire';
-    if ($note < $b) return 'Secondaire';
-    if ($note < $c) return 'Universitaire';
-    return 'Leader';
+    $n = nomsNiveaux();
+    if ($note < $a) return $n[0];
+    if ($note < $b) return $n[1];
+    if ($note < $c) return $n[2];
+    return $n[3];
 }
 
 /** Indique si le Super Admin / Admin a publié les résultats (bulletins visibles par les séminaristes) */

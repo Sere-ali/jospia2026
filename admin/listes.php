@@ -34,7 +34,7 @@ foreach ($stmt2->fetchAll() as $s) {
     $cle = $s['niveau_affecte'] ?: 'Test non composé';
     $parNiveau[$cle][] = $s;
 }
-$ordreNiveaux = ['Pépinière','Primaire','Secondaire','Universitaire','Leader','Test non composé'];
+$ordreNiveaux = array_merge(listeNiveaux(), ['Test non composé']);
 uksort($parNiveau, function($a, $b) use ($ordreNiveaux) {
     $ia = array_search($a, $ordreNiveaux); $ia = $ia === false ? 99 : $ia;
     $ib = array_search($b, $ordreNiveaux); $ib = $ib === false ? 99 : $ib;

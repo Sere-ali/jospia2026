@@ -74,7 +74,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <div class="help-text" style="margin-bottom: 20px;">
                     💡 <strong>Note sur la correction :</strong> Quelle que soit la somme totale configurée (ex: 20, 25, 30 questions), 
                     la note finale du séminariste sera automatiquement calculée de façon proportionnelle pour toujours être ramenée 
-                    sur <strong>20 points</strong>. Les seuils de niveaux (Primaire, Secondaire, Universitaire, Leader) restent donc valides.
+                    sur <strong>20 points</strong>. Les seuils de niveaux (<?= e(implode(', ', nomsNiveaux())) ?>) restent donc valides.
                 </div>
                 
                 <button type="submit" class="btn btn-primaire btn-block">Enregistrer la configuration</button>
