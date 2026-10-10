@@ -378,8 +378,8 @@ function photoSauvegarderEnBase($nom, $chemin, $ext) {
     }
 }
 
-/** Paiement automatique Wave (API Checkout) : actif seulement si la clé WAVE_API_KEY est définie sur Render. */
-function waveApiActive() { return (bool)getenv('WAVE_API_KEY'); }
+/** Paiement automatique Wave (API Checkout) : désactivé par défaut (mode manuel : le séminariste déclare son paiement, la commission Finance valide). Pour l'activer : WAVE_MODE=api et WAVE_API_KEY sur Render. */
+function waveApiActive() { return getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY'); }
 
 function waveApi($methode, $chemin, $corps = null) {
     $ch = curl_init('https://api.wave.com' . $chemin);
