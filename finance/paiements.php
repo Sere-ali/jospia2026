@@ -11,6 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
     $admin_id = $_SESSION['compte_id'];
 
     if ($action === 'valider') {
+        $stDecl = $pdo->prepare("SELECT paye_declare FROM paiements WHERE id = ?");
+        $stDecl->execute([$paiement_id]);
+        if ((int)$stDecl->fetchColumn() !== 1) {
+            $_SESSION['flash_erreur'] = "Validation impossible : la personne n'a pas signalé son paiement. Son QR code reste rouge.";
+            redirect('/finance/paiements');
+        }
         validerPaiement($pdo, $paiement_id, (int)$admin_id);
         $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
     } elseif ($action === 'supprimer') {
@@ -67,6 +73,10 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
         $montantTotal = $stats['valides'] * FRAIS_PARTICIPATION;
         ?>
 
+        <?php if (!empty($_SESSION['flash_erreur'])): ?>
+            <div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div>
+            <?php unset($_SESSION['flash_erreur']); ?>
+        <?php endif; ?>
         <?php if (!empty($_SESSION['flash_succes'])): ?>
             <div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div>
             <?php unset($_SESSION['flash_succes']); ?>
@@ -130,11 +140,13 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <div style="display: flex; gap: 5px;">
-                                    <form method="post" onsubmit="return confirm('<?= !empty($p['paye_declare']) ? 'Confirmer que les' : 'Paiement non signalé par la personne. Valider quand même si les' ?> 5 100 FCFA ont bien été reçus sur Wave ?');">
+                                    <?php if (!empty($p['paye_declare'])): ?>
+<form method="post" onsubmit="return confirm('Confirmer que les 5 100 FCFA ont bien été reçus sur Wave ?');">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="valider">
                                         <button type="submit" class="btn btn-primaire btn-sm">Valider</button>
                                     </form>
+<?php else: ?><small style="color:var(--texte-doux);align-self:center;">Pas encore payé : QR rouge</small><?php endif; ?>
                                     
                                     <form method="post" onsubmit="var m = prompt('Motif du rejet :'); if(m !== null) { this.motif_rejet.value = m; return true; } return false;">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">
