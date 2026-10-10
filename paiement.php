@@ -39,14 +39,25 @@ $erreur = null;
 $succes = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Le paiement est signalé sans identifiant de transaction : la commission Finance vérifie sur son compte Wave et valide.
-    if ($paiement && $paiement['statut'] === 'en attente') {
-        $pdo->prepare("UPDATE paiements SET paye_declare = 1, updated_at = NOW() WHERE id = ?")->execute([$paiement['id']]);
-    } elseif (!$paiement || $paiement['statut'] === 'rejeté') {
-        $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, paye_declare) VALUES (?, '', 'en attente', ?, ?, 1)")
-            ->execute([$seminariste_id, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
+    // Le paiement n'est signalé qu'avec l'ID de transaction Wave (reçu par SMS après un paiement réussi).
+    // Solde insuffisant ou paiement échoué = pas d'ID = pas de déclaration.
+    $refTx = strtoupper(preg_replace('/\s+/', '', (string)($_POST['reference_transaction'] ?? '')));
+    if (!preg_match('/^[A-Z0-9_-]{6,40}$/', $refTx)) {
+        $erreur = "Saisissez l'ID de transaction Wave (reçu par SMS après un paiement réussi). Si votre solde était insuffisant, rechargez votre compte Wave puis payez de nouveau.";
+    } else {
+        $stD = $pdo->prepare("SELECT COUNT(*) FROM paiements WHERE reference_transaction = ? AND seminariste_id <> ?");
+        $stD->execute([$refTx, $seminariste_id]);
+        if ((int)$stD->fetchColumn() > 0) {
+            $erreur = "Cet ID de transaction est déjà utilisé par un autre séminariste.";
+        } elseif ($paiement && $paiement['statut'] === 'en attente') {
+            $pdo->prepare("UPDATE paiements SET paye_declare = 1, reference_transaction = ?, updated_at = NOW() WHERE id = ?")->execute([$refTx, $paiement['id']]);
+            $succes = "Paiement signalé avec l'ID " . $refTx . ". Il est en attente de validation par la commission Finance.";
+        } elseif (!$paiement || $paiement['statut'] === 'rejeté') {
+            $pdo->prepare("INSERT INTO paiements (seminariste_id, reference_transaction, statut, numero_wave, montant, paye_declare) VALUES (?, ?, 'en attente', ?, ?, 1)")
+                ->execute([$seminariste_id, $refTx, $paiement['numero_wave'] ?? null, FRAIS_PARTICIPATION]);
+            $succes = "Paiement signalé avec l'ID " . $refTx . ". Il est en attente de validation par la commission Finance.";
+        }
     }
-    if (!$paiement || $paiement['statut'] !== 'validé') { $succes = "Paiement signalé. Il est en attente de validation par la commission Finance."; }
     $stmt = $pdo->prepare("SELECT * FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");
     $stmt->execute([$seminariste_id]);
     $paiement = $stmt->fetch();

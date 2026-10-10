@@ -190,7 +190,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>⏳ En attente de paiement</h3>
             <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas validé.</p>
             <a href="<?= lienWavePaiement() ? e(lienWavePaiement()) : BASE_URL . '/paiement' ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
-            <form method="post" action="<?= BASE_URL ?>/paiement" style="margin-top:12px;"><input type="hidden" name="declarer" value="1"><button type="submit" class="btn btn-primaire">✔ J'ai effectué le paiement</button></form>
+            <form method="post" action="<?= BASE_URL ?>/paiement" style="margin-top:12px;"><input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small><button type="submit" class="btn btn-primaire">✔ J'ai payé : envoyer l'ID</button></form>
             <?php endif; ?>
         </div>
         <?php endif; ?>

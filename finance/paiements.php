@@ -114,6 +114,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <th>Séminariste (Matricule)</th>
                         <th>Contact</th>
                         <th>N° du payeur (contact)</th>
+                        <th>ID transaction Wave</th>
                         <th>Statut</th>
                         <th>Action / Info</th>
                     </tr>
@@ -128,6 +129,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         </td>
                         <td><?= e($p['contact']) ?></td>
                         <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
+                        <td style="font-family: monospace;"><strong><?= e($p['reference_transaction'] ?: '-') ?></strong></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <?php if (!empty($p['paye_declare'])): ?><span class="tag tag-vert" style="background:#1cc6f4;color:#00323f;">💙 Payé : à valider</span><?php else: ?><span class="tag tag-vert" style="background:#ffc107;color:#000;">⏳ En attente de paiement</span><?php endif; ?>

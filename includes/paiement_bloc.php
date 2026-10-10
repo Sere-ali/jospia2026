@@ -40,8 +40,8 @@ if (waveApiActive()):
         <li>La <strong>commission Finance</strong> reçoit votre paiement sur son compte Wave et le valide. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors (page « Suivre mon paiement »).</li>
     </ol>
     <form method="post" action="<?= e($paiementAction) ?>" class="form-pro">
-        <input type="hidden" name="declarer" value="1">
-        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>✔ J'ai effectué le paiement</span><i aria-hidden="true">→</i></button>
+        <input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small>
+        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>✔ J'ai payé : envoyer l'ID de transaction</span><i aria-hidden="true">→</i></button>
         <small style="display:block;text-align:center;color:var(--texte-doux);margin-top:6px;">La commission Finance vérifie sur son compte Wave puis valide votre paiement.</small>
     </form>
 </div>
