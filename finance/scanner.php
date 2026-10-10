@@ -68,6 +68,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                  '<div class="mono">' + esc(res.matricule) + '</div>' +
                  '<div>' + esc(res.section) + '</div>' +
                  '<div>Dortoir : ' + esc(res.dortoir) + '</div>' +
+                 '<div>ID transaction Wave : <strong class="mono">' + esc(res.transaction || '-') + '</strong></div>' +
                  '<div style="margin-top:6px;">Payé : <strong>' + esc(res.montant) + ' FCFA</strong>' + (res.date ? ' le ' + esc(res.date) : '') + '</div>';
         } else {
             h = '<div style="font-size:1.1rem;">' + esc(res.message) + '</div>';

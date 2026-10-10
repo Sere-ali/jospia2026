@@ -22,7 +22,9 @@ if (preg_match('/[?&]c=([a-f0-9]{16,40})/i', $code, $mm)) {
     if (!$sem) { echo json_encode(['valide' => false, 'message' => 'Personne introuvable dans la base']); exit; }
     $stp = statutPaiementSeminariste($pdo, $sem['id']);
     if ($stp !== 'validé') { echo json_encode(['valide' => false, 'message' => $sem['nom_prenoms'] . ' (' . $sem['matricule'] . ') - ' . ($stp === 'rejeté' ? 'paiement rejeté' : 'paiement non effectué (en attente)')]); exit; }
-    echo json_encode(['valide' => true, 'message' => 'Paiement validé', 'nom' => $sem['nom_prenoms'], 'matricule' => $sem['matricule'],
+    $stT = $pdo->prepare("SELECT reference_transaction FROM paiements WHERE seminariste_id = ? AND statut = 'validé' ORDER BY id DESC LIMIT 1");
+    $stT->execute([$sem['id']]);
+    echo json_encode(['valide' => true, 'message' => 'Paiement validé', 'transaction' => (string)$stT->fetchColumn(), 'nom' => $sem['nom_prenoms'], 'matricule' => $sem['matricule'],
         'section' => $sem['anyama'] . ' - ' . $sem['section'], 'dortoir' => $sem['dortoir'], 'montant' => (int)FRAIS_PARTICIPATION, 'date' => '',
         'photo' => $sem['photo'] ? BASE_URL . '/uploads/photos/' . $sem['photo'] : null]);
     exit;
@@ -33,7 +35,7 @@ if (!preg_match('/^[a-f0-9]{16,40}$/i', $code)) {
     exit;
 }
 
-$st = $pdo->prepare("SELECT p.id, p.statut, p.montant, p.date_validation, s.nom_prenoms, s.matricule, s.photo, s.anyama, s.section, s.dortoir
+$st = $pdo->prepare("SELECT p.id, p.statut, p.montant, p.reference_transaction, p.date_validation, s.nom_prenoms, s.matricule, s.photo, s.anyama, s.section, s.dortoir
                      FROM paiements p JOIN seminaristes s ON s.id = p.seminariste_id
                      WHERE p.code_recu = ? LIMIT 1");
 $st->execute([$code]);
@@ -51,6 +53,7 @@ echo json_encode([
     'matricule' => $r['matricule'],
     'section' => $r['anyama'] . ' - ' . $r['section'],
     'dortoir' => $r['dortoir'],
+    'transaction' => (string)$r['reference_transaction'],
     'montant' => (int)$r['montant'],
     'date' => $r['date_validation'] ? date('d/m/Y H:i', strtotime($r['date_validation'])) : '',
     'photo' => $r['photo'] ? BASE_URL . '/uploads/photos/' . $r['photo'] : null,
