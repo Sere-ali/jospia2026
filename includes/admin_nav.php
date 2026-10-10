@@ -39,7 +39,9 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
         <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm <?= $dansAdministration ? 'btn-primaire' : 'btn-or' ?>">🗂️ Administration</a>
         <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm <?= $dansFinance ? 'btn-primaire' : 'btn-outline' ?>">💰 Commission finance</a>
         <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm <?= $dansScientifique ? 'btn-primaire' : 'btn-outline' ?>">🔬 Commission scientifique</a>
+        <?php if (estSecurite()): ?>
         <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-sm <?= strpos($_SERVER['PHP_SELF'], '/securite/') !== false ? 'btn-primaire' : 'btn-outline' ?>">🛡️ Commission sécurité</a>
+        <?php endif; ?>
         <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm <?= in_array($pageAdmin, ['comite_manageriale.php','rapports.php','sorties_mg.php'], true) ? 'btn-primaire' : 'btn-or' ?>">👔 Comité managérial</a>
         <?php if (estSuperAdmin()): ?>
             <a href="<?= BASE_URL ?>/admin/liens" class="btn btn-sm <?= $pageAdmin==='liens.php'?'btn-primaire':'btn-or' ?>">🔗 Liens</a>

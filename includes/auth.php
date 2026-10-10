@@ -95,13 +95,13 @@ function estFinance() {
     return $u && in_array($u['role'], ['finance', 'admin', 'superadmin'], true);
 }
 
-/** Commission sécurité : gestion des visiteurs (membres de la commission SÉCURITÉ, admins, super admin). */
+/** Commission sécurité : gestion des visiteurs (uniquement les membres de la commission SÉCURITÉ et le super admin). */
 function estSecurite() {
     static $cache = null;
     if ($cache !== null) return $cache;
     $u = utilisateurCourant();
     if (!$u) return $cache = false;
-    if (in_array($u['role'], ['admin', 'superadmin', 'securite'], true)) return $cache = true;
+    if (in_array($u['role'], ['superadmin', 'securite'], true)) return $cache = true;
     if ($u['role'] === 'membre' && !empty($u['membre_id'])) {
         global $pdo;
         $st = $pdo->prepare("SELECT commission FROM membres_commission WHERE id = ?");
