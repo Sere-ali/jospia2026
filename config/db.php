@@ -10,12 +10,18 @@
  *   dans le tableau de bord Render (onglet "Environment"). C'est plus
  *   sûr : vos identifiants ne sont jamais écrits dans le code.
  */
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'jospia2026');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_PORT', getenv('DB_PORT') ?: '3306'); // Aiven/Clever Cloud utilisent souvent un port non-standard
-define('DB_SSL_CA', getenv('DB_SSL_CA') ?: ''); // chemin vers le certificat CA fourni par l'hébergeur (si connexion chiffrée exigée)
+// Hébergement mutualisé (InfinityFree, etc.) : copiez config/db.local.php.example en
+// config/db.local.php et remplissez vos identifiants MySQL. Ce fichier a priorité.
+$configLocale = __DIR__ . '/db.local.php';
+$aConfigLocale = is_file($configLocale);
+if ($aConfigLocale) { require $configLocale; }
+
+defined('DB_HOST') or define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+defined('DB_NAME') or define('DB_NAME', getenv('DB_NAME') ?: 'jospia2026');
+defined('DB_USER') or define('DB_USER', getenv('DB_USER') ?: 'root');
+defined('DB_PASS') or define('DB_PASS', getenv('DB_PASS') ?: '');
+defined('DB_PORT') or define('DB_PORT', getenv('DB_PORT') ?: '3306'); // Aiven/Clever Cloud utilisent souvent un port non-standard
+defined('DB_SSL_CA') or define('DB_SSL_CA', getenv('DB_SSL_CA') ?: ''); // chemin vers le certificat CA fourni par l'hébergeur (si connexion chiffrée exigée)
 
 // Nom / thème de l'événement (facile à changer chaque année)
 define('EVENT_NAME', 'JOSPIA 2026');
@@ -44,7 +50,7 @@ try {
     $optionsPdo = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_PERSISTENT => true,   // réutilise les connexions MySQL entre les requêtes (charge élevée)
+        PDO::ATTR_PERSISTENT => !$aConfigLocale,   // réutilise les connexions MySQL entre les requêtes (charge élevée)
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
     if (DB_SSL_CA !== '' && file_exists(DB_SSL_CA)) {
