@@ -27,6 +27,48 @@ function genererIdentifiantMotDePasse($contact) {
     return [$contact, $mdp];
 }
 
+/**
+ * Réduit une photo envoyée (côté le plus long : 700 px max) et corrige son orientation.
+ * Sans effet si GD est absent ou si l'image est déjà petite : la photo d'origine est alors conservée.
+ */
+function photoRedimensionner($chemin, $ext, $max = 700) {
+    if (!function_exists('imagecreatetruecolor') || !is_file($chemin)) return;
+    $info = @getimagesize($chemin);
+    if (!$info) return;
+    [$l, $h] = $info;
+    if ($l <= 0 || $h <= 0) return;
+    $ext = strtolower($ext);
+    $im = null;
+    if ($ext === 'png') $im = @imagecreatefrompng($chemin);
+    elseif ($ext === 'webp' && function_exists('imagecreatefromwebp')) $im = @imagecreatefromwebp($chemin);
+    elseif ($ext === 'jpg' || $ext === 'jpeg') $im = @imagecreatefromjpeg($chemin);
+    if (!$im) return;
+    // Orientation EXIF (photos de téléphone prises en portrait)
+    if (($ext === 'jpg' || $ext === 'jpeg') && function_exists('exif_read_data')) {
+        $exif = @exif_read_data($chemin);
+        $o = $exif['Orientation'] ?? 1;
+        $angle = [3 => 180, 6 => -90, 8 => 90][$o] ?? 0;
+        if ($angle) { $rot = @imagerotate($im, $angle, 0); if ($rot) { $im = $rot; $l = imagesx($im); $h = imagesy($im); } }
+    }
+    if (max($l, $h) <= $max && filesize($chemin) <= 400 * 1024) { imagedestroy($im); return; }
+    $ratio = min(1, $max / max($l, $h));
+    $nl = max(1, (int) round($l * $ratio));
+    $nh = max(1, (int) round($h * $ratio));
+    $dst = imagecreatetruecolor($nl, $nh);
+    if ($ext === 'png' || $ext === 'webp') {
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+    }
+    imagecopyresampled($dst, $im, 0, 0, 0, 0, $nl, $nh, $l, $h);
+    $tmp = $chemin . '.tmp';
+    $ok = false;
+    if ($ext === 'png') $ok = @imagepng($dst, $tmp, 7);
+    elseif ($ext === 'webp' && function_exists('imagewebp')) $ok = @imagewebp($dst, $tmp, 82);
+    else $ok = @imagejpeg($dst, $tmp, 82);
+    imagedestroy($im); imagedestroy($dst);
+    if ($ok && is_file($tmp) && filesize($tmp) > 0) { @rename($tmp, $chemin); } else { @unlink($tmp); }
+}
+
 /** Upload sécurisé d'une photo, retourne le nom de fichier stocké ou null */
 function uploadPhoto($fichier, $sousDossier = 'photos') {
     if (!isset($fichier) || $fichier['error'] !== UPLOAD_ERR_OK) {
@@ -43,6 +85,8 @@ function uploadPhoto($fichier, $sousDossier = 'photos') {
     $nomFichier = uniqid('photo_', true) . '.' . $ext;
     $cheminDestination = __DIR__ . '/../uploads/' . $sousDossier . '/' . $nomFichier;
     if (move_uploaded_file($fichier['tmp_name'], $cheminDestination)) {
+        // Réduit la photo (les photos de téléphone pèsent 2 à 5 Mo) : pages et base beaucoup plus légères
+        photoRedimensionner($cheminDestination, $ext);
         // Copie durable en base de données : le disque du site est effacé à chaque mise à jour
         photoSauvegarderEnBase($nomFichier, $cheminDestination, $ext);
         return $nomFichier;

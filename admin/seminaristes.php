@@ -82,7 +82,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <tbody>
                 <?php foreach ($seminaristes as $s): ?>
                     <tr>
-                        <td><?php if ($s['photo']): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e($s['photo']) ?>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"><?php endif; ?></td>
+                        <td><?php if ($s['photo']): ?><img loading="lazy" decoding="async" src="<?= BASE_URL ?>/uploads/photos/<?= e($s['photo']) ?>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"><?php endif; ?></td>
                         <td class="mono"><?= e($s['matricule']) ?></td>
                         <td><?= e($s['nom_prenoms']) ?></td>
                         <td><?= e($s['genre']) ?></td>

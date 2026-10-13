@@ -70,7 +70,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <tbody>
                 <?php foreach ($membres as $m): ?>
                     <tr>
-                        <td><?php if ($m['photo']): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e($m['photo']) ?>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"><?php endif; ?></td>
+                        <td><?php if ($m['photo']): ?><img loading="lazy" decoding="async" src="<?= BASE_URL ?>/uploads/photos/<?= e($m['photo']) ?>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"><?php endif; ?></td>
                         <td class="mono"><?= e($m['matricule']) ?></td>
                         <td><?= e($m['nom_prenoms']) ?></td>
                         <td><span class="pill pill-vert"><?= e($m['commission']) ?></span></td>
