@@ -6,7 +6,7 @@
 ?>
 <div class="jos-doc jos-cert jos-cert-sem">
     <div class="jos-doc__stage">
-        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/certificat_seminariste.jpg" alt="Certificat de participation JOSPIA 2026">
+        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/certificat_seminariste.jpg?v=<?= @filemtime(__DIR__ . "/../assets/img/modeles/certificat_seminariste.jpg") ?>" alt="Certificat de participation JOSPIA 2026">
         <div class="jos-cert-sem__nom" data-fit="0.98"><span><?= e(mb_strtoupper($nomCertificat, 'UTF-8')) ?></span></div>
     </div>
 </div>
