@@ -12,7 +12,7 @@ $__mep = josBadgeCommissionMiseEnPage($membre['nom_prenoms'], $membre['commissio
 <div class="jos-doc jos-badge">
     <div class="jos-doc__stage" style="--dy:<?= (int)$__mep['dy'] ?>;--prs:<?= (int)$__mep['prTaille'] ?>;--prp:<?= (int)$__mep['prPas'] ?>;--cos:<?= (int)$__mep['comTaille'] ?>;">
         <img class="jos-badge__photo" src="<?= e($__photo) ?>" alt="" style="object-position:<?= round($__f[0]*100) ?>% <?= round($__f[1]*100) ?>%;" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
-        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.webp" alt="Badge JOSPIA 2026 - Commission">
+        <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.webp?v=<?= @filemtime(__DIR__ . "/../assets/img/modeles/badge_commission.webp") ?>" alt="Badge JOSPIA 2026 - Commission">
         <div class="jos-badge__n1" data-fit="1"><span><?= e($__mep['nom']) ?></span></div>
         <?php if ($__mep['prenoms']): ?>
         <div class="jos-badge__n2" data-fit="1">
