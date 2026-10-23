@@ -977,55 +977,41 @@ footer a { color: #fff; font-weight: 600; }
     font-size: calc(var(--u) * 56 * var(--fit, 1));
 }
 
-/* ---------- Badge commission 904 x 1280 ---------- */
+/* ---------- Badge commission (modèle orange) 638 x 1016 ---------- */
 .jos-badge { max-width: 380px; }
 .page-badges .jos-badge { max-width: 300px; }
-.jos-badge .jos-doc__stage { --u: calc(100cqw / 904); aspect-ratio: 904 / 1280; border-radius: calc(var(--u) * 38); background: #fff; }
+.jos-badge .jos-doc__stage { --u: calc(100cqw / 638); aspect-ratio: 638 / 1016; background: #fff; }
 .jos-badge__photo {
-    position: absolute; left: calc(var(--u) * 496); top: calc(var(--u) * 10);
-    width: calc(var(--u) * 400); height: calc(var(--u) * 660);
+    position: absolute; left: calc(var(--u) * 28); top: calc(var(--u) * 359);
+    width: calc(var(--u) * 192); height: calc(var(--u) * 446);
     object-fit: cover; object-position: 50% 18%; display: block; background: #fff;
 }
-.jos-badge__nom {
-    position: absolute; left: calc(var(--u) * 150); width: calc(var(--u) * 610);
-    top: calc(var(--u) * 708); height: calc(var(--u) * 172);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; color: #fff; font-weight: 800; text-transform: uppercase;
-    font-size: calc(var(--u) * 76 * var(--fit, 1)); line-height: 1.12; letter-spacing: .01em;
-    text-shadow: 0 calc(var(--u) * 3) calc(var(--u) * 4) rgba(0,0,0,.28);
+.jos-badge__n1, .jos-badge__n2 {
+    position: absolute; left: calc(var(--u) * 255); width: calc(var(--u) * 365);
+    color: #fff; font-weight: 800; display: flex; flex-direction: column; justify-content: flex-start;
 }
-.jos-badge__nom span { display: block; white-space: nowrap; }
-.jos-badge__com {
-    position: absolute; left: calc(var(--u) * 232); width: calc(var(--u) * 450);
-    top: calc(var(--u) * 985); height: calc(var(--u) * 90);
-    display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 10);
+.jos-badge__n1 {
+    top: calc(var(--u) * (450.5 + var(--dy, 0))); height: calc(var(--u) * 73);
+    text-transform: uppercase; letter-spacing: .01em;
+    font-size: calc(var(--u) * 73 * var(--fit, 1)); line-height: calc(var(--u) * 73);
 }
-.jos-badge__com .deco { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
-.jos-badge__com .deco i { flex: 1; height: calc(var(--u) * 3); background: linear-gradient(90deg, rgba(214,170,69,0), #D6AA45); }
-.jos-badge__com .deco.d i { background: linear-gradient(270deg, rgba(214,170,69,0), #D6AA45); }
-.jos-badge__com .deco b { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: #D6AA45; transform: rotate(45deg); flex: none; margin: 0 calc(var(--u) * 2); }
-.jos-badge__com .deco.d { flex-direction: row-reverse; }
-.jos-badge__com .valeur {
-    flex: none; font-weight: 800; text-transform: uppercase; letter-spacing: .01em;
-    font-size: calc(var(--u) * 84 * var(--fit, 1)); line-height: 1; padding-top: calc(var(--u) * 4);
-    background: linear-gradient(180deg, #F0CF73 0%, #D6A93F 55%, #B98526 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 calc(var(--u) * 3) calc(var(--u) * 2) rgba(0,0,0,.3));
+.jos-badge__n2 {
+    top: calc(var(--u) * (519.7 + var(--dy, 0)));
+    font-size: calc(var(--u) * var(--prs, 44) * var(--fit, 1)); line-height: calc(var(--u) * var(--prp, 44));
 }
-.jos-badge__com2 {
-    position: absolute; left: calc(var(--u) * 160); width: calc(var(--u) * 594);
-    top: calc(var(--u) * 980); height: calc(var(--u) * 100);
+.jos-badge__n1 span, .jos-badge__n2 span { display: block; white-space: nowrap; }
+.jos-badge__band {
+    position: absolute; left: calc(var(--u) * 14); width: calc(var(--u) * 610);
+    top: calc(var(--u) * 848); height: calc(var(--u) * 140);
     display: flex; align-items: center; justify-content: center;
 }
-.jos-badge__com2 .valeur {
-    flex: none; text-align: center; white-space: nowrap; font-weight: 800; text-transform: uppercase; letter-spacing: .01em;
-    font-size: calc(var(--u) * 42 * var(--fit, 1)); line-height: 1.02;
-    background: linear-gradient(180deg, #F0CF73 0%, #D6A93F 55%, #B98526 100%);
+.jos-badge__band .valeur {
+    flex: none; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: .01em;
+    font-size: calc(var(--u) * var(--cos, 80) * var(--fit, 1)); line-height: 1.02;
+    background: linear-gradient(180deg, #F28B1E 0%, #EF6C12 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 calc(var(--u) * 3) calc(var(--u) * 2) rgba(0,0,0,.3));
 }
-.jos-badge__com.large { left: calc(var(--u) * 160); width: calc(var(--u) * 594); }
-.jos-badge__com.large .deco { display: none; }
+.jos-badge__band .valeur span { display: block; white-space: nowrap; }
 
 @font-face { font-family: 'JosTinos'; font-weight: 400; font-display: block; src: url('../fonts/tinos-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'JosTinos'; font-weight: 700; font-display: block; src: url('../fonts/tinos-latin-700-normal.woff2') format('woff2'); }

@@ -36,7 +36,7 @@ switch ($type) {
         $l = lignesPar($pdo, 'membres_commission', $ids, $tous, $w, $p, 'commission, nom_prenoms');
         if (!$l) { die('Aucun badge à télécharger.'); }
         $suffixe = ($_GET['commission'] ?? '') !== '' ? '_' . preg_replace('/[^A-Za-z0-9]+/', '_', $_GET['commission']) : '';
-        pdfBadgesA4($l, function ($m) use ($pdo) { return pdfBadgeCommission($pdo, $m); }, 'badges_commission' . $suffixe . '.pdf');
+        pdfBadgesA4($l, function ($m) use ($pdo) { return pdfBadgeCommission($pdo, $m); }, 'badges_commission' . $suffixe . '.pdf', 638, 1016);
     case 'diplome_sem':
         $w = ''; $p = [];
         if (($_GET['niveau'] ?? '') === 'none') { $w .= " AND (niveau_affecte IS NULL OR niveau_affecte = '')"; }

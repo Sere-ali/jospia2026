@@ -243,18 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var w = largeurMax(zone, cible);
             if (!w) { return; }
             var dispo = zone.clientWidth * ratio;
-            if (zone.classList.contains('jos-badge__com')) {
-                // place restante entre les deux filets décoratifs ; si trop serré → mode large (sans filets)
-                var f = (zone.clientWidth * 0.62) / w;
-                if (f < 0.6) {
-                    zone.classList.add('large');
-                    zone.style.setProperty('--fit', 1);
-                    w = largeurMax(zone, cible);
-                    f = (zone.clientWidth * ratio) / w;
-                }
-                zone.style.setProperty('--fit', Math.min(1, f));
-                return;
-            }
             zone.style.setProperty('--fit', Math.min(1, dispo / w));
         });
     }

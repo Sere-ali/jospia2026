@@ -362,8 +362,8 @@ function lienWavePaiement() {
 }
 
 /** Répartit un nom en 1 ou 2 lignes équilibrées (majuscules) pour le badge. */
-function josLignesNom($nom) {
-    $mots = preg_split('/\s+/u', trim(mb_strtoupper($nom, 'UTF-8')), -1, PREG_SPLIT_NO_EMPTY);
+function josLignesNom($nom, $majuscules = true) {
+    $mots = preg_split('/\s+/u', trim($majuscules ? mb_strtoupper($nom, 'UTF-8') : (string)$nom), -1, PREG_SPLIT_NO_EMPTY);
     if (count($mots) <= 1) { return $mots ?: ['']; }
     $meilleur = null; $score = PHP_INT_MAX;
     for ($i = 1; $i < count($mots); $i++) {
@@ -374,6 +374,39 @@ function josLignesNom($nom) {
         if ($s < $score || ($s === $score && mb_strlen($a) >= mb_strlen($b))) { $score = $s; $meilleur = [$a, $b]; }
     }
     return $meilleur;
+}
+
+/**
+ * Sépare « nom et prénoms » pour le badge commission : [NOM en majuscules, Prénoms en minuscules avec majuscule initiale].
+ * Si la saisie mélange des mots en MAJUSCULES et d'autres non, les majuscules forment le nom ; sinon le 1er mot est le nom.
+ */
+function josNomPrenoms($nomPrenoms) {
+    $mots = preg_split('/\s+/u', trim((string)$nomPrenoms), -1, PREG_SPLIT_NO_EMPTY);
+    if (!$mots) { return ['', '']; }
+    if (count($mots) === 1) { return [mb_strtoupper($mots[0], 'UTF-8'), '']; }
+    $maj = []; $autres = [];
+    foreach ($mots as $m) {
+        if (mb_strlen($m, 'UTF-8') > 1 && $m === mb_strtoupper($m, 'UTF-8') && preg_match('/\p{L}/u', $m)) { $maj[] = $m; } else { $autres[] = $m; }
+    }
+    if ($maj && $autres) { $nom = implode(' ', $maj); $prenoms = implode(' ', $autres); }
+    else { $nom = $mots[0]; $prenoms = implode(' ', array_slice($mots, 1)); }
+    return [mb_strtoupper($nom, 'UTF-8'), mb_convert_case(mb_strtolower($prenoms, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')];
+}
+
+/** Mise en page du badge commission (repère 638 x 1016) : lignes de prénoms, taille, décalage vertical. */
+function josBadgeCommissionMiseEnPage($nomPrenoms, $commission) {
+    [$nom, $prenoms] = josNomPrenoms($nomPrenoms);
+    $prLignes = $prenoms === '' ? [] : (mb_strlen($prenoms, 'UTF-8') > 16 ? josLignesNom($prenoms, false) : [$prenoms]);
+    $prLignes = array_slice($prLignes, 0, 2);
+    $deuxLignes = count($prLignes) > 1;
+    $com = mb_strtoupper(nomCommissionComplet($commission), 'UTF-8');
+    $comLignes = mb_strlen($com, 'UTF-8') > 20 ? josLignesNom($com) : [$com];
+    return [
+        'nom' => $nom, 'prenoms' => $prLignes,
+        'dy' => $deuxLignes ? -22 : 0,
+        'prTaille' => $deuxLignes ? 36 : 44, 'prPas' => $deuxLignes ? 40 : 44,
+        'com' => $comLignes, 'comTaille' => count($comLignes) > 1 ? 58 : 80,
+    ];
 }
 
 /** Numéro de téléphone local : chiffres uniquement, sans indicatif 225 (ex : +225 05 46 15 53 98 => 0546155398). */

@@ -163,102 +163,68 @@ function pdfTexteDore($im, $W, $H, array $lignes, $police, $taille, $cx, $cy) {
 }
 
 /** Badge Commission (vert) 904 x 1280 -> image GD. */
-function pdfBadgeCommission(PDO $pdo, array $m, $S = 1.25) {
-    $W = (int)round(904 * $S); $H = (int)round(1280 * $S);
+function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
+    // Modèle orange 638 x 1016 (mise en page identique à .jos-badge dans style.css)
+    $W = (int)round(638 * $S); $H = (int)round(1016 * $S);
     $im = pdfToile($W, $H);
     $ph = pdfPhoto($pdo, $m['photo'] ?? '');
-    if ($ph) { [$fx, $fy] = photoFocus($pdo, $m['photo'] ?? '', 400 / 660); pdfCouvrir($im, $ph, 496 * $S, 10 * $S, 400 * $S, 660 * $S, $fx, $fy); imagedestroy($ph); }
-    else { pdfPlaceholderPhoto($im, 496 * $S, 10 * $S, 400 * $S, 660 * $S); }
+    if ($ph) { [$fx, $fy] = photoFocus($pdo, $m['photo'] ?? '', 192 / 446); pdfCouvrir($im, $ph, 28 * $S, 359 * $S, 192 * $S, 446 * $S, $fx, $fy); imagedestroy($ph); }
+    else { pdfPlaceholderPhoto($im, 28 * $S, 359 * $S, 192 * $S, 446 * $S); }
     pdfModele($im, 'badge_commission.webp', $W, $H);
+    $mep = josBadgeCommissionMiseEnPage($m['nom_prenoms'], $m['commission']);
+    $police = 'barlow-latin-800-normal.ttf';
     $blanc = imagecolorallocate($im, 255, 255, 255);
-    $ombre = imagecolorallocatealpha($im, 0, 0, 0, 100);
+    $x0 = 255 * $S; $dispo = 365 * $S;
 
-    // Nom sur 1 ou 2 lignes (interligne 1,12), taille commune ajustée à la ligne la plus large
-    $lignes = josLignesNom($m['nom_prenoms']);
-    $police = 'barlow-latin-800-normal.ttf';
-    $taille = 76 * $S; $maxL = 0;
-    foreach ($lignes as $l) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $l, 0.76 * $S)); }
-    $dispo = 610 * $S * 0.96;
-    if ($maxL > $dispo) { $taille *= $dispo / $maxL; }
-    $n = count($lignes);
-    $cy = (708 + 172 / 2) * $S;
-    foreach ($lignes as $i => $l) {
-        $centreLigne = $cy - $n * 0.56 * $taille + ($i + 0.5) * 1.12 * $taille;
-        $y = pdfBaseline($police, $taille, $centreLigne);
-        $x = 150 * $S + (610 * $S - pdfLargeurTexte($taille, $police, $l, 0.01 * $taille)) / 2;
-        pdfEcrire($im, $taille, $x, $y + 3 * $S, $ombre, $police, $l, 0.01 * $taille);
-        pdfEcrire($im, $taille, $x, $y, $blanc, $police, $l, 0.01 * $taille);
-    }
+    // Nom (une ligne, majuscules)
+    $taille = 73 * $S; $ls = 0.01 * $taille;
+    $l = pdfLargeurTexte($taille, $police, $mep['nom'], $ls);
+    if ($l > $dispo) { $taille *= $dispo / $l; $ls = 0.01 * $taille; }
+    pdfEcrire($im, $taille, $x0, pdfBaseline($police, $taille, (487 + $mep['dy']) * $S), $blanc, $police, $mep['nom'], $ls);
 
-    // Commission : texte doré entre deux filets (nom complet ; sur 2 lignes si long)
-    $com = mb_strtoupper(nomCommissionComplet($m['commission']), 'UTF-8');
-    if (mb_strlen($com, 'UTF-8') > 14) {
-        $lignesCom = josLignesNom($com);
-        $police = 'barlow-latin-800-normal.ttf';
-        $taille = 42 * $S; $maxL = 0;
-        foreach ($lignesCom as $l) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $l, 0.01 * $taille)); }
-        $dispo = 594 * $S * 0.96;
+    // Prénoms (1 ou 2 lignes), taille commune ajustée à la ligne la plus large
+    if ($mep['prenoms']) {
+        $taille = $mep['prTaille'] * $S; $maxL = 0;
+        foreach ($mep['prenoms'] as $t) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $t, 0.0)); }
         if ($maxL > $dispo) { $taille *= $dispo / $maxL; }
-        pdfTexteDore($im, $W, $H, $lignesCom, $police, $taille, (160 + 594 / 2) * $S, (980 + 100 / 2) * $S + 2 * $S);
-        return $im;
+        foreach ($mep['prenoms'] as $i => $t) {
+            $cy = (519.7 + $mep['dy'] + ($i + 0.5) * $mep['prPas']) * $S;
+            pdfEcrire($im, $taille, $x0, pdfBaseline($police, $taille, $cy), $blanc, $police, $t, 0.0);
+        }
     }
-    $police = 'barlow-latin-800-normal.ttf';
-    $bx = 232; $bw = 450; $by = 985; $bh = 90;
-    $taille = 84 * $S;
-    $l = pdfLargeurTexte($taille, $police, $com, 0.01 * $taille);
-    $large = false;
-    if ($l * 1 > 0 && ($bw * $S * 0.62) / $l < 0.6) { $large = true; $bx = 160; $bw = 594; }
-    $f = $large ? ($bw * $S * 0.98) / $l : ($bw * $S * 0.62) / $l;
-    if ($f < 1) { $taille *= $f; $l = pdfLargeurTexte($taille, $police, $com, 0.01 * $taille); }
-    $x = $bx * $S + ($bw * $S - $l) / 2;
-    $yBase = pdfBaseline($police, $taille, ($by + $bh / 2) * $S + 2 * $S);
-    // calque de texte pour remplissage dégradé doré
-    $x0 = (int)floor($x) - 4; $y0 = (int)floor($yBase - $taille * 1.0); $tw = (int)ceil($l) + 10; $th = (int)ceil($taille * 1.3);
-    if ($tw > 0 && $th > 0) {
+
+    // Commission : texte orange dans le bandeau blanc (centre 918, largeur 610)
+    $lignes = $mep['com'];
+    $taille = $mep['comTaille'] * $S; $maxL = 0;
+    foreach ($lignes as $t) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $t, 0.01 * $taille)); }
+    $dispoB = 610 * $S * 0.96;
+    if ($maxL > $dispoB) { $taille *= $dispoB / $maxL; }
+    $pas = 1.02 * $taille; $n = count($lignes);
+    $bandeTop = (918 * $S) - $n * $pas / 2;
+    $ls = 0.01 * $taille;
+    foreach ($lignes as $i => $t) {
+        $lw = pdfLargeurTexte($taille, $police, $t, $ls);
+        $x = 14 * $S + (610 * $S - $lw) / 2;
+        $yb = pdfBaseline($police, $taille, $bandeTop + ($i + 0.5) * $pas);
+        $mx = (int)floor($x) - 4; $my = (int)floor($yb - $taille); $tw = (int)ceil($lw) + 10; $th = (int)ceil($taille * 1.3);
+        if ($tw <= 0 || $th <= 0) continue;
         $masque = imagecreatetruecolor($tw, $th);
         imagefill($masque, 0, 0, imagecolorallocate($masque, 0, 0, 0));
-        $bl = imagecolorallocate($masque, 255, 255, 255);
-        pdfEcrire($masque, $taille, $x - $x0, $yBase - $y0, $bl, $police, $com, 0.01 * $taille);
-        // ombre portée légère
+        pdfEcrire($masque, $taille, $x - $mx, $yb - $my, imagecolorallocate($masque, 255, 255, 255), $police, $t, $ls);
         for ($j = 0; $j < $th; $j++) {
-            $t = $j / max(1, $th - 1);
-            // dégradé #F0CF73 -> #D6A93F -> #B98526
-            if ($t < 0.55) { $k = $t / 0.55; $r = 0xF0 + (0xD6 - 0xF0) * $k; $g = 0xCF + (0xA9 - 0xCF) * $k; $b = 0x73 + (0x3F - 0x73) * $k; }
-            else { $k = ($t - 0.55) / 0.45; $r = 0xD6 + (0xB9 - 0xD6) * $k; $g = 0xA9 + (0x85 - 0xA9) * $k; $b = 0x3F + (0x26 - 0x3F) * $k; }
+            $k = $j / max(1, $th - 1); // dégradé #F28B1E -> #EF6C12
+            $r = 0xF2 + (0xEF - 0xF2) * $k; $g = 0x8B + (0x6C - 0x8B) * $k; $bb = 0x1E + (0x12 - 0x1E) * $k;
             for ($i2 = 0; $i2 < $tw; $i2++) {
                 $a = imagecolorat($masque, $i2, $j) & 0xFF;
                 if ($a < 4) continue;
-                $px = $x0 + $i2; $py = $y0 + $j;
+                $px = $mx + $i2; $py = $my + $j;
                 if ($px < 0 || $py < 0 || $px >= $W || $py >= $H) continue;
-                $dst = imagecolorat($im, $px, $py);
+                $dst = imagecolorat($im, $px, $py); $al = $a / 255;
                 $dr = ($dst >> 16) & 255; $dg = ($dst >> 8) & 255; $db = $dst & 255;
-                $al = $a / 255;
-                imagesetpixel($im, $px, $py, ((int)round($dr + ($r - $dr) * $al) << 16) | ((int)round($dg + ($g - $dg) * $al) << 8) | (int)round($db + ($b - $db) * $al));
+                imagesetpixel($im, $px, $py, ((int)round($dr + ($r - $dr) * $al) << 16) | ((int)round($dg + ($g - $dg) * $al) << 8) | (int)round($db + ($bb - $db) * $al));
             }
         }
         imagedestroy($masque);
-    }
-    // filets décoratifs (absents en mode "large")
-    if (!$large) {
-        $or = [0xD6, 0xAA, 0x45];
-        $cyL = ($by + $bh / 2) * $S;
-        $gauche = [$bx * $S, $x - 10 * $S - 4 * $S];
-        $droite = [$x + $l + 10 * $S + 4 * $S, ($bx + $bw) * $S];
-        foreach ([[$gauche, false], [$droite, true]] as [$seg, $inverse]) {
-            $len = $seg[1] - $seg[0];
-            if ($len < 12 * $S) continue;
-            for ($i3 = 0; $i3 < $len - 14 * $S; $i3++) {
-                $t = $i3 / max(1, $len - 14 * $S);
-                $op = $inverse ? (1 - $t) : $t; // plein côté texte, transparent côté bord
-                $col = imagecolorallocatealpha($im, $or[0], $or[1], $or[2], (int)round(127 * (1 - $op)));
-                $px = $inverse ? $seg[0] + 14 * $S + $i3 : $seg[0] + $i3;
-                imagefilledrectangle($im, (int)$px, (int)($cyL - 1.5 * $S), (int)$px, (int)($cyL + 1.5 * $S), $col);
-            }
-            $dx = $inverse ? $seg[0] + 5.5 * $S : $seg[1] - 5.5 * $S;
-            $dxp = $inverse ? $seg[0] + 5.5 * $S : $seg[1] - 5.5 * $S;
-            $r = 6.5 * $S; $c = imagecolorallocate($im, $or[0], $or[1], $or[2]);
-            imagefilledpolygon($im, [(int)$dxp, (int)($cyL - $r), (int)($dxp + $r), (int)$cyL, (int)$dxp, (int)($cyL + $r), (int)($dxp - $r), (int)$cyL], 4, $c);
-        }
     }
     return $im;
 }
@@ -372,7 +338,7 @@ function pdfJpeg($im, $qualite = 88) {
  * Badges : 4 par page A4 (2 x 2, cases A6 de 105 x 148,5 mm), repères de découpe en pointillés.
  * $generateur : fonction(array $ligne) => ressource GD ; $lignes : liste de lignes SQL.
  */
-function pdfBadgesA4(array $lignes, callable $generateur, $nomFichier) {
+function pdfBadgesA4(array $lignes, callable $generateur, $nomFichier, $lr = 904, $hr = 1280) {
     @set_time_limit(600);
     @ini_set('memory_limit', '512M');
     $pdf = new PdfFlux($nomFichier);
@@ -387,9 +353,9 @@ function pdfBadgesA4(array $lignes, callable $generateur, $nomFichier) {
             $jpeg = pdfJpeg($im);
             imagedestroy($im);
             $col = $i % 2; $rang = intdiv($i, 2);
-            // badge 904:1280 centré dans sa case
-            $h = $ch - 2 * $marge; $w = $h * 904 / 1280;
-            if ($w > $cw - 2 * $marge) { $w = $cw - 2 * $marge; $h = $w * 1280 / 904; }
+            // badge centré dans sa case
+            $h = $ch - 2 * $marge; $w = $h * $lr / $hr;
+            if ($w > $cw - 2 * $marge) { $w = $cw - 2 * $marge; $h = $w * $hr / $lr; }
             $x = $col * $cw + ($cw - $w) / 2;
             $y = $rang * $ch + ($ch - $h) / 2;
             $images[] = [$jpeg, $wpx, $hpx, $x, $y, $w, $h];
