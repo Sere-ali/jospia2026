@@ -29,7 +29,7 @@ switch ($type) {
         $l = lignesPar($pdo, 'seminaristes', $ids, $tous, $w, $p, 'dortoir, nom_prenoms');
         if (!$l) { die('Aucun badge à télécharger.'); }
         $suffixe = ($_GET['niveau'] ?? '') !== '' ? '_' . preg_replace('/[^A-Za-z0-9]+/', '_', $_GET['niveau']) : '';
-        pdfBadgesA4($l, function ($s) use ($pdo) { return pdfBadgeSeminariste($pdo, $s); }, 'badges_seminaristes' . $suffixe . '.pdf');
+        pdfBadgesA4($l, function ($s) use ($pdo) { return pdfBadgeSeminariste($pdo, $s); }, 'badges_seminaristes' . $suffixe . '.pdf', 638, 1016);
     case 'badge_com':
         $w = ''; $p = [];
         if (($_GET['commission'] ?? '') !== '') { $w .= ' AND commission = ?'; $p[] = $_GET['commission']; }

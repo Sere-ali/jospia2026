@@ -12,6 +12,7 @@ const PDF_METRIQUES = [
     'barlow-latin-800-normal.ttf'              => [1.0, 0.2],
     'barlow-latin-700-normal.ttf'              => [1.0, 0.2],
     'barlow-semi-condensed-latin-700-normal.ttf' => [1.0, 0.2],
+    'barlow-semi-condensed-latin-600-normal.ttf' => [1.0, 0.2],
     'anton-latin-400-normal.ttf'               => [1.1763, 0.3291],
     'tinos-latin-400-normal.ttf'               => [0.8911, 0.2163],
     'tinos-latin-700-normal.ttf'               => [0.8911, 0.2163],
@@ -111,19 +112,34 @@ function pdfPlaceholderPhoto($toile, $x, $y, $w, $h) {
 }
 
 /** Badge Séminariste (orange) 904 x 1280 -> image GD. */
-function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 1.25) {
-    $W = (int)round(904 * $S); $H = (int)round(1280 * $S);
+function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 2.0) {
+    // Modèle orange 638 x 1016 (mise en page identique à .jos-badge-sem dans style.css)
+    $W = (int)round(638 * $S); $H = (int)round(1016 * $S);
     $im = pdfToile($W, $H);
     $ph = pdfPhoto($pdo, $s['photo'] ?? '');
-    if ($ph) { [$fx, $fy] = photoFocus($pdo, $s['photo'] ?? '', 1.0); pdfCouvrir($im, $ph, 238.5 * $S, 470 * $S, 424 * $S, 424 * $S, $fx, $fy); imagedestroy($ph); }
-    else { pdfPlaceholderPhoto($im, 238.5 * $S, 470 * $S, 424 * $S, 424 * $S); }
+    if ($ph) { [$fx, $fy] = photoFocus($pdo, $s['photo'] ?? '', 192 / 265); pdfCouvrir($im, $ph, 69 * $S, 376 * $S, 192 * $S, 265 * $S, $fx, $fy); imagedestroy($ph); }
+    else { pdfPlaceholderPhoto($im, 69 * $S, 376 * $S, 192 * $S, 265 * $S); }
     pdfModele($im, 'badge_seminariste.webp', $W, $H);
     $blanc = imagecolorallocate($im, 255, 255, 255);
-    $ombre = imagecolorallocatealpha($im, 0, 0, 0, 100);
-    pdfTexteBoite($im, $S, 'barlow-latin-800-normal.ttf', 62, 0.98, mb_strtoupper((string)$s['nom_prenoms'], 'UTF-8'), 112, 902, 680, 66, $blanc, true, 0.62, $ombre);
-    $vals = [(string)$s['dortoir'], (string)($s['niveau_affecte'] ?: 'Non affecté'), (string)$s['matricule']];
-    foreach ($vals as $i => $v) {
-        pdfTexteBoite($im, $S, 'barlow-semi-condensed-latin-700-normal.ttf', 37, 0.97, $v, 403, [994, 1037, 1081][$i], 340, 42, $blanc, false);
+    $t = josBadgeSeminaristeTextes($s);
+    $b800 = 'barlow-latin-800-normal.ttf'; $b700 = 'barlow-latin-700-normal.ttf'; $semi = 'barlow-semi-condensed-latin-600-normal.ttf';
+    if (!is_file(PDF_FONTS . $b700)) { $b700 = $b800; }
+    if (!is_file(PDF_FONTS . $semi)) { $semi = 'barlow-semi-condensed-latin-700-normal.ttf'; }
+    // [texte, police, corps, centre y, x, largeur, interlettre (em), centré]
+    $zones = [
+        [$t['nom'], $b800, 46, 418.7, 276, 310, 0.01, false],
+        [$t['prenoms'], $b700, 30, 461.9, 276, 310, 0.0, false],
+        [$t['matricule'], $b800, 42, 517.3, 276, 310, 0.04, false],
+        [$t['dortoir'], $semi, 29, 575, 276, 310, 0.0, false],
+        [$t['niveau'], $b800, 41, 713.5, 66, 198, 0.0, true],
+    ];
+    foreach ($zones as [$texte, $police, $corps, $cy, $x, $w, $lsEm, $centre]) {
+        if ($texte === '') { continue; }
+        $taille = $corps * $S; $ls = $lsEm * $taille;
+        $l = pdfLargeurTexte($taille, $police, $texte, $ls);
+        if ($l > $w * $S) { $taille *= ($w * $S) / $l; $ls = $lsEm * $taille; $l = pdfLargeurTexte($taille, $police, $texte, $ls); }
+        $px = $x * $S + ($centre ? ($w * $S - $l) / 2 : 0);
+        pdfEcrire($im, $taille, $px, pdfBaseline($police, $taille, $cy * $S), $blanc, $police, $texte, $ls);
     }
     return $im;
 }

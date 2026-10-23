@@ -1038,29 +1038,25 @@ footer a { color: #fff; font-weight: 600; }
 @font-face { font-family: 'JosSemi'; font-weight: 700; font-display: block; src: url('../fonts/barlow-semi-condensed-latin-700-normal.woff2') format('woff2'); }
 @font-face { font-family: 'JosSemi'; font-weight: 600; font-display: block; src: url('../fonts/barlow-semi-condensed-latin-600-normal.woff2') format('woff2'); }
 
-.jos-badge-sem .jos-doc__stage { --u: calc(100cqw / 904); background: #fff; }
+.jos-badge-sem .jos-doc__stage { --u: calc(100cqw / 638); aspect-ratio: 638 / 1016; background: #fff; }
 .jos-badge-sem__photo {
-    position: absolute; left: calc(var(--u) * 238.5); top: calc(var(--u) * 470);
-    width: calc(var(--u) * 424); height: calc(var(--u) * 424);
+    position: absolute; left: calc(var(--u) * 69); top: calc(var(--u) * 376);
+    width: calc(var(--u) * 192); height: calc(var(--u) * 265);
     object-fit: cover; object-position: 50% 20%; display: block; background: #fff;
 }
-.jos-badge-sem__nom {
-    position: absolute; left: calc(var(--u) * 112); width: calc(var(--u) * 680);
-    top: calc(var(--u) * 902); height: calc(var(--u) * 66);
-    display: flex; align-items: center; justify-content: center; color: #fff; text-transform: uppercase;
-    font-weight: 800; font-size: calc(var(--u) * 62 * var(--fit, 1)); letter-spacing: .01em;
-    text-shadow: 0 calc(var(--u) * 3) calc(var(--u) * 4) rgba(0,0,0,.22);
+/* zones de texte : --cy = centre vertical, --sz = corps (repère 638 x 1016) */
+.jos-badge-sem__t {
+    position: absolute; left: calc(var(--u) * var(--x, 276)); width: calc(var(--u) * var(--w, 310));
+    top: calc(var(--u) * (var(--cy) - 30)); height: calc(var(--u) * 60);
+    display: flex; align-items: center; justify-content: flex-start; color: #fff; font-weight: 800;
+    font-size: calc(var(--u) * var(--sz) * var(--fit, 1)); line-height: 1;
 }
-.jos-badge-sem__nom span { white-space: nowrap; }
-.jos-badge-sem__val {
-    position: absolute; left: calc(var(--u) * 403); width: calc(var(--u) * 340); height: calc(var(--u) * 42);
-    display: flex; align-items: center; justify-content: flex-start; color: #fff;
-    font-family: 'JosSemi', 'Barlow', Arial, sans-serif; font-weight: 700; font-size: calc(var(--u) * 37 * var(--fit, 1));
-}
-.jos-badge-sem__val span { white-space: nowrap; }
-.jos-badge-sem__val.v1 { top: calc(var(--u) * 994); }
-.jos-badge-sem__val.v2 { top: calc(var(--u) * 1037); }
-.jos-badge-sem__val.v3 { top: calc(var(--u) * 1081); }
+.jos-badge-sem__t span { white-space: nowrap; }
+.jos-badge-sem__t.t-nom { --cy: 418.7; --sz: 46; text-transform: uppercase; letter-spacing: .01em; }
+.jos-badge-sem__t.t-pre { --cy: 461.9; --sz: 30; font-weight: 700; }
+.jos-badge-sem__t.t-mat { --cy: 517.3; --sz: 42; letter-spacing: .04em; }
+.jos-badge-sem__t.t-dor { --cy: 575; --sz: 29; font-family: 'JosSemi', 'Barlow', Arial, sans-serif; font-weight: 600; }
+.jos-badge-sem__t.t-niv { --x: 66; --w: 198; --cy: 713.5; --sz: 41; justify-content: center; text-transform: uppercase; }
 
 .jos-cert-sem .jos-doc__stage { --u: calc(100cqw / 1123); aspect-ratio: 1123 / 793; }
 .jos-cert-sem__nom {

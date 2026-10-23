@@ -393,6 +393,17 @@ function josNomPrenoms($nomPrenoms) {
     return [mb_strtoupper($nom, 'UTF-8'), mb_convert_case(mb_strtolower($prenoms, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')];
 }
 
+/** Textes du badge séminariste (modèle orange 638 x 1016). */
+function josBadgeSeminaristeTextes(array $s) {
+    [$nom, $prenoms] = josNomPrenoms($s['nom_prenoms']);
+    $d = trim((string)($s['dortoir'] ?? ''));
+    if ($d !== '' && !preg_match('/^(dortoir|p[ée]pini[èe]re)/iu', $d)) { $d = 'Dortoir ' . $d; }
+    return [
+        'nom' => $nom, 'prenoms' => $prenoms, 'matricule' => (string)($s['matricule'] ?? ''),
+        'dortoir' => $d, 'niveau' => mb_strtoupper((string)(($s['niveau_affecte'] ?? '') ?: 'Non affecté'), 'UTF-8'),
+    ];
+}
+
 /** Mise en page du badge commission (repère 638 x 1016) : lignes de prénoms, taille, décalage vertical. */
 function josBadgeCommissionMiseEnPage($nomPrenoms, $commission) {
     [$nom, $prenoms] = josNomPrenoms($nomPrenoms);
