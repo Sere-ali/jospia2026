@@ -991,7 +991,8 @@ function photoFocus(PDO $pdo, $nom, $ratio = 1.0) {
             $pos[1] = 0.5;
         } else { // image plus haute : on décale verticalement
             $vis = $ia / $ratio; // part visible de la hauteur
-            $pos[1] = $vis >= 1 ? 0.5 : max(0, min(1, ($fy - $vis * 0.46) / (1 - $vis)));
+            // plafonné : sur les peaux foncées / vêtements proches de la peau, la détection descend vers le torse et coupe le haut du visage
+            $pos[1] = $vis >= 1 ? 0.5 : max(0, min(0.2, ($fy - $vis * 0.46) / (1 - $vis)));
         }
         return $cache[$cle] = $pos;
     } catch (Throwable $e) { return $cache[$cle] = $defaut; }
