@@ -981,6 +981,9 @@ function photoFocus(PDO $pdo, $nom, $ratio = 1.0) {
             if ($Y > 35 && $Y < 235 && $cb > 80 && $cb < 125 && $cr > 143 && $cr < 178 && $r > $b) {
                 $dx = abs($x / $w - 0.5); if ($dx > 0.42) continue;
                 $xs[] = $x; $ys[] = $y;
+            } elseif ($Y < 60) {
+                // vêtements / voile / cheveux sombres : repère de la personne quand la peau n'est pas détectée (peaux foncées, visage couvert)
+                $xs[] = $x; $ys[] = $y;
             }
         }
         imagedestroy($p);
