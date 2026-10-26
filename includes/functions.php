@@ -482,6 +482,12 @@ function waveApi($methode, $chemin, $corps = null) {
 
 /** Adresse publique du site (https) pour les retours Wave. */
 function urlSite() {
+    // Nom de domaine officiel (variable d'environnement SITE_DOMAIN sur Render) : les liens à partager l'utilisent toujours,
+    // même si l'administrateur est connecté par l'adresse technique onrender.com.
+    $officiel = trim((string)getenv('SITE_DOMAIN'));
+    $officiel = preg_replace('#^https?://#i', '', $officiel);
+    $officiel = rtrim($officiel, '/');
+    if ($officiel !== '' && preg_match('/^[a-z0-9.-]+$/i', $officiel)) { return 'https://' . $officiel . BASE_URL; }
     $hote = $_SERVER['HTTP_HOST'] ?? 'localhost';
     return 'https://' . $hote . BASE_URL;
 }
