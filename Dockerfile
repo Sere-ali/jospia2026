@@ -3,13 +3,14 @@
 # Render n'a pas de runtime PHP natif : ce Dockerfile fournit
 # PHP 8.2 + Apache avec l'extension pdo_mysql nécessaire au site.
 # ============================================================
-FROM php:8.2-apache
+FROM php:8.2.35-apache
 
 # Sécurité (octobre 2026) : correctifs PHP2Shell (PHP >= 8.2.35) et certificats racines à jour.
 # L'image de base est retirée à chaque build ; on met aussi à jour les certificats et on affiche la version de PHP dans les journaux.
 RUN apt-get update && apt-get install -y --no-install-recommends --only-upgrade ca-certificates openssl libssl3 \
     && rm -rf /var/lib/apt/lists/* \
-    && php -v | head -1
+    && php -v | head -1 \
+    && php -r 'exit(version_compare(PHP_VERSION, "8.2.35", ">=") ? 0 : 1);'
 
 # Extensions PHP nécessaires (connexion MySQL via PDO)
 # GD (freetype/jpeg/webp) : génération des badges et diplômes PDF
