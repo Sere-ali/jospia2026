@@ -21,6 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir une commission valide.";
     if ($contact === '' || !preg_match('/^[0-9]{10}$/', $contact)) $erreurs[] = "Le contact doit contenir uniquement des chiffres (10 chiffres).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
+    if (empty($erreurs)) { // évite les doublons (même numéro, même commission)
+        $dbl = $pdo->prepare("SELECT COUNT(*) FROM membres_commission WHERE contact = ? AND commission = ?");
+        $dbl->execute([$contact, $commission]);
+        if ((int)$dbl->fetchColumn() > 0) $erreurs[] = "Ce numéro est déjà inscrit dans cette commission. Connectez-vous à « Mon espace » pour consulter ou modifier votre fiche.";
+    }
 
     if (empty($erreurs)) {
         $nomPhoto = uploadPhoto($_FILES['photo']);
