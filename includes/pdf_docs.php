@@ -190,13 +190,16 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
     $mep = josBadgeCommissionMiseEnPage($m['nom_prenoms'], $m['commission']);
     $police = 'barlow-latin-800-normal.ttf';
     $blanc = imagecolorallocate($im, 255, 255, 255);
+    $ombre = imagecolorallocatealpha($im, 130, 45, 0, 85);
     $x0 = 255 * $S; $dispo = 365 * $S;
 
     // Nom (une ligne, majuscules)
     $taille = 73 * $S; $ls = 0.01 * $taille;
     $l = pdfLargeurTexte($taille, $police, $mep['nom'], $ls);
     if ($l > $dispo) { $taille *= $dispo / $l; $ls = 0.01 * $taille; }
-    pdfEcrire($im, $taille, $x0, pdfBaseline($police, $taille, (487 + $mep['dy']) * $S), $blanc, $police, $mep['nom'], $ls);
+    $yn = pdfBaseline($police, $taille, (487 + $mep['dy']) * $S);
+    pdfEcrire($im, $taille, $x0, $yn + 2 * $S, $ombre, $police, $mep['nom'], $ls);
+    pdfEcrire($im, $taille, $x0, $yn, $blanc, $police, $mep['nom'], $ls);
 
     // Prénoms (1 ou 2 lignes), taille commune ajustée à la ligne la plus large
     if ($mep['prenoms']) {
@@ -205,7 +208,9 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
         if ($maxL > $dispo) { $taille *= $dispo / $maxL; }
         foreach ($mep['prenoms'] as $i => $t) {
             $cy = (519.7 + $mep['dy'] + ($i + 0.5) * $mep['prPas']) * $S;
-            pdfEcrire($im, $taille, $x0, pdfBaseline($police, $taille, $cy), $blanc, $police, $t, 0.0);
+            $yp = pdfBaseline($police, $taille, $cy);
+            pdfEcrire($im, $taille, $x0, $yp + 2 * $S, $ombre, $police, $t, 0.0);
+            pdfEcrire($im, $taille, $x0, $yp, $blanc, $police, $t, 0.0);
         }
     }
 
