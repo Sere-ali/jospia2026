@@ -5,6 +5,12 @@
 # ============================================================
 FROM php:8.2-apache
 
+# Sécurité (octobre 2026) : correctifs PHP2Shell (PHP >= 8.2.35) et certificats racines à jour.
+# L'image de base est retirée à chaque build ; on met aussi à jour les certificats et on affiche la version de PHP dans les journaux.
+RUN apt-get update && apt-get install -y --no-install-recommends --only-upgrade ca-certificates openssl libssl3 \
+    && rm -rf /var/lib/apt/lists/* \
+    && php -v | head -1
+
 # Extensions PHP nécessaires (connexion MySQL via PDO)
 # GD (freetype/jpeg/webp) : génération des badges et diplômes PDF
 RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev libjpeg62-turbo-dev libwebp-dev libpng-dev \
