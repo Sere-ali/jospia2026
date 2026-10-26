@@ -89,6 +89,7 @@ function uploadPhoto($fichier, $sousDossier = 'photos') {
         photoRedimensionner($cheminDestination, $ext);
         // Copie durable en base de données : le disque du site est effacé à chaque mise à jour
         photoSauvegarderEnBase($nomFichier, $cheminDestination, $ext);
+        try { photoVisage($GLOBALS['pdo'], $nomFichier); } catch (Throwable $e) {} // détection du visage dès l'envoi (recadrage automatique des badges)
         return $nomFichier;
     }
     return null;
@@ -1007,6 +1008,88 @@ function photoFocus(PDO $pdo, $nom, $ratio = 1.0) {
     } catch (Throwable $e) { return $cache[$cle] = $defaut; }
 }
 
+
+/* ------------------------------------------------------------------ */
+/*  Recadrage automatique sur le visage (détection : docker/face.py, OpenCV)  */
+/* ------------------------------------------------------------------ */
+function photoOctets(PDO $pdo, $nom) {
+    $f = __DIR__ . '/../uploads/photos/' . $nom;
+    $d = is_file($f) ? @file_get_contents($f) : false;
+    if ($d) return $d;
+    try {
+        photoTableBase($pdo);
+        $st = $pdo->prepare("SELECT donnees FROM photos_stockees WHERE nom = ?");
+        $st->execute([$nom]);
+        $d = $st->fetchColumn();
+    } catch (Throwable $e) { $d = false; }
+    return $d ?: null;
+}
+
+/** Visage principal de la photo : ['iw','ih','x','y','w','h'] (x,y,w,h en fractions de l'image) ou null. Résultat mémorisé en base. */
+function photoVisage(PDO $pdo, $nom) {
+    static $cache = [];
+    if (isset($cache[$nom])) return $cache[$nom];
+    if (!$nom || !preg_match('/^[A-Za-z0-9._-]{1,120}$/', $nom)) return $cache[$nom] = null;
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS photos_visages (
+            nom VARCHAR(120) NOT NULL PRIMARY KEY, iw INT NOT NULL DEFAULT 0, ih INT NOT NULL DEFAULT 0,
+            fx FLOAT NULL, fy FLOAT NULL, fw FLOAT NULL, fh FLOAT NULL, trouve TINYINT NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $st = $pdo->prepare("SELECT * FROM photos_visages WHERE nom = ?");
+        $st->execute([$nom]);
+        $r = $st->fetch();
+        if ($r) {
+            return $cache[$nom] = ((int)$r['trouve'] === 1 && $r['fw'] > 0)
+                ? ['iw' => (int)$r['iw'], 'ih' => (int)$r['ih'], 'x' => (float)$r['fx'], 'y' => (float)$r['fy'], 'w' => (float)$r['fw'], 'h' => (float)$r['fh']] : null;
+        }
+        // détecteur indisponible (pas de Python / OpenCV) : on ne mémorise rien, repli sur l'ancien cadrage
+        if (!function_exists('shell_exec') || !is_file(__DIR__ . '/../docker/face.py')) return $cache[$nom] = null;
+        // limite de détections par requête (les photos suivantes seront traitées aux affichages suivants)
+        static $calculs = 0;
+        $max = isset($GLOBALS['JOS_VISAGES_MAX']) ? (int)$GLOBALS['JOS_VISAGES_MAX'] : 8;
+        if ($calculs >= $max) return $cache[$nom] = null;
+        $calculs++;
+        $octets = photoOctets($pdo, $nom);
+        if (!$octets) return $cache[$nom] = null;
+        $tmp = tempnam(sys_get_temp_dir(), 'vis');
+        file_put_contents($tmp, $octets);
+        $dim = @getimagesize($tmp);
+        $sortie = @shell_exec('timeout 25 python3 ' . escapeshellarg(__DIR__ . '/../docker/face.py') . ' ' . escapeshellarg($tmp) . ' 2>/dev/null');
+        @unlink($tmp);
+        $j = json_decode(trim((string)$sortie), true);
+        if (!is_array($j) || !$dim) {
+            if ($sortie === null || $sortie === '') return $cache[$nom] = null; // Python absent : réessaiera plus tard
+            $j = [];
+        }
+        $trouve = isset($j['w']) && $j['w'] > 0 ? 1 : 0;
+        $pdo->prepare("INSERT INTO photos_visages (nom, iw, ih, fx, fy, fw, fh, trouve) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE iw=VALUES(iw), ih=VALUES(ih), fx=VALUES(fx), fy=VALUES(fy), fw=VALUES(fw), fh=VALUES(fh), trouve=VALUES(trouve)")
+            ->execute([$nom, (int)($dim[0] ?? 0), (int)($dim[1] ?? 0), $trouve ? $j['x'] : null, $trouve ? $j['y'] : null, $trouve ? $j['w'] : null, $trouve ? $j['h'] : null, $trouve]);
+        return $cache[$nom] = $trouve ? ['iw' => (int)$dim[0], 'ih' => (int)$dim[1], 'x' => (float)$j['x'], 'y' => (float)$j['y'], 'w' => (float)$j['w'], 'h' => (float)$j['h']] : null;
+    } catch (Throwable $e) { return $cache[$nom] = null; }
+}
+
+/**
+ * Zone à afficher (fractions de l'image : x, y, w, h) pour un cadre de rapport $ratio (largeur / hauteur),
+ * centrée sur le visage (visage = ~40 % de la largeur du cadre, yeux au tiers haut). Null si aucun visage détecté.
+ */
+function photoCadrage(PDO $pdo, $nom, $ratio, $part = 0.40) {
+    $v = photoVisage($pdo, $nom);
+    if (!$v || $v['iw'] < 1 || $v['ih'] < 1) return null;
+    $iw = $v['iw']; $ih = $v['ih'];
+    $fw = $v['w'] * $iw; $fcx = ($v['x'] + $v['w'] / 2) * $iw; $fcy = ($v['y'] + $v['h'] / 2) * $ih;
+    $cw = $fw / $part; $ch = $cw / $ratio;                // fenêtre en pixels
+    $k = min(1, $iw / $cw, $ih / $ch);                    // ne dépasse pas l'image
+    $cw *= $k; $ch *= $k;
+    $x = max(0, min($iw - $cw, $fcx - $cw / 2));
+    $y = max(0, min($ih - $ch, $fcy - 0.36 * $ch));
+    return ['x' => $x / $iw, 'y' => $y / $ih, 'w' => $cw / $iw, 'h' => $ch / $ih];
+}
+
+/** Attributs HTML du cadre photo des badges : [style du conteneur interne (img), ...]. Retourne le style CSS de l'image. */
+function photoStyleCadrage($c) {
+    return 'position:absolute;max-width:none;object-fit:fill;width:' . round(100 / $c['w'], 3) . '%;height:' . round(100 / $c['h'], 3) . '%;left:-' . round($c['x'] / $c['w'] * 100, 3) . '%;top:-' . round($c['y'] / $c['h'] * 100, 3) . '%;';
+}
 
 /* ------------------------------------------------------------------ */
 /*  Noms des dortoirs : les quatre Califes (frères) et quatre figures féminines (sœurs)  */

@@ -984,8 +984,9 @@ footer a { color: #fff; font-weight: 600; }
 .jos-badge__photo {
     position: absolute; left: calc(var(--u) * 28); top: calc(var(--u) * 359);
     width: calc(var(--u) * 192); height: calc(var(--u) * 446);
-    object-fit: cover; object-position: 50% 18%; display: block; background: #fff;
+    overflow: hidden; background: #fff;
 }
+.jos-badge__photo img, .jos-badge-sem__photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; max-width: none; }
 .jos-badge__n1, .jos-badge__n2 {
     position: absolute; left: calc(var(--u) * 255); width: calc(var(--u) * 365);
     color: #fff; font-weight: 800; display: flex; flex-direction: column; justify-content: flex-start;
@@ -1042,7 +1043,7 @@ footer a { color: #fff; font-weight: 600; }
 .jos-badge-sem__photo {
     position: absolute; left: calc(var(--u) * 69); top: calc(var(--u) * 376);
     width: calc(var(--u) * 192); height: calc(var(--u) * 265);
-    object-fit: cover; object-position: 50% 20%; display: block; background: #fff;
+    overflow: hidden; background: #fff;
 }
 /* zones de texte : --cy = centre vertical, --sz = corps (repère 638 x 1016) */
 .jos-badge-sem__t {

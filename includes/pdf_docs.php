@@ -93,6 +93,21 @@ function pdfCouvrir($dst, $src, $x, $y, $w, $h, $px, $py) {
     imagecopyresampled($dst, $src, (int)round($x), (int)round($y), (int)round($sx), (int)round($sy), (int)round($w), (int)round($h), (int)round($cw), (int)round($ch));
 }
 
+/** Photo cadrée automatiquement sur le visage dans le rectangle (x,y,w,h) ; sinon repli sur l'ancien cadrage "cover". */
+function pdfPhotoCadree(PDO $pdo, $dst, $nom, $x, $y, $w, $h, $part) {
+    $ph = pdfPhoto($pdo, $nom);
+    if (!$ph) { pdfPlaceholderPhoto($dst, $x, $y, $w, $h); return; }
+    $c = photoCadrage($pdo, $nom, $w / $h, $part);
+    if ($c) {
+        $sw = imagesx($ph); $sh = imagesy($ph);
+        imagecopyresampled($dst, $ph, (int)round($x), (int)round($y), (int)round($c['x'] * $sw), (int)round($c['y'] * $sh), (int)round($w), (int)round($h), max(1, (int)round($c['w'] * $sw)), max(1, (int)round($c['h'] * $sh)));
+    } else {
+        [$fx, $fy] = photoFocus($pdo, $nom, $w / $h);
+        pdfCouvrir($dst, $ph, $x, $y, $w, $h, $fx, $fy);
+    }
+    imagedestroy($ph);
+}
+
 function pdfToile($w, $h) {
     $im = imagecreatetruecolor($w, $h);
     imagefill($im, 0, 0, imagecolorallocate($im, 255, 255, 255));
@@ -116,9 +131,7 @@ function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 2.0) {
     // Modèle orange 638 x 1016 (mise en page identique à .jos-badge-sem dans style.css)
     $W = (int)round(638 * $S); $H = (int)round(1016 * $S);
     $im = pdfToile($W, $H);
-    $ph = pdfPhoto($pdo, $s['photo'] ?? '');
-    if ($ph) { [$fx, $fy] = photoFocus($pdo, $s['photo'] ?? '', 192 / 265); pdfCouvrir($im, $ph, 69 * $S, 376 * $S, 192 * $S, 265 * $S, $fx, $fy); imagedestroy($ph); }
-    else { pdfPlaceholderPhoto($im, 69 * $S, 376 * $S, 192 * $S, 265 * $S); }
+    pdfPhotoCadree($pdo, $im, $s['photo'] ?? '', 69 * $S, 376 * $S, 192 * $S, 265 * $S, 0.45);
     pdfModele($im, 'badge_seminariste.webp', $W, $H);
     $blanc = imagecolorallocate($im, 255, 255, 255);
     $t = josBadgeSeminaristeTextes($s);
@@ -183,9 +196,7 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
     // Modèle orange 638 x 1016 (mise en page identique à .jos-badge dans style.css)
     $W = (int)round(638 * $S); $H = (int)round(1016 * $S);
     $im = pdfToile($W, $H);
-    $ph = pdfPhoto($pdo, $m['photo'] ?? '');
-    if ($ph) { [$fx, $fy] = photoFocus($pdo, $m['photo'] ?? '', 192 / 446); pdfCouvrir($im, $ph, 28 * $S, 359 * $S, 192 * $S, 446 * $S, $fx, $fy); imagedestroy($ph); }
-    else { pdfPlaceholderPhoto($im, 28 * $S, 359 * $S, 192 * $S, 446 * $S); }
+    pdfPhotoCadree($pdo, $im, $m['photo'] ?? '', 28 * $S, 359 * $S, 192 * $S, 446 * $S, 0.5);
     pdfModele($im, 'badge_commission.webp', $W, $H);
     $mep = josBadgeCommissionMiseEnPage($m['nom_prenoms'], $m['commission']);
     $police = 'barlow-latin-800-normal.ttf';

@@ -13,6 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6-de
     && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo pdo_mysql mysqli opcache
 
+# Détection de visage (recadrage automatique des photos sur les badges) : Python + OpenCV (sans interface graphique)
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-pip \
+    && pip3 install --no-cache-dir --break-system-packages opencv-python-headless==4.10.0.84 numpy \
+    && rm -rf /var/lib/apt/lists/* /root/.cache
+
 # Active mod_rewrite (non strictement requis par le site, mais utile
 # et sans risque si vous ajoutez des règles plus tard)
 RUN a2enmod rewrite deflate expires headers

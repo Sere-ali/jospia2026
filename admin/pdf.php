@@ -1,4 +1,5 @@
 <?php
+$GLOBALS['JOS_VISAGES_MAX'] = 400; // PDF : détecter les visages de toutes les photos
 require_once __DIR__ . '/../includes/init.php';
 exigerRole(['admin', 'superadmin']);
 require_once __DIR__ . '/../includes/pdf_docs.php';

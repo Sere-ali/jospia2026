@@ -6,12 +6,13 @@
  */
 $__avatar = BASE_URL . '/assets/img/avatar.svg';
 $__photo = !empty($s['photo']) ? BASE_URL . '/uploads/photos/' . rawurlencode($s['photo']) : $__avatar;
-$__f = photoFocus($GLOBALS['pdo'], $s['photo'] ?? '', 192 / 265);
+$__c = !empty($s['photo']) ? photoCadrage($GLOBALS['pdo'], $s['photo'], 192 / 265, 0.45) : null;
+$__f = $__c ? [0.5, 0.2] : photoFocus($GLOBALS['pdo'], $s['photo'] ?? '', 192 / 265);
 $__t = josBadgeSeminaristeTextes($s);
 ?>
 <div class="jos-doc jos-badge jos-badge-sem">
     <div class="jos-doc__stage">
-        <img class="jos-badge-sem__photo" src="<?= e($__photo) ?>" alt="" style="object-position:<?= round($__f[0]*100) ?>% <?= round($__f[1]*100) ?>%;" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
+        <div class="jos-badge-sem__photo"><img src="<?= e($__photo) ?>" alt="" style="<?= $__c ? e(photoStyleCadrage($__c)) : 'object-position:' . round($__f[0]*100) . '% ' . round($__f[1]*100) . '%;' ?>" onerror="this.onerror=null;this.style.cssText='';this.src='<?= e($__avatar) ?>'"></div>
         <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_seminariste.webp?v=<?= @filemtime(__DIR__ . '/../assets/img/modeles/badge_seminariste.webp') ?>" alt="Badge JOSPIA 2026 - Séminariste">
         <div class="jos-badge-sem__t t-nom" data-fit="1"><span><?= e($__t['nom']) ?></span></div>
         <?php if ($__t['prenoms'] !== ''): ?><div class="jos-badge-sem__t t-pre" data-fit="1"><span><?= e($__t['prenoms']) ?></span></div><?php endif; ?>

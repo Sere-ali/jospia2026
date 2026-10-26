@@ -5,13 +5,14 @@
  * Repère de mise en page : 638 x 1016 (voir .jos-badge dans style.css et pdfBadgeCommission dans pdf_docs.php).
  */
 $__avatar = BASE_URL . '/assets/img/avatar.svg';
-$__f = photoFocus($GLOBALS['pdo'], $membre['photo'] ?? '', 192 / 446);
+$__c = !empty($membre['photo']) ? photoCadrage($GLOBALS['pdo'], $membre['photo'], 192 / 446, 0.5) : null;
+$__f = $__c ? [0.5, 0.2] : photoFocus($GLOBALS['pdo'], $membre['photo'] ?? '', 192 / 446);
 $__photo = !empty($membre['photo']) ? BASE_URL . '/uploads/photos/' . rawurlencode($membre['photo']) : $__avatar;
 $__mep = josBadgeCommissionMiseEnPage($membre['nom_prenoms'], $membre['commission']);
 ?>
 <div class="jos-doc jos-badge">
     <div class="jos-doc__stage" style="--dy:<?= (int)$__mep['dy'] ?>;--prs:<?= (int)$__mep['prTaille'] ?>;--prp:<?= (int)$__mep['prPas'] ?>;--cos:<?= (int)$__mep['comTaille'] ?>;">
-        <img class="jos-badge__photo" src="<?= e($__photo) ?>" alt="" style="object-position:<?= round($__f[0]*100) ?>% <?= round($__f[1]*100) ?>%;" onerror="this.onerror=null;this.src='<?= e($__avatar) ?>'">
+        <div class="jos-badge__photo"><img src="<?= e($__photo) ?>" alt="" style="<?= $__c ? e(photoStyleCadrage($__c)) : 'object-position:' . round($__f[0]*100) . '% ' . round($__f[1]*100) . '%;' ?>" onerror="this.onerror=null;this.style.cssText='';this.src='<?= e($__avatar) ?>'"></div>
         <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.webp?v=<?= @filemtime(__DIR__ . "/../assets/img/modeles/badge_commission.webp") ?>" alt="Badge JOSPIA 2026 - Commission">
         <div class="jos-badge__n1" data-fit="1"><span><?= e($__mep['nom']) ?></span></div>
         <?php if ($__mep['prenoms']): ?>
