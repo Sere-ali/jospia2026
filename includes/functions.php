@@ -177,11 +177,11 @@ function nomCommissionComplet($commission) {
     return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
 }
 
-/** Réglage des niveaux (noms + notes de passage), modifiable par la commission scientifique. Défaut (grille officielle) : Iqra 0-7, Ilm 8-11, Basira 12-15, Hikma 16-20 (frères et sœurs). */
+/** Réglage des niveaux (noms + notes de passage), modifiable par la commission scientifique. Défaut (grille officielle) : IQRA 0-7, ILM 8-11, BASĪRA 12-15, HIKMA 16-20 (frères et sœurs). */
 function reglageNiveaux($relire = false) {
     static $c = null;
     if ($c !== null && !$relire) return $c;
-    $c = ['seuils' => [8.0, 12.0, 16.0], 'noms' => ['Iqra', 'Ilm', 'Basira', 'Hikma']];
+    $c = ['seuils' => [8.0, 12.0, 16.0], 'noms' => ['IQRA', 'ILM', 'BASĪRA', 'HIKMA']];
     try {
         global $pdo;
         $lire = function ($cle) use ($pdo) {
@@ -211,10 +211,13 @@ function niveauxMigrerGrille(PDO $pdo) {
     $fait = true;
     try {
         $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
-        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'grille_niveaux_v2'");
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'grille_niveaux_v3'");
         $st->execute();
         if ($st->fetchColumn() !== false) return;
-        $noms = ['Iqra', 'Ilm', 'Basira', 'Hikma']; $seuils = [8, 12, 16];
+        $noms = ['IQRA', 'ILM', 'BASĪRA', 'HIKMA']; $seuils = [8, 12, 16];
+        $anciens = ['Primaire' => 'IQRA', 'Secondaire' => 'ILM', 'Universitaire' => 'BASĪRA', 'Leader' => 'HIKMA', 'Iqra' => 'IQRA', 'Ilm' => 'ILM', 'Basira' => 'BASĪRA', 'Hikma' => 'HIKMA'];
+        $ren = $pdo->prepare("UPDATE seminaristes SET niveau_affecte = ? WHERE niveau_affecte = ?");
+        foreach ($anciens as $a => $n) { $ren->execute([$n, $a]); }
         $ins = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
         $ins->execute(['seuils_niveaux', json_encode($seuils)]);
         $ins->execute(['noms_niveaux', json_encode($noms)]);
@@ -224,7 +227,7 @@ function niveauxMigrerGrille(PDO $pdo) {
             $niv = niveauPourNote((float)$r['note_test'], $noms, $seuils);
             if ($niv !== $r['niveau_affecte']) $up->execute([$niv, $r['id']]);
         }
-        $ins->execute(['grille_niveaux_v2', '1']);
+        $ins->execute(['grille_niveaux_v3', '1']);
         reglageNiveaux(true);
     } catch (Throwable $e) {}
 }
@@ -429,7 +432,8 @@ function josBadgeSeminaristeTextes(array $s) {
     if ($d !== '' && !preg_match('/^(dortoir|p[ée]pini[èe]re)/iu', $d)) { $d = 'Dortoir ' . $d; }
     return [
         'nom' => $nom, 'prenoms' => $prenoms, 'matricule' => (string)($s['matricule'] ?? ''),
-        'dortoir' => $d, 'niveau' => mb_strtoupper((string)(($s['niveau_affecte'] ?? '') ?: 'Non affecté'), 'UTF-8'),
+        // la police des badges n'a pas le « Ī » : on écrit I (BASĪRA -> BASIRA)
+        'dortoir' => $d, 'niveau' => strtr(mb_strtoupper((string)(($s['niveau_affecte'] ?? '') ?: 'Non affecté'), 'UTF-8'), ['Ī' => 'I']),
     ];
 }
 

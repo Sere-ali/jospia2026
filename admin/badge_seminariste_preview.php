@@ -54,7 +54,7 @@
                 </div>
                 <div class="badge-details-row">
                     <div class="badge-details-label">NIVEAU :</div>
-                    <div class="badge-details-value">Basira</div>
+                    <div class="badge-details-value">BASĪRA</div>
                 </div>
                 <div class="badge-details-row">
                     <div class="badge-details-label">MATRICULE :</div>
