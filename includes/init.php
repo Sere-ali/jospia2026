@@ -13,4 +13,5 @@ require_once __DIR__ . '/functions.php';
 dortoirsRenommer($pdo);
 sectionsRenommer($pdo);
 paiementsPreparer($pdo);
+niveauxMigrerGrille($pdo);
 journalAutomatique($pdo);

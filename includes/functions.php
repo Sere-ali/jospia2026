@@ -177,11 +177,11 @@ function nomCommissionComplet($commission) {
     return $map[mb_strtoupper($c, 'UTF-8')] ?? $c;
 }
 
-/** Réglage des niveaux (noms + notes de passage), modifiable par la commission scientifique. Défaut : Primaire <5, Secondaire <9, Universitaire <13, Leader. */
+/** Réglage des niveaux (noms + notes de passage), modifiable par la commission scientifique. Défaut (grille officielle) : Iqra 0-7, Ilm 8-11, Basira 12-15, Hikma 16-20 (frères et sœurs). */
 function reglageNiveaux($relire = false) {
     static $c = null;
     if ($c !== null && !$relire) return $c;
-    $c = ['seuils' => [5.0, 9.0, 13.0], 'noms' => ['Primaire', 'Secondaire', 'Universitaire', 'Leader']];
+    $c = ['seuils' => [8.0, 12.0, 16.0], 'noms' => ['Iqra', 'Ilm', 'Basira', 'Hikma']];
     try {
         global $pdo;
         $lire = function ($cle) use ($pdo) {
@@ -201,6 +201,34 @@ function reglageNiveaux($relire = false) {
 }
 function seuilsNiveaux() { return reglageNiveaux()['seuils']; }
 function nomsNiveaux() { return reglageNiveaux()['noms']; }
+/**
+ * Passage (une seule fois) à la grille officielle des niveaux : Iqra 0-7, Ilm 8-11, Basira 12-15, Hikma 16-20 (/20),
+ * identique pour les frères et les sœurs. Les séminaristes déjà classés (Pépinière exclue) sont reclassés d'après leur note.
+ */
+function niveauxMigrerGrille(PDO $pdo) {
+    static $fait = false;
+    if ($fait) return;
+    $fait = true;
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur VARCHAR(255) NOT NULL) ENGINE=InnoDB");
+        $st = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = 'grille_niveaux_v2'");
+        $st->execute();
+        if ($st->fetchColumn() !== false) return;
+        $noms = ['Iqra', 'Ilm', 'Basira', 'Hikma']; $seuils = [8, 12, 16];
+        $ins = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
+        $ins->execute(['seuils_niveaux', json_encode($seuils)]);
+        $ins->execute(['noms_niveaux', json_encode($noms)]);
+        $up = $pdo->prepare("UPDATE seminaristes SET niveau_affecte = ? WHERE id = ?");
+        foreach ($pdo->query("SELECT id, note_test, niveau_affecte FROM seminaristes WHERE test_complete = 1 AND note_test IS NOT NULL")->fetchAll() as $r) {
+            if ($r['niveau_affecte'] === 'Pépinière') continue;
+            $niv = niveauPourNote((float)$r['note_test'], $noms, $seuils);
+            if ($niv !== $r['niveau_affecte']) $up->execute([$niv, $r['id']]);
+        }
+        $ins->execute(['grille_niveaux_v2', '1']);
+        reglageNiveaux(true);
+    } catch (Throwable $e) {}
+}
+
 /** Liste ordonnée des niveaux pour les filtres : Pépinière + les niveaux définis. */
 function listeNiveaux() { return array_merge(['Pépinière'], nomsNiveaux()); }
 
