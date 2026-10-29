@@ -1216,6 +1216,7 @@ const LIENS_COURTS = [
     'seminariste' => ['Formulaire des séminaristes', '/inscription_seminariste', 6],
     'commission'  => ['Formulaire des membres de commission', '/inscription_commission', 6],
     'visiteur'    => ['Formulaire des visiteurs', '/visiteur', 6],
+    'logistique'  => ['Liste de la commission Logistique (lecture seule, à envoyer à son responsable)', null, 10],
     'niveaux'     => ['Niveaux selon les notes (commission scientifique)', null, 10],
 ];
 function liensCourtsPreparer(PDO $pdo) {
