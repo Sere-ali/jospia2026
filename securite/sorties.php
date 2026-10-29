@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'ok') 
     if ($st->rowCount()) { journaliser($pdo, 'Sortie confirmée (Sécurité)', '#' . $id); $_SESSION['flash_succes'] = "OK : la personne est informée qu'elle a l'autorisation de sortir."; }
     redirect('/securite/sorties');
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'vider' && estSuperAdmin()) {
+    $n = $pdo->exec("DELETE FROM sorties");
+    journaliser($pdo, 'Liste des sorties vidée', (string)$n . ' ligne(s)');
+    $_SESSION['flash_succes'] = "La liste des sorties a été vidée ($n ligne(s) supprimée(s)).";
+    redirect('/securite/sorties');
+}
 $aFaire = $pdo->query("SELECT * FROM sorties WHERE statut = 'attente_securite' ORDER BY heure_sortie")->fetchAll();
 $dehors = $pdo->query("SELECT * FROM sorties WHERE statut = 'autorisee' ORDER BY heure_retour")->fetchAll();
 $rentres = $pdo->query("SELECT * FROM sorties WHERE statut = 'rentre' ORDER BY rentre_at DESC LIMIT 15")->fetchAll();
@@ -27,6 +33,11 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-titre"><span class="eyebrow">Commission Sécurité</span><h2>🚪 Sorties du camp</h2></div>
         
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
+        <?php if (estSuperAdmin()): ?>
+        <form method="post" data-no-ajax style="text-align:right;margin-bottom:12px;" onsubmit="return confirm('Supprimer TOUTES les sorties enregistrées (à autoriser, hors du camp et retours) ? Cette action est définitive.')">
+            <input type="hidden" name="action" value="vider"><button class="btn btn-danger btn-sm">🗑️ Vider la liste des sorties</button>
+        </form>
+        <?php endif; ?>
 
         <div data-live="secu">
             <h3>🔔 À autoriser (<?= count($aFaire) ?>) <small style="font-weight:400;color:var(--texte-doux);">- déjà acceptées par le MG / MGA</small></h3>
