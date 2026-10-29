@@ -33,7 +33,7 @@ $lettres = ['A' => 'option_a', 'B' => 'option_b', 'C' => 'option_c', 'D' => 'opt
 <?php foreach ($reponsesDetail as $i => $r): ?>
     <?php $estBonne = (int)$r['correcte'] === 1; ?>
     <div class="carte question-correction <?= $estBonne ? 'bonne' : 'mauvaise' ?>">
-        <span class="statut"><?= $estBonne ? '✅ Bonne réponse' : '❌ Réponse incorrecte / non trouvée' ?></span>
+        <span class="statut"><?= $estBonne ? 'Bonne réponse' : 'Réponse incorrecte / non trouvée' ?></span>
         <div class="categorie"><?= e($r['categorie']) ?></div>
         <h3>Q<?= $i + 1 ?>. <?= e($r['enonce']) ?></h3>
         <?php if (!$r['reponse_donnee']): ?>
@@ -49,8 +49,8 @@ $lettres = ['A' => 'option_a', 'B' => 'option_b', 'C' => 'option_c', 'D' => 'opt
             ?>
             <div class="<?= $classesOption ?>">
                 <?= e($r[$champ]) ?>
-                <?php if ($estLaBonneReponse): ?><span class="etiquette-option" style="color:var(--vert-fonce);">✔ Bonne réponse</span><?php endif; ?>
-                <?php if ($estChoisieEtFausse): ?><span class="etiquette-option" style="color:var(--danger);">✘ Réponse donnée par le séminariste</span><?php endif; ?>
+                <?php if ($estLaBonneReponse): ?><span class="etiquette-option" style="color:var(--vert-fonce);">Bonne réponse</span><?php endif; ?>
+                <?php if ($estChoisieEtFausse): ?><span class="etiquette-option" style="color:var(--danger);">Réponse donnée par le séminariste</span><?php endif; ?>
             </div>
         <?php endforeach; ?>
     </div>

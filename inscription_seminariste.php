@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="mono"><strong>Matricule :</strong> <?= e($identifiantsGeneres['matricule']) ?><br>
                    <strong>Sous-comité :</strong> <?= e($identifiantsGeneres['anyama']) ?><br>
                    <strong>Section :</strong> <?= e($identifiantsGeneres['section']) ?></p>
-                <p>🔒 Vos <strong>identifiants de connexion</strong> et votre <strong>reçu</strong> seront disponibles dès que la commission Finance aura <strong>validé votre paiement</strong>. Notez votre matricule <strong><?= e($identifiantsGeneres['matricule']) ?></strong> : il vous permettra de les récupérer sur la page <a href="<?= BASE_URL ?>/statut">« Suivre mon paiement »</a>.</p>
+                <p>Vos <strong>identifiants de connexion</strong> et votre <strong>reçu</strong> seront disponibles dès que la commission Finance aura <strong>validé votre paiement</strong>. Notez votre matricule <strong><?= e($identifiantsGeneres['matricule']) ?></strong> : il vous permettra de les récupérer sur la page <a href="<?= BASE_URL ?>/statut">« Suivre mon paiement »</a>.</p>
             </div>
             <?php if (estConnecte()): require __DIR__ . '/includes/paiement_bloc.php'; else: ?>
                 <a href="<?= BASE_URL ?>/login" class="btn btn-primaire">Me connecter et payer</a>
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label id="section_autre_label">Précisez le nom de la section <span class="req">*</span></label>
                         <input type="text" name="section_autre" value="<?= e($_POST['section_autre'] ?? '') ?>">
                     </div>
-                    <div class="help-text">ℹ️ Le sous-comité choisi ci-dessus n'est jamais modifié automatiquement. En revanche, jusqu'à <?= AGE_PEPINIERE_SEUIL ?> ans inclus, le <strong>dortoir</strong> attribué sera automatiquement <strong>Pépinière</strong> (voir section suivante).</div>
+                    <div class="help-text">Le sous-comité choisi ci-dessus n'est jamais modifié automatiquement. En revanche, jusqu'à <?= AGE_PEPINIERE_SEUIL ?> ans inclus, le <strong>dortoir</strong> attribué sera automatiquement <strong>Pépinière</strong> (voir section suivante).</div>
                 </fieldset>
 
                 <fieldset>
@@ -214,9 +214,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </fieldset>
 
-                <p class="help-text" style="margin-bottom:12px;">💙 Après la validation, vous arrivez directement sur votre page : vos identifiants, votre fiche et le paiement Wave (<strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>) s'affichent ensemble.</p>
+                <p class="help-text" style="margin-bottom:12px;">Après la validation, vous arrivez directement sur votre page : vos identifiants, votre fiche et le paiement Wave (<strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>) s'affichent ensemble.</p>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"><span>Valider mon inscription</span><i aria-hidden="true">→</i></button>
-                <p class="form-note">💙 Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
+                <p class="form-note">Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
             </form>
         <?php endif; ?>
         </div>

@@ -47,7 +47,7 @@ $maintenant = date('Y-m-d\TH:i');
             <form method="post" class="form-pro" novalidate data-ajax>
                 <input type="hidden" name="mode" value="arrivee">
                 <fieldset>
-                    <legend data-ico="🚶">Je suis arrivé</legend>
+                    <legend data-ico="">Je suis arrivé</legend>
                     <div class="form-group"><label>Nom et prénoms <span class="req">*</span></label>
                         <input type="text" name="nom_prenoms" required value="<?= e($mode === 'arrivee' ? ($_POST['nom_prenoms'] ?? '') : '') ?>"></div>
                     <div class="form-group"><label>Contact (téléphone) <span class="req">*</span></label>
@@ -62,7 +62,7 @@ $maintenant = date('Y-m-d\TH:i');
             </form>
 
             <div class="carte">
-                <h3>🚪 Départ</h3>
+                <h3>Départ</h3>
                 <p>La sortie d'un visiteur est enregistrée uniquement par la commission Sécurité. Avant de quitter le site, passez la voir.</p>
             </div>
         </div>

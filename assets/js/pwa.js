@@ -14,8 +14,8 @@
         var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
         var m = document.createElement('div');
         m.className = 'pwa-modal';
-        m.innerHTML = '<div class="pwa-boite"><h3>📲 Installer l\'application</h3>' + (ios
-            ? '<p>Sur iPhone / iPad (Safari) :</p><ol><li>Touchez le bouton <b>Partager</b> ⬆️</li><li>Choisissez <b>« Sur l\'écran d\'accueil »</b></li><li>Touchez <b>Ajouter</b></li></ol>'
+        m.innerHTML = '<div class="pwa-boite"><h3>Installer l\'application</h3>' + (ios
+            ? '<p>Sur iPhone / iPad (Safari) :</p><ol><li>Touchez le bouton <b>Partager</b> </li><li>Choisissez <b>« Sur l\'écran d\'accueil »</b></li><li>Touchez <b>Ajouter</b></li></ol>'
             : '<p>Sur Android (Chrome) :</p><ol><li>Touchez le menu <b>⋮</b> en haut à droite</li><li>Choisissez <b>« Installer l\'application »</b> ou <b>« Ajouter à l\'écran d\'accueil »</b></li></ol>')
             + '<button type="button" class="btn btn-primaire">OK</button></div>';
         m.addEventListener('click', function (e) { if (e.target === m || e.target.tagName === 'BUTTON') m.remove(); });
@@ -24,7 +24,7 @@
     function bouton() {
         var b = document.createElement('button');
         b.id = 'btn-pwa'; b.type = 'button'; b.className = 'btn-pwa';
-        b.innerHTML = '<span>📲</span> Installer l\'application';
+        b.innerHTML = '<span></span> Installer l\'application';
         b.addEventListener('click', function () {
             if (evt) { evt.prompt(); evt.userChoice.then(function (c) { if (c.outcome === 'accepted') b.remove(); evt = null; }); }
             else aide();

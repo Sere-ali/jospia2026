@@ -29,7 +29,7 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <?php require __DIR__ . '/../includes/bulletin_rendu.php'; ?>
             <div style="text-align:center;margin-top:18px;" class="no-print">
-                <a href="<?= BASE_URL ?>/espace/bulletin_pdf" class="btn btn-primaire">⬇️ Télécharger mon bulletin en PDF</a>
+                <a href="<?= BASE_URL ?>/espace/bulletin_pdf" class="btn btn-primaire">Télécharger mon bulletin en PDF</a>
             </div>
         <?php endif; ?>
     </div>

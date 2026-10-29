@@ -64,7 +64,7 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
 ?>
 <section class="section">
     <div class="container">
-        <div class="section-titre"><span class="eyebrow">Espace commission</span><h2>📝 Rapport journalier</h2></div>
+        <div class="section-titre"><span class="eyebrow">Espace commission</span><h2>Rapport journalier</h2></div>
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
@@ -77,7 +77,7 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
             <form method="post" id="formulaire" class="carte form-pro" style="margin-bottom:22px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
                 <input type="hidden" name="action" value="enregistrer">
                 <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>"><?php endif; ?>
-                <h3><?= $edit ? '✏️ Modifier le rapport' : '➕ Nouveau rapport' ?></h3>
+                <h3><?= $edit ? 'Modifier le rapport' : 'Nouveau rapport' ?></h3>
                 <div class="form-group"><label>Date du rapport</label>
                     <input type="date" name="date_rapport" required value="<?= e($edit['date_rapport'] ?? $aujourdhui) ?>" style="max-width:220px;"></div>
                 <div class="form-group"><label>Activités réalisées <span class="req">*</span></label>
@@ -98,8 +98,8 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
             <div data-live="rapports">
                 <?php foreach ($rapports as $r): $mien = $estAdminRapport || (int)$r['auteur_id'] === (int)$u['id'];
                     $act = '';
-                    if ($mien) $act = '<a href="?modifier=' . (int)$r['id'] . '#formulaire" class="btn btn-primaire btn-sm">✏️ Modifier ce rapport</a>'
-                        . '<form method="post" onsubmit="return confirm(\'Supprimer ce rapport ?\');" style="display:inline;"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="' . (int)$r['id'] . '"><button class="btn btn-sm btn-danger">🗑️ Supprimer</button></form>';
+                    if ($mien) $act = '<a href="?modifier=' . (int)$r['id'] . '#formulaire" class="btn btn-primaire btn-sm">Modifier ce rapport</a>'
+                        . '<form method="post" onsubmit="return confirm(\'Supprimer ce rapport ?\');" style="display:inline;"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="' . (int)$r['id'] . '"><button class="btn btn-sm btn-danger">Supprimer</button></form>';
                     echo lettreRapportHtml($r, $act);
                 endforeach; ?>
                 <?php if (!$rapports): ?><div class="carte" style="text-align:center;color:var(--texte-doux);">Aucun rapport pour le moment.</div><?php endif; ?>

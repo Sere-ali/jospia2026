@@ -34,7 +34,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <option value="">Tous les niveaux</option>
                     <?php foreach ($niveaux as $n): ?><option value="<?= e($n) ?>" <?= $niveau === $n ? 'selected' : '' ?>><?= e($n) ?></option><?php endforeach; ?>
                 </select>
-                <a href="<?= BASE_URL ?>/admin/pdf?<?= e($qs) ?>" class="btn btn-primaire">⬇️ Télécharger <?= count($liste) ?> badge(s) en PDF - <?= $nbPages ?> page(s) A4</a>
+                <a href="<?= BASE_URL ?>/admin/pdf?<?= e($qs) ?>" class="btn btn-primaire">Télécharger <?= count($liste) ?> badge(s) en PDF - <?= $nbPages ?> page(s) A4</a>
             </form>
             <p style="color:var(--texte-doux);margin:10px 0 0;">Le fichier PDF est prêt à imprimer : 4 badges par page A4, avec repères de découpe. Avec beaucoup de badges, la génération peut prendre un peu de temps.</p>
         </div>
@@ -45,7 +45,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <?php foreach ($liste as $s): ?>
                     <tr>
                         <td class="mono"><?= e($s['matricule']) ?></td><td><?= e($s['nom_prenoms']) ?></td><td><?= e($s['dortoir']) ?></td><td><?= e($s['niveau_affecte'] ?: 'Non affecté') ?></td>
-                        <td><a href="<?= BASE_URL ?>/admin/pdf?type=badge_sem&id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">⬇️ PDF</a></td>
+                        <td><a href="<?= BASE_URL ?>/admin/pdf?type=badge_sem&id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">PDF</a></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$liste): ?><tr><td colspan="5" class="text-center">Aucun badge.</td></tr><?php endif; ?>

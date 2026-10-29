@@ -25,7 +25,7 @@ require_once __DIR__ . '/includes/header.php';
             Aucun montant n'a été débité, ou votre solde Wave est insuffisant. Votre inscription n'est pas validée tant que le paiement n'est pas effectué.
         </div>
         <div class="text-center mt-3">
-            <a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">💙 Réessayer le paiement de <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</a>
+            <a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">Réessayer le paiement de <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</a>
         </div>
     </div>
 </div>

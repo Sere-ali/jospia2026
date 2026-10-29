@@ -14,15 +14,15 @@ $lienWaveConfigure = lienWavePaiement() !== null;
 if (waveApiActive()):
 ?>
 <div class="pay-bloc">
-    <h3>💳 Paiement des frais de participation</h3>
+    <h3>Paiement des frais de participation</h3>
     <div class="pay-montant"><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</div>
     <p style="text-align:center;">Le paiement est confirmé <strong>automatiquement</strong> : l'ID de transaction est enregistré et votre reçu apparaît dès que Wave confirme.</p>
-    <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a></p>
+    <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a></p>
     <p style="text-align:center;color:var(--texte-doux);font-size:.9rem;">Si votre solde est insuffisant ou si le paiement échoue, rien n'est validé : rechargez votre compte Wave puis cliquez de nouveau sur le bouton.</p>
 </div>
 <?php return; endif; ?>
 <div class="pay-bloc">
-    <h3>💳 Paiement des frais de participation</h3>
+    <h3>Paiement des frais de participation</h3>
     <div class="pay-montant"><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</div>
     <ol class="pay-etapes">
         <li>Ouvrez <strong>Wave</strong> et envoyez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong><?php if ($numeroPayeur): ?> <strong>depuis votre numéro <?= e($numeroPayeur) ?></strong><?php endif; ?> au numéro :
@@ -31,9 +31,9 @@ if (waveApiActive()):
                 <button type="button" class="btn btn-sm btn-outline" onclick="navigator.clipboard && navigator.clipboard.writeText('<?= e(WAVE_NUMERO) ?>'); this.textContent='Copié ✓';">Copier</button>
             </div>
             <?php if ($lienWaveConfigure): ?>
-                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
             <?php else: ?>
-                <button type="button" class="btn btn-wave" id="btn-wave">💙 Payer avec Wave</button>
+                <button type="button" class="btn btn-wave" id="btn-wave">Payer avec Wave</button>
                 <small style="display:block;color:var(--texte-doux);margin-top:4px;">Le numéro est copié automatiquement, puis l'application Wave s'ouvre : collez le numéro et envoyez <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
             <?php endif; ?>
         </li>
@@ -41,7 +41,7 @@ if (waveApiActive()):
     </ol>
     <form method="post" action="<?= e($paiementAction) ?>" class="form-pro">
         <input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small>
-        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>✔ J'ai payé : envoyer l'ID de transaction</span><i aria-hidden="true">→</i></button>
+        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>J'ai payé : envoyer l'ID de transaction</span><i aria-hidden="true">→</i></button>
         <small style="display:block;text-align:center;color:var(--texte-doux);margin-top:6px;">La commission Finance vérifie sur son compte Wave puis valide votre paiement.</small>
     </form>
 </div>
@@ -63,7 +63,7 @@ if (waveApiActive()):
         } else {
             window.open('https://www.wave.com/fr/', '_blank', 'noopener');
         }
-        btn.textContent = '✔ Numéro copié - ouvrez Wave et payez';
+        btn.textContent = 'Numéro copié - ouvrez Wave et payez';
     });
 })();
 </script>

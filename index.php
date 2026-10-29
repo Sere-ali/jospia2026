@@ -12,9 +12,9 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
             <h1>Bienvenue aux Journées Spirituelles Islamiques d'Anyama</h1>
             <p class="lead">Inscrivez-vous comme séminariste ou membre de commission, composez le test d'entrée en ligne, puis retrouvez votre fiche, votre dortoir et votre badge sur votre espace personnel.</p>
             <div class="hero-actions">
-                <a href="<?= BASE_URL ?>/inscription_seminariste" class="btn btn-or">🎓 M'inscrire comme séminariste</a>
-                <a href="<?= BASE_URL ?>/inscription_commission" class="btn btn-outline">👥 Rejoindre une commission</a>
-                <a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">🚶 Espace visiteurs</a>
+                <a href="<?= BASE_URL ?>/inscription_seminariste" class="btn btn-or">M'inscrire comme séminariste</a>
+                <a href="<?= BASE_URL ?>/inscription_commission" class="btn btn-outline">Rejoindre une commission</a>
+                <a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">Espace visiteurs</a>
             </div>
             <div class="compte-rebours" data-cible="<?= e($dateEvenement) ?>" aria-live="off">
                 <p class="compte-legende">Ouverture dans</p>
@@ -75,7 +75,7 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
         </div>
         <div class="grid grid-2">
             <div class="carte carte-profil orange rv">
-                <div class="tete"><h3>🎓 Séminariste</h3></div>
+                <div class="tete"><h3>Séminariste</h3></div>
                 <div class="corps">
                     <p>Après l'inscription et le paiement des frais de participation, vous composez un test d'entrée en ligne noté sur 20. Il détermine votre niveau et votre dortoir.</p>
                     <p>Votre reçu de paiement avec QR code et votre fiche d'inscription sont générés automatiquement.</p>
@@ -83,7 +83,7 @@ $dateEvenement = (substr(EVENT_NAME, -4)) . '-12-' . str_pad(EVENT_JOUR_DEBUT, 2
                 </div>
             </div>
             <div class="carte carte-profil vert rv" style="--d:.12s">
-                <div class="tete"><h3>👥 Membre de commission</h3></div>
+                <div class="tete"><h3>Membre de commission</h3></div>
                 <div class="corps">
                     <p>Pour les encadreurs et responsables : MG, MGA, Administration, Scientifique, MIC, Finance, Santé, Sécurité, Hygiène, Pépinière, Restauration, Logistique, Protocole.</p>
                     <p>Votre badge officiel et votre certificat sont générés automatiquement.</p>

@@ -14,7 +14,7 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
                 <div class="recu-titre">REÇU DE PAIEMENT</div>
                 <div class="recu-sous"><?= e(EVENT_FULL) ?></div>
             </div>
-            <div class="recu-statut">✔ PAYÉ</div>
+            <div class="recu-statut">PAYÉ</div>
         </div>
         <p class="recu-texte">La commission Finance atteste avoir reçu de <strong><?= e($s['nom_prenoms']) ?></strong>, matricule <strong><?= e($s['matricule']) ?></strong>, la somme de <strong><?= number_format((int)$recu['montant'], 0, ',', ' ') ?> FCFA</strong> au titre des frais d'inscription à la <?= e(EVENT_FULL) ?>. Ce paiement a été vérifié et validé le <?= e(date('d/m/Y à H:i', strtotime($dateRecu))) ?>. Le présent reçu est délivré pour servir et valoir ce que de droit.</p>
         <div class="recu-corps">
@@ -38,7 +38,7 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
         </div>
     </div>
     <div class="no-print" style="text-align:center;margin-top:14px;">
-        <a href="<?= BASE_URL ?>/espace/download_recu?id=<?= (int)$recu['id'] ?>" class="btn btn-or">📄 Télécharger le reçu en PDF</a>
+        <a href="<?= BASE_URL ?>/espace/download_recu?id=<?= (int)$recu['id'] ?>" class="btn btn-or">Télécharger le reçu en PDF</a>
     </div>
 </div>
 <script src="<?= BASE_URL ?>/assets/js/vendor/qrcode.js"></script>

@@ -57,7 +57,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;">
             <h2>Banque de questions (<?= count($questions) ?>)</h2>
-            <p><a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-sm btn-outline">⚙️ Configurer le tirage des banques</a></p>
+            <p><a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-sm btn-outline">Configurer le tirage des banques</a></p>
         </div>
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
@@ -119,8 +119,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($q['enonce']) ?></td>
                         <td><?= e($q['bonne_reponse']) ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/questions?modifier=<?= $q['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
-                            <a href="<?= BASE_URL ?>/admin/questions?supprimer=<?= $q['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette question ?')">🗑️</a>
+                            <a href="<?= BASE_URL ?>/admin/questions?modifier=<?= $q['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/questions?supprimer=<?= $q['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette question ?')">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

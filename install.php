@@ -65,7 +65,7 @@ try {
             <div class="alert <?= $erreur ? 'alert-erreur' : 'alert-succes' ?>"><?= $m ?></div>
         <?php endforeach; ?>
         <?php if (!$erreur): ?>
-            <p><strong>⚠️ Important :</strong> supprimez ou renommez le fichier <code>install.php</code> maintenant, puis rendez-vous sur la <a href="<?= BASE_URL ?>/login">page de connexion</a>.</p>
+            <p><strong>Important :</strong> supprimez ou renommez le fichier <code>install.php</code> maintenant, puis rendez-vous sur la <a href="<?= BASE_URL ?>/login">page de connexion</a>.</p>
         <?php endif; ?>
     </div>
 </div>

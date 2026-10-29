@@ -5,8 +5,8 @@ $titrePage = "Comité managérial";
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/admin_nav.php';
 $cartes = [
-    ['🚪 Sorties MG / MGA', 'Accepter ou refuser les demandes de sortie du camp.', '/espace/sorties_mg'],
-    ['📝 Rapports journaliers', 'Rapport du jour de chaque commission.', '/admin/rapports'],
+    ['Sorties MG / MGA', 'Accepter ou refuser les demandes de sortie du camp.', '/espace/sorties_mg'],
+    ['Rapports journaliers', 'Rapport du jour de chaque commission.', '/admin/rapports'],
 ];
 ?>
 <section class="section">

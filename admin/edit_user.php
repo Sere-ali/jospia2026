@@ -73,7 +73,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
         <?php if ($estPrincipal): ?>
-            <div class="alert alert-info">👑 Votre compte Super Administrateur : vous seul pouvez le modifier. Le rôle reste verrouillé pour éviter de vous exclure du site.</div>
+            <div class="alert alert-info">Votre compte Super Administrateur : vous seul pouvez le modifier. Le rôle reste verrouillé pour éviter de vous exclure du site.</div>
         <?php endif; ?>
 
         <form method="post">

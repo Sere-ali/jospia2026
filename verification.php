@@ -25,7 +25,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min
 .f img{width:96px;height:96px;object-fit:cover;border-radius:50%;border:3px solid #fff;display:block;margin:0 auto 10px}
 .f b{opacity:.85;font-weight:600}
 </style></head><body><div class="c">
-    <div class="i"><?= $ok ? '✔' : '✖' ?></div>
+    <div class="i"><?= $ok ? '' : '' ?></div>
     <div class="v"><?= $ok ? 'VALIDÉ' : 'REFUSÉ' ?></div>
     <div class="m"><?= $ok ? 'Paiement effectué' : e($motif) ?></div>
     <?php if ($s): ?>

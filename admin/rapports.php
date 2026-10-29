@@ -37,8 +37,8 @@ $q = function ($com, $jour = '') { return BASE_URL . '/admin/rapport_pdf?commiss
 ?>
 <section class="section">
     <div class="container">
-        <div class="section-titre"><span class="eyebrow">Back-office</span><h2>📝 Rapports journaliers des commissions</h2></div>
-        <p class="no-print" style="text-align:center;margin-bottom:14px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-outline btn-sm">✍️ Rédiger le rapport de l'administration</a></p>
+        <div class="section-titre"><span class="eyebrow">Back-office</span><h2>Rapports journaliers des commissions</h2></div>
+        <p class="no-print" style="text-align:center;margin-bottom:14px;"><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-outline btn-sm">Rédiger le rapport de l'administration</a></p>
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
@@ -47,19 +47,19 @@ $q = function ($com, $jour = '') { return BASE_URL . '/admin/rapport_pdf?commiss
             <form method="get" class="no-print carte" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:20px;">
                 <strong>Tous les rapports d'un jour :</strong>
                 <input type="date" name="jour" value="<?= e($jourChoisi ?: $aujourdhui) ?>" style="max-width:200px;" id="jour-global">
-                <a href="#" class="btn btn-primaire btn-sm" onclick="this.href='<?= BASE_URL ?>/admin/rapport_pdf?jour='+document.getElementById('jour-global').value;">📄 Télécharger en PDF</a>
-                <a href="<?= BASE_URL ?>/admin/rapport_pdf" class="btn btn-outline btn-sm">📄 Tous les rapports (PDF)</a>
+                <a href="#" class="btn btn-primaire btn-sm" onclick="this.href='<?= BASE_URL ?>/admin/rapport_pdf?jour='+document.getElementById('jour-global').value;">Télécharger en PDF</a>
+                <a href="<?= BASE_URL ?>/admin/rapport_pdf" class="btn btn-outline btn-sm">Tous les rapports (PDF)</a>
             </form>
             <div class="grid grid-3" data-live="cartes">
                 <?php foreach ($toutes as $c): $r = $resume[$c] ?? null; $fait = !empty($faits[$c]); ?>
                     <div class="carte">
                         <h3><?= e($c) ?></h3>
                         <?php if (nomCommissionComplet($c) !== $c): ?><p style="color:var(--texte-doux);font-size:.88rem;margin:0 0 8px;"><?= e(nomCommissionComplet($c)) ?></p><?php endif; ?>
-                        <p><?= $fait ? '<span class="pill pill-vert">✔ Rapport du jour déposé</span>' : '<span class="pill pill-or">⏳ Rapport du jour à faire</span>' ?></p>
+                        <p><?= $fait ? '<span class="pill pill-vert">Rapport du jour déposé</span>' : '<span class="pill pill-or">Rapport du jour à faire</span>' ?></p>
                         <p style="font-size:.85rem;color:var(--texte-doux);"><?= (int)($r['total'] ?? 0) ?> rapport(s)<?= !empty($r['dernier']) ? ' · dernier le ' . e(date('d/m/Y', strtotime($r['dernier']))) : '' ?></p>
                         <div style="display:flex;gap:6px;flex-wrap:wrap;">
                             <a href="?commission=<?= urlencode($c) ?>" class="btn btn-primaire btn-sm">Consulter</a>
-                            <?php if (!empty($r['total'])): ?><a href="<?= e($q($c)) ?>" class="btn btn-outline btn-sm">📄 PDF</a><?php endif; ?>
+                            <?php if (!empty($r['total'])): ?><a href="<?= e($q($c)) ?>" class="btn btn-outline btn-sm">PDF</a><?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -67,7 +67,7 @@ $q = function ($com, $jour = '') { return BASE_URL . '/admin/rapport_pdf?commiss
         <?php else: ?>
             <p class="no-print" style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;">
                 <a href="<?= BASE_URL ?>/admin/rapports" class="btn btn-outline btn-sm">&larr; Toutes les commissions</a>
-                <?php if ($rapports): ?><a href="<?= e($q($commission, $jourChoisi)) ?>" class="btn btn-primaire btn-sm">📄 Télécharger en PDF<?= $jourChoisi ? ' (' . e(date('d/m/Y', strtotime($jourChoisi))) . ')' : '' ?></a><?php endif; ?>
+                <?php if ($rapports): ?><a href="<?= e($q($commission, $jourChoisi)) ?>" class="btn btn-primaire btn-sm">Télécharger en PDF<?= $jourChoisi ? ' (' . e(date('d/m/Y', strtotime($jourChoisi))) . ')' : '' ?></a><?php endif; ?>
             </p>
             <h3 style="text-align:center;margin-bottom:14px;">Commission <?= e($commission) ?><?php if (nomCommissionComplet($commission) !== $commission): ?> <small style="color:var(--texte-doux);font-weight:400;">- <?= e(nomCommissionComplet($commission)) ?></small><?php endif; ?></h3>
             <form method="get" class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
@@ -77,8 +77,8 @@ $q = function ($com, $jour = '') { return BASE_URL . '/admin/rapport_pdf?commiss
             </form>
             <div data-live="rapports">
                 <?php foreach ($rapports as $r):
-                    $act = '<a href="' . BASE_URL . '/admin/rapport_pdf?id=' . (int)$r['id'] . '" class="btn btn-sm btn-outline">📄 PDF de ce rapport</a>';
-                    if (estSuperAdmin()) $act .= '<form method="post" onsubmit="return confirm(\'Supprimer ce rapport ?\');" style="display:inline;"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="' . (int)$r['id'] . '"><button class="btn btn-sm btn-danger">🗑️ Supprimer</button></form>';
+                    $act = '<a href="' . BASE_URL . '/admin/rapport_pdf?id=' . (int)$r['id'] . '" class="btn btn-sm btn-outline">PDF de ce rapport</a>';
+                    if (estSuperAdmin()) $act .= '<form method="post" onsubmit="return confirm(\'Supprimer ce rapport ?\');" style="display:inline;"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="' . (int)$r['id'] . '"><button class="btn btn-sm btn-danger">Supprimer</button></form>';
                     echo lettreRapportHtml($r, $act);
                 endforeach; ?>
                 <?php if (!$rapports): ?><div class="carte" style="text-align:center;color:var(--texte-doux);">Aucun rapport pour le moment.</div><?php endif; ?>

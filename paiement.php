@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="form-page" style="padding:2rem 0 4rem;"><div class="container" style="max-width: 640px;">
     <div class="card p-4">
         <?php if ($matriculeNouveau): ?>
-            <div class="alert alert-succes">✔ Inscription enregistrée - matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
+            <div class="alert alert-succes">Inscription enregistrée - matricule <strong><?= e($matriculeNouveau) ?></strong>. Il reste à payer par Wave pour la finaliser.</div>
         <?php endif; ?>
         <h2 style="color:var(--primaire);text-align:center;margin-bottom:1rem;">Validation de votre paiement</h2>
         

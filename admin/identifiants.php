@@ -60,7 +60,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 
         <form method="get" class="no-print" style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
             <input type="text" name="q" value="<?= e($q) ?>" placeholder="Nom, numéro de téléphone ou matricule" style="flex:1;min-width:220px;" autofocus>
-            <button class="btn btn-primaire">🔍 Rechercher</button>
+            <button class="btn btn-primaire">Rechercher</button>
         </form>
 
         <?php if (!$lignes): ?>
@@ -80,7 +80,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td>
                             <form method="post" onsubmit="return confirm('Réinitialiser le mot de passe de cette personne ?');">
                                 <input type="hidden" name="reinit" value="<?= (int)$l['id'] ?>">
-                                <button class="btn btn-sm btn-outline">🔄 Nouveau mot de passe</button>
+                                <button class="btn btn-sm btn-outline">Nouveau mot de passe</button>
                             </form>
                         </td>
                     </tr>

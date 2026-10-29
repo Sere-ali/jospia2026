@@ -53,9 +53,9 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
         <div data-onglets style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;" class="no-print">
-            <button type="button" class="btn btn-primaire btn-sm actif" data-onglet="dortoir">🛏️ Par dortoir</button>
-            <button type="button" class="btn btn-outline btn-sm" data-onglet="niveau">🎓 Par niveau</button>
-            <button type="button" onclick="window.print()" class="btn btn-outline btn-sm" style="margin-left:auto;">🖨️ Imprimer cette liste</button>
+            <button type="button" class="btn btn-primaire btn-sm actif" data-onglet="dortoir">Par dortoir</button>
+            <button type="button" class="btn btn-outline btn-sm" data-onglet="niveau">Par niveau</button>
+            <button type="button" onclick="window.print()" class="btn btn-outline btn-sm" style="margin-left:auto;">Imprimer cette liste</button>
         </div>
 
         <div data-panneau="dortoir">
@@ -76,13 +76,13 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                     <td><?= e($s['contact']) ?></td>
                                     <td class="no-print" style="white-space:nowrap;">
                                         <?php if (estAdmin()): ?>
-                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
                                         <?php endif; ?>
                                         <?php if (estSuperAdmin()): ?>
                                         <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement <?= e(addslashes($s['nom_prenoms'])) ?> ?');">
                                             <input type="hidden" name="action" value="supprimer">
                                             <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                         </form>
                                         <?php endif; ?>
                                     </td>
@@ -114,13 +114,13 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                                     <td><?= e($s['contact']) ?></td>
                                     <td class="no-print" style="white-space:nowrap;">
                                         <?php if (estAdmin()): ?>
-                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                        <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= (int)$s['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
                                         <?php endif; ?>
                                         <?php if (estSuperAdmin()): ?>
                                         <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement <?= e(addslashes($s['nom_prenoms'])) ?> ?');">
                                             <input type="hidden" name="action" value="supprimer">
                                             <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                         </form>
                                         <?php endif; ?>
                                     </td>

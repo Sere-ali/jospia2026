@@ -24,7 +24,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="grid grid-2">
             <?php foreach (['Masculin', 'Féminin'] as $genre): ?>
             <div class="carte">
-                <h3><?= $genre === 'Masculin' ? '👦 Dortoirs Hommes' : '👧 Dortoirs Femmes' ?></h3>
+                <h3><?= $genre === 'Masculin' ? 'Dortoirs Hommes' : 'Dortoirs Femmes' ?></h3>
                 <table>
                     <thead><tr><th>Dortoir</th><th>Occupants</th><th>Capacité</th><th></th></tr></thead>
                     <tbody>

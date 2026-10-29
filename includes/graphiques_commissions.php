@@ -16,7 +16,7 @@ foreach ($__jours as $__j) { $__m += (int)($__jM[$__j] ?? 0); $__s += (int)($__j
 ?>
 <div class="grid grid-2" style="margin-bottom:30px;align-items:start;">
     <div class="carte">
-        <h3>📊 Effectif par commission</h3>
+        <h3>Effectif par commission</h3>
         <?php if (!$__parCom): ?><p style="color:var(--texte-doux);">Aucune donnée.</p><?php else:
             $__max = max(array_column($__parCom, 'n')); $__h = 30; $__W = 560; $__lab = 210; $__H = count($__parCom) * $__h + 10; ?>
             <svg viewBox="0 0 <?= $__W ?> <?= $__H ?>" style="width:100%;height:auto;" role="img" aria-label="Effectif par commission">
@@ -29,7 +29,7 @@ foreach ($__jours as $__j) { $__m += (int)($__jM[$__j] ?? 0); $__s += (int)($__j
         <?php endif; ?>
     </div>
     <div class="carte">
-        <h3>📈 Évolution des inscriptions</h3>
+        <h3>Évolution des inscriptions</h3>
         <?php if (count($__jours) < 2): ?><p style="color:var(--texte-doux);">Pas encore assez de données.</p><?php else:
             $__W = 560; $__H = 260; $__gx = 44; $__gy = 16; $__gw = $__W - $__gx - 14; $__gh = $__H - $__gy - 42;
             $__top = max(1, max($__cumM), max($__cumS)); $__n = count($__jours);

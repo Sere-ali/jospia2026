@@ -28,7 +28,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="container" style="max-width:600px;margin:2rem auto;">
     <div class="carte">
         <div class="alert alert-erreur text-center"><strong>Échec : impossible de soumettre vos informations.</strong><br>Wave n'a pas pu être ouvert pour le moment, le paiement n'a donc pas été effectué. Aucune information n'a été enregistrée.</div>
-        <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_inscription?t=<?= e($jeton) ?>" class="btn btn-primaire">💙 Réessayer le paiement</a></p>
+        <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_inscription?t=<?= e($jeton) ?>" class="btn btn-primaire">Réessayer le paiement</a></p>
     </div>
 </div>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

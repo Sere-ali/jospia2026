@@ -288,7 +288,7 @@ function exigerAccesTest(PDO $pdo) {
     $titrePage = "Test d'entrée verrouillé";
     require_once __DIR__ . '/header.php';
     require_once __DIR__ . '/admin_nav.php';
-    echo '<section class="section"><div class="container"><div class="carte" style="max-width:640px;margin:0 auto;text-align:center;"><h3>🔒 Test d\'entrée verrouillé</h3><p>Le test d\'entrée (questions, configuration, déverrouillage) n\'est pas encore accessible à la commission scientifique. Il sera déverrouillé par le <strong>super administrateur</strong>.</p><a href="' . BASE_URL . '/admin/commission_scientifique" class="btn btn-outline btn-sm">&larr; Retour</a></div></div></section>';
+    echo '<section class="section"><div class="container"><div class="carte" style="max-width:640px;margin:0 auto;text-align:center;"><h3>Test d\'entrée verrouillé</h3><p>Le test d\'entrée (questions, configuration, déverrouillage) n\'est pas encore accessible à la commission scientifique. Il sera déverrouillé par le <strong>super administrateur</strong>.</p><a href="' . BASE_URL . '/admin/commission_scientifique" class="btn btn-outline btn-sm">&larr; Retour</a></div></div></section>';
     require_once __DIR__ . '/footer.php';
     exit;
 }
@@ -305,15 +305,15 @@ function blocTestEntree(PDO $pdo) {
     if (accesTestScientifique($pdo)) {
         $ouvert = testOuvert($pdo);
         $h .= '<div class="carte" style="border-left:4px solid ' . ($ouvert ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
-        $h .= '<h3>' . ($ouvert ? '🔓 Test ouvert aux séminaristes' : '🔒 Test fermé aux séminaristes') . '</h3>';
+        $h .= '<h3>' . ($ouvert ? 'Test ouvert aux séminaristes' : 'Test fermé aux séminaristes') . '</h3>';
         $h .= '<p>' . ($ouvert ? 'Les séminaristes dont le paiement est validé peuvent composer le test.' : 'Les séminaristes (paiement validé) ne peuvent pas encore composer le test.') . '</p>';
-        $h .= blocFormParametre('test_ouvert', $ouvert, '🔓 Ouvrir le test aux séminaristes', '🔒 Fermer le test') . '</div>';
+        $h .= blocFormParametre('test_ouvert', $ouvert, 'Ouvrir le test aux séminaristes', 'Fermer le test') . '</div>';
         if (estScientifique()) {
             $co = correctionOuverte($pdo);
             $h .= '<div class="carte" style="border-left:4px solid ' . ($co ? 'var(--couleur-succes)' : '#dc3545') . ';margin-bottom:24px;">';
-            $h .= '<h3>' . ($co ? '🔓 Correction du test visible par les séminaristes' : '🔒 Correction du test verrouillée') . '</h3>';
+            $h .= '<h3>' . ($co ? 'Correction du test visible par les séminaristes' : 'Correction du test verrouillée') . '</h3>';
             $h .= '<p>' . ($co ? 'Les séminaristes ayant composé le test peuvent voir la correction détaillée de leurs réponses.' : 'Les séminaristes ne peuvent pas voir la correction détaillée de leur test.') . '</p>';
-            $h .= blocFormParametre('correction_ouverte', $co, '🔓 Déverrouiller la correction', '🔒 Verrouiller la correction') . '</div>';
+            $h .= blocFormParametre('correction_ouverte', $co, 'Déverrouiller la correction', 'Verrouiller la correction') . '</div>';
         }
     }
     return $h;
@@ -868,7 +868,7 @@ function urlVerificationFiche(PDO $pdo, $seminaristeId) {
 function blocQrFiche(PDO $pdo, $seminaristeId) {
     $url = urlVerificationFiche($pdo, $seminaristeId);
     $statut = statutPaiementSeminariste($pdo, $seminaristeId);
-    $badge = $statut === 'validé' ? '<span class="pill pill-vert">✔ Paiement validé</span>' : ($statut === 'rejeté' ? '<span class="pill" style="background:#fde8e8;color:#b42318;">✖ Paiement rejeté</span>' : '<span class="pill pill-or">⏳ Paiement en attente</span>');
+    $badge = $statut === 'validé' ? '<span class="pill pill-vert">Paiement validé</span>' : ($statut === 'rejeté' ? '<span class="pill" style="background:#fde8e8;color:#b42318;">Paiement rejeté</span>' : '<span class="pill pill-or">Paiement en attente</span>');
     return '<div class="fiche-qr" style="text-align:center;margin:18px 0 6px;"><div id="qr-fiche" data-url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;"></div>'
         . '<div style="font-size:.82rem;color:var(--texte-doux);margin:6px 0;">Scannez ce QR code : <strong style="color:#0a8f3c;">vert = payé</strong>, <strong style="color:#c81e1e;">rouge = refusé</strong></div>' . $badge . '</div>'
         . '<script src="' . BASE_URL . '/assets/js/vendor/qrcode.js"></script><script>(function(){var el=document.getElementById("qr-fiche");if(!el||typeof qrcode==="undefined")return;var q=qrcode(0,"M");q.addData(el.getAttribute("data-url"));q.make();el.innerHTML=q.createSvgTag(5,2);})();</script>';
@@ -937,8 +937,8 @@ function sortiePersonne(PDO $pdo, array $u) {
 }
 
 function libelleStatutSortie($st) {
-    return ['attente_mg' => ['⏳ En attente du MG / MGA', 'pill-or'], 'refusee' => ['✖ Refusée', 'pill-gris'], 'attente_securite' => ['⏳ Validée par le MG - en attente de la Sécurité', 'pill-or'],
-            'autorisee' => ['✔ Autorisation accordée', 'pill-vert'], 'rentre' => ['🏠 Rentré sur le camp', 'pill-vert'], 'annulee' => ['Annulée', 'pill-gris']][$st] ?? [$st, 'pill-gris'];
+    return ['attente_mg' => ['En attente du MG / MGA', 'pill-or'], 'refusee' => ['Refusée', 'pill-gris'], 'attente_securite' => ['Validée par le MG - en attente de la Sécurité', 'pill-or'],
+            'autorisee' => ['Autorisation accordée', 'pill-vert'], 'rentre' => ['Rentré sur le camp', 'pill-vert'], 'annulee' => ['Annulée', 'pill-gris']][$st] ?? [$st, 'pill-gris'];
 }
 
 /** Nombre de demandes que la personne connectée doit traiter (pastille du menu). */
@@ -1170,7 +1170,7 @@ function programmeBandeau(PDO $pdo) {
     } catch (Throwable $e) { return ''; }
     if (!$p) return '';
     $u = BASE_URL . '/programme?id=' . (int)$p['id'];
-    return '<div class="programme-bandeau"><span class="pb-ico">📅</span><div><strong>Programme journalier</strong><br><small>' . e($p['titre']) . '</small></div>'
+    return '<div class="programme-bandeau"><span class="pb-ico"></span><div><strong>Programme journalier</strong><br><small>' . e($p['titre']) . '</small></div>'
         . '<a class="btn btn-or btn-sm" href="' . $u . '" target="_blank" rel="noopener">Voir</a> '
         . '<a class="btn btn-outline btn-sm" href="' . $u . '&dl=1">Télécharger</a></div>';
 }
@@ -1213,10 +1213,10 @@ function sectionsRenommer(PDO $pdo) {
 
 /** Liens courts partageables (/l/CODE), créés uniquement par le super administrateur. */
 const LIENS_COURTS = [
-    'seminariste' => ['📚 Formulaire des séminaristes', '/inscription_seminariste', 6],
-    'commission'  => ['👥 Formulaire des membres de commission', '/inscription_commission', 6],
-    'visiteur'    => ['🚶 Formulaire des visiteurs', '/visiteur', 6],
-    'niveaux'     => ['🎚️ Niveaux selon les notes (commission scientifique)', null, 10],
+    'seminariste' => ['Formulaire des séminaristes', '/inscription_seminariste', 6],
+    'commission'  => ['Formulaire des membres de commission', '/inscription_commission', 6],
+    'visiteur'    => ['Formulaire des visiteurs', '/visiteur', 6],
+    'niveaux'     => ['Niveaux selon les notes (commission scientifique)', null, 10],
 ];
 function liensCourtsPreparer(PDO $pdo) {
     static $ok = false;

@@ -64,9 +64,9 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <h3 style="margin-bottom:4px;">Statut des résultats</h3>
                 <p style="margin:0;color:var(--texte-doux);">
                     <?php if ($publie): ?>
-                        <span class="pill pill-vert">✅ Résultats publiés</span> - les séminaristes voient leur bulletin sur leur espace personnel.
+                        <span class="pill pill-vert">Résultats publiés</span> - les séminaristes voient leur bulletin sur leur espace personnel.
                     <?php else: ?>
-                        <span class="pill pill-gris">🔒 Résultats non publiés</span> - les bulletins restent invisibles pour les séminaristes.
+                        <span class="pill pill-gris">Résultats non publiés</span> - les bulletins restent invisibles pour les séminaristes.
                     <?php endif; ?>
                 </p>
             </div>
@@ -75,7 +75,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <?php else: ?>
                 <a href="<?= BASE_URL ?>/admin/matieres?publier=1" class="btn btn-primaire" onclick="return confirm('Rendre les bulletins visibles à tous les séminaristes ?')">Publier les résultats</a>
             <?php endif; ?>
-            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-outline">📄 Bulletins en PDF (2/feuille A4 paysage)</a>
+            <a href="<?= BASE_URL ?>/admin/bulletins_impression" class="btn btn-outline">Bulletins en PDF (2/feuille A4 paysage)</a>
         </div>
 
         <div class="carte" style="margin-bottom:24px;">
@@ -111,8 +111,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($m['nom']) ?></td>
                         <td>/ <?= e($m['note_max']) ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/matieres?modifier=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️</a>
-                            <a href="<?= BASE_URL ?>/admin/matieres?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette matière ? Les notes associées seront aussi supprimées.')">🗑️</a>
+                            <a href="<?= BASE_URL ?>/admin/matieres?modifier=<?= $m['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/matieres?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette matière ? Les notes associées seront aussi supprimées.')">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

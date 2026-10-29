@@ -60,7 +60,7 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container">
-        <div class="section-titre"><span class="eyebrow">Commission Sécurité</span><h2>🛡️ Gestion des visiteurs</h2></div>
+        <div class="section-titre"><span class="eyebrow">Commission Sécurité</span><h2>Gestion des visiteurs</h2></div>
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= e($succes) ?></div><?php endif; ?>
 
@@ -70,12 +70,12 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
             <div class="carte" style="text-align:center;"><div class="label">Total des visites</div><div class="valeur" style="font-size:2rem;color:var(--vert);"><?= (int)$stats['total'] ?></div></div>
         </div>
 
-        <p class="no-print" style="text-align:center;margin-bottom:16px;"><a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">&larr; Retour à la page publique</a> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire">🚪 Sorties du camp</a></p>
+        <p class="no-print" style="text-align:center;margin-bottom:16px;"><a href="<?= BASE_URL ?>/visiteur" class="btn btn-outline">&larr; Retour à la page publique</a> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire">Sorties du camp</a></p>
 
         <form method="post" class="carte form-pro" style="margin-bottom:20px;" <?= $edit ? 'data-no-ajax' : 'data-ajax' ?>>
             <input type="hidden" name="action" value="<?= $edit ? 'modifier' : 'ajouter' ?>">
             <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>"><?php endif; ?>
-            <h3><?= $edit ? '✏️ Modifier le visiteur' : '➕ Ajouter un visiteur' ?></h3>
+            <h3><?= $edit ? 'Modifier le visiteur' : 'Ajouter un visiteur' ?></h3>
             <div class="form-row">
                 <div class="form-group"><label>Nom et prénoms</label><input type="text" name="nom_prenoms" required value="<?= e($edit['nom_prenoms'] ?? '') ?>"></div>
                 <div class="form-group"><label>Contact</label><input type="tel" name="contact" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required value="<?= e($edit['contact'] ?? '') ?>"></div>
@@ -115,10 +115,10 @@ if (estAdmin()) require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= $v['heure_sortie'] ? '<span class="pill pill-gris">Sorti</span>' : '<span class="pill pill-vert">Présent</span>' ?></td>
                         <td class="no-print" style="white-space:nowrap;">
                             <?php if (!$v['heure_sortie']): ?>
-                                <form method="post" style="display:inline;"><input type="hidden" name="action" value="sortie"><input type="hidden" name="id" value="<?= (int)$v['id'] ?>"><button class="btn btn-sm btn-or">🚪 Sortie maintenant</button></form>
+                                <form method="post" style="display:inline;"><input type="hidden" name="action" value="sortie"><input type="hidden" name="id" value="<?= (int)$v['id'] ?>"><button class="btn btn-sm btn-or">Sortie maintenant</button></form>
                             <?php endif; ?>
-                            <a href="?modifier=<?= (int)$v['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce visiteur ?');"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$v['id'] ?>"><button class="btn btn-sm btn-danger">🗑️</button></form>
+                            <a href="?modifier=<?= (int)$v['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
+                            <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce visiteur ?');"><input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="<?= (int)$v['id'] ?>"><button class="btn btn-sm btn-danger">Supprimer</button></form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

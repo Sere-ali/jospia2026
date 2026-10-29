@@ -45,7 +45,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <p><?= $total ?> <?= $estBadge ? 'badge' : 'diplôme' ?><?= $total > 1 ? 's' : '' ?> - aperçu avant téléchargement.</p>
         </div>
         <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
-            <?php if ($total): ?><a href="<?= BASE_URL ?>/admin/pdf?<?= e($qsPdf) ?>" class="btn btn-primaire">⬇️ Télécharger <?= $total > 1 ? 'les ' . $total . ' ' . ($estBadge ? 'badges' : 'diplômes') : ($estBadge ? 'le badge' : 'le diplôme') ?> en PDF</a><?php endif; ?>
+            <?php if ($total): ?><a href="<?= BASE_URL ?>/admin/pdf?<?= e($qsPdf) ?>" class="btn btn-primaire">Télécharger <?= $total > 1 ? 'les ' . $total . ' ' . ($estBadge ? 'badges' : 'diplômes') : ($estBadge ? 'le badge' : 'le diplôme') ?> en PDF</a><?php endif; ?>
         </div>
         <?php if (!$total): ?><div class="alert alert-info">Aucun document dans cette catégorie.</div><?php endif; ?>
 

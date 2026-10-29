@@ -40,7 +40,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <h2>Membres de commission (<?= count($membres) ?>)</h2>
-            <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">⬇️ Télécharger tous les badges en PDF (4/page)</a>
+            <a href="<?= BASE_URL ?>/admin/badges_commission" class="btn btn-or btn-sm">Télécharger tous les badges en PDF (4/page)</a>
         </div>
 
         <?php require __DIR__ . '/../includes/graphiques_commissions.php'; ?>
@@ -77,12 +77,12 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($m['contact']) ?></td>
                         <td style="text-align:center;"><form method="post" data-ajax><input type="hidden" name="maj_responsable" value="1"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>"><input type="checkbox" name="responsable" value="1" style="width:22px;height:22px;" <?= !empty($m['responsable']) ? 'checked' : '' ?> onchange="this.form.requestSubmit()" aria-label="Responsable de commission"></form></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <a href="<?= BASE_URL ?>/admin/download_badge?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
-                            <a href="<?= BASE_URL ?>/admin/identifiants?q=<?= urlencode($m['matricule']) ?>" class="btn btn-sm btn-outline">🔑 Identifiant</a>
-                            <a href="<?= BASE_URL ?>/admin/download_diplome_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-primaire">🎓 Diplôme</a>
+                            <a href="<?= BASE_URL ?>/admin/edit_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/download_badge?id=<?= $m['id'] ?>" class="btn btn-sm btn-or">Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/identifiants?q=<?= urlencode($m['matricule']) ?>" class="btn btn-sm btn-outline">Identifiant</a>
+                            <a href="<?= BASE_URL ?>/admin/download_diplome_membre?id=<?= $m['id'] ?>" class="btn btn-sm btn-primaire">Diplôme</a>
                             <?php if (estSuperAdmin()): ?>
-                                <a href="<?= BASE_URL ?>/admin/commissions?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce membre ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/commissions?supprimer=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce membre ?')">Supprimer</a>
                             <?php endif; ?>
                         </td>
                     </tr>

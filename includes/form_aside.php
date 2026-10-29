@@ -5,7 +5,7 @@ $estSem = ($asideType === 'seminariste');
 ?>
 <aside class="form-aside">
     <div class="fa-card">
-        <div class="fa-arche" aria-hidden="true"><span><?= $estSem ? '🎓' : '🤝' ?></span></div>
+        <div class="fa-arche" aria-hidden="true"><span><?= $estSem ? '' : '' ?></span></div>
         <span class="fa-tag">JOSPIA 2026</span>
         <h3><?= $estSem ? 'Rejoignez les séminaristes' : 'Rejoignez l\'équipe d\'organisation' ?></h3>
         <p class="fa-sous"><?= $estSem ? 'Quelques minutes suffisent pour réserver votre place.' : 'Mettez vos talents au service de la Journée.' ?></p>
@@ -25,6 +25,6 @@ $estSem = ($asideType === 'seminariste');
             <li><span>3</span><div><b>Obtenir votre badge</b><small>Généré automatiquement</small></div></li>
             <?php endif; ?>
         </ol>
-        <div class="fa-secu">🔒 Vos données restent confidentielles.</div>
+        <div class="fa-secu">Vos données restent confidentielles.</div>
     </div>
 </aside>

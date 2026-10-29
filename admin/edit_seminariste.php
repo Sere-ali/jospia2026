@@ -99,7 +99,7 @@ if (!$modeUser) { require_once __DIR__ . '/../includes/admin_nav.php'; }
 
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if ($succes): ?><div class="alert alert-succes"><?= $succes ?></div><?php endif; ?>
-        <div class="alert alert-info">ℹ️ Si vous modifiez l'âge ou le genre, le dortoir (et le niveau Pépinière) sont recalculés automatiquement et en toute sécurité.</div>
+        <div class="alert alert-info">Si vous modifiez l'âge ou le genre, le dortoir (et le niveau Pépinière) sont recalculés automatiquement et en toute sécurité.</div>
 
         <form method="post" enctype="multipart/form-data" novalidate>
             <fieldset>

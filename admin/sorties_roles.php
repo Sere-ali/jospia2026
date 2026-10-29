@@ -48,7 +48,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                     <?php foreach (['mg'] as $rl): $a = !empty($roles[$cid][$rl]); ?>
                     <td><form method="post" style="margin:0;">
                         <input type="hidden" name="compte_id" value="<?= $cid ?>"><input type="hidden" name="role" value="<?= $rl ?>">
-                        <?php if ($a): ?><span class="pill pill-vert">✔ Attribué</span> <button name="action" value="retirer" class="btn btn-outline btn-sm">Retirer</button>
+                        <?php if ($a): ?><span class="pill pill-vert">Attribué</span> <button name="action" value="retirer" class="btn btn-outline btn-sm">Retirer</button>
                         <?php else: ?><button name="action" value="donner" class="btn btn-primaire btn-sm">Attribuer</button><?php endif; ?>
                     </form></td>
                     <?php endforeach; ?>

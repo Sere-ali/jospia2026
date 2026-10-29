@@ -72,7 +72,7 @@ if (!$PARTAGE) require_once __DIR__ . '/../includes/admin_nav.php';
         <form method="post" id="form-niveaux" data-no-ajax>
             <p style="margin-bottom:14px;">Le niveau du séminariste dépend de sa note au test d'entrée (sur 20). Modifiez le <strong>nom</strong> et l'<strong>intervalle</strong> de chaque niveau, ou ajoutez-en un.</p>
             <div class="grid grid-2" id="liste-niveaux"></div>
-            <p style="margin:14px 0;"><button type="button" class="btn btn-or" id="btn-ajouter">➕ Ajouter un niveau</button></p>
+            <p style="margin:14px 0;"><button type="button" class="btn btn-or" id="btn-ajouter">Ajouter un niveau</button></p>
             <label style="display:flex;gap:8px;align-items:center;margin:16px 0;"><input type="checkbox" name="recalculer" value="1" checked style="width:20px;height:20px;"> Recalculer aussi le niveau des séminaristes qui ont déjà composé le test</label>
             <button class="btn btn-primaire" type="submit">Enregistrer</button>
         </form>
@@ -95,7 +95,7 @@ if (!$PARTAGE) require_once __DIR__ . '/../includes/admin_nav.php';
             (dernier ? '<input type="number" value="20" disabled style="width:90px;"><input type="hidden" name="fin[]" value="20">'
                      : '<input type="number" name="fin[]" step="0.25" min="0.25" max="20" required class="fin" style="width:90px;" value="' + esc(d.fin) + '">') +
             '<small>(fin exclue)</small></div>' +
-            (n > 2 ? '<p style="margin:10px 0 0;"><button type="button" class="btn btn-sm btn-danger sup">🗑️ Supprimer ce niveau</button></p>' : '') + '</div>';
+            (n > 2 ? '<p style="margin:10px 0 0;"><button type="button" class="btn btn-sm btn-danger sup">Supprimer ce niveau</button></p>' : '') + '</div>';
     }
     function dessiner() {
         liste.innerHTML = donnees.map(function (d, i) { return carte(d, i, donnees.length); }).join('');

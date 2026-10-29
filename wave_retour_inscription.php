@@ -35,7 +35,7 @@ require_once __DIR__ . '/includes/header.php';
             <strong>Échec : impossible de soumettre vos informations.</strong><br>
             Le paiement n'a pas été effectué. Tant que le paiement n'a pas abouti, votre inscription n'est pas enregistrée.
         </div>
-        <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_inscription?t=<?= e($jeton) ?>" class="btn btn-primaire">💙 Réessayer le paiement de <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</a></p>
+        <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_inscription?t=<?= e($jeton) ?>" class="btn btn-primaire">Réessayer le paiement de <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</a></p>
     </div>
 </div>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -52,14 +52,14 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
 ?>
 <section class="section">
     <div class="container" style="max-width:820px;">
-        <div class="section-titre"><span class="eyebrow">Camp</span><h2>🚪 Autorisation de sortie</h2>
+        <div class="section-titre"><span class="eyebrow">Camp</span><h2>Autorisation de sortie</h2>
             <p>Pour quitter le camp, faites une demande : elle doit être acceptée par le <strong>MG ou le MGA</strong>, puis confirmée par la <strong>commission Sécurité</strong>.</p></div>
         <?php foreach ($erreurs as $err): ?><div class="alert alert-erreur"><?= e($err) ?></div><?php endforeach; ?>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
         <form method="post" class="carte form-pro" style="margin-bottom:22px;">
             <input type="hidden" name="action" value="demander">
-            <h3>➕ Nouvelle demande de sortie</h3>
+            <h3>Nouvelle demande de sortie</h3>
             <div class="form-group"><label>Motif de la sortie <span class="req">*</span></label>
                 <input type="text" name="motif" maxlength="255" required placeholder="Ex : rendez-vous médical, course urgente..." value="<?= e($_POST['motif'] ?? '') ?>"></div>
             <div class="form-row">
@@ -80,12 +80,12 @@ if (($u['role'] ?? '') === 'finance') require_once __DIR__ . '/../includes/finan
                         <span class="pill <?= $cls ?>"><?= e($lib) ?></span>
                     </div>
                     <p style="margin:8px 0;color:var(--texte-doux);">Sortie : <strong><?= e(dateHeureAffiche($r['heure_sortie'])) ?></strong> · Retour prévu : <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong></p>
-                    <?php if ($r['statut'] === 'refusee'): ?><div class="alert alert-erreur" style="margin:8px 0;">✖ <strong>Votre requête a été refusée.</strong><?= $r['refus_motif'] ? ' Motif : ' . e($r['refus_motif']) : '' ?></div><?php endif; ?>
-                    <?php if ($r['statut'] === 'attente_securite'): ?><p>✔ Acceptée par <?= e($r['mg_nom']) ?>. La commission Sécurité a été avertie.</p><?php endif; ?>
+                    <?php if ($r['statut'] === 'refusee'): ?><div class="alert alert-erreur" style="margin:8px 0;"><strong>Votre requête a été refusée.</strong><?= $r['refus_motif'] ? ' Motif : ' . e($r['refus_motif']) : '' ?></div><?php endif; ?>
+                    <?php if ($r['statut'] === 'attente_securite'): ?><p>Acceptée par <?= e($r['mg_nom']) ?>. La commission Sécurité a été avertie.</p><?php endif; ?>
                     <?php if ($r['statut'] === 'autorisee'): ?>
-                        <div class="alert alert-succes" style="margin:8px 0;">✅ <strong>Vous êtes autorisé à sortir.</strong> S'il vous plaît, rentrez dans le délai : avant <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong>. (Accepté par <?= e($r['mg_nom']) ?>, confirmé par la Sécurité.)</div>
-                        <?php if ($retard): ?><div class="alert alert-erreur" style="margin:8px 0;">⏰ <strong>Votre heure de sortie est épuisée. Veuillez retourner sur le camp, s'il vous plaît.</strong></div><?php endif; ?>
-                        <form method="post"><input type="hidden" name="action" value="rentre"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-primaire">🏠 Je suis rentré sur le camp</button></form>
+                        <div class="alert alert-succes" style="margin:8px 0;"><strong>Vous êtes autorisé à sortir.</strong> S'il vous plaît, rentrez dans le délai : avant <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong>. (Accepté par <?= e($r['mg_nom']) ?>, confirmé par la Sécurité.)</div>
+                        <?php if ($retard): ?><div class="alert alert-erreur" style="margin:8px 0;"><strong>Votre heure de sortie est épuisée. Veuillez retourner sur le camp, s'il vous plaît.</strong></div><?php endif; ?>
+                        <form method="post"><input type="hidden" name="action" value="rentre"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-primaire">Je suis rentré sur le camp</button></form>
                     <?php elseif ($r['statut'] === 'rentre'): ?><p>Retour signalé le <?= e(dateHeureAffiche($r['rentre_at'])) ?>.</p>
                     <?php elseif (in_array($r['statut'], ['attente_mg', 'attente_securite'], true)): ?>
                         <form method="post" onsubmit="return confirm('Annuler cette demande ?');"><input type="hidden" name="action" value="annuler"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-sm btn-outline">Annuler la demande</button></form>

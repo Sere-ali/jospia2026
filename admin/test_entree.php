@@ -47,8 +47,8 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 
         <?php if (accesTestScientifique($pdo)): ?>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-            <a href="<?= BASE_URL ?>/admin/questions" class="btn btn-primaire btn-sm">📝 Questions du test</a>
-            <a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-primaire btn-sm">⚙️ Config Quiz (6 banques)</a>
+            <a href="<?= BASE_URL ?>/admin/questions" class="btn btn-primaire btn-sm">Questions du test</a>
+            <a href="<?= BASE_URL ?>/admin/config_quiz" class="btn btn-primaire btn-sm">Config Quiz (6 banques)</a>
         </div>
         <?php endif; ?>
 
@@ -60,7 +60,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <?php foreach ($resultats as $r): ?>
                     <tr>
                         <td class="mono"><?= e($r['matricule']) ?></td><td><?= e($r['nom_prenoms']) ?></td><td><?= e($r['note_test']) ?></td><td><?= e($r['niveau_affecte']) ?></td>
-                        <td><a href="<?= BASE_URL ?>/admin/correction?id=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">🔍 Correction</a></td>
+                        <td><a href="<?= BASE_URL ?>/admin/correction?id=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">Correction</a></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$resultats): ?><tr><td colspan="5" class="text-center">Aucun test composé pour le moment.</td></tr><?php endif; ?>

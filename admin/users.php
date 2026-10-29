@@ -107,20 +107,20 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?= e($c['nom_affiche']) ?></td>
                         <td class="mono"><?= e($c['identifiant']) ?></td>
                         <td><?php
-                            $libelles = ['superadmin' => '👑 Super Administrateur', 'admin' => 'Administrateur', 'finance' => '💰 Commission finance', 'scientifique' => '🔬 Commission scientifique', 'securite' => '🛡️ Commission sécurité', 'mg' => '👔 MG / MGA'];
+                            $libelles = ['superadmin' => 'Super Administrateur', 'admin' => 'Administrateur', 'finance' => 'Commission finance', 'scientifique' => 'Commission scientifique', 'securite' => 'Commission sécurité', 'mg' => 'MG / MGA'];
                             $lib = $libelles[$c['role']] ?? $c['role'];
                         ?><span class="pill <?= $c['role'] === 'superadmin' ? 'pill-or' : 'pill-vert' ?>" <?= $c['role'] === 'superadmin' ? 'style="background:#C89A3E;color:#fff;font-weight:800;"' : '' ?>><?= e($lib) ?></span></td>
                         <td><?= $c['actif'] ? '<span class="pill pill-vert">Actif</span>' : '<span class="pill pill-rouge">Désactivé</span>' ?></td>
                         <td style="white-space:nowrap;">
                             <?php $moi = (int)$c['id'] === (int)$_SESSION['compte_id']; $gerable = $c['role'] !== 'superadmin' || $moi || estSuperAdminPrincipal(); ?>
                             <?php if ($gerable): ?>
-                                <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
+                                <a href="<?= BASE_URL ?>/admin/edit_user?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
                             <?php endif; ?>
                             <?php if ($gerable && !$moi): ?>
                                 <a href="<?= BASE_URL ?>/admin/users?desactiver=<?= $c['id'] ?>" class="btn btn-sm btn-outline"><?= $c['actif'] ? 'Désactiver' : 'Activer' ?></a>
                                 <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer définitivement le compte de <?= e(addslashes($c['nom_affiche'])) ?> ?');">
                                     <input type="hidden" name="supprimer_id" value="<?= (int)$c['id'] ?>">
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             <?php else: ?>
                                 <span class="help-text"><?= $moi ? 'Votre compte' : 'Réservé à son propriétaire et au super administrateur principal' ?></span>

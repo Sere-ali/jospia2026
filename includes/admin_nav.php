@@ -23,32 +23,32 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
         <p class="no-print" style="margin:0 0 4px;"><a href="<?= e($urlRetour) ?>" class="btn btn-outline btn-sm">&larr; Retour</a></p>
     <?php elseif ($roleMg): ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm btn-primaire">👔 Comité managérial</a>
+        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm btn-primaire">Comité managérial</a>
     </div>
     <?php elseif (!estAdmin()): ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm btn-primaire">🔬 Commission scientifique</a>
+        <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm btn-primaire">Commission scientifique</a>
     </div>
     <?php elseif (!estSuperAdmin()): ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm btn-primaire">🗂️ Administration</a>
+        <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm btn-primaire">Administration</a>
     </div>
     <?php else: ?>
     <div class="carte" style="padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="<?= BASE_URL ?>/admin/dashboard" class="btn btn-sm <?= $pageAdmin==='dashboard.php'?'btn-primaire':'btn-outline' ?>">📊 Tableau de bord</a>
-        <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm <?= $dansAdministration ? 'btn-primaire' : 'btn-or' ?>">🗂️ Administration</a>
-        <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm <?= $dansFinance ? 'btn-primaire' : 'btn-outline' ?>">💰 Commission finance</a>
-        <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm <?= $dansScientifique ? 'btn-primaire' : 'btn-outline' ?>">🔬 Commission scientifique</a>
+        <a href="<?= BASE_URL ?>/admin/dashboard" class="btn btn-sm <?= $pageAdmin==='dashboard.php'?'btn-primaire':'btn-outline' ?>">Tableau de bord</a>
+        <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm <?= $dansAdministration ? 'btn-primaire' : 'btn-or' ?>">Administration</a>
+        <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm <?= $dansFinance ? 'btn-primaire' : 'btn-outline' ?>">Commission finance</a>
+        <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm <?= $dansScientifique ? 'btn-primaire' : 'btn-outline' ?>">Commission scientifique</a>
         <?php if (estSecurite()): ?>
-        <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-sm <?= strpos($_SERVER['PHP_SELF'], '/securite/') !== false ? 'btn-primaire' : 'btn-outline' ?>">🛡️ Commission sécurité</a>
+        <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-sm <?= strpos($_SERVER['PHP_SELF'], '/securite/') !== false ? 'btn-primaire' : 'btn-outline' ?>">Commission sécurité</a>
         <?php endif; ?>
-        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm <?= in_array($pageAdmin, ['comite_manageriale.php','rapports.php','sorties_mg.php'], true) ? 'btn-primaire' : 'btn-or' ?>">👔 Comité managérial</a>
+        <a href="<?= BASE_URL ?>/admin/comite_manageriale" class="btn btn-sm <?= in_array($pageAdmin, ['comite_manageriale.php','rapports.php','sorties_mg.php'], true) ? 'btn-primaire' : 'btn-or' ?>">Comité managérial</a>
         <?php if (estSuperAdmin()): ?>
-            <a href="<?= BASE_URL ?>/admin/liens" class="btn btn-sm <?= $pageAdmin==='liens.php'?'btn-primaire':'btn-or' ?>">🔗 Liens</a>
-            <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">💬 Critiques</a>
-            <a href="<?= BASE_URL ?>/admin/users" class="btn btn-sm <?= $pageAdmin==='users.php'?'btn-primaire':'btn-outline' ?>">🔑 Comptes admin</a>
-            <a href="<?= BASE_URL ?>/admin/activite" class="btn btn-sm <?= $pageAdmin==='activite.php'?'btn-primaire':'btn-outline' ?>">📋 Activité journalière</a>
-            <a href="<?= BASE_URL ?>/admin/parametres" class="btn btn-sm <?= $pageAdmin==='parametres.php'?'btn-primaire':'btn-outline' ?>">⚙️ Paramètres du site</a>
+            <a href="<?= BASE_URL ?>/admin/liens" class="btn btn-sm <?= $pageAdmin==='liens.php'?'btn-primaire':'btn-or' ?>">Liens</a>
+            <a href="<?= BASE_URL ?>/admin/critiques" class="btn btn-sm <?= $pageAdmin==='critiques.php'?'btn-primaire':'btn-outline' ?>">Critiques</a>
+            <a href="<?= BASE_URL ?>/admin/users" class="btn btn-sm <?= $pageAdmin==='users.php'?'btn-primaire':'btn-outline' ?>">Comptes admin</a>
+            <a href="<?= BASE_URL ?>/admin/activite" class="btn btn-sm <?= $pageAdmin==='activite.php'?'btn-primaire':'btn-outline' ?>">Activité journalière</a>
+            <a href="<?= BASE_URL ?>/admin/parametres" class="btn btn-sm <?= $pageAdmin==='parametres.php'?'btn-primaire':'btn-outline' ?>">Paramètres du site</a>
         <?php endif; ?>
     </div>
     <?php endif; ?>

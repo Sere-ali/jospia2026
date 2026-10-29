@@ -9,7 +9,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
     <div class="container">
         <div class="section-titre">
             <h2>Vérification des reçus (QR code)</h2>
-            <p>Scannez le QR code du reçu : <strong style="color:#0a8f3c;">✔ vert</strong> si le séminariste existe avec un paiement validé, <strong style="color:#c81e1e;">✖ rouge</strong> sinon.</p>
+            <p>Scannez le QR code du reçu : <strong style="color:#0a8f3c;">vert</strong> si le séminariste existe avec un paiement validé, <strong style="color:#c81e1e;">rouge</strong> sinon.</p>
         </div>
 
         <div class="scan-zone">
@@ -19,7 +19,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
             </div>
             <p id="scan-etat" style="color:var(--texte-doux);margin:10px 0;">Démarrage de la caméra…</p>
             <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-                <button type="button" class="btn btn-outline btn-sm" id="scan-tourner">🔄 Changer de caméra</button>
+                <button type="button" class="btn btn-outline btn-sm" id="scan-tourner">Changer de caméra</button>
             </div>
 
             <form id="scan-manuel" class="carte" style="margin-top:18px;text-align:left;">
@@ -59,7 +59,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
         actif = false;
         overlay.className = 'scan-resultat ' + (res.valide ? 'ok' : 'ko');
         overlay.style.display = 'flex';
-        document.getElementById('scan-icone').textContent = res.valide ? '✔' : '✖';
+        document.getElementById('scan-icone').textContent = res.valide ? '' : '';
         document.getElementById('scan-verdict').textContent = res.valide ? 'VALIDÉ' : 'REFUSÉ';
         var h = '';
         if (res.valide) {

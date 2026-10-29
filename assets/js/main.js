@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', function () {
         var afficher = function () {
             var restant = Math.max(0, Math.round((finTest - Date.now()) / 1000));
             var m = Math.floor(restant / 60), s = restant % 60;
-            timerEl.textContent = '⏱ Temps restant : ' + m + ':' + (s < 10 ? '0' : '') + s;
+            timerEl.textContent = 'Temps restant : ' + m + ':' + (s < 10 ? '0' : '') + s;
             if (restant <= 60) { timerEl.style.background = '#c0392b'; }
             if (restant <= 0 && !soumis) {
                 soumis = true;
                 clearInterval(interval);
-                timerEl.textContent = '⏱ Temps écoulé : envoi de vos réponses...';
+                timerEl.textContent = 'Temps écoulé : envoi de vos réponses...';
                 if (formulaireQuiz) { formulaireQuiz.submit(); }
             }
         };
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var btnCam = document.createElement('button');
     btnCam.type = 'button';
     btnCam.className = 'btn btn-outline btn-sm';
-    btnCam.textContent = '📷 Prendre une photo';
+    btnCam.textContent = 'Prendre une photo';
     barre.appendChild(btnCam);
     input.parentNode.insertBefore(barre, apercu);
 
@@ -188,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
             '<div class="cam-boite">' +
             '<video autoplay playsinline muted></video>' +
             '<div class="cam-btns">' +
-            '<button type="button" class="btn btn-primaire" data-a="prendre">📸 Capturer</button>' +
-            '<button type="button" class="btn btn-outline" data-a="tourner">🔄 Changer de caméra</button>' +
+            '<button type="button" class="btn btn-primaire" data-a="prendre">Capturer</button>' +
+            '<button type="button" class="btn btn-outline" data-a="tourner">Changer de caméra</button>' +
             '<button type="button" class="btn btn-outline" data-a="fermer">Annuler</button>' +
             '</div><p class="cam-msg"></p></div>';
         document.body.appendChild(fond);
@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
         b.type = 'button';
         b.className = 'btn btn-outline btn-sm no-print btn-export-excel';
         b.style.margin = '0 0 10px 0';
-        b.textContent = '📥 ' + libelle;
+        b.textContent = '' + libelle;
         b.addEventListener('click', action);
         return b;
     }

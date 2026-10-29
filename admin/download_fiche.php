@@ -15,7 +15,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="container">
         <div class="no-print" style="text-align:center;margin-bottom:20px;">
             <a href="<?= BASE_URL ?>/admin/seminaristes" class="btn btn-outline btn-sm">&larr; Retour à la liste</a>
-            <a href="<?= BASE_URL ?>/espace/download_fiche?id=<?= (int)$s['id'] ?>" class="btn btn-primaire">📄 Télécharger en PDF</a>
+            <a href="<?= BASE_URL ?>/espace/download_fiche?id=<?= (int)$s['id'] ?>" class="btn btn-primaire">Télécharger en PDF</a>
         </div>
         <div class="fiche">
             <div class="fiche-header">

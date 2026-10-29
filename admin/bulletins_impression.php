@@ -31,7 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </form>
-            <a href="<?= BASE_URL ?>/admin/bulletin_pdf?tous=1&niveau=<?= urlencode($filtreNiveau) ?>" class="btn btn-primaire">⬇️ Télécharger en PDF - <?= count($seminaristesListe) ?> bulletin(s), 2 par feuille</a>
+            <a href="<?= BASE_URL ?>/admin/bulletin_pdf?tous=1&niveau=<?= urlencode($filtreNiveau) ?>" class="btn btn-primaire">Télécharger en PDF - <?= count($seminaristesListe) ?> bulletin(s), 2 par feuille</a>
         </div>
 
         <?php if (!$seminaristesListe): ?>

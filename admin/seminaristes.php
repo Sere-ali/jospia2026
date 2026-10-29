@@ -37,7 +37,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="container">
         <div class="section-titre" style="text-align:left;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <h2>Séminaristes (<?= count($seminaristes) ?>)</h2>
-            <a href="<?= BASE_URL ?>/admin/badges_seminaristes" class="btn btn-or btn-sm">⬇️ Télécharger tous les badges en PDF (4/page)</a>
+            <a href="<?= BASE_URL ?>/admin/badges_seminaristes" class="btn btn-or btn-sm">Télécharger tous les badges en PDF (4/page)</a>
         </div>
 
         <form method="get" class="carte" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
@@ -92,17 +92,17 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                         <td><?php if ($s['test_complete']): ?><span class="pill pill-or"><?= e($s['note_test']) ?>/20</span><?php else: ?><span class="pill pill-gris">En attente</span><?php endif; ?></td>
                         <td><?= e($s['niveau_affecte'] ?? '-') ?></td>
                         <td style="white-space:nowrap;">
-                            <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">✏️ Modifier</a>
-                            <a href="<?= BASE_URL ?>/admin/identifiants?q=<?= urlencode($s['matricule']) ?>" class="btn btn-sm btn-outline">🔑 Identifiant</a>
-                            <a href="<?= BASE_URL ?>/admin/seminariste_detail?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">👁️</a>
-                            <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">📄 Fiche</a>
-                            <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🪪 Badge</a>
-                            <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">🎖️ Diplôme</a>
+                            <a href="<?= BASE_URL ?>/admin/edit_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">Modifier</a>
+                            <a href="<?= BASE_URL ?>/admin/identifiants?q=<?= urlencode($s['matricule']) ?>" class="btn btn-sm btn-outline">Identifiant</a>
+                            <a href="<?= BASE_URL ?>/admin/seminariste_detail?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">Détails</a>
+                            <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-sm btn-primaire">Fiche</a>
+                            <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">Badge</a>
+                            <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-sm btn-or">Diplôme</a>
                             <?php if ($s['test_complete']): ?>
-                                <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">🔍 Correction</a>
+                                <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-sm btn-outline">Correction</a>
                             <?php endif; ?>
                             <?php if (estSuperAdmin()): ?>
-                                <a href="<?= BASE_URL ?>/admin/seminaristes?supprimer=<?= $s['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce séminariste ?')">🗑️</a>
+                                <a href="<?= BASE_URL ?>/admin/seminaristes?supprimer=<?= $s['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce séminariste ?')">Supprimer</a>
                             <?php endif; ?>
                         </td>
                     </tr>

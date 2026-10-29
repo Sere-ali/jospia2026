@@ -39,14 +39,14 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <p><?= e($s['parent_nom']) ?> (<?= e($s['parent_lien']) ?>) - <?= e($s['parent_contact']) ?></p>
 
             <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
-                <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-primaire">📄 Fiche d'inscription</a>
-                <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-or">🪪 Badge</a>
-                <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-or">🎖️ Diplôme</a>
+                <a href="<?= BASE_URL ?>/admin/download_fiche?id=<?= $s['id'] ?>" class="btn btn-primaire">Fiche d'inscription</a>
+                <a href="<?= BASE_URL ?>/admin/download_badge_seminariste?id=<?= $s['id'] ?>" class="btn btn-or">Badge</a>
+                <a href="<?= BASE_URL ?>/admin/download_diplome?id=<?= $s['id'] ?>" class="btn btn-or">Diplôme</a>
                 <?php if ($s['test_complete']): ?>
-                    <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-outline">🔍 Correction du test</a>
+                    <a href="<?= BASE_URL ?>/admin/correction?id=<?= $s['id'] ?>" class="btn btn-outline">Correction du test</a>
                 <?php endif; ?>
-                <a href="<?= BASE_URL ?>/admin/notes?id=<?= $s['id'] ?>" class="btn btn-outline">📝 Saisir ses notes</a>
-                <a href="<?= BASE_URL ?>/admin/bulletin?id=<?= $s['id'] ?>" class="btn btn-outline">📄 Voir son bulletin</a>
+                <a href="<?= BASE_URL ?>/admin/notes?id=<?= $s['id'] ?>" class="btn btn-outline">Saisir ses notes</a>
+                <a href="<?= BASE_URL ?>/admin/bulletin?id=<?= $s['id'] ?>" class="btn btn-outline">Voir son bulletin</a>
             </div>
         </div>
     </div>

@@ -60,7 +60,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
         <div class="section-titre">
             <h2>Commission Finance - Paiements Wave</h2>
             <p>Vérifiez chaque paiement dans le compte Wave (<?= e(numeroWaveAffiche()) ?>) puis validez ou rejetez. La validation génère le reçu avec QR code du séminariste.</p>
-            <p><a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-primaire">📷 Scanner un reçu</a></p>
+            <p><a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-primaire">Scanner un reçu</a></p>
         </div>
 
         <?php
@@ -132,7 +132,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td style="font-family: monospace;"><strong><?= e($p['reference_transaction'] ?: '-') ?></strong></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
-                                <?php if (!empty($p['paye_declare'])): ?><span class="tag tag-vert" style="background:#1cc6f4;color:#00323f;">💙 Payé : à valider</span><?php else: ?><span class="tag tag-vert" style="background:#ffc107;color:#000;">⏳ En attente de paiement</span><?php endif; ?>
+                                <?php if (!empty($p['paye_declare'])): ?><span class="tag tag-vert" style="background:#1cc6f4;color:#00323f;">Payé : à valider</span><?php else: ?><span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente de paiement</span><?php endif; ?>
                             <?php elseif ($p['statut'] === 'validé'): ?>
                                 <span class="tag tag-vert">Validé</span>
                             <?php else: ?>
@@ -167,7 +167,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                                 <form method="post" style="margin-top:6px;" onsubmit="return confirm('Supprimer définitivement ce paiement de <?= e(addslashes($p['nom_prenoms'])) ?> ?<?= $p['statut'] === 'validé' ? ' Son reçu disparaîtra et il devra payer de nouveau pour accéder à son espace.' : '' ?>');">
                                     <input type="hidden" name="paiement_id" value="<?= (int)$p['id'] ?>">
                                     <input type="hidden" name="action" value="supprimer">
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             <?php endif; ?>
                         </td>

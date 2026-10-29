@@ -35,7 +35,7 @@ if (estComiteManagerial()) require_once __DIR__ . '/../includes/admin_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:900px;">
-        <div class="section-titre"><span class="eyebrow">MG / MGA</span><h2>🚪 Demandes de sortie du camp</h2><?php if (estSuperAdmin()): ?><p><a href="<?= BASE_URL ?>/admin/sorties_roles" class="btn btn-outline btn-sm">👤 Choisir les MG / MGA</a></p><?php endif; ?></div>
+        <div class="section-titre"><span class="eyebrow">MG / MGA</span><h2>Demandes de sortie du camp</h2><?php if (estSuperAdmin()): ?><p><a href="<?= BASE_URL ?>/admin/sorties_roles" class="btn btn-outline btn-sm">Choisir les MG / MGA</a></p><?php endif; ?></div>
         <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
@@ -46,8 +46,8 @@ if (estComiteManagerial()) require_once __DIR__ . '/../includes/admin_nav.php';
                     <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;"><strong><?= e($r['nom']) ?></strong><span class="pill pill-gris"><?= e($r['groupe']) ?></span></div>
                     <p style="margin:8px 0;">Motif : <strong><?= e($r['motif']) ?></strong><br>Sortie : <strong><?= e(dateHeureAffiche($r['heure_sortie'])) ?></strong> · Retour prévu : <strong><?= e(dateHeureAffiche($r['heure_retour'])) ?></strong></p>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                        <form method="post"><input type="hidden" name="action" value="accepter"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-primaire btn-sm">✔ Accepter</button></form>
-                        <form method="post" style="display:flex;gap:6px;flex-wrap:wrap;"><input type="hidden" name="action" value="refuser"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><input type="text" name="refus_motif" placeholder="Motif du refus (facultatif)" maxlength="255" style="min-width:200px;"><button class="btn btn-danger btn-sm">✖ Refuser</button></form>
+                        <form method="post"><input type="hidden" name="action" value="accepter"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><button class="btn btn-primaire btn-sm">Accepter</button></form>
+                        <form method="post" style="display:flex;gap:6px;flex-wrap:wrap;"><input type="hidden" name="action" value="refuser"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><input type="text" name="refus_motif" placeholder="Motif du refus (facultatif)" maxlength="255" style="min-width:200px;"><button class="btn btn-danger btn-sm">Refuser</button></form>
                     </div>
                 </div>
             <?php endforeach; ?>

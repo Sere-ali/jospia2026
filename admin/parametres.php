@@ -57,7 +57,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
             <?php endforeach; ?>
             <h3 style="margin-top:20px;">Commissions</h3>
             <p class="help-text">Renommer une commission, ajouter un nom complet (affiché sur les badges et certificats) ou créer une commission.</p>
-            <a href="<?= BASE_URL ?>/admin/commissions_noms" class="btn btn-or btn-sm">🏷️ Modifier le nom des commissions</a>
+            <a href="<?= BASE_URL ?>/admin/commissions_noms" class="btn btn-or btn-sm">Modifier le nom des commissions</a>
             <button type="submit" class="btn btn-primaire" style="margin-top:14px;">Enregistrer les paramètres</button>
         </form>
         <p style="color:var(--texte-doux);margin-top:12px;">Les changements s'appliquent immédiatement à tout le site (page de paiement, inscriptions, test d'entrée...).</p>

@@ -38,12 +38,12 @@ require_once __DIR__ . '/../includes/admin_nav.php';
                 <?php if ($code !== ''): ?>
                     <input type="text" readonly value="<?= e(urlSite() . '/l/' . $code) ?>" onclick="this.select()" style="font-family:monospace;margin:6px 0;">
                     <form method="post" data-no-ajax style="display:flex;gap:8px;flex-wrap:wrap;"><input type="hidden" name="cible" value="<?= e($cle) ?>">
-                        <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='✔ Copié'">📋 Copier</button>
-                        <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">🔄 Nouveau</button>
-                        <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver ce lien ?')">⛔ Désactiver</button>
+                        <button type="button" class="btn btn-or btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.form.previousElementSibling.value);this.textContent='Copié'">Copier</button>
+                        <button class="btn btn-outline btn-sm" name="lien_action" value="generer" onclick="return confirm('Créer un nouveau lien ? L\'ancien ne fonctionnera plus.')">Nouveau</button>
+                        <button class="btn btn-danger btn-sm" name="lien_action" value="desactiver" onclick="return confirm('Désactiver ce lien ?')">Désactiver</button>
                     </form>
                 <?php else: ?>
-                    <form method="post" data-no-ajax style="margin-top:6px;"><input type="hidden" name="cible" value="<?= e($cle) ?>"><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">🔗 Créer le lien</button></form>
+                    <form method="post" data-no-ajax style="margin-top:6px;"><input type="hidden" name="cible" value="<?= e($cle) ?>"><button class="btn btn-primaire btn-sm" name="lien_action" value="generer">Créer le lien</button></form>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>

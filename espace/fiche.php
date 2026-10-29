@@ -52,17 +52,17 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Espace membre</span>
             <h2>Bonjour, <?= e($membre['nom_prenoms']) ?></h2>
-            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
-            <?php if (estResponsableCommission($pdo)): ?><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">📝 Rapport journalier</a><?php endif; ?>
-            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a>
-            <?php if (estMG()): ?> <a href="<?= BASE_URL ?>/espace/sorties_mg" class="btn btn-primaire btn-sm">🚪 Valider les sorties (MG)</a><?php endif; ?>
-            <?php if (estSortieSecurite()): ?> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire btn-sm">🛡️ Sorties sécurité</a><?php endif; ?>
-            <?php if (estSecurite()): ?> <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-primaire btn-sm">🛡️ Gestion des visiteurs</a><?php endif; ?></p>
+            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">Modifier mon formulaire</a>
+            <?php if (estResponsableCommission($pdo)): ?><a href="<?= BASE_URL ?>/espace/rapport" class="btn btn-or btn-sm">Rapport journalier</a><?php endif; ?>
+            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">Autorisation de sortie</a>
+            <?php if (estMG()): ?> <a href="<?= BASE_URL ?>/espace/sorties_mg" class="btn btn-primaire btn-sm">Valider les sorties (MG)</a><?php endif; ?>
+            <?php if (estSortieSecurite()): ?> <a href="<?= BASE_URL ?>/securite/sorties" class="btn btn-primaire btn-sm">Sorties sécurité</a><?php endif; ?>
+            <?php if (estSecurite()): ?> <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-primaire btn-sm">Gestion des visiteurs</a><?php endif; ?></p>
         </div>
-        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion : notez-les.</div><?php endif; ?>
+        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">Inscription enregistrée. Voici vos identifiants de connexion : notez-les.</div><?php endif; ?>
         <?php if ($idsInitiaux): ?>
         <div class="carte" style="max-width:720px;margin:0 auto 20px;border:2px solid var(--primaire,#1b7a3d);">
-            <h3>🔑 Vos identifiants de connexion</h3>
+            <h3>Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
             <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans le PDF de votre fiche) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
@@ -82,7 +82,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <h3 style="text-align:center;">Mon badge</h3>
                 <?php require __DIR__ . '/../includes/badge_commission_carte.php'; ?>
                 <div class="acces-restreint">
-                    🔒 Le téléchargement / impression du badge est réservé aux administrateurs.
+                    Le téléchargement / impression du badge est réservé aux administrateurs.
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Mon diplôme</h3>
             <?php $nomCertificat = $membre['nom_prenoms']; $qualiteCertificat = 'MEMBRE DE LA COMMISSION ' . nomCommissionComplet($membre['commission']); require __DIR__ . '/../includes/certificat_carte.php'; ?>
             <div class="acces-restreint" style="margin-top:14px;">
-                🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
+                Le téléchargement / impression du diplôme est réservé aux administrateurs.
             </div>
         </div>
 
@@ -120,11 +120,11 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="section-titre">
             <span class="eyebrow">Espace séminariste</span>
             <h2>Bonjour, <?= e($seminariste['nom_prenoms']) ?></h2>
-            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">✏️ Modifier mon formulaire</a>
-            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">🚪 Autorisation de sortie</a></p>
+            <p><a href="<?= BASE_URL ?>/espace/modifier" class="btn btn-outline btn-sm">Modifier mon formulaire</a>
+            <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">Autorisation de sortie</a></p>
         </div>
 
-        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">✔ Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez télécharger votre fiche (PDF) avec son QR code.</div><?php endif; ?>
+        <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez télécharger votre fiche (PDF) avec son QR code.</div><?php endif; ?>
         <div class="fiche" id="ficheImprimable">
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">
@@ -156,20 +156,20 @@ require_once __DIR__ . '/../includes/header.php';
             <?= blocQrFiche($pdo, $seminariste['id']) ?>
         </div>
         <div style="text-align:center;margin-top:18px;" class="no-print">
-            <a href="<?= BASE_URL ?>/espace/download_fiche" class="btn btn-primaire">📄 Télécharger ma fiche d'inscription (PDF)</a>
+            <a href="<?= BASE_URL ?>/espace/download_fiche" class="btn btn-primaire">Télécharger ma fiche d'inscription (PDF)</a>
         </div>
 
         <div style="max-width:340px;margin:30px auto 0;">
             <h3 style="text-align:center;">Mon badge</h3>
             <?php $s = $seminariste; require __DIR__ . '/../includes/badge_seminariste_carte.php'; ?>
             <div class="acces-restreint">
-                🔒 Le téléchargement / impression du badge est réservé aux administrateurs.
+                Le téléchargement / impression du badge est réservé aux administrateurs.
             </div>
         </div>
 
         <?php if ($idsInitiaux): ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border:2px solid var(--primaire,#1b7a3d);">
-            <h3>🔑 Vos identifiants de connexion</h3>
+            <h3>Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
             <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans le PDF de votre fiche) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
@@ -184,13 +184,13 @@ require_once __DIR__ . '/../includes/header.php';
         ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border-left:5px solid <?= $payeDeclare ? '#1cc6f4' : 'var(--orange)' ?>;">
             <?php if ($payeDeclare): ?>
-            <h3>💙 Paiement signalé : en attente de validation</h3>
+            <h3>Paiement signalé : en attente de validation</h3>
             <p>Merci ! La commission Finance vérifie votre paiement de <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong> sur son compte Wave et le valide. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas validé : votre reçu apparaîtra ici.</p>
             <?php else: ?>
-            <h3>⏳ En attente de paiement</h3>
+            <h3>En attente de paiement</h3>
             <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas validé.</p>
-            <a href="<?= lienWavePaiement() ? e(lienWavePaiement()) : BASE_URL . '/paiement' ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">💙 Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
-            <form method="post" action="<?= BASE_URL ?>/paiement" style="margin-top:12px;"><input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small><button type="submit" class="btn btn-primaire">✔ J'ai payé : envoyer l'ID</button></form>
+            <a href="<?= lienWavePaiement() ? e(lienWavePaiement()) : BASE_URL . '/paiement' ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
+            <form method="post" action="<?= BASE_URL ?>/paiement" style="margin-top:12px;"><input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small><button type="submit" class="btn btn-primaire">J'ai payé : envoyer l'ID</button></form>
             <?php endif; ?>
         </div>
         <?php endif; ?>
@@ -204,15 +204,15 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php if (testOuvert($pdo)): ?>
                     <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
                 <?php else: ?>
-                    <div class="acces-restreint">🔒 Le test d'entrée est verrouillé pour le moment. Il sera ouvert par la commission scientifique : revenez sur cette page à ce moment-là.</div>
+                    <div class="acces-restreint">Le test d'entrée est verrouillé pour le moment. Il sera ouvert par la commission scientifique : revenez sur cette page à ce moment-là.</div>
                 <?php endif; ?>
             <?php else: ?>
                 <p><strong>Note obtenue :</strong> <?= e($seminariste['note_test']) ?> / 20<br>
                    <strong>Niveau d'affectation :</strong> <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>
                 <?php if (correctionOuverte($pdo)): ?>
-                    <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">🔍 Voir la correction détaillée de mon test</a>
+                    <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">Voir la correction détaillée de mon test</a>
                 <?php else: ?>
-                    <div class="acces-restreint">🔒 La correction détaillée du test est verrouillée pour le moment.</div>
+                    <div class="acces-restreint">La correction détaillée du test est verrouillée pour le moment.</div>
                 <?php endif; ?>
 
             <?php endif; ?>
@@ -222,7 +222,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Mon diplôme</h3>
             <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
             <div class="acces-restreint" style="margin-top:14px;">
-                🔒 Le téléchargement / impression du diplôme est réservé aux administrateurs.
+                Le téléchargement / impression du diplôme est réservé aux administrateurs.
             </div>
         </div>
 
@@ -230,7 +230,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Bulletin de notes</h3>
             <?php if (resultatsPublies($pdo)): ?>
                 <p style="color:var(--texte-doux);">Les résultats des compositions du séminaire sont disponibles.</p>
-                <a href="<?= BASE_URL ?>/espace/bulletin" class="btn btn-primaire">📄 Voir et télécharger mon bulletin</a>
+                <a href="<?= BASE_URL ?>/espace/bulletin" class="btn btn-primaire">Voir et télécharger mon bulletin</a>
             <?php else: ?>
                 <p style="color:var(--texte-doux);">Le bulletin de notes des compositions sera disponible ici dès que le comité d'organisation aura publié les résultats.</p>
             <?php endif; ?>
@@ -239,7 +239,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="carte" style="max-width:720px;margin:24px auto 0;">
             <h3>Votre avis compte</h3>
             <p style="color:var(--texte-doux);">Vous pouvez donner votre avis sur le travail d'une commission durant les JOSPIA. Votre message sera transmis directement à ses membres.</p>
-            <a href="<?= BASE_URL ?>/espace/critiquer" class="btn btn-outline">💬 Critiquer une commission</a>
+            <a href="<?= BASE_URL ?>/espace/critiquer" class="btn btn-outline">Critiquer une commission</a>
         </div>
     <?php else: ?>
         <div class="alert alert-info">Aucune fiche associée à ce compte.</div>
