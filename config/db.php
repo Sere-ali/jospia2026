@@ -78,8 +78,16 @@ try {
 define('WAVE_NUMERO', preg_replace('/\D+/', '', $JOS_PARAMS['wave_numero'] ?? '') ?: (getenv('WAVE_NUMERO') ?: '0767752772'));
 // Lien de paiement Wave marchand
 define('WAVE_PAYMENT_LINK', ($JOS_PARAMS['wave_payment_link'] ?? '') !== '' ? $JOS_PARAMS['wave_payment_link'] : (getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/M_ci_LhLv7A4lJDJ8/c/ci/'));
+// Frais de participation : passés à 5000 FCFA (une seule fois ; modifiables ensuite dans « Paramètres du site »).
+try {
+    if (!isset($JOS_PARAMS['frais_5000_v1'])) {
+        $__i = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
+        $__i->execute(['frais_participation', '5000']); $__i->execute(['frais_5000_v1', '1']);
+        $JOS_PARAMS['frais_participation'] = '5000';
+    }
+} catch (Throwable $e) { /* table absente au premier démarrage */ }
 // Frais de participation au séminaire (FCFA)
-define('FRAIS_PARTICIPATION', max(0, (int)($JOS_PARAMS['frais_participation'] ?? 5100)));
+define('FRAIS_PARTICIPATION', max(0, (int)($JOS_PARAMS['frais_participation'] ?? 5000)));
 // Seuil d'âge (inclus) jusqu'auquel le DORTOIR attribué devient automatiquement "Pépinière"
 define('AGE_PEPINIERE_SEUIL', (int)($JOS_PARAMS['age_pepiniere'] ?? 9));
 // Durée du test d'entrée (minutes)
