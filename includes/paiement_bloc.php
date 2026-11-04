@@ -16,9 +16,9 @@ if (waveApiActive()):
 <div class="pay-bloc">
     <h3>Paiement des frais de participation</h3>
     <div class="pay-montant"><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</div>
-    <p style="text-align:center;">Le paiement est confirmé <strong>automatiquement</strong> : l'ID de transaction est enregistré et votre reçu apparaît dès que Wave confirme.</p>
-    <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a></p>
-    <p style="text-align:center;color:var(--texte-doux);font-size:.9rem;">Si votre solde est insuffisant ou si le paiement échoue, rien n'est validé : rechargez votre compte Wave puis cliquez de nouveau sur le bouton.</p>
+    <p style="text-align:center;">Le paiement est confirmé <strong>automatiquement</strong> : l'ID de transaction est enregistré et votre reçu apparaît dès que le paiement est confirmé.</p>
+    <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA<?= fedapayActive() ? ' (MTN, Orange, Moov ou Wave)' : ' avec Wave' ?></a></p>
+    <p style="text-align:center;color:var(--texte-doux);font-size:.9rem;">Si votre solde est insuffisant ou si le paiement échoue, rien n'est validé : rechargez votre compte puis cliquez de nouveau sur le bouton.</p>
 </div>
 <?php return; endif; ?>
 <div class="pay-bloc">

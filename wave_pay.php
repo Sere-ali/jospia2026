@@ -19,18 +19,11 @@ if (!$p || $p['statut'] === 'rejeté') {
     $pid = (int)$p['id'];
 }
 
-[$code, $j] = waveApi('POST', '/v1/checkout/sessions', [
-    'amount' => (string)FRAIS_PARTICIPATION,
-    'currency' => 'XOF',
-    'client_reference' => 'JOSPIA-P' . $pid,
-    'success_url' => urlSite() . '/wave_retour?p=' . $pid,
-    'error_url' => urlSite() . '/wave_retour?p=' . $pid . '&echec=1',
-]);
-if ($code >= 200 && $code < 300 && !empty($j['wave_launch_url']) && !empty($j['id'])) {
-    $pdo->prepare("UPDATE paiements SET wave_session_id = ? WHERE id = ?")->execute([$j['id'], $pid]);
-    header('Location: ' . $j['wave_launch_url']);
+$session = paiementCreerSession('JOSPIA-P' . $pid, urlSite() . '/wave_retour?p=' . $pid);
+if ($session) {
+    $pdo->prepare("UPDATE paiements SET wave_session_id = ? WHERE id = ?")->execute([$session[0], $pid]);
+    header('Location: ' . $session[1]);
     exit;
 }
-error_log('Wave checkout échoué (' . $code . ') : ' . json_encode($j));
-$_SESSION['flash_paiement'] = "Impossible d'ouvrir Wave pour le moment. Réessayez dans un instant.";
+$_SESSION['flash_paiement'] = "Impossible d'ouvrir la page de paiement pour le moment. Réessayez dans un instant.";
 redirect('/paiement');

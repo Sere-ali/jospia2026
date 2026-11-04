@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <p class="help-text" style="margin-bottom:12px;">Après la validation, vous arrivez directement sur votre page : vos identifiants, votre fiche et le paiement Wave (<strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>) s'affichent ensemble.</p>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"><span>Valider mon inscription</span><i aria-hidden="true">→</i></button>
-                <p class="form-note">Paiement Wave · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
+                <p class="form-note">Paiement <?= fedapayActive() ? 'MTN, Orange, Moov ou Wave' : 'Wave' ?> · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
             </form>
         <?php endif; ?>
         </div>

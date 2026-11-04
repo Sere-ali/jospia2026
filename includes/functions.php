@@ -500,7 +500,73 @@ function photoSauvegarderEnBase($nom, $chemin, $ext) {
 }
 
 /** Paiement automatique Wave (API Checkout) : désactivé par défaut (mode manuel : le séminariste déclare son paiement, la commission Finance valide). Pour l'activer : WAVE_MODE=api et WAVE_API_KEY sur Render. */
-function waveApiActive() { return getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY'); }
+function waveApiActive() { return fedapayActive() || (getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY')); }
+
+/** Paiement FedaPay (MTN, Orange, Moov, Wave sur une seule page de paiement) : actif dès que FEDAPAY_SECRET_KEY est défini sur Render. */
+function fedapayActive() { return trim((string)getenv('FEDAPAY_SECRET_KEY')) !== ''; }
+
+function fedapayApi($methode, $chemin, $corps = null) {
+    $cle = trim((string)getenv('FEDAPAY_SECRET_KEY'));
+    $base = (strpos($cle, 'sk_sandbox_') === 0 || getenv('FEDAPAY_ENV') === 'sandbox') ? 'https://sandbox-api.fedapay.com' : 'https://api.fedapay.com';
+    $ch = curl_init($base . $chemin);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_CUSTOMREQUEST => $methode,
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $cle, 'Content-Type: application/json']]);
+    if ($corps !== null) { curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($corps)); }
+    $rep = curl_exec($ch);
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return [$code, $rep ? json_decode($rep, true) : null];
+}
+
+/**
+ * Crée une session de paiement (FedaPay si configuré, sinon Wave) et retourne [identifiant de session, URL de paiement], ou null en cas d'échec.
+ * L'identifiant FedaPay est préfixé « fp_ » pour savoir quel service interroger ensuite.
+ */
+function paiementCreerSession($reference, $urlRetour) {
+    if (fedapayActive()) {
+        [$code, $j] = fedapayApi('POST', '/v1/transactions', [
+            'description' => 'Frais de participation JOSPIA 2026 (' . $reference . ')',
+            'amount' => (int)FRAIS_PARTICIPATION,
+            'currency' => ['iso' => 'XOF'],
+            'callback_url' => $urlRetour,
+        ]);
+        $t = $j['v1/transaction'] ?? ($j['transaction'] ?? null);
+        $id = is_array($t) ? ($t['id'] ?? null) : null;
+        if ($code >= 200 && $code < 300 && $id) {
+            [$c2, $j2] = fedapayApi('POST', '/v1/transactions/' . (int)$id . '/token');
+            if ($c2 >= 200 && $c2 < 300 && !empty($j2['url'])) { return ['fp_' . (int)$id, $j2['url']]; }
+            error_log('FedaPay token échoué (' . $c2 . ') : ' . json_encode($j2));
+        } else {
+            error_log('FedaPay transaction échouée (' . $code . ') : ' . json_encode($j));
+        }
+        return null;
+    }
+    [$code, $j] = waveApi('POST', '/v1/checkout/sessions', [
+        'amount' => (string)FRAIS_PARTICIPATION,
+        'currency' => 'XOF',
+        'client_reference' => $reference,
+        'success_url' => $urlRetour,
+        'error_url' => $urlRetour . (strpos($urlRetour, '?') === false ? '?' : '&') . 'echec=1',
+    ]);
+    if ($code >= 200 && $code < 300 && !empty($j['wave_launch_url']) && !empty($j['id'])) { return [$j['id'], $j['wave_launch_url']]; }
+    error_log('Wave checkout échoué (' . $code . ') : ' . json_encode($j));
+    return null;
+}
+
+/** Interroge le service de paiement : retourne [payé ?, montant, identifiant de transaction]. */
+function paiementInterroger($sessionId) {
+    if (strpos($sessionId, 'fp_') === 0) {
+        [$code, $j] = fedapayApi('GET', '/v1/transactions/' . (int)substr($sessionId, 3));
+        $t = $j['v1/transaction'] ?? ($j['transaction'] ?? null);
+        if ($code !== 200 || !is_array($t)) { return [false, 0, '']; }
+        $ok = in_array($t['status'] ?? '', ['approved', 'transferred'], true);
+        $tx = (string)($t['reference'] ?? ($t['id'] ?? ''));
+        return [$ok, (int)($t['amount'] ?? 0), $tx !== '' ? 'FEDAPAY-' . $tx : ''];
+    }
+    [$code, $j] = waveApi('GET', '/v1/checkout/sessions/' . rawurlencode($sessionId));
+    if ($code !== 200 || !is_array($j)) { return [false, 0, '']; }
+    return [($j['payment_status'] ?? '') === 'succeeded', (int)($j['amount'] ?? 0), (string)($j['transaction_id'] ?? '')];
+}
 
 function waveApi($methode, $chemin, $corps = null) {
     $ch = curl_init('https://api.wave.com' . $chemin);
@@ -530,9 +596,8 @@ function urlSite() {
  * et valide automatiquement. Retourne true si le paiement est confirmé.
  */
 function waveVerifierEtValider(PDO $pdo, $sessionId) {
-    [$code, $j] = waveApi('GET', '/v1/checkout/sessions/' . rawurlencode($sessionId));
-    if ($code !== 200 || !is_array($j) || ($j['payment_status'] ?? '') !== 'succeeded') { return false; }
-    if ((int)($j['amount'] ?? 0) < FRAIS_PARTICIPATION) { return false; }
+    [$paye, $montantPaye, $txId] = paiementInterroger($sessionId);
+    if (!$paye || $montantPaye < FRAIS_PARTICIPATION) { return false; }
     $st = $pdo->prepare("SELECT id FROM paiements WHERE wave_session_id = ? LIMIT 1");
     $st->execute([$sessionId]);
     $pid = (int)$st->fetchColumn();
@@ -543,12 +608,12 @@ function waveVerifierEtValider(PDO $pdo, $sessionId) {
             $sa = $pdo->prepare("SELECT * FROM inscriptions_attente WHERE wave_session_id = ? LIMIT 1");
             $sa->execute([$sessionId]);
             if ($att = $sa->fetch()) {
-                return finaliserInscriptionAttente($pdo, $att, $sessionId, (string)($j['transaction_id'] ?? '')) !== null;
+                return finaliserInscriptionAttente($pdo, $att, $sessionId, $txId) !== null;
             }
         } catch (Throwable $e) { error_log('Inscription en attente : ' . $e->getMessage()); }
         return false;
     }
-    $tx = (string)($j['transaction_id'] ?? '');
+    $tx = $txId;
     $pdo->prepare("UPDATE paiements SET reference_transaction = ? WHERE id = ?")->execute([$tx !== '' ? $tx : 'WAVE-' . $sessionId, $pid]);
     validerPaiement($pdo, $pid, null);
     return true;
@@ -595,7 +660,7 @@ function journalAutomatique(PDO $pdo) {
     $u = $_SESSION['compte'] ?? null;
     if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) return;
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
-    if (in_array($script, ['login', 'logout', 'wave_webhook', 'wave_retour', 'wave_pay'], true)) return;
+    if (in_array($script, ['login', 'logout', 'wave_webhook', 'fedapay_webhook', 'wave_retour', 'wave_pay'], true)) return;
     $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
     $action = null;
