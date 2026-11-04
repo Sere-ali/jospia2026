@@ -91,7 +91,7 @@ $montant = number_format(FRAIS_PARTICIPATION, 0, ',', ' ');
         </script>
 <?php else: ?>
 <?php if ($erreur): ?><div class="alert alert-erreur"><?= e($erreur) ?></div><?php endif; ?>
-        <form method="post">
+        <form method="post" data-no-ajax>
             <label for="operateur" style="font-weight:600;">Votre opérateur</label>
             <select name="operateur" id="operateur" required style="width:100%;padding:12px;margin:6px 0 14px;border:1px solid #ccc;border-radius:8px;">
                 <option value="">Choisir</option>
