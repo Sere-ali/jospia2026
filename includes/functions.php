@@ -581,7 +581,12 @@ function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $ur
     $token = $j2['token'] ?? null;
     if ($c2 < 200 || $c2 >= 300 || !$token) { error_log('FedaPay direct (token) ' . $c2 . ' : ' . json_encode($j2)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
     [$c3, $j3] = fedapayApi('POST', '/v1/transactions/' . $modes[$operateur], ['token' => $token, 'phone_number' => ['number' => $numero, 'country' => 'ci']]);
-    if ($c3 < 200 || $c3 >= 300) { error_log('FedaPay direct (envoi ' . $modes[$operateur] . ') ' . $c3 . ' : ' . json_encode($j3)); return ['erreur' => "La demande de paiement n'a pas pu être envoyée à ce numéro. Vérifiez l'opérateur et le numéro, puis réessayez."]; }
+    if ($c3 < 200 || $c3 >= 300) {
+        error_log('FedaPay direct (envoi ' . $modes[$operateur] . ') ' . $c3 . ' : ' . json_encode($j3));
+        // Tous les opérateurs ne permettent pas le paiement sans redirection : on bascule alors sur la page de paiement sécurisée.
+        if ($c3 === 404 && !empty($j2['url'])) { return ['id' => 'fp_' . (int)$id, 'url' => $j2['url']]; }
+        return ['erreur' => "La demande de paiement n'a pas pu être envoyée à ce numéro. Vérifiez l'opérateur et le numéro, puis réessayez."];
+    }
     $url = null;
     $cherche = function ($x) use (&$cherche, &$url) { if (is_array($x)) { foreach ($x as $k => $v) { if (is_string($v) && preg_match('#^https://#', $v) && in_array($k, ['url', 'payment_url', 'redirect_url', 'checkout_url'], true)) { $url = $v; } else { $cherche($v); } } } };
     $cherche($j3);
