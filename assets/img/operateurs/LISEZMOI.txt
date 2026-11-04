@@ -1,0 +1,1 @@
+Deposez ici les logos officiels : mtn, orange, moov, wave (.svg, .png ou .webp). Sans fichier, une pastille de couleur avec le nom est affichee.
