@@ -500,7 +500,60 @@ function photoSauvegarderEnBase($nom, $chemin, $ext) {
 }
 
 /** Paiement automatique Wave (API Checkout) : désactivé par défaut (mode manuel : le séminariste déclare son paiement, la commission Finance valide). Pour l'activer : WAVE_MODE=api et WAVE_API_KEY sur Render. */
-function waveApiActive() { return fedapayActive() || (getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY')); }
+function waveApiActive() { return paydunyaActive() || fedapayActive() || (getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY')); }
+
+/** Paiement PayDunya (MTN, Orange, Moov, Wave, directement sur le site) : actif dès que les 3 clés sont définies sur Render (prioritaire sur FedaPay). */
+function paydunyaActive() { return trim((string)getenv('PAYDUNYA_MASTER_KEY')) !== '' && trim((string)getenv('PAYDUNYA_PRIVATE_KEY')) !== '' && trim((string)getenv('PAYDUNYA_TOKEN')) !== ''; }
+/** Un paiement direct (sans quitter le site) est disponible. */
+function paiementDirectDisponible() { return paydunyaActive() || fedapayActive(); }
+
+function paydunyaApi($methode, $chemin, $corps = null, $delai = 20) {
+    $base = getenv('PAYDUNYA_MODE') === 'test' ? 'https://app.paydunya.com/sandbox-api/v1' : 'https://app.paydunya.com/api/v1';
+    $ch = curl_init($base . $chemin);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => $delai, CURLOPT_CUSTOMREQUEST => $methode,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'PAYDUNYA-MASTER-KEY: ' . trim((string)getenv('PAYDUNYA_MASTER_KEY')),
+            'PAYDUNYA-PRIVATE-KEY: ' . trim((string)getenv('PAYDUNYA_PRIVATE_KEY')), 'PAYDUNYA-TOKEN: ' . trim((string)getenv('PAYDUNYA_TOKEN'))]]);
+    if ($corps !== null) { curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($corps)); }
+    $rep = curl_exec($ch);
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return [$code, $rep ? json_decode($rep, true) : null];
+}
+
+/** Paiement direct PayDunya : crée la facture puis déclenche le paiement chez l'opérateur. Retourne ['id' => 'pd_...', 'url' => null|string] ou ['erreur' => message]. */
+function paydunyaPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp = '') {
+    $tel = preg_replace('/\D+/', '', (string)$telephone);
+    if (strpos($tel, '225') === 0 && strlen($tel) > 10) { $tel = substr($tel, 3); }
+    if (strlen($tel) !== 10) { return ['erreur' => "Numéro invalide : saisissez les 10 chiffres de votre numéro."]; }
+    $nom = trim($nomComplet) !== '' ? trim($nomComplet) : 'Participant JOSPIA';
+    $email = 'paiement@' . (preg_replace('#^https?://([^/]+).*$#', '$1', urlSite()) ?: 'jospia26.site');
+    [$code, $j] = paydunyaApi('POST', '/checkout-invoice/create', [
+        'invoice' => ['total_amount' => (int)FRAIS_PARTICIPATION, 'description' => 'Frais de participation JOSPIA 2026'],
+        'store' => ['name' => 'JOSPIA 2026'],
+        'custom_data' => ['reference' => $reference],
+        'actions' => ['callback_url' => urlSite() . '/paydunya_webhook', 'return_url' => $urlRetour, 'cancel_url' => $urlRetour],
+    ]);
+    $token = is_array($j) ? ($j['token'] ?? null) : null;
+    if (($j['response_code'] ?? '') !== '00' || !$token) { error_log('PayDunya facture ' . $code . ' : ' . json_encode($j)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
+    switch ($operateur) {
+        case 'mtn':    $chemin = '/softpay/mtn-ci';          $corps = ['mtn_ci_customer_fullname' => $nom, 'mtn_ci_email' => $email, 'mtn_ci_phone_number' => $tel, 'mtn_ci_wallet_provider' => 'MTNCI', 'payment_token' => $token]; break;
+        case 'moov':   $chemin = '/softpay/moov-ci';         $corps = ['moov_ci_customer_fullname' => $nom, 'moov_ci_email' => $email, 'moov_ci_phone_number' => $tel, 'payment_token' => $token]; break;
+        case 'orange':
+            $otp = preg_replace('/\D+/', '', (string)$otp);
+            if ($otp === '') { return ['erreur' => "Orange Money : saisissez le code de paiement (composez #144*82# puis choisissez l'option 2)."]; }
+            $chemin = '/softpay/orange-money-ci'; $corps = ['orange_money_ci_customer_fullname' => $nom, 'orange_money_ci_email' => $email, 'orange_money_ci_phone_number' => $tel, 'orange_money_ci_otp' => $otp, 'payment_token' => $token]; break;
+        case 'wave':   $chemin = '/softpay/wave-ci';         $corps = ['wave_ci_fullName' => $nom, 'wave_ci_email' => $email, 'wave_ci_phone' => $tel, 'wave_ci_payment_token' => $token]; break;
+        default: return ['erreur' => "Choisissez un opérateur."];
+    }
+    [$c2, $j2] = paydunyaApi('POST', $chemin, $corps, 45);
+    error_log('PayDunya softpay ' . $chemin . ' ' . $c2 . ' : ' . json_encode($j2));
+    if (!is_array($j2) || empty($j2['success'])) {
+        $msg = is_array($j2) && !empty($j2['message']) && is_string($j2['message']) ? $j2['message'] : "La demande de paiement n'a pas pu être envoyée. Vérifiez l'opérateur et le numéro, puis réessayez.";
+        return ['erreur' => $msg];
+    }
+    return ['id' => 'pd_' . $token, 'url' => (!empty($j2['url']) && is_string($j2['url'])) ? $j2['url'] : null];
+}
+
 
 /** Paiement FedaPay (MTN, Orange, Moov, Wave sur une seule page de paiement) : actif dès que FEDAPAY_SECRET_KEY est défini sur Render. */
 function fedapayActive() { return trim((string)getenv('FEDAPAY_SECRET_KEY')) !== ''; }
@@ -557,6 +610,11 @@ function paiementCreerSession($reference, $urlRetour) {
  * Paiement direct FedaPay, sans quitter le site : crée la transaction puis envoie la demande au téléphone du payeur.
  * $operateur : mtn | moov | orange | wave. Retourne ['id' => 'fp_...', 'url' => null|string] ou ['erreur' => message].
  */
+function paiementPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp = '') {
+    if (paydunyaActive()) { return paydunyaPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp); }
+    return fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour);
+}
+
 function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour) {
     $modes = ['mtn' => ['mtn_open_ci', 'mtn_ci'], 'moov' => ['moov_ci', 'moov_open_ci'], 'orange' => ['orange_ci', 'orange_open_ci'], 'wave' => ['wave_ci', 'wave_open_ci']];
     if (!isset($modes[$operateur])) { return ['erreur' => "Choisissez un opérateur."]; }
@@ -600,6 +658,13 @@ function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $ur
 
 /** Interroge le service de paiement : retourne [payé ?, montant, identifiant de transaction]. */
 function paiementInterroger($sessionId) {
+    if (strpos($sessionId, 'pd_') === 0) {
+        [$code, $j] = paydunyaApi('GET', '/checkout-invoice/confirm/' . rawurlencode(substr($sessionId, 3)));
+        if ($code !== 200 || !is_array($j) || ($j['response_code'] ?? '') !== '00') { return [false, 0, '', 'inconnu']; }
+        $statut = (string)($j['status'] ?? '');
+        $montant = (int)round((float)($j['invoice']['total_amount'] ?? 0));
+        return [$statut === 'completed', $montant, 'PAYDUNYA-' . substr($sessionId, 3), $statut];
+    }
     if (strpos($sessionId, 'fp_') === 0) {
         [$code, $j] = fedapayApi('GET', '/v1/transactions/' . (int)substr($sessionId, 3));
         $t = $j['v1/transaction'] ?? ($j['transaction'] ?? null);
@@ -705,7 +770,7 @@ function journalAutomatique(PDO $pdo) {
     $u = $_SESSION['compte'] ?? null;
     if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) return;
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
-    if (in_array($script, ['login', 'logout', 'wave_webhook', 'fedapay_webhook', 'wave_retour', 'wave_pay', 'paiement_direct'], true)) return;
+    if (in_array($script, ['login', 'logout', 'wave_webhook', 'fedapay_webhook', 'paydunya_webhook', 'wave_retour', 'wave_pay', 'paiement_direct'], true)) return;
     $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
     $action = null;

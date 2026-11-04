@@ -19,7 +19,7 @@ if (!$p || $p['statut'] === 'rejeté') {
     $pid = (int)$p['id'];
 }
 
-if (fedapayActive()) { redirect('/paiement_direct?p=' . $pid); }
+if (paiementDirectDisponible()) { redirect('/paiement_direct?p=' . $pid); }
 $session = paiementCreerSession('JOSPIA-P' . $pid, urlSite() . '/wave_retour?p=' . $pid);
 if ($session) {
     $pdo->prepare("UPDATE paiements SET wave_session_id = ? WHERE id = ?")->execute([$session[0], $pid]);

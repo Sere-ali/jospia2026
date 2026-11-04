@@ -1,7 +1,7 @@
 <?php
 /** Paiement des frais directement sur le site : le séminariste choisit son opérateur et son numéro, puis valide sur son téléphone. */
 require_once __DIR__ . '/includes/init.php';
-if (!fedapayActive()) { redirect('/inscription_seminariste'); }
+if (!paiementDirectDisponible()) { redirect('/inscription_seminariste'); }
 
 $jeton = preg_replace('/[^a-f0-9]/', '', (string)($_GET['t'] ?? ''));
 $pid = (int)($_GET['p'] ?? 0);
@@ -46,7 +46,7 @@ if (isset($_GET['statut'])) {
     $etat = 'attente';
     if ($session !== '') {
         [$ok, , , $statut] = paiementInterroger($session);
-        if ($ok) { $etat = 'ok'; } elseif (in_array($statut, ['declined', 'canceled'], true)) { $etat = 'echec'; }
+        if ($ok) { $etat = 'ok'; } elseif (in_array($statut, ['declined', 'canceled', 'cancelled', 'failed'], true)) { $etat = 'echec'; }
     }
     echo json_encode(['etat' => $etat]);
     exit;
@@ -54,7 +54,7 @@ if (isset($_GET['statut'])) {
 
 $erreur = null; $attente = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $r = fedapayPayerDirect($reference, $nom, (string)($_POST['telephone'] ?? ''), (string)($_POST['operateur'] ?? ''), $retour);
+    $r = paiementPayerDirect($reference, $nom, (string)($_POST['telephone'] ?? ''), (string)($_POST['operateur'] ?? ''), $retour, (string)($_POST['otp'] ?? ''));
     if (isset($r['erreur'])) {
         $erreur = $r['erreur'];
     } else {
@@ -102,9 +102,22 @@ $montant = number_format(FRAIS_PARTICIPATION, 0, ',', ' ');
             </select>
             <label for="telephone" style="font-weight:600;">Numéro qui paie</label>
             <input type="tel" name="telephone" id="telephone" required inputmode="numeric" maxlength="14" value="<?= e($contact) ?>" placeholder="ex. 0586189663" style="width:100%;padding:12px;margin:6px 0 14px;border:1px solid #ccc;border-radius:8px;">
+            <div id="bloc-otp" style="display:none;">
+                <label for="otp" style="font-weight:600;">Code de paiement Orange</label>
+                <input type="text" name="otp" id="otp" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="Code reçu" style="width:100%;padding:12px;margin:6px 0 4px;border:1px solid #ccc;border-radius:8px;">
+                <small style="display:block;color:var(--texte-doux);margin-bottom:14px;">Composez <strong>#144*82#</strong> sur votre téléphone, choisissez l'option 2, puis saisissez ici le code reçu.</small>
+            </div>
             <button type="submit" class="btn btn-wave" style="width:100%;">Payer <?= $montant ?> FCFA</button>
             <small style="display:block;text-align:center;color:var(--texte-doux);margin-top:10px;">Vous recevrez une demande de confirmation sur ce numéro.</small>
         </form>
+<script>
+(function () {
+    var op = document.getElementById('operateur'), bloc = document.getElementById('bloc-otp');
+    if (!op || !bloc) return;
+    function maj() { bloc.style.display = op.value === 'orange' ? 'block' : 'none'; }
+    op.addEventListener('change', maj); maj();
+})();
+</script>
 <?php endif; ?>
     </div>
 </div>
