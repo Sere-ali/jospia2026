@@ -381,7 +381,7 @@ function validerPaiement(PDO $pdo, int $paiementId, ?int $validateurId): bool {
     return $st->rowCount() > 0;
 }
 
-/** Numéro Wave affiché : +225 05 46 15 53 98 */
+/** Numéro Wave affiché : +225 05 86 18 96 63 */
 function numeroWaveAffiche() {
     return '+225 ' . trim(chunk_split(WAVE_NUMERO, 2, ' '));
 }
