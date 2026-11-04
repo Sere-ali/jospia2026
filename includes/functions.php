@@ -558,7 +558,7 @@ function paiementCreerSession($reference, $urlRetour) {
  * $operateur : mtn | moov | orange | wave. Retourne ['id' => 'fp_...', 'url' => null|string] ou ['erreur' => message].
  */
 function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour) {
-    $modes = ['mtn' => 'mtn_ci', 'moov' => 'moov_ci', 'orange' => 'orange_ci', 'wave' => 'wave_ci'];
+    $modes = ['mtn' => ['mtn_open_ci', 'mtn_ci'], 'moov' => ['moov_ci', 'moov_open_ci'], 'orange' => ['orange_ci', 'orange_open_ci'], 'wave' => ['wave_ci', 'wave_open_ci']];
     if (!isset($modes[$operateur])) { return ['erreur' => "Choisissez un opérateur."]; }
     $tel = preg_replace('/\D+/', '', (string)$telephone);
     if (strpos($tel, '225') === 0 && strlen($tel) > 10) { $tel = substr($tel, 3); }
@@ -580,11 +580,16 @@ function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $ur
     [$c2, $j2] = fedapayApi('POST', '/v1/transactions/' . (int)$id . '/token');
     $token = $j2['token'] ?? null;
     if ($c2 < 200 || $c2 >= 300 || !$token) { error_log('FedaPay direct (token) ' . $c2 . ' : ' . json_encode($j2)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
-    [$c3, $j3] = fedapayApi('POST', '/v1/transactions/' . $modes[$operateur], ['token' => $token, 'phone_number' => ['number' => $numero, 'country' => 'ci']]);
+    // On essaie les identifiants de mode connus pour cet opérateur : le premier que FedaPay reconnaît (hors 404) est utilisé.
+    $c3 = 404; $j3 = null; $reconnu = false;
+    foreach ($modes[$operateur] as $mode) {
+        [$c3, $j3] = fedapayApi('POST', '/v1/transactions/' . $mode, ['token' => $token, 'phone_number' => ['number' => $numero, 'country' => 'ci']]);
+        error_log('FedaPay direct (essai ' . $mode . ') ' . $c3 . ' : ' . json_encode($j3));
+        if ($c3 !== 404) { $reconnu = true; break; }
+    }
     if ($c3 < 200 || $c3 >= 300) {
-        error_log('FedaPay direct (envoi ' . $modes[$operateur] . ') ' . $c3 . ' : ' . json_encode($j3));
-        // Tous les opérateurs ne permettent pas le paiement sans redirection : on bascule alors sur la page de paiement sécurisée.
-        if ($c3 === 404 && !empty($j2['url'])) { return ['id' => 'fp_' . (int)$id, 'url' => $j2['url']]; }
+        // Aucun mode direct reconnu pour cet opérateur : repli sur la page de paiement sécurisée.
+        if (!$reconnu && !empty($j2['url'])) { return ['id' => 'fp_' . (int)$id, 'url' => $j2['url']]; }
         return ['erreur' => "La demande de paiement n'a pas pu être envoyée à ce numéro. Vérifiez l'opérateur et le numéro, puis réessayez."];
     }
     $url = null;
