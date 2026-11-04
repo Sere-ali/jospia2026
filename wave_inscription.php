@@ -9,6 +9,7 @@ $att = $st->fetch();
 if (!$att || !waveApiActive()) { redirect('/inscription_seminariste'); }
 if (!empty($att['seminariste_id'])) { redirect('/login'); }
 
+if (fedapayActive()) { redirect('/paiement_direct?t=' . $jeton); }
 $session = paiementCreerSession('JOSPIA-I' . (int)$att['id'], urlSite() . '/wave_retour_inscription?t=' . $jeton);
 if ($session) {
     $pdo->prepare("UPDATE inscriptions_attente SET wave_session_id = ? WHERE id = ?")->execute([$session[0], $att['id']]);

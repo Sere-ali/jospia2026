@@ -553,19 +553,54 @@ function paiementCreerSession($reference, $urlRetour) {
     return null;
 }
 
+/**
+ * Paiement direct FedaPay, sans quitter le site : crée la transaction puis envoie la demande au téléphone du payeur.
+ * $operateur : mtn | moov | orange | wave. Retourne ['id' => 'fp_...', 'url' => null|string] ou ['erreur' => message].
+ */
+function fedapayPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour) {
+    $modes = ['mtn' => 'mtn_ci', 'moov' => 'moov_ci', 'orange' => 'orange_ci', 'wave' => 'wave_ci'];
+    if (!isset($modes[$operateur])) { return ['erreur' => "Choisissez un opérateur."]; }
+    $tel = preg_replace('/\D+/', '', (string)$telephone);
+    if (strpos($tel, '225') === 0 && strlen($tel) > 10) { $tel = substr($tel, 3); }
+    if (strlen($tel) !== 10) { return ['erreur' => "Numéro invalide : saisissez les 10 chiffres de votre numéro."]; }
+    $mots = preg_split('/\s+/', trim($nomComplet)) ?: [];
+    $nom = $mots[0] ?? 'Participant';
+    $prenoms = count($mots) > 1 ? implode(' ', array_slice($mots, 1)) : $nom;
+    $numero = '+225' . $tel;
+    [$code, $j] = fedapayApi('POST', '/v1/transactions', [
+        'description' => 'Frais de participation JOSPIA 2026 (' . $reference . ')',
+        'amount' => (int)FRAIS_PARTICIPATION,
+        'currency' => ['iso' => 'XOF'],
+        'callback_url' => $urlRetour,
+        'customer' => ['firstname' => $prenoms, 'lastname' => $nom, 'phone_number' => ['number' => $numero, 'country' => 'ci']],
+    ]);
+    $t = $j['v1/transaction'] ?? ($j['transaction'] ?? null);
+    $id = is_array($t) ? ($t['id'] ?? null) : null;
+    if ($code < 200 || $code >= 300 || !$id) { error_log('FedaPay direct (transaction) ' . $code . ' : ' . json_encode($j)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
+    [$c2, $j2] = fedapayApi('POST', '/v1/transactions/' . (int)$id . '/token');
+    $token = $j2['token'] ?? null;
+    if ($c2 < 200 || $c2 >= 300 || !$token) { error_log('FedaPay direct (token) ' . $c2 . ' : ' . json_encode($j2)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
+    [$c3, $j3] = fedapayApi('POST', '/v1/transactions/' . $modes[$operateur], ['token' => $token, 'phone_number' => ['number' => $numero, 'country' => 'ci']]);
+    if ($c3 < 200 || $c3 >= 300) { error_log('FedaPay direct (envoi ' . $modes[$operateur] . ') ' . $c3 . ' : ' . json_encode($j3)); return ['erreur' => "La demande de paiement n'a pas pu être envoyée à ce numéro. Vérifiez l'opérateur et le numéro, puis réessayez."]; }
+    $url = null;
+    $cherche = function ($x) use (&$cherche, &$url) { if (is_array($x)) { foreach ($x as $k => $v) { if (is_string($v) && preg_match('#^https://#', $v) && in_array($k, ['url', 'payment_url', 'redirect_url', 'checkout_url'], true)) { $url = $v; } else { $cherche($v); } } } };
+    $cherche($j3);
+    return ['id' => 'fp_' . (int)$id, 'url' => $url];
+}
+
 /** Interroge le service de paiement : retourne [payé ?, montant, identifiant de transaction]. */
 function paiementInterroger($sessionId) {
     if (strpos($sessionId, 'fp_') === 0) {
         [$code, $j] = fedapayApi('GET', '/v1/transactions/' . (int)substr($sessionId, 3));
         $t = $j['v1/transaction'] ?? ($j['transaction'] ?? null);
-        if ($code !== 200 || !is_array($t)) { return [false, 0, '']; }
+        if ($code !== 200 || !is_array($t)) { return [false, 0, '', 'inconnu']; }
         $ok = in_array($t['status'] ?? '', ['approved', 'transferred'], true);
         $tx = (string)($t['reference'] ?? ($t['id'] ?? ''));
-        return [$ok, (int)($t['amount'] ?? 0), $tx !== '' ? 'FEDAPAY-' . $tx : ''];
+        return [$ok, (int)($t['amount'] ?? 0), $tx !== '' ? 'FEDAPAY-' . $tx : '', (string)($t['status'] ?? '')];
     }
     [$code, $j] = waveApi('GET', '/v1/checkout/sessions/' . rawurlencode($sessionId));
-    if ($code !== 200 || !is_array($j)) { return [false, 0, '']; }
-    return [($j['payment_status'] ?? '') === 'succeeded', (int)($j['amount'] ?? 0), (string)($j['transaction_id'] ?? '')];
+    if ($code !== 200 || !is_array($j)) { return [false, 0, '', 'inconnu']; }
+    return [($j['payment_status'] ?? '') === 'succeeded', (int)($j['amount'] ?? 0), (string)($j['transaction_id'] ?? ''), (string)($j['payment_status'] ?? '')];
 }
 
 function waveApi($methode, $chemin, $corps = null) {
@@ -660,7 +695,7 @@ function journalAutomatique(PDO $pdo) {
     $u = $_SESSION['compte'] ?? null;
     if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) return;
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
-    if (in_array($script, ['login', 'logout', 'wave_webhook', 'fedapay_webhook', 'wave_retour', 'wave_pay'], true)) return;
+    if (in_array($script, ['login', 'logout', 'wave_webhook', 'fedapay_webhook', 'wave_retour', 'wave_pay', 'paiement_direct'], true)) return;
     $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
     $action = null;
