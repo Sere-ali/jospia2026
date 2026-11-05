@@ -906,8 +906,8 @@ function pdfTicket(array $t) {
     imagefilledrectangle($im, 5, 5, (int)($W / 3), 16, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 5, $W - 6, 16, $vert);
     // découpe pointillée
     for ($y = 24; $y < $H - 14; $y += 18) { imagefilledrectangle($im, $XP - 1, $y, $XP + 1, $y + 8, $gris); }
-    // Entête du badge (calligraphie JOSPIA 2026 + bandeau des logos AEEMCI et JOSPIA), posée sur fond blanc
-    $src = imagecreatefrompng(__DIR__ . '/../assets/img/badge_entete.png');
+    // Entête du badge actuel (logos AEEMCI et JOSPIA + JOSPIA 2026 en couleurs), extraite de la maquette du badge séminariste
+    $src = imagecreatefrompng(__DIR__ . '/../assets/img/ticket_entete.png');
     $ex = imagesx($src); $ey = imagesy($src);
     $ent = imagecreatetruecolor($ex, $ey); imagefill($ent, 0, 0, imagecolorallocate($ent, 255, 255, 255));
     imagealphablending($ent, true); imagecopy($ent, $src, 0, 0, 0, 0, $ex, $ey); imagedestroy($src);
