@@ -65,7 +65,7 @@ require_once __DIR__ . '/../includes/header.php';
             <h3>Vos identifiants de connexion</h3>
             <p class="mono"><strong>Identifiant :</strong> <?= e($idsInitiaux['identifiant']) ?><br>
                <strong>Mot de passe :</strong> <?= e($idsInitiaux['mdp_initial']) ?></p>
-            <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans le PDF de votre fiche) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
+            <p style="color:var(--texte-doux);">Conservez-les (ils sont aussi dans votre fiche d'inscription, disponible après validation du paiement) : ils vous permettent de revenir sur le site pour voir si la commission Finance a validé votre paiement. Vous pouvez choisir votre propre mot de passe dans <a href="<?= BASE_URL ?>/compte">Mon compte</a> (ce bloc disparaîtra alors).</p>
         </div>
         <?php endif; ?>
 
@@ -125,6 +125,7 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
 
         <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez télécharger votre fiche (PDF) avec son QR code.</div><?php endif; ?>
+        <?php if ($recu): // La fiche d'inscription n'est visible qu'après validation du paiement par la commission Finance ?>
         <div class="fiche" id="ficheImprimable">
             <div class="fiche-header">
                 <img src="<?= BASE_URL ?>/assets/img/logo.jpg" class="logo-fiche" alt="Logo">
@@ -158,6 +159,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div style="text-align:center;margin-top:18px;" class="no-print">
             <a href="<?= BASE_URL ?>/espace/download_fiche" class="btn btn-primaire">Télécharger ma fiche d'inscription (PDF)</a>
         </div>
+        <?php endif; ?>
 
         <div style="max-width:340px;margin:30px auto 0;">
             <h3 style="text-align:center;">Mon badge</h3>
@@ -179,7 +181,7 @@ require_once __DIR__ . '/../includes/header.php';
         <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; else: ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border-left:5px solid var(--orange);">
             <h3>En attente de paiement</h3>
-            <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à remettre <strong>en espèces</strong> à la commission Finance. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas enregistré : votre reçu apparaîtra ici dès sa validation.</p>
+            <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à remettre <strong>en espèces</strong> à la commission Finance. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas enregistré : votre fiche d'inscription et votre reçu (avec QR code) apparaîtront ici dès que la commission Finance aura validé votre paiement.</p>
         </div>
         <?php endif; ?>
 
