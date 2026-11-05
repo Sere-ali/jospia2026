@@ -45,8 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($parentContact === '' || !preg_match('/^[0-9]{10}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (10 chiffres).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
 
-    // PAIEMENT : la commission Finance joue le rôle de l'API (pas d'identifiant de transaction demandé).
-    $modeApi = waveApiActive();
+    // PAIEMENT : en espèces, auprès de la commission Finance (aucun paiement en ligne).
     $referenceTx = '';
 
     if (empty($erreurs)) {
@@ -60,13 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'lieuResidence' => $lieuResidence, 'maladie' => $maladie, 'maladieAutre' => $maladieAutre, 'age' => $age, 'contact' => $contact,
             'parentNom' => $parentNom, 'parentLien' => $parentLien, 'parentContact' => $parentContact];
 
-        if ($modeApi) {
-            // Paiement d'abord : le dossier n'est créé qu'après confirmation de Wave (wave_retour_inscription / webhook).
-            $jeton = inscriptionEnAttente($pdo, $donnees, $nomPhoto);
-            redirect('/wave_inscription?t=' . $jeton);
-        }
-
-        // Mode manuel : le paiement a été fait par la personne, la commission Finance contrôle l'identifiant de transaction.
+        // Le dossier est créé ; le paiement en espèces sera enregistré et validé par la commission Finance.
         $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx, null, 0);
         $stC = $pdo->prepare("SELECT * FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' LIMIT 1");
         $stC->execute([$r['id']]);
@@ -214,9 +207,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </fieldset>
 
-                <p class="help-text" style="margin-bottom:12px;">Après la validation, vous arrivez directement sur votre page : vos identifiants, votre fiche et le paiement Wave (<strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>) s'affichent ensemble.</p>
+                <p class="help-text" style="margin-bottom:12px;">Après la validation, vous arrivez directement sur votre page : vos identifiants, votre fiche et le paiement en espèces (<strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>) s'affichent ensemble.</p>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"><span>Valider mon inscription</span><i aria-hidden="true">→</i></button>
-                <p class="form-note">Paiement <?= paiementDirectDisponible() ? 'MTN, Orange, Moov ou Wave' : 'Wave' ?> · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA · <?= waveApiActive() ? "votre inscription n'est enregistrée qu'après le paiement" : "sans paiement, l'inscription reste en attente" ?></p>
+                <p class="form-note">Paiement en espèces · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA, à remettre à la commission Finance</p>
             </form>
         <?php endif; ?>
         </div>

@@ -786,7 +786,7 @@ function pdfRecu(array $s, array $recu, $nomFichier) {
     // détails
     $det = [['N° de reçu', $numRecu], ['Date de validation', $dateTxt], ['Nom et prénoms', $s['nom_prenoms']], ['Matricule', $s['matricule']],
         ['Sous-comité / Section', trim(($s['anyama'] ?? '') . ' - ' . ($s['section'] ?? ''), ' -')], ['Dortoir', (string)($s['dortoir'] ?? '')], ['Contact', (string)($s['contact'] ?? '')],
-        ['Payé depuis (Wave)', (string)($recu['numero_wave'] ?: '-')]];
+        ['Mode de paiement', 'Espèces']];
     if (($recu['reference_transaction'] ?? '') !== '') $det[] = ['ID transaction', $recu['reference_transaction']];
     $det[] = ['Montant payé', $montant]; $det[] = ['Validé par', (string)($recu['valideur'] ?? '') ?: 'Commission Finance'];
     imagefilledrectangle($im, $M, $y, $W - $M, $y + 3, $ligne);

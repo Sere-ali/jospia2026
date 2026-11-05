@@ -1,69 +1,12 @@
 <?php
-/**
- * Bloc de paiement Wave (affiché après l'inscription et sur paiement.php).
- * Variable optionnelle : $paiementAction (URL du formulaire, défaut /paiement.php)
- */
-$paiementAction = $paiementAction ?? (BASE_URL . '/paiement');
-$numeroPayeur = null;
-if (!empty($_SESSION['compte']['seminariste_id'])) {
-    $stNP = $pdo->prepare("SELECT numero_wave FROM paiements WHERE seminariste_id = ? ORDER BY id DESC LIMIT 1");
-    $stNP->execute([$_SESSION['compte']['seminariste_id']]);
-    $numeroPayeur = $stNP->fetchColumn() ?: null;
-}
-$lienWaveConfigure = lienWavePaiement() !== null;
-if (waveApiActive()):
+/** Bloc de paiement en espèces (affiché après l'inscription et sur paiement.php). */
 ?>
 <div class="pay-bloc">
     <h3>Paiement des frais de participation</h3>
     <div class="pay-montant"><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</div>
-    <p style="text-align:center;">Le paiement est confirmé <strong>automatiquement</strong> : l'ID de transaction est enregistré et votre reçu apparaît dès que le paiement est confirmé.</p>
-    <p style="text-align:center;"><a href="<?= BASE_URL ?>/wave_pay" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA<?= paiementDirectDisponible() ? ' (MTN, Orange, Moov ou Wave)' : ' avec Wave' ?></a></p>
-    <p style="text-align:center;color:var(--texte-doux);font-size:.9rem;">Si votre solde est insuffisant ou si le paiement échoue, rien n'est validé : rechargez votre compte puis cliquez de nouveau sur le bouton.</p>
-</div>
-<?php return; endif; ?>
-<div class="pay-bloc">
-    <h3>Paiement des frais de participation</h3>
-    <div class="pay-montant"><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</div>
     <ol class="pay-etapes">
-        <li>Ouvrez <strong>Wave</strong> et envoyez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong><?php if ($numeroPayeur): ?> <strong>depuis votre numéro <?= e($numeroPayeur) ?></strong><?php endif; ?> au numéro :
-            <div class="pay-numero">
-                <span id="wave-numero"><?= e(numeroWaveAffiche()) ?></span>
-                <button type="button" class="btn btn-sm btn-outline" onclick="navigator.clipboard && navigator.clipboard.writeText('<?= e(WAVE_NUMERO) ?>'); this.textContent='Copié ✓';">Copier</button>
-            </div>
-            <?php if ($lienWaveConfigure): ?>
-                <a href="<?= e(lienWavePaiement()) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-wave">Payer <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA avec Wave</a>
-            <?php else: ?>
-                <button type="button" class="btn btn-wave" id="btn-wave">Payer avec Wave</button>
-                <small style="display:block;color:var(--texte-doux);margin-top:4px;">Le numéro est copié automatiquement, puis l'application Wave s'ouvre : collez le numéro et envoyez <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
-            <?php endif; ?>
-        </li>
-        <li>La <strong>commission Finance</strong> reçoit votre paiement sur son compte Wave et le valide. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors (page « Suivre mon paiement »).</li>
+        <li>Remettez <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA en espèces</strong> à la <strong>commission Finance</strong>.</li>
+        <li>La commission Finance enregistre votre paiement. Vos <strong>identifiants de connexion</strong> et votre <strong>reçu avec QR code</strong> apparaissent alors sur votre espace (page « Suivre mon paiement »).</li>
     </ol>
-    <form method="post" action="<?= e($paiementAction) ?>" class="form-pro">
-        <input type="hidden" name="declarer" value="1"><label for="ref-tx" style="display:block;font-weight:600;margin:6px 0 4px;">ID de transaction Wave</label><input type="text" id="ref-tx" name="reference_transaction" required minlength="6" maxlength="40" placeholder="ex. T_AB12CD34EF" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><small style="display:block;color:var(--texte-doux);margin-bottom:8px;">Wave vous envoie cet ID par SMS une fois le paiement réussi. Pas d'ID (solde insuffisant, paiement échoué) : rechargez puis payez de nouveau.</small>
-        <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>J'ai payé : envoyer l'ID de transaction</span><i aria-hidden="true">→</i></button>
-        <small style="display:block;text-align:center;color:var(--texte-doux);margin-top:6px;">La commission Finance vérifie sur son compte Wave puis valide votre paiement.</small>
-    </form>
+    <small style="display:block;text-align:center;color:var(--texte-doux);margin-top:6px;">Votre QR code reste rouge tant que le paiement n'est pas enregistré par la commission Finance.</small>
 </div>
-
-<script>
-(function () {
-    var btn = document.getElementById('btn-wave');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-        var numero = '<?= e(WAVE_NUMERO) ?>';
-        if (navigator.clipboard) { navigator.clipboard.writeText(numero).catch(function () {}); }
-        var ua = navigator.userAgent || '';
-        if (/Android/i.test(ua)) {
-            // ouvre l'application Wave (sinon Play Store)
-            window.location.href = 'intent://#Intent;package=com.wave.personal;S.browser_fallback_url=' +
-                encodeURIComponent('https://play.google.com/store/apps/details?id=com.wave.personal') + ';end';
-        } else if (/iPhone|iPad|iPod/i.test(ua)) {
-            window.location.href = 'https://apps.apple.com/app/wave-mobile-money/id1523620198';
-        } else {
-            window.open('https://www.wave.com/fr/', '_blank', 'noopener');
-        }
-        btn.textContent = 'Numéro copié - ouvrez Wave et payez';
-    });
-})();
-</script>

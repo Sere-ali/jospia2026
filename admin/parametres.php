@@ -5,8 +5,6 @@ exigerRole(['superadmin']);
 $erreurs = [];
 $defs = [
     'frais_participation' => ['Frais de participation (FCFA)', 'number', (string)FRAIS_PARTICIPATION],
-    'wave_numero'         => ['Numéro Wave qui reçoit les paiements (sans 225)', 'text', WAVE_NUMERO],
-    'wave_payment_link'   => ['Lien de paiement Wave marchand', 'text', WAVE_PAYMENT_LINK],
     'age_pepiniere'       => ['Âge maximum du dortoir Pépinière (ans)', 'number', (string)AGE_PEPINIERE_SEUIL],
     'duree_test_minutes'  => ["Durée du test d'entrée (minutes)", 'number', (string)DUREE_TEST_MINUTES],
 ];
@@ -19,12 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $v = [];
     foreach ($defs as $cle => [$lib, $type, $def]) { $v[$cle] = trim($_POST[$cle] ?? ''); }
     if (!ctype_digit($v['frais_participation']) || (int)$v['frais_participation'] < 100) $erreurs[] = "Frais de participation invalides.";
-    if (!preg_match('/^\d{8,15}$/', preg_replace('/\D+/', '', $v['wave_numero']))) $erreurs[] = "Numéro Wave invalide.";
-    if ($v['wave_payment_link'] !== '' && !preg_match('#^https://#i', $v['wave_payment_link'])) $erreurs[] = "Le lien Wave doit commencer par https://";
     if (!ctype_digit($v['age_pepiniere']) || (int)$v['age_pepiniere'] > 18) $erreurs[] = "Âge Pépinière invalide (0 à 18).";
     if (!ctype_digit($v['duree_test_minutes']) || (int)$v['duree_test_minutes'] < 1 || (int)$v['duree_test_minutes'] > 240) $erreurs[] = "Durée du test invalide (1 à 240 minutes).";
     if (!$erreurs) {
-        $v['wave_numero'] = numeroLocal($v['wave_numero']);
         foreach ($bascules as $cle => $b) { $v[$cle] = isset($_POST[$cle]) ? '1' : '0'; }
         $pdo->exec("CREATE TABLE IF NOT EXISTS parametres (cle VARCHAR(50) PRIMARY KEY, valeur TEXT NOT NULL) ENGINE=InnoDB");
         try { $pdo->exec("ALTER TABLE parametres MODIFY valeur TEXT NOT NULL"); } catch (Throwable $e) { /* déjà TEXT */ }

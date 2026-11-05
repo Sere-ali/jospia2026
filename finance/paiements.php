@@ -11,14 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
     $admin_id = $_SESSION['compte_id'];
 
     if ($action === 'valider') {
-        $stDecl = $pdo->prepare("SELECT paye_declare FROM paiements WHERE id = ?");
-        $stDecl->execute([$paiement_id]);
-        if ((int)$stDecl->fetchColumn() !== 1) {
-            $_SESSION['flash_erreur'] = "Validation impossible : la personne n'a pas signalé son paiement. Son QR code reste rouge.";
-            redirect('/finance/paiements');
-        }
         validerPaiement($pdo, $paiement_id, (int)$admin_id);
-        $_SESSION['flash_succes'] = "Paiement validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
+        $_SESSION['flash_succes'] = "Paiement en espèces enregistré et validé. Le reçu avec QR code est disponible sur l'espace du séminariste.";
     } elseif ($action === 'supprimer') {
         if (estSuperAdmin()) {
             $pdo->prepare("DELETE FROM paiements WHERE id = ?")->execute([$paiement_id]);
@@ -41,7 +35,7 @@ $query = "SELECT p.*, s.nom_prenoms, s.matricule, s.contact, s.anyama, s.section
           FROM paiements p
           JOIN seminaristes s ON p.seminariste_id = s.id
           LEFT JOIN comptes c ON p.admin_validateur_id = c.id
-          ORDER BY (p.statut = 'en attente' AND p.paye_declare = 1) DESC, (p.statut = 'en attente') DESC, p.created_at DESC";
+          ORDER BY (p.statut = 'en attente') DESC, p.created_at DESC";
 $tous = $pdo->query($query)->fetchAll();
 // Liste principale : paiements avec ID de transaction (ou déjà traités).
 // Sans ID = paiement non effectué / échoué (solde insuffisant...) : jamais validable.
@@ -58,8 +52,8 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
 <section class="section">
     <div class="container">
         <div class="section-titre">
-            <h2>Commission Finance - Paiements Wave</h2>
-            <p>Vérifiez chaque paiement dans le compte Wave (<?= e(numeroWaveAffiche()) ?>) puis validez ou rejetez. La validation génère le reçu avec QR code du séminariste.</p>
+            <h2>Commission Finance - Paiements en espèces</h2>
+            <p>Quand un séminariste vous remet ses frais en espèces, cliquez sur « Paiement en espèces reçu » pour valider. La validation génère le reçu avec QR code du séminariste.</p>
             <p><a href="<?= BASE_URL ?>/finance/scanner" class="btn btn-primaire">Scanner un reçu</a></p>
         </div>
 
@@ -114,7 +108,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <th>Séminariste (Matricule)</th>
                         <th>Contact</th>
                         <th>N° du payeur (contact)</th>
-                        <th>ID transaction Wave</th>
+                        <th>Référence</th>
                         <th>Statut</th>
                         <th>Action / Info</th>
                     </tr>
@@ -132,7 +126,7 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td style="font-family: monospace;"><strong><?= e($p['reference_transaction'] ?: '-') ?></strong></td>
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
-                                <?php if (!empty($p['paye_declare'])): ?><span class="tag tag-vert" style="background:#1cc6f4;color:#00323f;">Payé : à valider</span><?php else: ?><span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente de paiement</span><?php endif; ?>
+                                <span class="tag tag-vert" style="background:#ffc107;color:#000;">En attente de paiement</span>
                             <?php elseif ($p['statut'] === 'validé'): ?>
                                 <span class="tag tag-vert">Validé</span>
                             <?php else: ?>
@@ -142,13 +136,12 @@ require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../include
                         <td>
                             <?php if ($p['statut'] === 'en attente'): ?>
                                 <div style="display: flex; gap: 5px;">
-                                    <?php if (!empty($p['paye_declare'])): ?>
-<form method="post" onsubmit="return confirm('Confirmer que les <?= number_format(FRAIS_PARTICIPATION, 0, ",", " ") ?> FCFA ont bien été reçus ?');">
+                                    <form method="post" onsubmit="return confirm('Confirmer que les <?= number_format(FRAIS_PARTICIPATION, 0, ",", " ") ?> FCFA ont bien été reçus en espèces ?');">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">
                                         <input type="hidden" name="action" value="valider">
-                                        <button type="submit" class="btn btn-primaire btn-sm">Valider</button>
+                                        <button type="submit" class="btn btn-primaire btn-sm">Paiement en espèces reçu</button>
                                     </form>
-<?php else: ?><small style="color:var(--texte-doux);align-self:center;">Pas encore payé : QR rouge</small><?php endif; ?>
+
                                     
                                     <form method="post" onsubmit="var m = prompt('Motif du rejet :'); if(m !== null) { this.motif_rejet.value = m; return true; } return false;">
                                         <input type="hidden" name="paiement_id" value="<?= $p['id'] ?>">

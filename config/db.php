@@ -74,18 +74,6 @@ try {
     foreach ($pdo->query("SELECT cle, valeur FROM parametres")->fetchAll() as $__p) { $JOS_PARAMS[$__p['cle']] = $__p['valeur']; }
 } catch (Throwable $e) { /* table absente au tout premier démarrage : valeurs par défaut */ }
 
-// Numéro de réception des paiements : passé à 05 86 18 96 63 (une seule fois ; modifiable ensuite dans « Paramètres du site »).
-try {
-    if (!isset($JOS_PARAMS['numero_0586189663_v1'])) {
-        $__n = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
-        $__n->execute(['wave_numero', '0586189663']); $__n->execute(['numero_0586189663_v1', '1']);
-        $JOS_PARAMS['wave_numero'] = '0586189663';
-    }
-} catch (Throwable $e) { /* table absente au premier démarrage */ }
-// Numéro Wave qui reçoit les paiements (chiffres, sans +225)
-define('WAVE_NUMERO', preg_replace('/\D+/', '', $JOS_PARAMS['wave_numero'] ?? '') ?: (getenv('WAVE_NUMERO') ?: '0586189663'));
-// Lien de paiement Wave marchand
-define('WAVE_PAYMENT_LINK', ($JOS_PARAMS['wave_payment_link'] ?? '') !== '' ? $JOS_PARAMS['wave_payment_link'] : (getenv('WAVE_PAYMENT_LINK') ?: 'https://pay.wave.com/m/M_ci_LhLv7A4lJDJ8/c/ci/'));
 // Frais de participation : passés à 5000 FCFA (une seule fois ; modifiables ensuite dans « Paramètres du site »).
 try {
     if (!isset($JOS_PARAMS['frais_5000_v1'])) {

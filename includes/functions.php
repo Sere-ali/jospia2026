@@ -376,21 +376,10 @@ function redirect($url) {
 /** Valide un paiement et génère le code secret du reçu (utilisé dans le QR code). */
 function validerPaiement(PDO $pdo, int $paiementId, ?int $validateurId): bool {
     $code = bin2hex(random_bytes(12));
-    $st = $pdo->prepare("UPDATE paiements SET statut = 'validé', admin_validateur_id = ?, code_recu = COALESCE(code_recu, ?), date_validation = NOW(), montant = ? WHERE id = ? AND statut <> 'validé'");
+    // Paiement en espèces reçu par la commission Finance : on garde une référence interne pour le reçu.
+    $st = $pdo->prepare("UPDATE paiements SET statut = 'validé', paye_declare = 1, reference_transaction = IF(reference_transaction = '' OR reference_transaction IS NULL, CONCAT('ESPECES-', id), reference_transaction), admin_validateur_id = ?, code_recu = COALESCE(code_recu, ?), date_validation = NOW(), montant = ? WHERE id = ? AND statut <> 'validé'");
     $st->execute([$validateurId, $code, FRAIS_PARTICIPATION, $paiementId]);
     return $st->rowCount() > 0;
-}
-
-/** Numéro Wave affiché : +225 05 86 18 96 63 */
-function numeroWaveAffiche() {
-    return '+225 ' . trim(chunk_split(WAVE_NUMERO, 2, ' '));
-}
-
-/** Lien de paiement Wave (marchand) avec le montant, ou null s'il n'est pas configuré. */
-function lienWavePaiement() {
-    if (strpos(WAVE_PAYMENT_LINK, 'VOTRE_MARCHAND_ID') !== false) return null;
-    $base = preg_replace('/[?&]amount=\d+/', '', WAVE_PAYMENT_LINK);
-    return $base . (strpos($base, '?') === false ? '?' : '&') . 'amount=' . (int)FRAIS_PARTICIPATION;
 }
 
 /** Répartit un nom en 1 ou 2 lignes équilibrées (majuscules) pour le badge. */
@@ -499,106 +488,7 @@ function photoSauvegarderEnBase($nom, $chemin, $ext) {
     }
 }
 
-/** Paiement automatique Wave (API Checkout) : désactivé par défaut (mode manuel : le séminariste déclare son paiement, la commission Finance valide). Pour l'activer : WAVE_MODE=api et WAVE_API_KEY sur Render. */
-function waveApiActive() { return paydunyaActive() || (getenv('WAVE_MODE') === 'api' && (bool)getenv('WAVE_API_KEY')); }
-
-/** Paiement PayDunya (MTN, Orange, Moov, Wave, directement sur le site) : actif dès que les 3 clés sont définies sur Render. */
-function paydunyaActive() { return trim((string)getenv('PAYDUNYA_MASTER_KEY')) !== '' && trim((string)getenv('PAYDUNYA_PRIVATE_KEY')) !== '' && trim((string)getenv('PAYDUNYA_TOKEN')) !== ''; }
-/** Un paiement direct (sans quitter le site) est disponible. */
-function paiementDirectDisponible() { return paydunyaActive(); }
-
-function paydunyaApi($methode, $chemin, $corps = null, $delai = 20) {
-    $base = getenv('PAYDUNYA_MODE') === 'test' ? 'https://app.paydunya.com/sandbox-api/v1' : 'https://app.paydunya.com/api/v1';
-    $ch = curl_init($base . $chemin);
-    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => $delai, CURLOPT_CUSTOMREQUEST => $methode,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'PAYDUNYA-MASTER-KEY: ' . trim((string)getenv('PAYDUNYA_MASTER_KEY')),
-            'PAYDUNYA-PRIVATE-KEY: ' . trim((string)getenv('PAYDUNYA_PRIVATE_KEY')), 'PAYDUNYA-TOKEN: ' . trim((string)getenv('PAYDUNYA_TOKEN'))]]);
-    if ($corps !== null) { curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($corps)); }
-    $rep = curl_exec($ch);
-    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    return [$code, $rep ? json_decode($rep, true) : null];
-}
-
-/** Paiement direct PayDunya : crée la facture puis déclenche le paiement chez l'opérateur. Retourne ['id' => 'pd_...', 'url' => null|string] ou ['erreur' => message]. */
-function paydunyaPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp = '') {
-    $tel = preg_replace('/\D+/', '', (string)$telephone);
-    if (strpos($tel, '225') === 0 && strlen($tel) > 10) { $tel = substr($tel, 3); }
-    if (strlen($tel) !== 10) { return ['erreur' => "Numéro invalide : saisissez les 10 chiffres de votre numéro."]; }
-    $nom = trim($nomComplet) !== '' ? trim($nomComplet) : 'Participant JOSPIA';
-    $email = 'paiement@' . (preg_replace('#^https?://([^/]+).*$#', '$1', urlSite()) ?: 'jospia26.site');
-    [$code, $j] = paydunyaApi('POST', '/checkout-invoice/create', [
-        'invoice' => ['total_amount' => (int)FRAIS_PARTICIPATION, 'description' => 'Frais de participation JOSPIA 2026'],
-        'store' => ['name' => 'JOSPIA 2026'],
-        'custom_data' => ['reference' => $reference],
-        'actions' => ['callback_url' => urlSite() . '/paydunya_webhook', 'return_url' => $urlRetour, 'cancel_url' => $urlRetour],
-    ]);
-    $token = is_array($j) ? ($j['token'] ?? null) : null;
-    if (($j['response_code'] ?? '') !== '00' || !$token) { error_log('PayDunya facture ' . $code . ' : ' . json_encode($j)); return ['erreur' => "Le paiement n'a pas pu démarrer. Réessayez dans un instant."]; }
-    switch ($operateur) {
-        case 'mtn':    $chemin = '/softpay/mtn-ci';          $corps = ['mtn_ci_customer_fullname' => $nom, 'mtn_ci_email' => $email, 'mtn_ci_phone_number' => $tel, 'mtn_ci_wallet_provider' => 'MTNCI', 'payment_token' => $token]; break;
-        case 'moov':   $chemin = '/softpay/moov-ci';         $corps = ['moov_ci_customer_fullname' => $nom, 'moov_ci_email' => $email, 'moov_ci_phone_number' => $tel, 'payment_token' => $token]; break;
-        case 'orange':
-            $otp = preg_replace('/\D+/', '', (string)$otp);
-            if ($otp === '') { return ['erreur' => "Orange Money : saisissez le code de paiement (composez #144*82# puis choisissez l'option 2)."]; }
-            $chemin = '/softpay/orange-money-ci'; $corps = ['orange_money_ci_customer_fullname' => $nom, 'orange_money_ci_email' => $email, 'orange_money_ci_phone_number' => $tel, 'orange_money_ci_otp' => $otp, 'payment_token' => $token]; break;
-        case 'wave':   $chemin = '/softpay/wave-ci';         $corps = ['wave_ci_fullName' => $nom, 'wave_ci_email' => $email, 'wave_ci_phone' => $tel, 'wave_ci_payment_token' => $token]; break;
-        default: return ['erreur' => "Choisissez un opérateur."];
-    }
-    [$c2, $j2] = paydunyaApi('POST', $chemin, $corps, 45);
-    error_log('PayDunya softpay ' . $chemin . ' ' . $c2 . ' : ' . json_encode($j2));
-    if (!is_array($j2) || empty($j2['success'])) {
-        $msg = is_array($j2) && !empty($j2['message']) && is_string($j2['message']) ? $j2['message'] : "La demande de paiement n'a pas pu être envoyée. Vérifiez l'opérateur et le numéro, puis réessayez.";
-        return ['erreur' => $msg];
-    }
-    return ['id' => 'pd_' . $token, 'url' => (!empty($j2['url']) && is_string($j2['url'])) ? $j2['url'] : null];
-}
-
-
-/** Crée une session de paiement Wave (API Checkout, mode WAVE_MODE=api) : retourne [identifiant de session, URL de paiement], ou null en cas d'échec. */
-function paiementCreerSession($reference, $urlRetour) {
-    [$code, $j] = waveApi('POST', '/v1/checkout/sessions', [
-        'amount' => (string)FRAIS_PARTICIPATION,
-        'currency' => 'XOF',
-        'client_reference' => $reference,
-        'success_url' => $urlRetour,
-        'error_url' => $urlRetour . (strpos($urlRetour, '?') === false ? '?' : '&') . 'echec=1',
-    ]);
-    if ($code >= 200 && $code < 300 && !empty($j['wave_launch_url']) && !empty($j['id'])) { return [$j['id'], $j['wave_launch_url']]; }
-    error_log('Wave checkout échoué (' . $code . ') : ' . json_encode($j));
-    return null;
-}
-
-function paiementPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp = '') {
-    return paydunyaPayerDirect($reference, $nomComplet, $telephone, $operateur, $urlRetour, $otp);
-}
-
-/** Interroge le service de paiement : retourne [payé ?, montant, identifiant de transaction]. */
-function paiementInterroger($sessionId) {
-    if (strpos($sessionId, 'pd_') === 0) {
-        [$code, $j] = paydunyaApi('GET', '/checkout-invoice/confirm/' . rawurlencode(substr($sessionId, 3)));
-        if ($code !== 200 || !is_array($j) || ($j['response_code'] ?? '') !== '00') { return [false, 0, '', 'inconnu']; }
-        $statut = (string)($j['status'] ?? '');
-        $montant = (int)round((float)($j['invoice']['total_amount'] ?? 0));
-        return [$statut === 'completed', $montant, 'PAYDUNYA-' . substr($sessionId, 3), $statut];
-    }
-    [$code, $j] = waveApi('GET', '/v1/checkout/sessions/' . rawurlencode($sessionId));
-    if ($code !== 200 || !is_array($j)) { return [false, 0, '', 'inconnu']; }
-    return [($j['payment_status'] ?? '') === 'succeeded', (int)($j['amount'] ?? 0), (string)($j['transaction_id'] ?? ''), (string)($j['payment_status'] ?? '')];
-}
-
-function waveApi($methode, $chemin, $corps = null) {
-    $ch = curl_init('https://api.wave.com' . $chemin);
-    $entetes = ['Authorization: Bearer ' . getenv('WAVE_API_KEY'), 'Content-Type: application/json'];
-    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_HTTPHEADER => $entetes, CURLOPT_CUSTOMREQUEST => $methode]);
-    if ($corps !== null) { curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($corps)); }
-    $rep = curl_exec($ch);
-    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    return [$code, $rep ? json_decode($rep, true) : null];
-}
-
-/** Adresse publique du site (https) pour les retours Wave. */
+/** Adresse publique du site (https), utilisée pour les liens à partager. */
 function urlSite() {
     // Nom de domaine officiel (variable d'environnement SITE_DOMAIN sur Render) : les liens à partager l'utilisent toujours,
     // même si l'administrateur est connecté par l'adresse technique onrender.com.
@@ -608,34 +498,6 @@ function urlSite() {
     if ($officiel !== '' && preg_match('/^[a-z0-9.-]+$/i', $officiel)) { return 'https://' . $officiel . BASE_URL; }
     $hote = $_SERVER['HTTP_HOST'] ?? 'localhost';
     return 'https://' . $hote . BASE_URL;
-}
-
-/**
- * Interroge Wave sur une session de paiement ; si le paiement a abouti, enregistre l'ID de transaction
- * et valide automatiquement. Retourne true si le paiement est confirmé.
- */
-function waveVerifierEtValider(PDO $pdo, $sessionId) {
-    [$paye, $montantPaye, $txId] = paiementInterroger($sessionId);
-    if (!$paye || $montantPaye < FRAIS_PARTICIPATION) { return false; }
-    $st = $pdo->prepare("SELECT id FROM paiements WHERE wave_session_id = ? LIMIT 1");
-    $st->execute([$sessionId]);
-    $pid = (int)$st->fetchColumn();
-    if (!$pid) {
-        // Inscription en attente de paiement : le dossier n'existe pas encore, on le crée maintenant que Wave confirme.
-        try {
-            inscriptionsAttentePreparer($pdo);
-            $sa = $pdo->prepare("SELECT * FROM inscriptions_attente WHERE wave_session_id = ? LIMIT 1");
-            $sa->execute([$sessionId]);
-            if ($att = $sa->fetch()) {
-                return finaliserInscriptionAttente($pdo, $att, $sessionId, $txId) !== null;
-            }
-        } catch (Throwable $e) { error_log('Inscription en attente : ' . $e->getMessage()); }
-        return false;
-    }
-    $tx = $txId;
-    $pdo->prepare("UPDATE paiements SET reference_transaction = ? WHERE id = ?")->execute([$tx !== '' ? $tx : 'WAVE-' . $sessionId, $pid]);
-    validerPaiement($pdo, $pid, null);
-    return true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -679,7 +541,7 @@ function journalAutomatique(PDO $pdo) {
     $u = $_SESSION['compte'] ?? null;
     if (!$u || !in_array($u['role'], ['admin', 'superadmin', 'finance', 'scientifique', 'securite'], true)) return;
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '', '.php');
-    if (in_array($script, ['login', 'logout', 'wave_webhook', 'paydunya_webhook', 'wave_retour', 'wave_pay', 'paiement_direct'], true)) return;
+    if (in_array($script, ['login', 'logout'], true)) return;
     $methode = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
     $action = null;
@@ -694,7 +556,7 @@ function journalAutomatique(PDO $pdo) {
     if ($action === null) return;
 
     $libelles = [
-        'paiements' => 'Paiements Wave', 'seminaristes' => 'Séminaristes', 'commissions' => 'Membres commission',
+        'paiements' => 'Paiements', 'seminaristes' => 'Séminaristes', 'commissions' => 'Membres commission',
         'edit_seminariste' => 'Modification séminariste', 'edit_membre' => 'Modification membre', 'edit_user' => 'Modification compte admin',
         'users' => 'Comptes admin', 'identifiants' => 'Identifiants', 'notes' => 'Saisie des notes', 'matieres' => 'Matières et résultats',
         'questions' => 'Questions du test', 'config_quiz' => 'Config quiz', 'test_entree' => "Test d'entrée", 'listes' => 'Listes',
@@ -856,55 +718,6 @@ function creerInscriptionSeminariste(PDO $pdo, array $d, $nomPhoto, $referenceTx
         ->execute([$sid, (string)$referenceTx, $d['contact'], FRAIS_PARTICIPATION, $waveSessionId, $payeDeclare ? 1 : 0]);
     $pid = (int)$pdo->lastInsertId();
     return ['id' => $sid, 'paiement_id' => $pid, 'identifiant' => $identifiant, 'mdp' => $motDePasse, 'matricule' => $matricule, 'dortoir' => $dortoir];
-}
-
-function inscriptionsAttentePreparer(PDO $pdo) {
-    static $ok = false;
-    if ($ok) return;
-    $ok = true;
-    $pdo->exec("CREATE TABLE IF NOT EXISTS inscriptions_attente (
-        id INT AUTO_INCREMENT PRIMARY KEY, jeton VARCHAR(64) NOT NULL UNIQUE, donnees LONGTEXT NOT NULL, photo VARCHAR(255) NOT NULL,
-        wave_session_id VARCHAR(100) NULL, statut VARCHAR(20) NOT NULL DEFAULT 'attente', seminariste_id INT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_att_session (wave_session_id)) ENGINE=InnoDB");
-}
-
-/** Enregistre une inscription EN ATTENTE de paiement (rien n'est créé dans les séminaristes). Retourne le jeton. */
-function inscriptionEnAttente(PDO $pdo, array $d, $nomPhoto) {
-    inscriptionsAttentePreparer($pdo);
-    $jeton = bin2hex(random_bytes(24));
-    $pdo->prepare("INSERT INTO inscriptions_attente (jeton, donnees, photo) VALUES (?,?,?)")->execute([$jeton, json_encode($d, JSON_UNESCAPED_UNICODE), $nomPhoto]);
-    return $jeton;
-}
-
-/**
- * Le paiement est confirmé : crée le dossier du séminariste (une seule fois, même si le retour et le webhook arrivent ensemble)
- * puis valide le paiement. Retourne l'id du séminariste ou null.
- */
-function finaliserInscriptionAttente(PDO $pdo, array $att, $waveSessionId, $transactionId = '') {
-    inscriptionsAttentePreparer($pdo);
-    if (!empty($att['seminariste_id'])) return (int)$att['seminariste_id'];
-    $claim = $pdo->prepare("UPDATE inscriptions_attente SET statut = 'finalisation' WHERE id = ? AND statut = 'attente'");
-    $claim->execute([$att['id']]);
-    if ($claim->rowCount() < 1) {
-        // déjà pris en charge par une autre requête : on attend brièvement son résultat
-        for ($i = 0; $i < 10; $i++) {
-            usleep(300000);
-            $r = $pdo->prepare("SELECT seminariste_id FROM inscriptions_attente WHERE id = ?"); $r->execute([$att['id']]);
-            if ($sid = (int)$r->fetchColumn()) return $sid;
-        }
-        return null;
-    }
-    try {
-        $d = json_decode($att['donnees'], true);
-        $r = creerInscriptionSeminariste($pdo, $d, $att['photo'], $transactionId !== '' ? $transactionId : 'WAVE-' . $waveSessionId, $waveSessionId);
-        validerPaiement($pdo, $r['paiement_id'], null);
-        $pdo->prepare("UPDATE inscriptions_attente SET statut = 'finalisee', seminariste_id = ? WHERE id = ?")->execute([$r['id'], $att['id']]);
-        return $r['id'];
-    } catch (Throwable $e) {
-        error_log('Finalisation inscription : ' . $e->getMessage());
-        $pdo->prepare("UPDATE inscriptions_attente SET statut = 'attente' WHERE id = ? AND seminariste_id IS NULL")->execute([$att['id']]);
-        return null;
-    }
 }
 
 /* ------------------------------------------------------------------ */

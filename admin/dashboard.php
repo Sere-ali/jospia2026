@@ -13,7 +13,7 @@ $parNiveau = $pdo->query("SELECT niveau_affecte, COUNT(*) n FROM seminaristes WH
 $parAnyama = $pdo->query("SELECT anyama, COUNT(*) n FROM seminaristes GROUP BY anyama ORDER BY n DESC")->fetchAll();
 $parSection = $pdo->query("SELECT section, COUNT(*) n FROM seminaristes GROUP BY section ORDER BY n DESC")->fetchAll();
 
-// Statistiques des paiements Wave
+// Statistiques des paiements
 $statsPaiements = $pdo->query("
     SELECT 
         COUNT(*) as total,
@@ -52,7 +52,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         </div>
 
         <div class="section-titre" style="margin-top: 40px;">
-            <h3>Statistiques Financières (Wave)</h3>
+            <h3>Statistiques Financières (espèces)</h3>
         </div>
         <div class="grid grid-3" style="margin-bottom:30px;">
             <div class="carte stat-card" style="border-left: 4px solid #1cc6f4;"><div class="chiffre" style="color: #1cc6f4;"><?= number_format($montantTotalEncaisse, 0, ',', ' ') ?> F</div><div class="label">Total Encaissé</div></div>
