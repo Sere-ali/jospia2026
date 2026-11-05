@@ -906,10 +906,11 @@ function pdfTicket(array $t) {
     imagefilledrectangle($im, 5, 5, (int)($W / 3), 16, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 5, $W - 6, 16, $vert);
     // découpe pointillée
     for ($y = 24; $y < $H - 14; $y += 18) { imagefilledrectangle($im, $XP - 1, $y, $XP + 1, $y + 8, $gris); }
-    $ent0 = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
-    // on retire quelques pixels en haut et en bas (restes de la découpe du badge)
-    $ex = imagesx($ent0); $ey = imagesy($ent0) - 18;
-    $ent = imagecreatetruecolor($ex, $ey); imagecopy($ent, $ent0, 0, 0, 0, 14, $ex, $ey); imagedestroy($ent0);
+    // Entête du badge (calligraphie JOSPIA 2026 + bandeau des logos AEEMCI et JOSPIA), posée sur fond blanc
+    $src = imagecreatefrompng(__DIR__ . '/../assets/img/badge_entete.png');
+    $ex = imagesx($src); $ey = imagesy($src);
+    $ent = imagecreatetruecolor($ex, $ey); imagefill($ent, 0, 0, imagecolorallocate($ent, 255, 255, 255));
+    imagealphablending($ent, true); imagecopy($ent, $src, 0, 0, 0, 0, $ex, $ey); imagedestroy($src);
     $code = (string)$t['code'];
     // Le QR code ouvre le formulaire d'inscription du site : la personne qui achète le ticket scanne et s'inscrit.
     $qrTexte = urlSite() . '/inscription_seminariste';
@@ -922,53 +923,47 @@ function pdfTicket(array $t) {
     };
 
     // ---------- SOUCHE (conservée par l'organisation) ----------
-    $sw = 460; $sh = (int)round($sw * $ey / $ex);
+    $sw = 232; $sh = (int)round($sw * $ey / $ex);
     imagecopyresampled($im, $ent, 30, 30, 0, 0, $sw, $sh, $ex, $ey);
-    $y = 30 + $sh + 32;
-    pdfEcrire($im, 17, 30, $y, $orange, $B, 'SOUCHE - À CONSERVER', 2);
-    pdfEcrire($im, 32, 30, $y + 48, $vertF, $BA, 'N° ' . $code);
-    $y += 100;
+    pdfEcrire($im, 20, 280, 84, $orange, $B, 'SOUCHE', 3);
+    pdfEcrire($im, 16, 280, 112, $orange, $B, 'À CONSERVER', 2);
+    pdfEcrire($im, 30, 30, 30 + $sh + 46, $vertF, $BA, 'N° ' . $code);
+    $y = 30 + $sh + 100;
     foreach (['Nom', 'Prénoms', 'Sous-comité', 'Section', 'Contact', "Contact d'un parent", 'Date de paiement'] as $lib) {
         $champ($lib, 30, $y, $XP - 28, 17);
-        $y += 47;
+        $y += 44;
     }
 
     // ---------- TICKET (remis à la personne, vendu) ----------
     $mx = $XP + 40; $mw = $W - $mx - 40;
-    $hw = min($mw, 1000); $hh = (int)round($hw * $ey / $ex);
-    imagecopyresampled($im, $ent, (int)($mx + ($mw - $hw) / 2), 30, 0, 0, $hw, $hh, $ex, $ey);
-    $by = 30 + $hh + 20;
-    imagefilledrectangle($im, $mx, $by, $mx + $mw, $by + 72, $orange);
-    $tt = 'TICKET JOSPIA 2026'; $tw = pdfLargeurTexte(38, $BA, $tt, 4);
-    pdfEcrire($im, 38, $mx + ($mw - $tw) / 2, $by + 52, $blanc, $BA, $tt, 4);
+    $hw = 520; $hh = (int)round($hw * $ey / $ex);
+    imagecopyresampled($im, $ent, $mx, 28, 0, 0, $hw, $hh, $ex, $ey);
     // QR code (lien du site) + numéro codé, à droite
     $qr = QRCode::getMinimumQRCode($qrTexte, QR_ERROR_CORRECT_LEVEL_M);
-    $nb = $qr->getModuleCount(); $cell = max(3, (int)floor(165 / $nb)); $q = $nb * $cell;
-    $qx = $W - 40 - $q; $qy = $by + 72 + 16;
+    $nb = $qr->getModuleCount(); $cell = max(3, (int)floor(160 / $nb)); $q = $nb * $cell;
+    $qx = $W - 40 - $q; $qy = 44;
     for ($r = 0; $r < $nb; $r++) for ($c = 0; $c < $nb; $c++) if ($qr->isDark($r, $c)) imagefilledrectangle($im, $qx + $c * $cell, $qy + $r * $cell, $qx + ($c + 1) * $cell - 1, $qy + ($r + 1) * $cell - 1, $noir);
     $sc = 'Scannez pour vous inscrire'; $scw = pdfLargeurTexte(13, $R, $sc);
     pdfEcrire($im, 13, $qx + ($q - $scw) / 2, $qy + $q + 22, $gris, $R, $sc);
     $cw = pdfLargeurTexte(18, $BA, 'N° ' . $code);
-    pdfEcrire($im, 18, $W - 40 - $cw, $qy + $q + 50, $vertF, $BA, 'N° ' . $code);
-    // prix + dates
-    $xFin = $qx - 70;
-    $y = $by + 72 + 74;
-    pdfEcrire($im, 18, $mx, $y - 36, $gris, $B, 'Prix du ticket');
+    pdfEcrire($im, 18, $W - 40 - $cw, $qy + $q + 52, $vertF, $BA, 'N° ' . $code);
+    // prix + dates (entre l'entête et le QR code)
+    $px0 = $mx + $hw + 36;
+    imagefilledrectangle($im, $px0, 44, $qx - 30, 44 + 54, $orange);
+    $tt = 'TICKET'; $tw = pdfLargeurTexte(30, $BA, $tt, 6);
+    pdfEcrire($im, 30, $px0 + (($qx - 30 - $px0) - $tw) / 2, 44 + 40, $blanc, $BA, $tt, 6);
     $m1 = number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . ' FCFA';
-    pdfEcrire($im, 50, $mx, $y + 22, $vertF, $BA, $m1);
-    $dx = $mx + pdfLargeurTexte(50, $BA, $m1) + 34;
+    pdfEcrire($im, 18, $px0, 150, $gris, $B, 'Prix du ticket');
+    pdfEcrire($im, 43, $px0, 204, $vertF, $BA, $m1);
     $mois = defined('EVENT_MOIS_ANNEE') ? mb_strtolower(EVENT_MOIS_ANNEE, 'UTF-8') : 'décembre 2026';
-    pdfEcrire($im, 16, $dx, $y - 6, $noir, $R, 'Du ' . (defined('EVENT_JOUR_DEBUT') ? EVENT_JOUR_DEBUT : '22') . ' au ' . (defined('EVENT_JOUR_FIN') ? EVENT_JOUR_FIN : '28') . ' ' . $mois);
-    pdfEcrire($im, 14, $dx, $y + 20, $gris, $R, "Collège privé Henriette Dagri-Diabaté");
-    pdfEcrire($im, 14, $dx, $y + 42, $gris, $R, "d'Anyama");
+    pdfEcrire($im, 16, $px0, 246, $noir, $R, 'Du ' . (defined('EVENT_JOUR_DEBUT') ? EVENT_JOUR_DEBUT : '22') . ' au ' . (defined('EVENT_JOUR_FIN') ? EVENT_JOUR_FIN : '28') . ' ' . $mois);
+    pdfEcrire($im, 14, $px0, 272, $gris, $R, "Collège privé Henriette Dagri-Diabaté d'Anyama");
     // champs à remplir par l'acheteur
-    $y += 84;
-    $champ('Nom et prénoms', $mx, $y, $xFin, 18);
-    $y += 52;
-    $champ('Contact', $mx, $y, $mx + 400, 18);
-    $champ('Date', $mx + 440, $y, $xFin, 18);
-    $y += 46;
-    pdfEcrire($im, 13, $mx, $y, $gris, $R, "Ticket vendu " . $m1 . ". Un ticket = un participant. À présenter à la commission Finance.");
+    $xFin = $W - 40;
+    $champ('Nom et prénoms', $mx, 372, $xFin, 19);
+    $champ('Contact', $mx, 436, $mx + 440, 19);
+    $champ('Date', $mx + 490, 436, $xFin, 19);
+    pdfEcrire($im, 13, $mx, 500, $gris, $R, "Ticket vendu " . $m1 . ". Un ticket = un participant. À présenter à la commission Finance.");
     imagedestroy($ent);
     return $im;
 }
