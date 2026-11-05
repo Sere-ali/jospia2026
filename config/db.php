@@ -74,6 +74,20 @@ try {
     foreach ($pdo->query("SELECT cle, valeur FROM parametres")->fetchAll() as $__p) { $JOS_PARAMS[$__p['cle']] = $__p['valeur']; }
 } catch (Throwable $e) { /* table absente au tout premier démarrage : valeurs par défaut */ }
 
+// Commission PROTOCOLE : ajoutée une seule fois à la liste des commissions si elle manque (renommable ensuite dans « Noms des commissions »).
+try {
+    if (!isset($JOS_PARAMS['commission_protocole_v1'])) {
+        $__l = trim((string)($JOS_PARAMS['liste_commissions'] ?? ''));
+        $__i = $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
+        if ($__l !== '') {
+            $__tab = array_values(array_filter(array_map('trim', preg_split('/\R/u', $__l)), 'strlen'));
+            $__existe = false;
+            foreach ($__tab as $__c) { if (mb_strtoupper($__c, 'UTF-8') === 'PROTOCOLE') { $__existe = true; } }
+            if (!$__existe) { $__tab[] = 'PROTOCOLE'; $__i->execute(['liste_commissions', implode("\n", $__tab)]); $JOS_PARAMS['liste_commissions'] = implode("\n", $__tab); }
+        }
+        $__i->execute(['commission_protocole_v1', '1']);
+    }
+} catch (Throwable $e) { /* table absente au premier démarrage */ }
 // Frais de participation : passés à 5000 FCFA (une seule fois ; modifiables ensuite dans « Paramètres du site »).
 try {
     if (!isset($JOS_PARAMS['frais_5000_v1'])) {
