@@ -63,11 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx, null, 0);
         $stC = $pdo->prepare("SELECT * FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' LIMIT 1");
         $stC->execute([$r['id']]);
+        $nouveauCompte = false;
         if (!estConnecte() && ($compteNew = $stC->fetch())) {
+            $nouveauCompte = true;
             session_regenerate_id(true);
             $_SESSION['compte_id'] = $compteNew['id'];
             $_SESSION['compte'] = $compteNew;
         }
+        // Le séminariste passe d'abord par l'étape « Paiement en espèces », puis arrive sur sa page.
+        if ($nouveauCompte) { redirect('/paiement?nouveau=1'); }
         if (estConnecte()) { redirect('/espace/fiche?inscrit=1'); }
 
         $succes = "Inscription reçue. Votre dortoir a été attribué automatiquement : " . $r['dortoir'] . ".";

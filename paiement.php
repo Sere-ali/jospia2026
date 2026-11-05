@@ -68,6 +68,10 @@ $succes = null;
             <?php endif; ?>
 
             <?php require __DIR__ . '/includes/paiement_bloc.php'; ?>
+            <div class="text-center mt-3">
+                <a href="<?= BASE_URL ?>/espace/fiche<?= $nouveau ? '?inscrit=1' : '' ?>" class="btn btn-primaire btn-lg">Paiement en espèces</a>
+                <small style="display:block;color:var(--texte-doux);margin-top:8px;">Cliquez pour continuer vers votre page. Remettez ensuite vos frais en espèces à la commission Finance.</small>
+            </div>
         <?php endif; ?>
     </div>
 </div></div>
