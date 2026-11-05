@@ -25,7 +25,7 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
 <section class="section">
     <div class="container" style="max-width:820px;">
         <div class="section-titre"><span class="eyebrow">Commission finance</span><h2>Tickets de paiement</h2>
-            <p>Chaque ticket a un numéro codé, imprimé sur la <strong>souche</strong> (à garder, avec le nom, la section, le contact et le contact d'un parent) et sur le <strong>ticket</strong> remis à la personne. Les tickets portent l'entête des badges avec les logos AEEMCI et JOSPIA.</p>
+            <p>Les tickets sont <strong>vendus</strong> (prix imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA). Chaque ticket a un numéro codé. La <strong>souche</strong> reste avec nous (nom, prénoms, sous-comité, section, contact, contact d'un parent, date de paiement). Le <strong>ticket</strong> remis à l'acheteur porte son nom, son contact et la date, avec un QR code qui ouvre l'inscription sur le site.</p>
         </div>
         <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
 
