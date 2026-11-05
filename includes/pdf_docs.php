@@ -761,7 +761,7 @@ function pdfRecu(array $s, array $recu, $nomFichier) {
     pdfEcrire($im, 34, ($W - $pw) / 2, $y + 50, $blanc, $B, $pt); $y += 130;
     // attestation justifiée (segments en gras possibles via ** )
     $texte = "La commission Finance atteste avoir reçu de **" . $s['nom_prenoms'] . "**, matricule **" . $s['matricule'] . "**, la somme de **" . $montant
-        . "** au titre des frais d'inscription à la " . $sub . ". Ce paiement a été vérifié et validé le " . $dateTxt . ". Le présent reçu est délivré pour servir et valoir ce que de droit.";
+        . "** au titre des frais d'inscription aux " . $sub . ". Ce paiement a été vérifié et validé le " . $dateTxt . ". Le présent reçu est délivré pour servir et valoir ce que de droit.";
     $taille = 34; $largeur = $W - 2 * $M; $inter = 58;
     $mots = []; $gras = false;
     foreach (preg_split('/(\*\*)/', $texte, -1, PREG_SPLIT_DELIM_CAPTURE) as $morceau) {
@@ -787,7 +787,7 @@ function pdfRecu(array $s, array $recu, $nomFichier) {
     $det = [['N° de reçu', $numRecu], ['Date de validation', $dateTxt], ['Nom et prénoms', $s['nom_prenoms']], ['Matricule', $s['matricule']],
         ['Sous-comité / Section', trim(($s['anyama'] ?? '') . ' - ' . ($s['section'] ?? ''), ' -')], ['Dortoir', (string)($s['dortoir'] ?? '')], ['Contact', (string)($s['contact'] ?? '')],
         ['Mode de paiement', 'Espèces']];
-    if (($recu['reference_transaction'] ?? '') !== '') $det[] = ['ID transaction', $recu['reference_transaction']];
+    if (($recu['reference_transaction'] ?? '') !== '' && strpos($recu['reference_transaction'], 'ESPECES-') !== 0) $det[] = ['ID transaction', $recu['reference_transaction']];
     $det[] = ['Montant payé', $montant]; $det[] = ['Validé par', (string)($recu['valideur'] ?? '') ?: 'Commission Finance'];
     imagefilledrectangle($im, $M, $y, $W - $M, $y + 3, $ligne);
     foreach ($det as [$k, $v]) {

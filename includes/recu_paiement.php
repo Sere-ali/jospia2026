@@ -16,7 +16,7 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
             </div>
             <div class="recu-statut">PAYÉ</div>
         </div>
-        <p class="recu-texte">La commission Finance atteste avoir reçu de <strong><?= e($s['nom_prenoms']) ?></strong>, matricule <strong><?= e($s['matricule']) ?></strong>, la somme de <strong><?= number_format((int)$recu['montant'], 0, ',', ' ') ?> FCFA</strong> au titre des frais d'inscription à la <?= e(EVENT_FULL) ?>. Ce paiement a été vérifié et validé le <?= e(date('d/m/Y à H:i', strtotime($dateRecu))) ?>. Le présent reçu est délivré pour servir et valoir ce que de droit.</p>
+        <p class="recu-texte">La commission Finance atteste avoir reçu de <strong><?= e($s['nom_prenoms']) ?></strong>, matricule <strong><?= e($s['matricule']) ?></strong>, la somme de <strong><?= number_format((int)$recu['montant'], 0, ',', ' ') ?> FCFA</strong> au titre des frais d'inscription aux <?= e(EVENT_FULL) ?>. Ce paiement a été vérifié et validé le <?= e(date('d/m/Y à H:i', strtotime($dateRecu))) ?>. Le présent reçu est délivré pour servir et valoir ce que de droit.</p>
         <div class="recu-corps">
             <dl class="recu-infos">
                 <dt>N° de reçu</dt><dd class="mono"><?= e($numRecu) ?></dd>
@@ -27,7 +27,7 @@ $dateRecu = $recu['date_validation'] ?: $recu['updated_at'];
                 <dt>Dortoir</dt><dd><?= e($s['dortoir']) ?></dd>
                 <dt>Contact</dt><dd><?= e($s['contact']) ?></dd>
                 <dt>Mode de paiement</dt><dd class="mono">Espèces</dd>
-                <?php if ($recu['reference_transaction'] !== ''): ?><dt>ID transaction</dt><dd class="mono"><?= e($recu['reference_transaction']) ?></dd><?php endif; ?>
+                <?php if ($recu['reference_transaction'] !== '' && strpos($recu['reference_transaction'], 'ESPECES-') !== 0): ?><dt>ID transaction</dt><dd class="mono"><?= e($recu['reference_transaction']) ?></dd><?php endif; ?>
                 <dt>Montant payé</dt><dd><strong><?= number_format((int)$recu['montant'], 0, ',', ' ') ?> FCFA</strong></dd>
                 <dt>Validé par</dt><dd><?= e($recu['valideur'] ?: 'Commission Finance') ?></dd>
             </dl>
