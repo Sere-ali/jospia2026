@@ -161,6 +161,7 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <?php endif; ?>
 
+        <?php if ($recu): // Badge visible uniquement après validation du paiement ?>
         <div style="max-width:340px;margin:30px auto 0;">
             <h3 style="text-align:center;">Mon badge</h3>
             <?php $s = $seminariste; require __DIR__ . '/../includes/badge_seminariste_carte.php'; ?>
@@ -168,6 +169,7 @@ require_once __DIR__ . '/../includes/header.php';
                 Le téléchargement / impression du badge est réservé aux administrateurs.
             </div>
         </div>
+        <?php endif; ?>
 
         <?php if ($idsInitiaux): ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border:2px solid var(--primaire,#1b7a3d);">
@@ -181,7 +183,7 @@ require_once __DIR__ . '/../includes/header.php';
         <?php if ($recu): $s = $seminariste; require __DIR__ . '/../includes/recu_paiement.php'; else: ?>
         <div class="carte" style="max-width:720px;margin:30px auto 0;border-left:5px solid var(--orange);">
             <h3>En attente de paiement</h3>
-            <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à remettre <strong>en espèces</strong> à la commission Finance. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas enregistré : votre fiche d'inscription et votre reçu (avec QR code) apparaîtront ici dès que la commission Finance aura validé votre paiement.</p>
+            <p>Frais : <strong><?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA</strong>, à remettre <strong>en espèces</strong> à la commission Finance. Votre QR code est <strong style="color:#c81e1e;">rouge (refusé)</strong> tant que le paiement n'est pas enregistré : votre fiche d'inscription, votre reçu (avec QR code), votre badge et votre diplôme apparaîtront ici dès que la commission Finance aura validé votre paiement.</p>
         </div>
         <?php endif; ?>
 
@@ -208,6 +210,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php endif; ?>
         </div>
 
+        <?php if ($recu): // Diplôme visible uniquement après validation du paiement ?>
         <div class="carte" style="max-width:900px;margin:24px auto 0;">
             <h3>Mon diplôme</h3>
             <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>
@@ -215,6 +218,7 @@ require_once __DIR__ . '/../includes/header.php';
                 Le téléchargement / impression du diplôme est réservé aux administrateurs.
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="carte" style="max-width:720px;margin:24px auto 0;">
             <h3>Bulletin de notes</h3>
