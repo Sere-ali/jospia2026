@@ -887,3 +887,92 @@ function pdfFiche(PDO $pdo, array $s, $nomFichier) {
     $pdf->fin();
     exit;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Tickets de paiement avec souche (4 par page A4, à découper)        */
+/* ------------------------------------------------------------------ */
+
+/** Un ticket (souche à gauche, ticket à droite) 1680 x 570 px -> image GD. $t : ['code' => 'JOS-0001-X7K2', 'numero' => 1]. */
+function pdfTicket(array $t) {
+    require_once __DIR__ . '/qrcode_php.php';
+    $W = 1680; $H = 570; $XP = 520; // $XP : ligne de découpe entre la souche et le ticket
+    $R = 'tinos-latin-400-normal.ttf'; $B = 'tinos-latin-700-normal.ttf'; $BA = 'barlow-latin-800-normal.ttf';
+    $im = pdfToile($W, $H); imageantialias($im, true);
+    $vertF = imagecolorallocate($im, 6, 83, 47); $vert = imagecolorallocate($im, 11, 138, 78); $orange = imagecolorallocate($im, 247, 127, 0);
+    $noir = imagecolorallocate($im, 30, 38, 33); $gris = imagecolorallocate($im, 100, 112, 105); $blanc = imagecolorallocate($im, 255, 255, 255);
+    $creme = imagecolorallocate($im, 255, 244, 230);
+    // cadre + bandes
+    imagesetthickness($im, 5); imagerectangle($im, 4, 4, $W - 5, $H - 5, $vert); imagesetthickness($im, 1);
+    imagefilledrectangle($im, 5, 5, (int)($W / 3), 16, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 5, $W - 6, 16, $vert);
+    // découpe pointillée
+    for ($y = 24; $y < $H - 14; $y += 18) { imagefilledrectangle($im, $XP - 1, $y, $XP + 1, $y + 8, $gris); }
+    $ent0 = imagecreatefrompng(__DIR__ . '/../assets/img/bulletin_entete.png');
+    // on retire quelques pixels en haut et en bas (restes de la découpe du badge)
+    $ex = imagesx($ent0); $ey = imagesy($ent0) - 18;
+    $ent = imagecreatetruecolor($ex, $ey); imagecopy($ent, $ent0, 0, 0, 0, 14, $ex, $ey); imagedestroy($ent0);
+    $code = (string)$t['code'];
+    $qrTexte = 'JOSPIA-T:' . $code;
+
+    // ---------- SOUCHE (conservée par l'organisation) ----------
+    $sw = 460; $sh = (int)round($sw * $ey / $ex);
+    imagecopyresampled($im, $ent, 30, 30, 0, 0, $sw, $sh, $ex, $ey);
+    $y = 30 + $sh + 34;
+    $tx = 'SOUCHE - À CONSERVER'; pdfEcrire($im, 17, 30, $y, $orange, $B, $tx, 2); 
+    $nw = pdfLargeurTexte(34, $BA, 'N° ' . $code); pdfEcrire($im, 34, 30, $y + 52, $vertF, $BA, 'N° ' . $code);
+    $y += 118;
+    foreach (['Nom et prénoms', 'Section', 'Contact', "Contact d'un parent"] as $lib) {
+        pdfEcrire($im, 18, 30, $y, $noir, $B, $lib . ' :');
+        $lx = 30 + pdfLargeurTexte(18, $B, $lib . ' :') + 14;
+        for ($px = $lx; $px < $XP - 28; $px += 10) { imagefilledrectangle($im, $px, $y + 4, $px + 4, $y + 5, $gris); }
+        $y += 66;
+    }
+
+    // ---------- TICKET (remis à la personne) ----------
+    $mx = $XP + 40; $mw = $W - $mx - 40;
+    $hw = min($mw, 1000); $hh = (int)round($hw * $ey / $ex);
+    imagecopyresampled($im, $ent, (int)($mx + ($mw - $hw) / 2), 30, 0, 0, $hw, $hh, $ex, $ey);
+    $by = 30 + $hh + 20;
+    imagefilledrectangle($im, $mx, $by, $mx + $mw, $by + 78, $orange);
+    $tt = 'TICKET DE PAIEMENT - JOSPIA 2026'; $tw = pdfLargeurTexte(40, $BA, $tt, 3);
+    pdfEcrire($im, 40, $mx + ($mw - $tw) / 2, $by + 55, $blanc, $BA, $tt, 3);
+    $y = $by + 78 + 80;
+    $m1 = number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . ' FCFA';
+    pdfEcrire($im, 58, $mx, $y + 12, $vertF, $BA, $m1);
+    $dessous = 'Frais de participation aux ' . (defined('EVENT_FULL') ? EVENT_FULL : 'JOSPIA 2026');
+    pdfEcrire($im, 19, $mx, $y + 58, $noir, $R, $dessous);
+    $dates = 'Du ' . (defined('EVENT_JOUR_DEBUT') ? EVENT_JOUR_DEBUT : '22') . ' au ' . (defined('EVENT_JOUR_FIN') ? EVENT_JOUR_FIN : '28') . ' ' . (defined('EVENT_MOIS_ANNEE') ? mb_strtolower(EVENT_MOIS_ANNEE, 'UTF-8') : 'décembre 2026') . ' - Collège privé Henriette Dagri-Diabaté d\'Anyama';
+    pdfEcrire($im, 16, $mx, $y + 92, $gris, $R, $dates);
+    pdfEcrire($im, 15, $mx, $y + 128, $gris, $R, "Un ticket = un participant. Présentez-le à la commission Finance pour valider votre inscription.");
+    // numéro codé + QR (à droite)
+    $qr = QRCode::getMinimumQRCode($qrTexte, QR_ERROR_CORRECT_LEVEL_M);
+    $nb = $qr->getModuleCount(); $cell = max(4, (int)floor(170 / $nb)); $q = $nb * $cell;
+    $qx = $W - 40 - $q; $qy = $by + 78 + 28;
+    for ($r = 0; $r < $nb; $r++) for ($c = 0; $c < $nb; $c++) if ($qr->isDark($r, $c)) imagefilledrectangle($im, $qx + $c * $cell, $qy + $r * $cell, $qx + ($c + 1) * $cell - 1, $qy + ($r + 1) * $cell - 1, $noir);
+    $cw = pdfLargeurTexte(22, $BA, 'N° ' . $code);
+    pdfEcrire($im, 22, $W - 40 - $cw, $qy + $q + 40, $vertF, $BA, 'N° ' . $code);
+    imagedestroy($ent);
+    return $im;
+}
+
+/** Tickets : 4 par page A4 portrait, repères de découpe en pointillés. */
+function pdfTicketsA4(array $tickets, $nomFichier) {
+    @set_time_limit(600);
+    @ini_set('memory_limit', '512M');
+    $pdf = new PdfFlux($nomFichier);
+    $A4w = 595.28; $A4h = 841.89;
+    $ch = $A4h / 4; $marge = 8;
+    $w = $A4w - 2 * 18; $h = $w * 570 / 1680;
+    foreach (array_chunk($tickets, 4) as $groupe) {
+        $images = [];
+        foreach ($groupe as $i => $t) {
+            $im = pdfTicket($t);
+            $jpeg = pdfJpeg($im, 90); $wpx = imagesx($im); $hpx = imagesy($im); imagedestroy($im);
+            $images[] = [$jpeg, $wpx, $hpx, ($A4w - $w) / 2, $i * $ch + ($ch - $h) / 2, $w, $h];
+        }
+        $traits = [[0, $ch, $A4w, $ch], [0, 2 * $ch, $A4w, 2 * $ch], [0, 3 * $ch, $A4w, 3 * $ch]];
+        $pdf->page($A4w, $A4h, $images, $traits);
+    }
+    if (!$tickets) { $pdf->page($A4w, $A4h, []); }
+    $pdf->fin();
+    exit;
+}

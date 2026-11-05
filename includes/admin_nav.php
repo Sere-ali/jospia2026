@@ -38,6 +38,7 @@ else { $urlRetour = BASE_URL . (estAdmin() ? '/admin/dashboard' : '/admin/commis
         <a href="<?= BASE_URL ?>/admin/dashboard" class="btn btn-sm <?= $pageAdmin==='dashboard.php'?'btn-primaire':'btn-outline' ?>">Tableau de bord</a>
         <a href="<?= BASE_URL ?>/admin/administration" class="btn btn-sm <?= $dansAdministration ? 'btn-primaire' : 'btn-or' ?>">Administration</a>
         <a href="<?= BASE_URL ?>/finance/paiements" class="btn btn-sm <?= $dansFinance ? 'btn-primaire' : 'btn-outline' ?>">Commission finance</a>
+        <a href="<?= BASE_URL ?>/admin/tickets" class="btn btn-sm <?= $pageAdmin==='tickets.php' ? 'btn-primaire' : 'btn-outline' ?>">Tickets</a>
         <a href="<?= BASE_URL ?>/admin/commission_scientifique" class="btn btn-sm <?= $dansScientifique ? 'btn-primaire' : 'btn-outline' ?>">Commission scientifique</a>
         <?php if (estSecurite()): ?>
         <a href="<?= BASE_URL ?>/securite/visiteurs" class="btn btn-sm <?= strpos($_SERVER['PHP_SELF'], '/securite/') !== false ? 'btn-primaire' : 'btn-outline' ?>">Commission sécurité</a>

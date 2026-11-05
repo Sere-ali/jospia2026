@@ -523,6 +523,33 @@ function journalPreparer(PDO $pdo) {
     @file_put_contents($drapeau, '1');
 }
 
+/** Tickets de paiement numérotés avec code (table créée au premier usage). */
+function ticketsPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS tickets (
+        id INT AUTO_INCREMENT PRIMARY KEY, numero INT NOT NULL, code VARCHAR(20) NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE KEY uniq_ticket_numero (numero), UNIQUE KEY uniq_ticket_code (code)) ENGINE=InnoDB");
+}
+
+/** Génère $n nouveaux tickets à la suite des précédents ; retourne [premier numéro, dernier numéro]. */
+function ticketsGenerer(PDO $pdo, $n) {
+    ticketsPreparer($pdo);
+    $n = max(1, min(400, (int)$n));
+    $alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // sans 0/O/1/I/L : lisible à la main
+    $debut = (int)$pdo->query("SELECT COALESCE(MAX(numero), 0) FROM tickets")->fetchColumn() + 1;
+    $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?)");
+    for ($num = $debut; $num < $debut + $n; $num++) {
+        for ($essai = 0; $essai < 10; $essai++) {
+            $suffixe = '';
+            for ($k = 0; $k < 4; $k++) { $suffixe .= $alphabet[random_int(0, strlen($alphabet) - 1)]; }
+            try { $ins->execute([$num, 'JOS-' . str_pad((string)$num, 4, '0', STR_PAD_LEFT) . '-' . $suffixe]); break; } catch (Throwable $e) { /* code déjà pris : on retente */ }
+        }
+    }
+    return [$debut, $debut + $n - 1];
+}
+
 /** Enregistre une action dans le journal (ne provoque jamais d'erreur visible). */
 function journaliser(PDO $pdo, $action, $cible = '', $compte = null) {
     try {
