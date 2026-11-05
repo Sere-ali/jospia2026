@@ -21,26 +21,27 @@ if ($cible === 'niveaux') {
     require __DIR__ . '/admin/seuils_niveaux.php';
     exit;
 }
-if ($cible === 'logistique') {
+if ($cible === 'logistique' || $cible === 'protocole') {
+    $commissionListe = strtoupper($cible); $libelleListe = ucfirst($cible);
     header('X-Robots-Tag: noindex, nofollow');
     header('Cache-Control: no-store');
-    $st = $pdo->prepare("SELECT nom_prenoms, contact, matricule FROM membres_commission WHERE UPPER(commission) = 'LOGISTIQUE' ORDER BY nom_prenoms");
-    $st->execute();
+    $st = $pdo->prepare("SELECT nom_prenoms, contact, matricule FROM membres_commission WHERE UPPER(commission) = ? ORDER BY nom_prenoms");
+    $st->execute([$commissionListe]);
     $liste = $st->fetchAll();
     if (isset($_GET['export'])) {
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="commission_logistique.csv"');
+        header('Content-Disposition: attachment; filename="commission_' . $cible . '.csv"');
         echo "\xEF\xBB\xBF";
         $f = fopen('php://output', 'w');
         fputcsv($f, ['N°', 'Nom et prénoms', 'Contact', 'Matricule'], ';');
         foreach ($liste as $i => $m) { fputcsv($f, [$i + 1, $m['nom_prenoms'], $m['contact'], $m['matricule']], ';'); }
         exit;
     }
-    $titrePage = 'Commission Logistique';
+    $titrePage = 'Commission ' . $libelleListe;
     require __DIR__ . '/includes/header.php';
     ?>
 <section class="section"><div class="container" style="max-width:820px;">
-    <div class="section-titre"><span class="eyebrow">JOSPIA 2026</span><h2>Commission Logistique</h2></div>
+    <div class="section-titre"><span class="eyebrow">JOSPIA 2026</span><h2>Commission <?= e($libelleListe) ?></h2></div>
     <p class="no-print" style="text-align:center;"><?= count($liste) ?> membre(s) &middot; <a href="?export=1" class="btn btn-outline btn-sm">Exporter en Excel</a> <a href="#" onclick="window.print();return false;" class="btn btn-outline btn-sm">Imprimer</a></p>
     <div class="table-wrap">
         <table>
