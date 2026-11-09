@@ -6,6 +6,7 @@ require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/admin_nav.php';
 $cartes = [
     ['Sorties MG / MGA', 'Accepter ou refuser les demandes de sortie du camp.', '/espace/sorties_mg'],
+    ['Présentation du lancement', 'Grandes activités et innovations de JOSPIA 2026 — présentation animée du 29 novembre.', '/admin/presentation_lancement'],
     ['Rapports journaliers', 'Rapport du jour de chaque commission.', '/admin/rapports'],
 ];
 ?>
