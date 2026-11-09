@@ -234,6 +234,12 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .etincelle{position:fixed;width:12px;height:12px;border-radius:50%;pointer-events:none;z-index:40;animation:etc .8s ease-out forwards}
 @keyframes etc{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:35}
+/* mesure : état final (tout affiché) pour ajuster la taille à l'écran */
+.fit .cols{transition:none!important;row-gap:14px}
+.fit .res{display:block!important;height:auto!important;opacity:1!important;overflow:visible!important;padding:clamp(12px,min(2.2vw,3.5vh),30px)!important;border-width:1px!important;transition:none!important}
+.fit .el,.fit .mt{transform:none!important;filter:none!important;animation:none!important}
+.fit .objb,.fit .bloc li{opacity:1!important;transition:none!important}
+@media(min-width:821px){.fit .cols{grid-template-columns:1fr 1fr!important;column-gap:26px!important}}
 @media(max-width:820px){.cols{grid-template-columns:1fr;row-gap:0}.cols.s2{grid-template-columns:1fr;row-gap:14px}.res{display:none}.s2 .res{display:block}.slide{align-items:flex-start}.points{display:none}}
 @media(max-height:520px) and (orientation:landscape){.slide{bottom:66px}.nav button,.nav a{width:42px;height:42px}.partie .logo,.merci .logo{width:90px}}
 @media(orientation:portrait){.bloc .obj{font-size:clamp(16px,3.6vw,26px)}.bloc li{font-size:clamp(15px,3.2vw,22px)}.entete h2{font-size:clamp(22px,6.4vw,52px)}.entete p{font-size:clamp(14px,3vw,24px)}.bloc h3{font-size:clamp(12px,2.6vw,16px)}.partie h1{font-size:clamp(26px,8vw,68px)}}
@@ -285,6 +291,19 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   var sl=[].slice.call(document.querySelectorAll('.slide')),n=sl.length,c=-1,st=0;
   var pts=document.getElementById('points'),cpt=document.getElementById('cpt'),bar=document.getElementById('barre'),bal=document.getElementById('balai');
   var NT=6,MAP=[2,5,0,4,7,3];
+  function ajuster(){
+    sl.forEach(function(s){
+      var c=s.querySelector('.contenu');if(!c)return;
+      s.classList.add('fit');c.style.zoom=1;
+      function ok(){return c.getBoundingClientRect().height<=s.clientHeight-4}
+      if(!ok()){var lo=.25,hi=1;for(var t=0;t<12;t++){var m=(lo+hi)/2;c.style.zoom=m;if(ok())lo=m;else hi=m}c.style.zoom=lo}
+      s.classList.remove('fit');
+      if(window.CSS&&CSS.supports&&CSS.supports('zoom','1'))s.style.overflowY='hidden';
+    });
+  }
+  var rt;function replanifier(){clearTimeout(rt);rt=setTimeout(ajuster,120)}
+  addEventListener('resize',replanifier);addEventListener('orientationchange',replanifier);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajuster);
   sl.forEach(function(s,i){s.setAttribute('data-tr',MAP[i%NT]);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
@@ -364,6 +383,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     P.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()});
     if(P.length)requestAnimationFrame(boucle);else run=false;
   }
+  ajuster();
   var h=parseInt((location.hash||'').slice(1),10);
   go(h>=1&&h<=n?h-1:0,0);
 })();
