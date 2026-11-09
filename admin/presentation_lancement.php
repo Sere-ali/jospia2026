@@ -100,14 +100,41 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 .haut img{width:min(100%,940px);height:auto;display:block;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent),linear-gradient(#000 85%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent),linear-gradient(#000 85%,transparent);mask-composite:intersect}
 @keyframes desc{from{opacity:0;transform:translateY(-40px)}}
 @keyframes flo{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
-/* balai de transition */
+/* rideaux de transition : 6 effets différents */
 .balai{position:fixed;inset:0;z-index:18;pointer-events:none;overflow:hidden}
-.balai:before,.balai:after{content:"";position:absolute;top:-10%;bottom:-10%;left:-90vw;width:34vw;min-width:140px;transform:skewX(-14deg) translateX(0)}
-.balai:before{background:linear-gradient(90deg,var(--v),var(--vf))}
-.balai:after{background:linear-gradient(90deg,var(--o),var(--r));width:22vw;min-width:90px;left:-130vw}
-.balai.go:before{animation:bal 1s cubic-bezier(.7,0,.3,1)}
-.balai.go:after{animation:bal 1s .08s cubic-bezier(.7,0,.3,1)}
+.balai u{position:absolute;display:none;text-decoration:none}
+.balai.go u{display:block}
+.balai.go.k0 u:nth-child(n+3),.balai.go.k1 u:nth-child(n+3),.balai.go.k2 u:nth-child(n+2),.balai.go.k4 u:nth-child(n+3),.balai.go.k5 u:nth-child(n+2){display:none}
+/* 0 : bandes en diagonale */
+.k0 u{top:-10%;bottom:-10%;left:-90vw;width:34vw;min-width:140px;transform:skewX(-14deg);background:linear-gradient(90deg,var(--v),var(--vf));animation:bal 1s cubic-bezier(.7,0,.3,1)}
+.k0 u:nth-child(2){width:22vw;min-width:90px;left:-130vw;background:linear-gradient(90deg,var(--o),var(--r));animation-delay:.08s}
 @keyframes bal{from{transform:skewX(-14deg) translateX(0)}to{transform:skewX(-14deg) translateX(300vw)}}
+/* 1 : rideau qui se ferme puis s'ouvre */
+.k1 u{top:0;bottom:0;width:50.5%;animation:rid 1.2s cubic-bezier(.65,0,.35,1)}
+.k1 u:nth-child(1){left:0;background:linear-gradient(90deg,var(--vf),var(--v));--d:-101%}
+.k1 u:nth-child(2){right:0;background:linear-gradient(270deg,var(--r),var(--o));--d:101%}
+@keyframes rid{0%{transform:translateX(var(--d))}42%,58%{transform:translateX(0)}100%{transform:translateX(var(--d))}}
+/* 2 : cercle qui grandit depuis le centre */
+.k2 u{left:50%;top:50%;width:70vmax;height:70vmax;margin:-35vmax 0 0 -35vmax;border-radius:50%;background:radial-gradient(circle,var(--o),var(--r) 45%,var(--v) 46%,var(--vf));animation:cer 1.2s cubic-bezier(.6,0,.3,1)}
+@keyframes cer{0%{transform:scale(0);opacity:1}45%{transform:scale(1);opacity:1}60%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:0}}
+/* 3 : volets verticaux */
+.k3 u{top:0;bottom:0;width:16.8%;animation:vol 1.2s cubic-bezier(.65,0,.35,1)}
+.k3 u:nth-child(1){left:0;background:var(--v);animation-delay:0s}
+.k3 u:nth-child(2){left:16.66%;background:var(--o);animation-delay:.07s}
+.k3 u:nth-child(3){left:33.33%;background:var(--vf);animation-delay:.14s}
+.k3 u:nth-child(4){left:50%;background:var(--r);animation-delay:.21s}
+.k3 u:nth-child(5){left:66.66%;background:var(--v);animation-delay:.28s}
+.k3 u:nth-child(6){left:83.33%;background:var(--o);animation-delay:.35s}
+@keyframes vol{0%{transform:scaleY(0);transform-origin:top}40%{transform:scaleY(1);transform-origin:top}60%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+/* 4 : vague qui monte du bas */
+.k4 u{left:0;right:0;top:0;bottom:0;animation:vag 1.1s cubic-bezier(.7,0,.3,1)}
+.k4 u:nth-child(1){background:linear-gradient(0deg,var(--v),var(--vf))}
+.k4 u:nth-child(2){background:linear-gradient(0deg,var(--r),var(--o));animation-delay:.1s;animation-name:vag2}
+@keyframes vag{0%{transform:translateY(101%)}100%{transform:translateY(-101%)}}
+@keyframes vag2{0%{transform:translateY(101%)}100%{transform:translateY(-101%)}}
+/* 5 : éclat lumineux */
+.k5 u{inset:0;background:radial-gradient(circle at 50% 50%,#fff,#ffd9a8 40%,rgba(247,127,0,.85));animation:ecl 1s ease-in-out}
+@keyframes ecl{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
 /* diapositives et 6 transitions différentes */
 .slide{position:absolute;left:0;right:0;top:var(--haut);bottom:84px;display:flex;opacity:0;visibility:hidden;z-index:5;overflow-y:auto;overflow-x:hidden;padding:0 clamp(16px,6vw,90px);transition:opacity .9s,transform 1s cubic-bezier(.2,.8,.2,1),clip-path 1.1s cubic-bezier(.7,0,.2,1),filter .9s,visibility 0s 1s}
 .slide.actif{opacity:1;visibility:visible;z-index:6;transform:none;clip-path:none;filter:none;transition:opacity .9s .15s,transform 1s .15s cubic-bezier(.2,.8,.2,1),clip-path 1.1s .1s cubic-bezier(.7,0,.2,1),filter .9s .15s}
@@ -206,7 +233,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 </div>
 <div class="brille"></div>
 <div class="barre" id="barre"></div>
-<div class="balai" id="balai"></div>
+<div class="balai" id="balai"><u></u><u></u><u></u><u></u><u></u><u></u></div>
 <div class="haut"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
 <div id="scene">
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
@@ -249,8 +276,8 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 (function(){
   var sl=[].slice.call(document.querySelectorAll('.slide')),n=sl.length,c=-1,st=0;
   var pts=document.getElementById('points'),cpt=document.getElementById('cpt'),bar=document.getElementById('barre'),bal=document.getElementById('balai');
-  var NT=8;
-  sl.forEach(function(s,i){s.setAttribute('data-tr',i%NT);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
+  var NT=6,MAP=[2,5,0,4,7,3];
+  sl.forEach(function(s,i){s.setAttribute('data-tr',MAP[i%NT]);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
     if(cols){cols.classList.toggle('s1',st>=1);cols.classList.toggle('s2',st>=2);
@@ -262,7 +289,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
     if(i<0||i>=n)return;
     var chg=(i!==c);
     if(chg){
-      bal.classList.remove('go');void bal.offsetWidth;bal.classList.add('go');
+      bal.className='balai';void bal.offsetWidth;bal.className='balai go k'+(i%NT);
       sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
       [].forEach.call(pts.children,function(p,k){p.classList.toggle('on',k===i)});
       cpt.textContent=(i+1)+' / '+n;
