@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin', 'mg']);
+if (!defined('PRESENTATION_PUBLIQUE')) { exigerRole(['admin', 'superadmin', 'mg']); }
 
 // Contenu fourni par le Comité d'organisation (document « Grandes Activités & Innovations JOSPIA 2026 »), repris tel quel.
 $sections = [
@@ -84,6 +84,7 @@ $ouverture = array_shift($sections[0][2]);
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Grandes activités et innovations — JOSPIA 2026</title>
 <style>
@@ -274,7 +275,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 <div class="bas">
   <div class="nav"><button id="prec" type="button" aria-label="Précédent">&#8592;</button><button id="suiv" type="button" aria-label="Suivant">&#8594;</button></div>
   <div class="points" id="points"></div>
-  <div class="nav"><a class="sec" href="<?= BASE_URL ?>/admin/comite_manageriale" title="Quitter" aria-label="Quitter">&#10005;</a><button class="sec" id="plein" type="button" title="Plein écran" aria-label="Plein écran">&#x26F6;</button><div class="cpt" id="cpt"></div></div>
+  <div class="nav"><?php if (!defined('PRESENTATION_PUBLIQUE')): ?><a class="sec" href="<?= BASE_URL ?>/admin/comite_manageriale" title="Quitter" aria-label="Quitter">&#10005;</a><?php endif; ?><button class="sec" id="plein" type="button" title="Plein écran" aria-label="Plein écran">&#x26F6;</button><div class="cpt" id="cpt"></div></div>
 </div>
 <script>
 (function(){
