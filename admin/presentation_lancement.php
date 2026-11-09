@@ -158,6 +158,10 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 .bloc:hover{box-shadow:0 22px 44px rgba(247,127,0,.22)}
 .bloc h3{font-size:clamp(12px,1.3vw,15px);letter-spacing:.2em;color:var(--o);margin-bottom:14px;font-weight:800}
 .bloc .obj{font-size:clamp(16px,1.9vw,24px);line-height:1.55}
+.objb{opacity:0;transform:translateY(40px) scale(.97);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.s1 .objb{opacity:1;transform:none}
+.actif .obj .mt{animation:none}
+.actif .s1 .obj .mt{animation:mot .8s cubic-bezier(.2,.9,.3,1.3) forwards,ond 4s ease-in-out infinite;animation-delay:calc(var(--w)*.05s + .5s),calc(var(--w)*.05s + 1.5s)}
 .res{opacity:0;padding-left:0;padding-right:0;border-width:0;transform:translateX(60px);transition:opacity .7s .3s,padding .9s,transform .9s .2s cubic-bezier(.2,.8,.2,1)}
 .cols:not(.s2) .res{height:0;min-height:0;padding-top:0;padding-bottom:0;overflow:hidden}
 .s2 .res{opacity:1;padding-left:clamp(16px,2.2vw,30px);padding-right:clamp(16px,2.2vw,30px);border-width:1px;transform:none}
@@ -165,7 +169,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 .bloc li{position:relative;padding-left:28px;font-size:clamp(14px,1.55vw,19px);line-height:1.45;opacity:0;transform:translateX(40px) scale(.96)}
 .bloc li:before{content:"";position:absolute;left:0;top:.45em;width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,var(--o),var(--r));box-shadow:0 0 0 4px rgba(247,127,0,.2);animation:bat 2s ease-in-out infinite}
 @keyframes bat{50%{box-shadow:0 0 0 9px rgba(247,127,0,0);transform:scale(1.15)}}
-.s2 .bloc li{animation:ap2 .8s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--k)*.3s + .8s)}
+.bloc li.on{animation:ap2 .8s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes ap2{to{opacity:1;transform:none}}
 /* merci */
 .merci{text-align:center}
@@ -213,14 +217,14 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
     <div class="trait"></div>
   </div></section>
   <?php foreach ($items as [$num, $nom, $sous, $obj, $labelR, $res]): ?>
-  <section class="slide" data-steps="2"><div class="contenu">
+  <section class="slide" data-steps="<?= count($res) + 2 ?>"><div class="contenu">
     <div class="entete">
       <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
       <h2 class="degrade"><?= mots($nom) ?></h2>
       <?php if ($sous !== ''): ?><p class="el" style="--i:3">(<?= e($sous) ?>)</p><?php endif; ?>
     </div>
     <div class="cols">
-      <div class="bloc"><h3>OBJECTIF GÉNÉRAL :</h3><p class="obj"><?= mots($obj[0], 4) ?></p></div>
+      <div class="bloc objb"><h3>OBJECTIF GÉNÉRAL :</h3><p class="obj"><?= mots($obj[0], 4) ?></p></div>
       <div class="bloc res"><h3><?= e($labelR) ?> :</h3><ul>
         <?php foreach ($res as $k => $r): ?><li style="--k:<?= $k ?>"><?= e($r) ?></li><?php endforeach; ?>
       </ul></div>
@@ -249,7 +253,8 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
   sl.forEach(function(s,i){s.setAttribute('data-tr',i%NT);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
-    if(cols)cols.classList.toggle('s2',st>=1);
+    if(cols){cols.classList.toggle('s1',st>=1);cols.classList.toggle('s2',st>=2);
+      [].forEach.call(cols.querySelectorAll('li'),function(li,k){li.classList.toggle('on',st>=k+2)})}
     document.getElementById('prec').disabled=(c===0&&st===0);
     document.getElementById('suiv').disabled=(c===n-1);
   }
@@ -258,7 +263,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
     var chg=(i!==c);
     if(chg){
       bal.classList.remove('go');void bal.offsetWidth;bal.classList.add('go');
-      sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc)cc.classList.remove('s2')}});
+      sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
       [].forEach.call(pts.children,function(p,k){p.classList.toggle('on',k===i)});
       cpt.textContent=(i+1)+' / '+n;
       bar.style.width=((i+1)/n*100)+'%';
