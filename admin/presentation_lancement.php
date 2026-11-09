@@ -4,12 +4,12 @@ if (!defined('PRESENTATION_PUBLIQUE')) { exigerRole(['admin', 'superadmin', 'mg'
 
 // Contenu fourni par le Comité d'organisation (document « Grandes Activités & Innovations JOSPIA 2026 »), repris tel quel.
 $sections = [
-  ['I.', 'LES GRANDES ACTIVITÉS', [
-    ['', 'CÉRÉMONIE DE LANCEMENT OFFICIEL DES JOSPIA 2026', '',
+  ['I-', 'LES GRANDES ACTIVITÉS', [
+    ['1-', 'CÉRÉMONIE DE LANCEMENT OFFICIEL DES JOSPIA 2026', '',
       ["Donner le coup d'envoi officiel de JOSPIA 2026, en dévoiler la vision, le thème, les ambitions et les grandes articulations, tout en mobilisant et fédérant l'ensemble des parties prenantes autour des enjeux et de la réussite de cette 15e édition."],
       'RÉSULTATS ATTENDUS',
       ["JOSPIA 2026 est officiellement lancé ;", "La vision, le thème et les objectifs de l'édition sont clairement compris ;", "Les parties prenantes sont mobilisées et engagées ;", "La visibilité et la notoriété de JOSPIA 2026 sont renforcées ;", "Une dynamique collective est créée pour assurer la réussite du séminaire."]],
-    ['1.', 'CÉRÉMONIE OFFICIELLE DES JOSPIA 2026', '',
+    ['2-', 'CÉRÉMONIE OFFICIELLE DES JOSPIA 2026', '',
       ["Faire de la cérémonie officielle le temps fort institutionnel de JOSPIA 2026, réunissant séminaristes, parents, guides religieux, autorités politiques et administratives, structures de jeunesse, structures sœurs et partenaires autour du thème central et des enjeux de la jeunesse."],
       'RÉSULTATS ATTENDUS',
       ["Réunir les principaux acteurs autour des enjeux de l'AEEMCI ;", "Favoriser le dialogue entre militants, parents, guides religieux, autorités et structures de jeunesse ;", "Renforcer les liens entre les parties prenantes ;", "Consolider JOSPIA comme cadre de formation, de dialogue et de responsabilisation de la jeunesse."]],
@@ -30,24 +30,24 @@ $sections = [
       'RÉSULTATS ATTENDUS',
       ["Des talents révélés et valorisés dans un esprit d'humilité et de saine émulation ;", "Une créativité accrue et une fraternité renforcée entre les séminaristes ;", "Des messages éducatifs et spirituels transmis par des expressions originales."]],
   ]],
-  ['II.', 'LES GRANDES INNOVATIONS', [
-    ['', "HALAQAT AT-TA'LÎM", '',
+  ['II-', 'LES GRANDES INNOVATIONS', [
+    ['1-', "HALAQAT AT-TA'LÎM", '',
       ["Renforcer les compétences coraniques des séminaristes à travers un enseignement adapté à leur niveau, favorisant la qualité de lecture, la maîtrise des règles de récitation et la progression individuelle."],
       'RÉSULTAT ATTENDU',
       ["Des séminaristes mieux orientés, plus compétents dans leur lecture du Saint Coran et capables de mesurer leur propre progression, grâce à un dispositif d'apprentissage adapté et évalué."]],
-    ['1.', "IQRA' TIME", 'La bibliothèque vivante des JOSPIA',
+    ['2-', "IQRA' TIME", 'La bibliothèque vivante des JOSPIA',
       ["Promouvoir la culture de la lecture et stimuler la curiosité intellectuelle des séminaristes à travers une bibliothèque interactive dédiée à la découverte des ouvrages islamiques, littéraires, historiques et culturels."],
       'RÉSULTATS ATTENDUS',
       ["Une meilleure familiarisation des séminaristes avec les ouvrages disponibles ;", "Un intérêt renforcé pour la lecture et la recherche documentaire ;", "Une participation active à des animations éducatives ;", "Une dynamique de lecture appelée à se poursuivre au-delà des JOSPIA."]],
-    ['', "JE ME GBACHI'S", 'Séance collective de fitness et de bien-être',
+    ['3-', "JE ME GBACHI'S", 'Séance collective de fitness et de bien-être',
       ["Favoriser le bien-être physique, la cohésion entre séminaristes et l'adoption de bonnes habitudes de vie à travers des séances collectives de fitness alliant détente, divertissement et discipline personnelle."],
       'RÉSULTATS ATTENDUS',
       ["Des séminaristes ayant vécu un moment de détente et de divertissement collectif ;", "Une cohésion renforcée grâce à la participation et à l'effort partagé ;", "Une sensibilisation aux bonnes habitudes de vie et à la pratique du sport."]],
-    ['', 'JOSPIA FACE-À-FACE', 'Le choc des idées, la force des arguments',
+    ['4-', 'JOSPIA FACE-À-FACE', 'Le choc des idées, la force des arguments',
       ["Développer les capacités d'argumentation, d'analyse critique et d'expression des séminaristes à travers des débats contradictoires et constructifs."],
       'RÉSULTATS ATTENDUS',
       ["Renforcement des capacités d'argumentation et d'expression orale ;", "Développement de l'esprit critique et de l'écoute active ;", "Amélioration de la capacité à défendre et à confronter des idées avec respect ;", "Approfondissement des connaissances sur les thématiques abordées ;", "Participation accrue des séminaristes à leur propre formation."]],
-    ['', 'PARCOURS INSPIRANT', '',
+    ['5-', 'PARCOURS INSPIRANT', '',
       ["Inspirer et édifier les séminaristes à travers des témoignages authentiques, afin de renforcer leur foi, leur persévérance, leur ambition et leur capacité à faire des choix éclairés."],
       'RÉSULTATS ATTENDUS',
       ["Des séminaristes inspirés par des expériences authentiques et édifiantes ;", "Une meilleure compréhension de l'importance de la persévérance, de la discipline et des choix ;", "Un renforcement de leur motivation dans leurs parcours personnel, académique et associatif ;", "Une appropriation d'enseignements concrets pouvant guider leurs décisions futures."]],
