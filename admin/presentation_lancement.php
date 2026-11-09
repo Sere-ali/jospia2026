@@ -5,11 +5,11 @@ exigerRole(['admin', 'superadmin', 'mg']);
 // Contenu fourni par le Comité d'organisation (document « Grandes Activités & Innovations JOSPIA 2026 »), repris tel quel.
 $sections = [
   ['I.', 'LES GRANDES ACTIVITÉS', [
-    ['', 'CÉRÉMONIE DE LANCEMENT OFFICIEL DE JOSPIA 2026', '',
+    ['', 'CÉRÉMONIE DE LANCEMENT OFFICIEL DES JOSPIA 2026', '',
       ["Donner le coup d'envoi officiel de JOSPIA 2026, en dévoiler la vision, le thème, les ambitions et les grandes articulations, tout en mobilisant et fédérant l'ensemble des parties prenantes autour des enjeux et de la réussite de cette 15e édition."],
       'RÉSULTATS ATTENDUS',
       ["JOSPIA 2026 est officiellement lancé ;", "La vision, le thème et les objectifs de l'édition sont clairement compris ;", "Les parties prenantes sont mobilisées et engagées ;", "La visibilité et la notoriété de JOSPIA 2026 sont renforcées ;", "Une dynamique collective est créée pour assurer la réussite du séminaire."]],
-    ['1.', 'CÉRÉMONIE OFFICIELLE DE JOSPIA 2026', '',
+    ['1.', 'CÉRÉMONIE OFFICIELLE DES JOSPIA 2026', '',
       ["Faire de la cérémonie officielle le temps fort institutionnel de JOSPIA 2026, réunissant séminaristes, parents, guides religieux, autorités politiques et administratives, structures de jeunesse, structures sœurs et partenaires autour du thème central et des enjeux de la jeunesse."],
       'RÉSULTATS ATTENDUS',
       ["Réunir les principaux acteurs autour des enjeux de l'AEEMCI ;", "Favoriser le dialogue entre militants, parents, guides religieux, autorités et structures de jeunesse ;", "Renforcer les liens entre les parties prenantes ;", "Consolider JOSPIA comme cadre de formation, de dialogue et de responsabilisation de la jeunesse."]],
