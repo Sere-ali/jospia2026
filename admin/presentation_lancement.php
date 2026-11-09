@@ -103,7 +103,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 /* rideaux de transition : 6 effets différents */
 .balai{position:fixed;inset:0;z-index:18;pointer-events:none;overflow:hidden}
 .balai u{position:absolute;display:none;text-decoration:none}
-.balai.go u{display:block}
+.balai.go u{display:block;animation-fill-mode:both}
 .balai.go.k0 u:nth-child(n+3),.balai.go.k1 u:nth-child(n+3),.balai.go.k2 u:nth-child(n+2),.balai.go.k4 u:nth-child(n+3),.balai.go.k5 u:nth-child(n+2){display:none}
 /* 0 : bandes en diagonale */
 .k0 u{top:-10%;bottom:-10%;left:-90vw;width:34vw;min-width:140px;transform:skewX(-14deg);background:linear-gradient(90deg,var(--v),var(--vf));animation:bal 1s cubic-bezier(.7,0,.3,1)}
@@ -289,7 +289,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
     if(i<0||i>=n)return;
     var chg=(i!==c);
     if(chg){
-      bal.className='balai';void bal.offsetWidth;bal.className='balai go k'+(i%NT);
+      bal.className='balai';void bal.offsetWidth;bal.className='balai go k'+(i%NT);clearTimeout(bal._t);bal._t=setTimeout(function(){bal.className='balai'},1800);
       sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
       [].forEach.call(pts.children,function(p,k){p.classList.toggle('on',k===i)});
       cpt.textContent=(i+1)+' / '+n;
