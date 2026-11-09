@@ -64,6 +64,22 @@ $sections = [
 function pTxt($s) { return str_replace('15e édition', '15<sup>e</sup> édition', e($s)); }
 $total = 0; foreach ($sections as $s) { $total += 1 + count($s[2]); }
 function mots($s, $base = 0) { $o = ''; $i = $base; foreach (preg_split('/\s+/', trim($s)) as $m) { $t = ($m === '15e') ? '15<sup>e</sup>' : e($m); $o .= '<span class="mt" style="--w:' . $i++ . '">' . $t . '</span> '; } return $o; }
+function afficherActivite($num, $nom, $sous, $obj, $labelR, $res) { ?>
+  <section class="slide" data-steps="<?= count($res) + 2 ?>"><div class="contenu">
+    <div class="entete">
+      <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
+      <h2 class="degrade"><?= mots($nom) ?></h2>
+      <?php if ($sous !== ''): ?><p class="el" style="--i:3">(<?= e($sous) ?>)</p><?php endif; ?>
+    </div>
+    <div class="cols">
+      <div class="bloc objb"><h3>OBJECTIF GÉNÉRAL :</h3><p class="obj"><?= mots($obj[0], 4) ?></p></div>
+      <div class="bloc res"><h3><?= e($labelR) ?> :</h3><ul>
+        <?php foreach ($res as $k => $r): ?><li style="--k:<?= $k ?>"><?= e($r) ?></li><?php endforeach; ?>
+      </ul></div>
+    </div>
+  </div></section>
+<?php }
+$ouverture = array_shift($sections[0][2]);
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -236,6 +252,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
 <div class="balai" id="balai"><u></u><u></u><u></u><u></u><u></u><u></u></div>
 <div class="haut"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
 <div id="scene">
+<?php afficherActivite(...$ouverture); ?>
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
@@ -243,21 +260,7 @@ html,body{height:100%;overflow:hidden;background:#fff;color:var(--tx);font-famil
     <h1 class="degrade"><?= mots($titre, 2) ?></h1>
     <div class="trait"></div>
   </div></section>
-  <?php foreach ($items as [$num, $nom, $sous, $obj, $labelR, $res]): ?>
-  <section class="slide" data-steps="<?= count($res) + 2 ?>"><div class="contenu">
-    <div class="entete">
-      <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
-      <h2 class="degrade"><?= mots($nom) ?></h2>
-      <?php if ($sous !== ''): ?><p class="el" style="--i:3">(<?= e($sous) ?>)</p><?php endif; ?>
-    </div>
-    <div class="cols">
-      <div class="bloc objb"><h3>OBJECTIF GÉNÉRAL :</h3><p class="obj"><?= mots($obj[0], 4) ?></p></div>
-      <div class="bloc res"><h3><?= e($labelR) ?> :</h3><ul>
-        <?php foreach ($res as $k => $r): ?><li style="--k:<?= $k ?>"><?= e($r) ?></li><?php endforeach; ?>
-      </ul></div>
-    </div>
-  </div></section>
-  <?php endforeach; ?>
+  <?php foreach ($items as [$num, $nom, $sous, $obj, $labelR, $res]) { afficherActivite($num, $nom, $sous, $obj, $labelR, $res); } ?>
 <?php endforeach; ?>
   <section class="slide final" data-steps="1"><div class="contenu merci">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
