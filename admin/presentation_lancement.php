@@ -79,7 +79,6 @@ function afficherActivite($num, $nom, $sous, $obj, $labelR, $res) { ?>
     </div>
   </div></section>
 <?php }
-$ouverture = array_shift($sections[0][2]);
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -261,7 +260,6 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 <div class="balai" id="balai"><u></u><u></u><u></u><u></u><u></u><u></u></div>
 <div class="haut"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
 <div id="scene">
-<?php afficherActivite(...$ouverture); ?>
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
