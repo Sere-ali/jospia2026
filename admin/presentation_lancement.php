@@ -61,21 +61,81 @@ $sections = [
       ["Renforcement de la mémoire, de l'observation et de la concentration ;", "Développement de la participation et de la coopération ;", "Consolidation de la cohésion et de l'émulation entre frères et sœurs."]],
   ]],
 ];
+
+$introTitre = 'PRÉSENTATION DU THÈME, DE LA VISION, DES OBJECTIFS ET DU BUDGET GLOBAL ESTIMATIF DES JOSPIA 2026';
+// [num, nom, [objectif ou vide], labelObjectif, labelListe, liste, gras, deuxColonnes]
+$intro = [
+  ['I-', 'THÈME CENTRAL POUR CETTE 15è ÉDITION', ["Thème central : « LE TRANSFERT ENTRE GÉNÉRATIONS À L'ÉPREUVE DU TEMPS : PÉRENNISER L'HÉRITAGE DE L'AEEMCI »"], '', '', [], false, false],
+  ['II-', 'NOTRE VISION POUR CETTE 15è ÉDITION', ['Faire des JOSPIA 2026 le carrefour où l’héritage devient promesse.'], '', '', [
+      'Une génération qui reçoit avec gratitude, qui porte avec fidélité, et qui transmet avec excellence, pour que l’AEEMCI d’Anyama vive au-delà du temps.',
+      'Quatre (4) grands axes sont visés :'], false, false],
+  ['1-', 'FORMATION : TRANSMETTRE POUR FAIRE GRANDIR', ['Nous ne voulons pas former des spectateurs, mais des héritiers responsables.'], '', '', [
+      'Formation spirituelle : Enraciner la foi, la sincérité et l’esprit de sacrifice chez nos apprenants',
+      'Formation académique : Outiller pour réussir à l’école, à l’université et dans la vie',
+      'Formation managériale : Apprendre à organiser, à diriger et à servir',
+      'Mentorat Aînés – Cadets : Un cadre réel d’échange pour que chaque séminariste repart avec des repères, des méthodes et un mentor'], true, false],
+  ['2-', 'INNOVATION : TRANSMETTRE AUTREMENT', [], '', '', [
+      'Digitalisation de la mémoire : Documenter, archiver et valoriser 15 ans de JOSPIA à travers cette édition 15',
+      'Nouveaux formats : IQRA’TIME (La bibliothèque vivante des JOSPIA) ; JE ME GBACHI’S (Séance collective de fitness et de bien-être) etc…',
+      'Transmission moderne : Utiliser les outils d’aujourd’hui pour transmettre un héritage vivant et accessible aux codes de notre époque'], true, false],
+  ['3-', 'PARTICIPATION : AUTORITÉS ET PARTIES PRENANTES', [], '', '', [
+      'Les Aînés : Gardiens de la mémoire, premiers transmetteurs',
+      'Les Autorités : Administratives, coutumières, religieuses et politiques d’Anyama',
+      'Les Partenaires : Institutions, ONG, médias, associations sœurs',
+      'Les Parents : Premiers éducateurs et premiers soutiens des JOSPIA',
+      'Notre promesse : Les JOSPIA 2026 seront un pont, pas une île. Un lieu de rencontre, de reconnaissance et de responsabilité partagée.'], true, false],
+  ['4-', 'IMPACT SOCIAL : TRANSMETTRE POUR SERVIR', ['Un héritage qui ne sert pas la société s’éteint.'], '', '', [
+      'Citoyenneté : Cross Populaire, sensibilisation à l’hygiène et à l’environnement etc…',
+      'Cohésion : Fraternité entre organisateurs, accompagnateurs et séminaristes',
+      'Service : Des jeunes utiles à leur famille, à leur commune et à leur pays',
+      'Pérennité : 450 militants formés aujourd’hui, des leaders responsables demain',
+      'Notre promesse : Anyama verra, sentira et retiendra le passage de la JOSPIA 15.'], true, false],
+  ['III-', 'OBJECTIFS', ['Assurer une transmission efficace et durable des valeurs, des expériences et de l’héritage spirituel, moral et organisationnel de l’AEEMCI entre les générations, afin de garantir la pérennité et le rayonnement de l’association à l’épreuve du temps.'], 'A- OBJECTIF GÉNÉRAL :', 'B- OBJECTIFS SPÉCIFIQUES', [
+      'Valoriser et capitaliser l’héritage historique, spirituel et organisationnel légué par les ainés de l’AEEMCI.',
+      'Renforcer le dialogue intergénérationnel et la solidarité entre les anciens et les jeunes membres pour une meilleure cohésion.',
+      'Mettre en place des mécanismes durables de transmission et de préservation de la mémoire de l’AEEMCI.',
+      'Outiller la nouvelle génération pour relever les défis actuels tout en préservant l’identité et les valeurs fondatrices de l’AEEMCI.'], false, false],
+  ['IV-1', 'BUDGET DÉTAILLÉ PAR COMMISSION', [], '', '', [
+      'Commission Scientifique : 283.970 Fcfa',
+      'Commission Mobilisation, Informations et Communication : 392.000 Fcfa',
+      'Commission Hygiène et Cadre de Vie : 100.000 Fcfa',
+      'Commission Administration : 412.000 Fcfa',
+      'Commission Logistique, Transport et Hébergement : 280.200 Fcfa',
+      'Commission Sécurité : 146.500 Fcfa',
+      'Commission Protocole : 207.615 Fcfa',
+      'Commission Pépinière : 114.000 Fcfa',
+      'Commission Santé : 190.000 Fcfa',
+      'Commission Restauration : 4.090.125 Fcfa',
+      'Imprévus : 689.625 Fcfa',
+      'Total global : 6.841.035 Fcfa'], true, true],
+  ['IV-2', 'LES DIFFÉRENTES SOURCES DE FINANCEMENT', [], '', '', [
+      "Participation des séminaristes\n450×5.000F = 2.250 000 Fcfa",
+      "Participation des membres du comité d’organisation\n94×2.000f = 188.000 Fcfa",
+      'Apports extérieurs : 4.403.035 Fcfa',
+      'JOSPIA, votre formation, notre priorité !'], false, false],
+];
 function pTxt($s) { return str_replace('15e édition', '15<sup>e</sup> édition', e($s)); }
 $total = 0; foreach ($sections as $s) { $total += 1 + count($s[2]); }
 function mots($s, $base = 0) { $o = ''; $i = $base; foreach (preg_split('/\s+/', trim($s)) as $m) { $t = ($m === '15e') ? '15<sup>e</sup>' : e($m); $o .= '<span class="mt" style="--w:' . $i++ . '">' . $t . '</span> '; } return $o; }
-function afficherActivite($num, $nom, $sous, $obj, $labelR, $res) { ?>
-  <section class="slide" data-steps="<?= count($res) + 2 ?>"><div class="contenu">
+function liTxt($r, $gras) {
+    $t = e($r);
+    if ($gras && ($p = strpos($r, ' : ')) !== false) { $t = '<strong>' . e(substr($r, 0, $p + 2)) . '</strong>' . e(substr($r, $p + 2)); }
+    return nl2br($t);
+}
+function afficherActivite($num, $nom, $sous, $obj, $labelR, $res, $labelO = 'OBJECTIF GÉNÉRAL :', $gras = false, $deux = false) {
+    $solo = empty($obj);
+    $pas = $res ? count($res) + ($solo ? 1 : 2) : 2; ?>
+  <section class="slide" data-steps="<?= $pas ?>"><div class="contenu">
     <div class="entete">
       <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
       <h2 class="degrade"><?= mots($nom) ?></h2>
       <?php if ($sous !== ''): ?><p class="el" style="--i:3">(<?= e($sous) ?>)</p><?php endif; ?>
     </div>
-    <div class="cols">
-      <div class="bloc objb"><h3>OBJECTIF GÉNÉRAL :</h3><p class="obj"><?= mots($obj[0], 4) ?></p></div>
-      <div class="bloc res"><h3><?= e($labelR) ?> :</h3><ul>
-        <?php foreach ($res as $k => $r): ?><li style="--k:<?= $k ?>"><?= e($r) ?></li><?php endforeach; ?>
-      </ul></div>
+    <div class="cols<?= $solo ? ' solo' : '' ?>">
+      <?php if (!$solo): ?><div class="bloc objb"><?php if ($labelO !== ''): ?><h3><?= e($labelO) ?></h3><?php endif; ?><p class="obj"><?= mots($obj[0], 4) ?></p></div><?php endif; ?>
+      <?php if ($res): ?><div class="bloc res<?= $deux ? ' deux' : '' ?>"><?php if ($labelR !== ''): ?><h3><?= e($labelR) ?> :</h3><?php endif; ?><ul>
+        <?php foreach ($res as $k => $r): ?><li style="--k:<?= $k ?>"><?= liTxt($r, $gras) ?></li><?php endforeach; ?>
+      </ul></div><?php endif; ?>
     </div>
   </div></section>
 <?php }
@@ -85,7 +145,7 @@ function afficherActivite($num, $nom, $sous, $obj, $labelR, $res) { ?>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Grandes activités et innovations — JOSPIA 2026</title>
+<title>Présentation du lancement — JOSPIA 2026</title>
 <style>
 :root{--vh:1vh;--v:#0B8A4E;--vf:#06532F;--o:#F77F00;--oc:#FFA43A;--r:#E8431E;--tx:#14301F;--hw:min(100vw - 20px,940px,calc(var(--vh)*125));--haut:calc(var(--hw)*.128 + 24px)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -215,6 +275,13 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 @keyframes bat{50%{box-shadow:0 0 0 9px rgba(247,127,0,0);transform:scale(1.15)}}
 .bloc li.on{animation:ap2 .8s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes ap2{to{opacity:1;transform:none}}
+.cols.solo,.cols.solo.s2{grid-template-columns:1fr;column-gap:0}
+.cols.solo .objb{display:none}
+.fit .cols.solo{grid-template-columns:1fr!important;column-gap:0!important}
+.titreintro{font-size:clamp(20px,min(4.2vw,calc(var(--vh)*7.5)),54px)!important;margin-top:14px}
+.bloc li strong{color:var(--vf)}
+@media(min-width:700px){.res.deux ul{grid-auto-flow:column;grid-template-rows:repeat(6,auto);column-gap:clamp(16px,3vw,40px)}}
+@media(orientation:portrait){.titreintro{font-size:clamp(20px,5.6vw,46px)!important}}
 /* merci */
 .merci{text-align:center}
 .merci .logo{width:clamp(90px,calc(var(--vh)*24),260px);animation:flo 5s ease-in-out infinite}
@@ -260,6 +327,13 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 <div class="balai" id="balai"><u></u><u></u><u></u><u></u><u></u><u></u></div>
 <div class="haut"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
 <div id="scene">
+<?php /* Présentation du thème, de la vision, des objectifs et du budget : passe avant les grandes activités */ ?>
+  <section class="slide" data-steps="1"><div class="contenu partie">
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
+    <h1 class="degrade titreintro"><?= mots($introTitre, 1) ?></h1>
+    <div class="trait"></div>
+  </div></section>
+  <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) { afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux); } ?>
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
@@ -305,9 +379,10 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   sl.forEach(function(s,i){s.setAttribute('data-tr',MAP[i%NT]);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
-    if(cols){cols.classList.toggle('s1',st>=1);cols.classList.toggle('s2',st>=2);
-      [].forEach.call(cols.querySelectorAll('li'),function(li,k){li.classList.toggle('on',st>=k+2)});
-      var cible=st>=2?cols.querySelectorAll('li')[st-2]:(st===1?cols.querySelector('.objb'):null);
+    if(cols){var solo=cols.classList.contains('solo'),off=solo?1:2;
+      cols.classList.toggle('s1',st>=1);cols.classList.toggle('s2',st>=off);
+      [].forEach.call(cols.querySelectorAll('li'),function(li,k){li.classList.toggle('on',st>=k+off)});
+      var cible=st>=off?cols.querySelectorAll('li')[st-off]:(st===1?cols.querySelector('.objb'):null);
       if(cible)setTimeout(function(){try{cible.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}},700)}
     document.getElementById('prec').disabled=(c===0&&st===0);
     document.getElementById('suiv').disabled=(c===n-1);
