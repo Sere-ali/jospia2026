@@ -1143,6 +1143,7 @@ const LIENS_COURTS = [
     'logistique'  => ['Liste de la commission Logistique (lecture seule, à envoyer à son responsable)', null, 10],
     'protocole'   => ['Liste de la commission Protocole (lecture seule, à envoyer à son responsable)', null, 10],
     'niveaux'     => ['Niveaux selon les notes (commission scientifique)', null, 10],
+    'ressources'  => ['Documents de travail de la commission scientifique (téléchargement des fichiers, sans compte)', null, 10],
 ];
 function liensCourtsPreparer(PDO $pdo) {
     static $ok = false;

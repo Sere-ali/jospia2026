@@ -21,6 +21,16 @@ if ($cible === 'niveaux') {
     require __DIR__ . '/admin/seuils_niveaux.php';
     exit;
 }
+if ($cible === 'ressources') {
+    header('X-Robots-Tag: noindex, nofollow');
+    require_once __DIR__ . '/includes/ressources_sci.php';
+    resTraiterTelechargement();
+    $titrePage = 'Documents de travail';
+    require __DIR__ . '/includes/header.php';
+    resAfficher(BASE_URL . '/l/' . $code);
+    require __DIR__ . '/includes/footer.php';
+    exit;
+}
 if ($cible === 'logistique' || $cible === 'protocole') {
     $commissionListe = strtoupper($cible); $libelleListe = ucfirst($cible);
     header('X-Robots-Tag: noindex, nofollow');
