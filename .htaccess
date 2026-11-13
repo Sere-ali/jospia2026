@@ -11,6 +11,9 @@ RewriteRule ^(sql|db|config|includes)(/|$) - [F,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^uploads/photos/([A-Za-z0-9._-]+)$ photo.php?f=$1 [L,QSA]
 
+# Archives de la commission scientifique : lien signé d'un fichier
+RewriteRule ^archives/[a-f0-9]{24}/.+$ archives_fichier.php [L]
+
 # Lien court /l/CODE
 RewriteRule ^l/([A-Za-z0-9]{4,20})/?$ l.php?c=$1 [L,QSA]
 

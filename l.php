@@ -25,7 +25,7 @@ if ($cible === 'ressources') {
     header('X-Robots-Tag: noindex, nofollow');
     require_once __DIR__ . '/includes/ressources_sci.php';
     resTraiterTelechargement();
-    $titrePage = 'Documents de travail';
+    $titrePage = 'Archives';
     require __DIR__ . '/includes/header.php';
     resAfficher(BASE_URL . '/l/' . $code);
     require __DIR__ . '/includes/footer.php';

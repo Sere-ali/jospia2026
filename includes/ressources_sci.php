@@ -19,21 +19,37 @@ function resIcone($nom) {
     $x = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
     return ['pdf' => '📕', 'doc' => '📘', 'docx' => '📘', 'xls' => '📗', 'xlsx' => '📗', 'ppt' => '📙', 'pptx' => '📙', 'odp' => '📙', 'png' => '🖼️', 'jpg' => '🖼️', 'jpeg' => '🖼️'][$x] ?? '📄';
 }
-/** Envoie le fichier tel quel (jamais interprété par le navigateur ; les PDF s'ouvrent à l'écran). */
-function resTelecharger($rel, $inlinePdf = false) {
+/** Lien public signé d'un fichier : sert à ouvrir directement dans Word / Excel / PowerPoint (qui ne peuvent pas se connecter au site). */
+function resSignature($rel) { return substr(hash_hmac('sha256', (string)$rel, 'archives|' . DB_PASS . '|' . DB_NAME . '|' . DB_HOST), 0, 24); }
+function resUrlPublique($rel) {
+    return urlSite() . '/archives/' . resSignature($rel) . '/' . implode('/', array_map('rawurlencode', explode('/', $rel)));
+}
+/** Application Office qui ouvre le fichier pour le modifier (null = pas un document Office). */
+function resAppOffice($nom) {
+    $x = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
+    $m = ['doc' => 'word', 'docx' => 'word', 'docm' => 'word', 'xls' => 'excel', 'xlsx' => 'excel', 'csv' => 'excel', 'ppt' => 'powerpoint', 'pptx' => 'powerpoint', 'odp' => 'powerpoint'];
+    return $m[$x] ?? null;
+}
+/** Envoie le fichier tel quel (jamais interprété par le navigateur). $mode 'inline' : PDF, images et texte s'ouvrent à l'écran. */
+function resTelecharger($rel, $mode = 'download') {
     $f = resResoudre($rel);
     if (!$f || !is_file($f)) { http_response_code(404); die('Fichier introuvable.'); }
     $nom = basename($f);
-    $pdf = strtolower(pathinfo($nom, PATHINFO_EXTENSION)) === 'pdf';
-    $types = ['docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pdf' => 'application/pdf'];
-    $type = $types[strtolower(pathinfo($nom, PATHINFO_EXTENSION))] ?? 'application/octet-stream';
+    $x = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
+    $types = ['docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pdf' => 'application/pdf', 'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'odp' => 'application/vnd.oasis.opendocument.presentation'];
+    $type = $types[$x] ?? 'application/octet-stream';
+    $inline = false;
+    if ($mode === 'inline') {
+        if (in_array($x, ['pdf', 'png', 'jpg', 'jpeg'], true)) { $inline = true; }
+        elseif (in_array($x, ['html', 'htm', 'mht', 'txt'], true)) { $inline = true; $type = 'text/plain; charset=utf-8'; }
+    }
     while (ob_get_level()) ob_end_clean();
     header('X-Robots-Tag: noindex, nofollow');
     header('X-Content-Type-Options: nosniff');
     header("Content-Security-Policy: sandbox");
     header('Content-Type: ' . $type);
     header('Content-Length: ' . filesize($f));
-    header('Content-Disposition: ' . (($pdf && $inlinePdf) ? 'inline' : 'attachment') . "; filename=\"" . str_replace(['"', '\\', "\r", "\n"], '_', $nom) . "\"; filename*=UTF-8''" . rawurlencode($nom));
+    header('Content-Disposition: ' . ($inline ? 'inline' : 'attachment') . "; filename=\"" . str_replace(['"', '\\', "\r", "\n"], '_', $nom) . "\"; filename*=UTF-8''" . rawurlencode($nom));
     header('Cache-Control: private, max-age=600');
     readfile($f);
     exit;
@@ -54,8 +70,8 @@ function resAfficher($urlBase) {
     $lien = function ($cle, $val) use ($urlBase) { return e($urlBase . '?' . $cle . '=' . rawurlencode($val)); };
     ?>
 <section class="section"><div class="container" style="max-width:900px;">
-    <div class="section-titre"><span class="eyebrow">Commission scientifique</span><h2>Documents de travail</h2></div>
-    <p style="text-align:center;">Fichiers à utiliser pour le travail de la commission, tels qu'ils ont été fournis (Word, PDF…). Appuyez sur un fichier pour le télécharger.</p>
+    <div class="section-titre"><span class="eyebrow">Commission scientifique</span><h2>Archives</h2></div>
+    <p style="text-align:center;">Archives de la commission, telles qu'elles ont été fournies (Word, PDF…). « Voir » ouvre le document directement dans Word (ou Excel, PowerPoint) pour le modifier ; les PDF s'ouvrent à l'écran.</p>
     <p style="margin:14px 0;font-weight:600;">
         <a href="<?= e($urlBase) ?>">Accueil</a>
         <?php $cum = ''; if ($rel !== '') foreach (explode('/', $rel) as $seg) { $cum .= ($cum === '' ? '' : '/') . $seg; echo ' &rsaquo; <a href="' . $lien('r', $cum) . '">' . e($seg) . '</a>'; } ?>
@@ -67,11 +83,16 @@ function resAfficher($urlBase) {
             <span style="font-size:1.4rem;">📁</span><a href="<?= $lien('r', $r) ?>" style="font-weight:700;flex:1;word-break:break-word;"><?= e($n) ?></a>
         </div>
         <?php endforeach; ?>
-        <?php foreach ($fichiers as $n): $r = ($rel === '' ? '' : $rel . '/') . $n; $pdf = strtolower(pathinfo($n, PATHINFO_EXTENSION)) === 'pdf'; ?>
+        <?php foreach ($fichiers as $n): $r = ($rel === '' ? '' : $rel . '/') . $n; $app = resAppOffice($n); ?>
         <div class="resl" data-n="<?= e(mb_strtolower($n)) ?>" style="display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eee;flex-wrap:wrap;">
             <span style="font-size:1.4rem;"><?= resIcone($n) ?></span>
             <span style="flex:1;min-width:150px;word-break:break-word;"><?= e($n) ?><br><small style="color:#777;"><?= e(resTaille(filesize($dossier . '/' . $n))) ?></small></span>
-            <?php if ($pdf): ?><a class="btn btn-outline btn-sm" href="<?= $lien('v', $r) ?>" target="_blank" rel="noopener">Voir</a><?php endif; ?>
+            <?php if ($app): $pub = resUrlPublique($r); $nomApp = ['word' => 'Word', 'excel' => 'Excel', 'powerpoint' => 'PowerPoint'][$app]; ?>
+                <a class="btn btn-or btn-sm" href="<?= e('ms-' . $app . ':ofe|u|' . $pub) ?>" title="S'ouvre directement dans <?= $nomApp ?> pour modifier">Voir (<?= $nomApp ?>)</a>
+                <a class="btn btn-outline btn-sm" href="<?= e('https://view.officeapps.live.com/op/view.aspx?src=' . rawurlencode($pub)) ?>" target="_blank" rel="noopener" title="Aperçu dans le navigateur, sans Word">Aperçu</a>
+            <?php else: ?>
+                <a class="btn btn-or btn-sm" href="<?= $lien('v', $r) ?>" target="_blank" rel="noopener">Voir</a>
+            <?php endif; ?>
             <a class="btn btn-primaire btn-sm" href="<?= $lien('d', $r) ?>">Télécharger</a>
         </div>
         <?php endforeach; ?>
@@ -85,6 +106,6 @@ function resAfficher($urlBase) {
 }
 /** Gère les téléchargements (?d= / ?v=) : à appeler avant tout affichage. */
 function resTraiterTelechargement() {
-    if (isset($_GET['d'])) resTelecharger((string)$_GET['d'], false);
-    if (isset($_GET['v'])) resTelecharger((string)$_GET['v'], true);
+    if (isset($_GET['d'])) resTelecharger((string)$_GET['d'], 'download');
+    if (isset($_GET['v'])) resTelecharger((string)$_GET['v'], 'inline');
 }
