@@ -53,12 +53,6 @@ function presAdminChiffres() {
 /** Diapositives de contenu : [numéro, titre, lignes, gras, deux colonnes]. Les rubriques vides sont ignorées. */
 function presAdminDiapositives(array $contenu, array $chiffres) {
     $s = [];
-    $s[] = ['', 'LES DOMAINES SUIVIS PAR LA COMMISSION', [
-        'Membres de commission : enregistrement, liste, badges et diplômes ;',
-        'Séminaristes : inscription, fiches, badges et diplômes ;',
-        'Identifiants : retrouver un identifiant ou réinitialiser un mot de passe ;',
-        'Dortoirs : occupation et capacité, listes nominatives par dortoir et par niveau (export Excel).',
-    ], false, false];
     $ch = [];
     foreach ($chiffres as $lib => $v) { if ($v !== null) $ch[] = $lib . ' : ' . number_format($v, 0, ',', ' '); }
     if ($ch) $s[] = ['', 'LA COMMISSION EN CHIFFRES', $ch, true, false];

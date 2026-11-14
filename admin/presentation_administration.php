@@ -33,12 +33,12 @@ function afficherActivite($num, $nom, $sous, $obj, $labelR, $res, $labelO = 'OBJ
   </div></section>
 <?php }
 function afficherVariantes($num, $nom, $dossier, $cle, $vars, $ext = 'webp', $paysage = false) { ?>
-  <section class="slide" data-steps="4"><div class="contenu">
+  <section class="slide" data-steps="<?= count($vars) + 1 ?>"><div class="contenu">
     <div class="entete">
       <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
       <h2 class="degrade"><?= mots($nom) ?></h2>
     </div>
-    <div class="revs<?= $paysage ? ' paysage' : '' ?>">
+    <div class="revs<?= $paysage ? ' paysage' : '' ?> n<?= count($vars) ?>">
       <?php foreach ($vars as $k => [$f, $lib, $coul, $hex]): ?>
       <figure class="rev" style="--k:<?= $k ?>">
         <img src="<?= BASE_URL ?>/assets/img/pres/<?= e($dossier) ?>/<?= e($cle) ?>_<?= e($f) ?>.<?= e($ext) ?>" <?= $paysage ? 'width="900" height="636"' : 'width="638" height="1016"' ?> alt="<?= e($nom) ?> — <?= e($coul) ?>">
@@ -179,6 +179,8 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .rev{flex:0 1 31%;max-width:300px;text-align:center;opacity:0;transform:translateY(46px) scale(.94);transition:opacity .7s,transform .8s cubic-bezier(.2,.8,.2,1)}
 .rev.on{opacity:1;transform:none}
 .revs.paysage{gap:clamp(8px,1.6vw,20px)}.revs.paysage .rev{flex-basis:32%;max-width:400px}.revs.paysage .rev img{max-height:calc(var(--vh)*40);border-radius:8px}
+.revs.n4:not(.paysage) .rev{flex-basis:23.5%;max-width:250px}
+.revs.paysage.n4{flex-wrap:wrap;width:min(100%,calc(var(--vh)*118));margin-left:auto;margin-right:auto;row-gap:10px}.revs.paysage.n4 .rev{flex-basis:46%;max-width:none}.revs.paysage.n4 .rev img{max-height:calc(var(--vh)*30)}
 .rev img{display:block;width:100%;height:auto;max-height:calc(var(--vh)*52);object-fit:contain;border-radius:16px;background:#fff;box-shadow:0 16px 36px rgba(20,48,31,.22);border:1px solid #e3efe8}
 .rev figcaption{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:clamp(12px,min(1.5vw,calc(var(--vh)*2.6)),18px);flex-wrap:wrap}
 .rev figcaption i{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px rgba(20,48,31,.1)}
@@ -255,12 +257,14 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     <div class="trait"></div>
   </div></section>
   <?php
+  $AC = ['actuel', 'Version actuelle', 'Orange et vert (initial)', '#F28B1E'];
   $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['vert', 'Proposition 2', 'Vert profond', '#385747'], ['nuit', 'Proposition 3', 'Bleu nuit', '#1B2F6B']];
+  $BA = array_merge([$AC], $BT);
   $OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#6B1F33'], ['anthracite', 'Proposition 3', 'Anthracite', '#2B2F33']];
-  afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'badges', 'seminariste', $BT);
-  afficherVariantes('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BT);
-  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $BT, 'jpg', true);
-  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $BT, 'jpg', true);
+  afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'badges', 'seminariste', $BA);
+  afficherVariantes('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $BA, 'jpg', true);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $BA, 'jpg', true);
   afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
   ?>
   <?php foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) { afficherActivite($num, $nom, '', [], '', $res, '', $gras, $deux); } ?>
