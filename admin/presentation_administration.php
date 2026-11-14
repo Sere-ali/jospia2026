@@ -89,7 +89,7 @@ $BA = array_merge([$AC], $BT);
 $DS = [['actuel', 'Version actuelle', 'Vert et or (initial)', '#C89B2C'], ['d', 'Modèle 1', 'Vagues pétrole et orange', '#0A6B84'], ['e', 'Modèle 2', 'Cadre doré étoilé', '#B8862B'], ['f', 'Modèle 3', 'Losanges vert et orange', '#0B6A3A']];
 $DC = [['actuel', 'Version actuelle', 'Vert (initial)', '#2E9A4C'], ['a', 'Proposition 1', 'Vagues vert et orange', '#3CB34A'], ['b', 'Proposition 2', 'Bande latérale vert profond', '#3F6B52'], ['c', 'Proposition 3', 'Rubans bleu pétrole', '#0A6B84']];
 $AB = [['formateur', 'Badge', 'Formateur', '#0B8A4E'], ['media', 'Badge', 'Média', '#16A870'], ['stand', 'Badge', 'Stand', '#F77F00'], ['visiteur', 'Badge', 'Visiteur', '#0B8A4E']];
-$TK = [['a', 'Ticket', 'N° JOS-0001-K7QM', '#0B8A4E'], ['b', 'Ticket', 'N° JOS-0002-R4XT', '#0B8A4E'], ['c', 'Ticket', 'N° JOS-0003-H9WE', '#F77F00'], ['d', 'Ticket', 'N° JOS-0004-P2ZN', '#F77F00']];
+$TK = [['a', 'Ticket', 'N° JOS-0001-K7QM', '#0B8A4E'], ['b', 'Ticket', 'N° JOS-0002-R4XT', '#0B8A4E'], ['c', 'Ticket', 'N° JOS-0003-H9WE', '#F77F00'], ['d', 'Ticket', 'N° JOS-0004-P2ZN', '#F77F00'], ['e', 'Ticket', 'N° JOS-0001-X7K2', '#0B8A4E']];
 $OF = [['1', 'Modèle 1', 'Cercles vert et orange', '#0B6A3A'], ['2', 'Modèle 2', 'Arcs concentriques pétrole', '#0A6B84'], ['3', 'Modèle 3', 'Triangles diagonaux', '#3CB34A'], ['4', 'Modèle 4', 'Demi-cercles en frise', '#F27B1B']];
 ?><!DOCTYPE html>
 <html lang="fr">
@@ -274,6 +274,8 @@ button{font-family:inherit}
 .tick .grille figcaption{display:none}
 .tick.land.n4 .grille{left:90px;right:90px;top:290px;bottom:80px;gap:34px 40px}
 .tick.land.n4 .grille figure img{width:840px;height:auto}
+.tick.land.n5 .grille{left:90px;right:90px;top:270px;bottom:60px;gap:26px 30px}
+.tick.land.n5 .grille figure img{width:560px;height:auto}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
