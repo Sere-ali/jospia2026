@@ -1,0 +1,74 @@
+<?php
+/** Présentation de la commission Administration (bataille de Kirina) : contenu modifiable depuis le site + chiffres en direct. */
+const PRES_ADMIN_RUBRIQUES = [
+    'effectue'     => ['TRAVAUX EFFECTUÉS', 'Travaux effectués', 'Un travail par ligne.'],
+    'non_effectue' => ['TRAVAUX NON EFFECTUÉS', 'Travaux non effectués', 'Un travail par ligne (ce qui reste à faire).'],
+    'difficultes'  => ['DIFFICULTÉS RENCONTRÉES', 'Difficultés rencontrées', 'Une difficulté par ligne.'],
+    'perspectives' => ['PERSPECTIVES ET SUGGESTIONS', 'Perspectives et suggestions (facultatif)', 'Une proposition par ligne. Laissez vide pour ne pas afficher cette diapositive.'],
+];
+function presAdminTable() {
+    static $ok = false; global $pdo;
+    if ($ok) return;
+    $pdo->exec("CREATE TABLE IF NOT EXISTS pres_administration (cle VARCHAR(30) NOT NULL PRIMARY KEY, valeur MEDIUMTEXT NOT NULL, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $ok = true;
+}
+function presAdminLire() {
+    global $pdo;
+    $r = array_fill_keys(array_keys(PRES_ADMIN_RUBRIQUES), '');
+    try {
+        presAdminTable();
+        foreach ($pdo->query("SELECT cle, valeur FROM pres_administration")->fetchAll() as $l) { if (isset($r[$l['cle']])) $r[$l['cle']] = (string)$l['valeur']; }
+    } catch (Throwable $e) { }
+    return $r;
+}
+function presAdminEnregistrer(array $valeurs) {
+    global $pdo;
+    presAdminTable();
+    $st = $pdo->prepare("INSERT INTO pres_administration (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)");
+    foreach (array_keys(PRES_ADMIN_RUBRIQUES) as $k) {
+        $v = str_replace(["\r\n", "\r"], "\n", (string)($valeurs[$k] ?? ''));
+        $st->execute([$k, mb_substr($v, 0, 20000)]);
+    }
+}
+function presAdminLignes($texte) {
+    $o = [];
+    foreach (explode("\n", str_replace("\r", '', (string)$texte)) as $l) {
+        $l = trim(preg_replace('/^\s*(?:[-•*–]|\d+[.)])\s*/u', '', $l));
+        if ($l !== '') $o[] = $l;
+    }
+    return $o;
+}
+function presAdminChiffres() {
+    global $pdo;
+    $n = function ($sql) use ($pdo) { try { return (int)$pdo->query($sql)->fetchColumn(); } catch (Throwable $e) { return null; } };
+    return [
+        'Séminaristes inscrits' => $n("SELECT COUNT(*) FROM seminaristes"),
+        'Séminaristes affectés à un dortoir' => $n("SELECT COUNT(*) FROM seminaristes WHERE dortoir IS NOT NULL AND dortoir <> ''"),
+        "Tests d'entrée complétés" => $n("SELECT COUNT(*) FROM seminaristes WHERE test_complete = 1"),
+        'Membres de commission enregistrés' => $n("SELECT COUNT(*) FROM membres_commission"),
+        'Membres de la commission Administration' => $n("SELECT COUNT(*) FROM membres_commission WHERE UPPER(commission) = 'ADMINISTRATION'"),
+        "Capacité d'accueil des dortoirs (places)" => $n("SELECT COALESCE(SUM(capacite),0) FROM dortoirs"),
+    ];
+}
+/** Diapositives de contenu : [numéro, titre, lignes, gras, deux colonnes]. Les rubriques vides sont ignorées. */
+function presAdminDiapositives(array $contenu, array $chiffres) {
+    $s = [];
+    $s[] = ['', 'LES DOMAINES SUIVIS PAR LA COMMISSION', [
+        'Membres de commission : enregistrement, liste, badges et diplômes ;',
+        'Séminaristes : inscription, fiches, badges et diplômes ;',
+        'Identifiants : retrouver un identifiant ou réinitialiser un mot de passe ;',
+        'Dortoirs : occupation et capacité, listes nominatives par dortoir et par niveau (export Excel).',
+    ], false, false];
+    $ch = [];
+    foreach ($chiffres as $lib => $v) { if ($v !== null) $ch[] = $lib . ' : ' . number_format($v, 0, ',', ' '); }
+    if ($ch) $s[] = ['', 'LA COMMISSION EN CHIFFRES', $ch, true, false];
+    $rom = ['I-', 'II-', 'III-', 'IV-']; $r = 0;
+    foreach (PRES_ADMIN_RUBRIQUES as $k => $def) {
+        $lignes = presAdminLignes($contenu[$k] ?? '');
+        if (!$lignes) continue;
+        $num = $rom[$r++] ?? '';
+        $parts = array_chunk($lignes, 6);
+        foreach ($parts as $i => $p) { $s[] = [$i === 0 ? $num : '', $def[0] . ($i > 0 ? ' (SUITE)' : ''), $p, false, false]; }
+    }
+    return $s;
+}

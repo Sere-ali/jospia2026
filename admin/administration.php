@@ -12,14 +12,15 @@ $cartes = [
     ['Identifiants', 'Retrouver un identifiant ou réinitialiser un mot de passe.', '/admin/identifiants'],
     ['Dortoirs', 'Occupation et capacité des dortoirs.', '/admin/dortoirs'],
     ['Listes dortoir/niveau', 'Listes nominatives par dortoir et par niveau (export Excel).', '/admin/listes'],
+    ['Présentation', 'Bataille de Kirina : travaux effectués, non effectués et difficultés de la commission (diaporama).', '/admin/presentation_administration', ['Modifier le contenu', '/admin/presentation_administration_edition']],
 ];
 ?>
 <section class="section">
     <div class="container">
         <div class="section-titre"><span class="eyebrow">Administration</span><h2>Administration</h2></div>
         <div class="grid grid-3">
-            <?php foreach ($cartes as [$titre, $desc, $lien]): ?>
-                <div class="carte"><h3><?= $titre ?></h3><p><?= e($desc) ?></p><a href="<?= BASE_URL . $lien ?>" class="btn btn-primaire btn-sm">Ouvrir</a></div>
+            <?php foreach ($cartes as $c): [$titre, $desc, $lien] = $c; $second = $c[3] ?? null; ?>
+                <div class="carte"><h3><?= $titre ?></h3><p><?= e($desc) ?></p><a href="<?= BASE_URL . $lien ?>" class="btn btn-primaire btn-sm">Ouvrir</a><?php if ($second): ?> <a href="<?= BASE_URL . $second[1] ?>" class="btn btn-outline btn-sm"><?= e($second[0]) ?></a><?php endif; ?></div>
             <?php endforeach; ?>
         </div>
     </div>
