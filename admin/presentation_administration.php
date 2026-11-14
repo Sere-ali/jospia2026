@@ -41,7 +41,8 @@ function afficherVariantes($num, $nom, $dossier, $cle, $vars, $ext = 'webp', $pa
     <div class="revs<?= $paysage ? ' paysage' : '' ?> n<?= count($vars) ?>">
       <?php foreach ($vars as $k => [$f, $lib, $coul, $hex]): ?>
       <figure class="rev" style="--k:<?= $k ?>">
-        <img src="<?= BASE_URL ?>/assets/img/pres/<?= e($dossier) ?>/<?= e($cle) ?>_<?= e($f) ?>.<?= e($ext) ?>" <?= $paysage ? 'width="900" height="636"' : 'width="638" height="1016"' ?> alt="<?= e($nom) ?> — <?= e($coul) ?>">
+        <?php $chemImg = 'assets/img/pres/' . $dossier . '/' . $cle . '_' . $f . '.' . $ext; ?>
+        <img src="<?= BASE_URL ?>/<?= e($chemImg) ?>?v=<?= (int)@filemtime(__DIR__ . '/../' . $chemImg) ?>" <?= $paysage ? 'width="900" height="636"' : 'width="638" height="1016"' ?> alt="<?= e($nom) ?> — <?= e($coul) ?>">
         <figcaption><i style="background:<?= $hex ?>"></i><b><?= e($lib) ?></b><span><?= e($coul) ?></span></figcaption>
       </figure>
       <?php endforeach; ?>
