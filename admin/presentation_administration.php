@@ -90,7 +90,7 @@ $DS = [['actuel', 'Version actuelle', 'Vert et or (initial)', '#C89B2C'], ['d', 
 $DC = [['actuel', 'Version actuelle', 'Vert (initial)', '#2E9A4C'], ['a', 'Proposition 1', 'Vagues vert et orange', '#3CB34A'], ['b', 'Proposition 2', 'Bande latérale vert profond', '#3F6B52'], ['c', 'Proposition 3', 'Rubans bleu pétrole', '#0A6B84']];
 $AB = [['formateur', 'Badge', 'Formateur', '#0B8A4E'], ['media', 'Badge', 'Média', '#16A870'], ['stand', 'Badge', 'Stand', '#F77F00'], ['visiteur', 'Badge', 'Visiteur', '#0B8A4E']];
 $TK = [['a', 'Ticket', 'N° JOS-0001-K7QM', '#0B8A4E'], ['b', 'Ticket', 'N° JOS-0002-R4XT', '#0B8A4E'], ['c', 'Ticket', 'N° JOS-0003-H9WE', '#F77F00'], ['d', 'Ticket', 'N° JOS-0004-P2ZN', '#F77F00']];
-$OF = [['petrole', 'Modèle 1', 'Cadre sombre rayé', '#0A6B84'], ['b', 'Modèle 2', 'Bordeaux et or', '#6B1F33'], ['c', 'Modèle 3', 'Noir et or', '#D4A94A'], ['d', 'Modèle 4', 'Cercles vert et orange', '#0B6A3A']];
+$OF = [['1', 'Modèle 1', 'Cercles vert et orange', '#0B6A3A'], ['2', 'Modèle 2', 'Arcs concentriques pétrole', '#0A6B84'], ['3', 'Modèle 3', 'Triangles diagonaux', '#3CB34A'], ['4', 'Modèle 4', 'Demi-cercles en frise', '#F27B1B']];
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
