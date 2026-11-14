@@ -1,7 +1,7 @@
 <?php
 /** Présentation de la commission Administration (bataille de Kirina) : contenu modifiable depuis le site + chiffres en direct. */
 const PRES_ADMIN_RUBRIQUES = [
-    'effectue'     => ['TRAVAUX EFFECTUÉS', 'Travaux effectués', 'Un travail par ligne.'],
+    'effectue'     => ['AUTRES RÉALISATIONS', 'Travaux effectués', 'Un travail par ligne.'],
     'non_effectue' => ['TRAVAUX NON EFFECTUÉS', 'Travaux non effectués', 'Un travail par ligne (ce qui reste à faire).'],
     'difficultes'  => ['DIFFICULTÉS RENCONTRÉES', 'Difficultés rencontrées', 'Une difficulté par ligne.'],
     'perspectives' => ['PERSPECTIVES ET SUGGESTIONS', 'Perspectives et suggestions (facultatif)', 'Une proposition par ligne. Laissez vide pour ne pas afficher cette diapositive.'],
@@ -62,11 +62,11 @@ function presAdminDiapositives(array $contenu, array $chiffres) {
     $ch = [];
     foreach ($chiffres as $lib => $v) { if ($v !== null) $ch[] = $lib . ' : ' . number_format($v, 0, ',', ' '); }
     if ($ch) $s[] = ['', 'LA COMMISSION EN CHIFFRES', $ch, true, false];
-    $rom = ['I-', 'II-', 'III-', 'IV-']; $r = 0;
+    $rom = ['II-', 'III-', 'IV-']; $r = 0; // « I- » = Réalisations (diapositives des badges)
     foreach (PRES_ADMIN_RUBRIQUES as $k => $def) {
         $lignes = presAdminLignes($contenu[$k] ?? '');
         if (!$lignes) continue;
-        $num = $rom[$r++] ?? '';
+        $num = ($k === 'effectue') ? '' : ($rom[$r++] ?? '');
         $parts = array_chunk($lignes, 6);
         foreach ($parts as $i => $p) { $s[] = [$i === 0 ? $num : '', $def[0] . ($i > 0 ? ' (SUITE)' : ''), $p, false, false]; }
     }

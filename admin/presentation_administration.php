@@ -32,6 +32,23 @@ function afficherActivite($num, $nom, $sous, $obj, $labelR, $res, $labelO = 'OBJ
     </div>
   </div></section>
 <?php }
+function afficherBadges($num, $nom, $cle) {
+    $vars = [['orange', 'Version actuelle', 'Orange', '#F28B1E'], ['vert', 'Proposition 1', 'Vert', '#1FA64A'], ['bleu', 'Proposition 2', 'Bleu', '#2F5BD6']]; ?>
+  <section class="slide" data-steps="4"><div class="contenu">
+    <div class="entete">
+      <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
+      <h2 class="degrade"><?= mots($nom) ?></h2>
+    </div>
+    <div class="revs">
+      <?php foreach ($vars as $k => [$f, $lib, $coul, $hex]): ?>
+      <figure class="rev" style="--k:<?= $k ?>">
+        <img src="<?= BASE_URL ?>/assets/img/pres/badges/<?= e($cle) ?>_<?= e($f) ?>.webp" width="638" height="1016" alt="Badge <?= e($cle) ?> — <?= e($coul) ?>">
+        <figcaption><i style="background:<?= $hex ?>"></i><b><?= e($lib) ?></b><span><?= e($coul) ?></span></figcaption>
+      </figure>
+      <?php endforeach; ?>
+    </div>
+  </div></section>
+<?php }
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -159,6 +176,16 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .s1 .objb{opacity:1;transform:none}
 .actif .obj .mt{animation:none}
 .actif .s1 .obj .mt{animation:mot .8s cubic-bezier(.2,.9,.3,1.3) forwards,ond 4s ease-in-out infinite;animation-delay:calc(var(--w)*.05s + .5s),calc(var(--w)*.05s + 1.5s)}
+.revs{display:flex;justify-content:center;align-items:flex-start;gap:clamp(10px,2.4vw,30px);margin-top:clamp(6px,1.4vh,16px)}
+.rev{flex:0 1 31%;max-width:300px;text-align:center;opacity:0;transform:translateY(46px) scale(.94);transition:opacity .7s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.rev.on{opacity:1;transform:none}
+.rev img{display:block;width:100%;height:auto;max-height:calc(var(--vh)*52);object-fit:contain;border-radius:16px;background:#fff;box-shadow:0 16px 36px rgba(20,48,31,.22);border:1px solid #e3efe8}
+.rev figcaption{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:clamp(12px,min(1.5vw,calc(var(--vh)*2.6)),18px);flex-wrap:wrap}
+.rev figcaption i{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px rgba(20,48,31,.1)}
+.rev figcaption b{color:var(--vf);font-weight:800}
+.rev figcaption span{color:#4b5f54}
+.fit .rev{opacity:1!important;transform:none!important;transition:none!important}
+@media(orientation:portrait){.revs{gap:8px}.rev{flex-basis:32%}.rev img{border-radius:10px;max-height:calc(var(--vh)*40)}.rev figcaption{margin-top:8px;font-size:clamp(10px,2.6vw,15px)}}
 .res{opacity:0;padding-left:0;padding-right:0;border-width:0;transform:translateX(60px);transition:opacity .7s .3s,padding .9s,transform .9s .2s cubic-bezier(.2,.8,.2,1)}
 .cols:not(.s2) .res{height:0;min-height:0;padding-top:0;padding-bottom:0;overflow:hidden}
 .s2 .res{opacity:1;padding-left:clamp(12px,min(2.2vw,calc(var(--vh)*3.5)),30px);padding-right:clamp(12px,min(2.2vw,calc(var(--vh)*3.5)),30px);border-width:1px;transform:none}
@@ -224,9 +251,10 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   <section class="slide" data-steps="1"><div class="contenu partie">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
     <h1 class="degrade titreintro"><?= mots("COMMISSION ADMINISTRATION", 1) ?></h1>
-    <p class="sous-titre el" style="--i:5">Bataille de Kirina — présentation des travaux effectués, des travaux non effectués et des difficultés</p>
+    <p class="sous-titre el" style="--i:5">Bataille de Kirina — réalisations, travaux non effectués et difficultés</p>
     <div class="trait"></div>
   </div></section>
+  <?php afficherBadges('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'seminariste'); afficherBadges('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'commission'); ?>
   <?php foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) { afficherActivite($num, $nom, '', [], '', $res, '', $gras, $deux); } ?>
   <section class="slide final" data-steps="1"><div class="contenu merci">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
@@ -261,9 +289,11 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   var rt;function replanifier(){clearTimeout(rt);rt=setTimeout(ajuster,120)}
   addEventListener('resize',replanifier);addEventListener('orientationchange',replanifier);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajuster);
+  [].forEach.call(document.images,function(im){if(!im.complete)im.addEventListener('load',replanifier)});
   sl.forEach(function(s,i){s.setAttribute('data-tr',MAP[i%NT]);var d=document.createElement('span');d.onclick=function(){go(i,0)};pts.appendChild(d)});
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
+    [].forEach.call(s.querySelectorAll('.rev'),function(r,k){r.classList.toggle('on',st>=k+1)});
     if(cols){var solo=cols.classList.contains('solo'),off=solo?1:2;
       cols.classList.toggle('s1',st>=1);cols.classList.toggle('s2',st>=off);
       [].forEach.call(cols.querySelectorAll('li'),function(li,k){li.classList.toggle('on',st>=k+off)});
@@ -277,7 +307,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     var chg=(i!==c);
     if(chg){
       bal.className='balai';void bal.offsetWidth;bal.className='balai go k'+(i%NT);clearTimeout(bal._t);bal._t=setTimeout(function(){bal.className='balai'},1800);
-      sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
+      sl.forEach(function(s,k){s.classList.toggle('actif',k===i);if(k===i)s.scrollTop=0;if(k!==i){[].forEach.call(s.querySelectorAll('.rev'),function(r){r.classList.remove('on')});var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
       [].forEach.call(pts.children,function(p,k){p.classList.toggle('on',k===i)});
       cpt.textContent=(i+1)+' / '+n;
       bar.style.width=((i+1)/n*100)+'%';

@@ -116,7 +116,10 @@ function pdfToile($w, $h) {
 }
 
 function pdfModele($toile, $fichier, $W, $H) {
-    $m = pdfChargerImage(__DIR__ . '/../assets/img/modeles/' . $fichier);
+    // Dossier de modèles alternatif (variantes de couleur de la présentation) – sinon modèles d'origine
+    $dir = __DIR__ . '/../assets/img/modeles/';
+    if (!empty($GLOBALS['pdfModelesDir']) && is_file($GLOBALS['pdfModelesDir'] . $fichier)) { $dir = $GLOBALS['pdfModelesDir']; }
+    $m = pdfChargerImage($dir . $fichier);
     imagealphablending($toile, true);
     imagecopyresampled($toile, $m, 0, 0, 0, 0, $W, $H, imagesx($m), imagesy($m));
     imagedestroy($m);
@@ -124,6 +127,11 @@ function pdfModele($toile, $fichier, $W, $H) {
 
 function pdfPlaceholderPhoto($toile, $x, $y, $w, $h) {
     imagefilledrectangle($toile, (int)$x, (int)$y, (int)($x + $w), (int)($y + $h), imagecolorallocate($toile, 221, 226, 223));
+    if (!empty($GLOBALS['pdfSilhouette'])) { // aperçu : silhouette neutre (présentation)
+        $g = imagecolorallocate($toile, 178, 186, 181);
+        imagefilledellipse($toile, (int)($x + $w / 2), (int)($y + $h * 0.36), (int)($w * 0.40), (int)($w * 0.46), $g);
+        imagefilledellipse($toile, (int)($x + $w / 2), (int)($y + $h * 0.98), (int)($w * 0.95), (int)($h * 0.52), $g);
+    }
 }
 
 /** Badge Séminariste (orange) 904 x 1280 -> image GD. */
@@ -244,8 +252,9 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
         imagefill($masque, 0, 0, imagecolorallocate($masque, 0, 0, 0));
         pdfEcrire($masque, $taille, $x - $mx, $yb - $my, imagecolorallocate($masque, 255, 255, 255), $police, $t, $ls);
         for ($j = 0; $j < $th; $j++) {
-            $k = $j / max(1, $th - 1); // dégradé #F28B1E -> #EF6C12
-            $r = 0xF2 + (0xEF - 0xF2) * $k; $g = 0x8B + (0x6C - 0x8B) * $k; $bb = 0x1E + (0x12 - 0x1E) * $k;
+            $k = $j / max(1, $th - 1); // dégradé #F28B1E -> #EF6C12 (ou couleurs de variante)
+            $c1 = $GLOBALS['pdfCommCouleur'][0] ?? [0xF2, 0x8B, 0x1E]; $c2 = $GLOBALS['pdfCommCouleur'][1] ?? [0xEF, 0x6C, 0x12];
+            $r = $c1[0] + ($c2[0] - $c1[0]) * $k; $g = $c1[1] + ($c2[1] - $c1[1]) * $k; $bb = $c1[2] + ($c2[2] - $c1[2]) * $k;
             for ($i2 = 0; $i2 < $tw; $i2++) {
                 $a = imagecolorat($masque, $i2, $j) & 0xFF;
                 if ($a < 4) continue;
