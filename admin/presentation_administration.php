@@ -53,7 +53,7 @@ function afficherVariantes($titre, $dossier, $cle, $vars, $ext = 'webp', $paysag
     $n = count($vars);
     [$kick, $reste] = array_pad(explode(' : ', $titre, 2), 2, '');
     ?>
-  <section class="slide var <?= $paysage ? 'land' : 'port' ?> n<?= $n ?>" data-steps="<?= $n + 1 ?>"><div class="cadre">
+  <section class="slide var <?= $paysage ? 'land' : 'port' ?><?= $cle === 'ticket' ? ' tick' : '' ?> n<?= $n ?>" data-steps="<?= $n + 1 ?>"><div class="cadre">
     <h2 class="titre"><em><?= mots($kick . ' :', 0) ?></em> <?= mots($reste, 2) ?></h2>
     <div class="hero a" style="--d:3">
       <?php foreach ($vars as $k => [$f, $lib, $coul, $hex]):
@@ -88,6 +88,8 @@ $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#0A6B84'], ['vert', 'Propo
 $BA = array_merge([$AC], $BT);
 $DS = array_merge([['actuel', 'Version actuelle', 'Vert et or (initial)', '#C89B2C']], $BT);
 $DC = [['actuel', 'Version actuelle', 'Vert (initial)', '#2E9A4C'], ['a', 'Proposition 1', 'Vagues vert et orange', '#3CB34A'], ['b', 'Proposition 2', 'Bande latérale vert profond', '#3F6B52'], ['c', 'Proposition 3', 'Rubans bleu pétrole', '#0A6B84']];
+$AB = [['formateur', 'Badge', 'Formateur', '#0B8A4E'], ['media', 'Badge', 'Média', '#16A870'], ['stand', 'Badge', 'Stand', '#F77F00'], ['visiteur', 'Badge', 'Visiteur', '#0B8A4E']];
+$TK = [['a', 'Ticket', 'N° JOS-0001-K7QM', '#0B8A4E'], ['b', 'Ticket', 'N° JOS-0002-R4XT', '#0B8A4E'], ['c', 'Ticket', 'N° JOS-0003-H9WE', '#F77F00'], ['d', 'Ticket', 'N° JOS-0004-P2ZN', '#F77F00']];
 $OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#0A6B84'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#A63A58'], ['anthracite', 'Proposition 3', 'Anthracite', '#6A7077']];
 ?><!DOCTYPE html>
 <html lang="fr">
@@ -222,6 +224,20 @@ button{font-family:inherit}
 .var.ov .hero,.var.ov .panneau{opacity:0!important;transition:opacity .5s;pointer-events:none}
 .var.ov .grille{pointer-events:auto}
 .var.ov .grille figure{opacity:1;transform:none}
+/* tickets : grand format horizontal */
+.tick.land .hero{left:90px;top:250px;width:1740px;height:590px}
+.tick.land .panneau{left:90px;right:90px;top:868px;height:172px}
+.tick .infos{position:absolute;left:0;top:0;width:760px;height:172px}
+.tick .info h3{margin-top:12px;font-size:56px}
+.tick .info small{font-size:26px;padding:6px 20px}
+.tick .sw{margin-top:14px;height:14px}
+.tick .vign{left:auto;right:0;bottom:0;width:1000px;flex-wrap:nowrap;gap:18px}
+.tick.land .vg{flex:1 1 0}
+.tick .vg img{border-width:3px}
+.tick .vg span{display:none}
+.tick .grille figcaption{display:none}
+.tick.land.n4 .grille{left:90px;right:90px;top:290px;bottom:80px;gap:34px 40px}
+.tick.land.n4 .grille figure img{width:840px;height:auto}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -252,6 +268,8 @@ body.cache{cursor:none}
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $DS, 'jpg', true);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
+  afficherVariantes('RÉALISATIONS : LES AUTRES BADGES', 'badges', 'autre', $AB, 'jpg');
+  afficherVariantes('RÉALISATIONS : LES TICKETS', 'tickets', 'ticket', $TK, 'jpg', true);
   foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) {
       if ($nom === 'LA COMMISSION EN CHIFFRES') { afficherChiffres($nom, $res); }
       else { afficherListe($num, $nom, $res, $gras); }
