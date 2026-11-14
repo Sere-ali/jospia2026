@@ -261,7 +261,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['vert', 'Proposition 2', 'Vert profond', '#385747'], ['nuit', 'Proposition 3', 'Bleu nuit', '#1B2F6B']];
   $BA = array_merge([$AC], $BT);
   $OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#6B1F33'], ['anthracite', 'Proposition 3', 'Anthracite', '#2B2F33']];
-  afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'badges', 'seminariste', $BA);
+  afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $BA, 'jpg', true);
   afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $BA, 'jpg', true);
