@@ -940,10 +940,11 @@ function pdfTicket(array $t) {
     pdfEcrire($im, 20, 280, 84, $orange, $B, 'SOUCHE', 3);
     pdfEcrire($im, 16, 280, 112, $orange, $B, 'À CONSERVER', 2);
     pdfEcrire($im, 30, 30, 30 + $sh + 46, $vertF, $BA, 'N° ' . $code);
-    $y = 30 + $sh + 100;
-    foreach (['Nom', 'Prénoms', 'Sous-comité', 'Section', 'Contact', "Contact d'un parent", 'Date de paiement'] as $lib) {
-        $champ($lib, 30, $y, $XP - 28, 17);
-        $y += 44;
+    pdfEcrire($im, 18, 30, 30 + $sh + 82, $orange, $B, '15e ÉDITION', 2);
+    $y = 30 + $sh + 140;
+    foreach (['Nom', 'Prénoms', 'Contact', "Contact d'un parent", 'Date de paiement'] as $lib) {
+        $champ($lib, 30, $y, $XP - 28, 18);
+        $y += 56;
     }
 
     // ---------- TICKET (remis à la personne, vendu) ----------
@@ -965,11 +966,13 @@ function pdfTicket(array $t) {
     $tt = 'TICKET'; $tw = pdfLargeurTexte(30, $BA, $tt, 6);
     pdfEcrire($im, 30, $px0 + (($qx - 30 - $px0) - $tw) / 2, 44 + 40, $blanc, $BA, $tt, 6);
     $m1 = number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . ' FCFA';
-    pdfEcrire($im, 18, $px0, 150, $gris, $B, 'Prix du ticket');
-    pdfEcrire($im, 43, $px0, 204, $vertF, $BA, $m1);
+    $ed = '15e ÉDITION'; $edw = pdfLargeurTexte(22, $BA, $ed, 4);
+    pdfEcrire($im, 22, $px0 + (($qx - 30 - $px0) - $edw) / 2, 44 + 54 + 36, $orange, $BA, $ed, 4);
+    pdfEcrire($im, 18, $px0, 168, $gris, $B, 'Prix du ticket');
+    pdfEcrire($im, 43, $px0, 222, $vertF, $BA, $m1);
     $mois = defined('EVENT_MOIS_ANNEE') ? mb_strtolower(EVENT_MOIS_ANNEE, 'UTF-8') : 'décembre 2026';
-    pdfEcrire($im, 16, $px0, 246, $noir, $R, 'Du ' . (defined('EVENT_JOUR_DEBUT') ? EVENT_JOUR_DEBUT : '22') . ' au ' . (defined('EVENT_JOUR_FIN') ? EVENT_JOUR_FIN : '28') . ' ' . $mois);
-    pdfEcrire($im, 14, $px0, 272, $gris, $R, "Collège privé Henriette Dagri-Diabaté d'Anyama");
+    pdfEcrire($im, 16, $px0, 262, $noir, $R, 'Du ' . (defined('EVENT_JOUR_DEBUT') ? EVENT_JOUR_DEBUT : '22') . ' au ' . (defined('EVENT_JOUR_FIN') ? EVENT_JOUR_FIN : '28') . ' ' . $mois);
+    pdfEcrire($im, 14, $px0, 288, $gris, $R, "Collège privé Henriette Dagri-Diabaté d'Anyama");
     // champs à remplir par l'acheteur
     $xFin = $W - 40;
     $champ('Nom et prénoms', $mx, 372, $xFin, 19);

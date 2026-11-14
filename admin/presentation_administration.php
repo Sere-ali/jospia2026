@@ -86,11 +86,11 @@ function afficherVariantes($titre, $dossier, $cle, $vars, $ext = 'webp', $paysag
 $AC = ['actuel', 'Version actuelle', 'Orange (initial)', '#F28B1E'];
 $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#0A6B84'], ['vert', 'Proposition 2', 'Vert profond', '#3F6B52'], ['nuit', 'Proposition 3', 'Bleu nuit', '#2A44A0']];
 $BA = array_merge([$AC], $BT);
-$DS = array_merge([['actuel', 'Version actuelle', 'Vert et or (initial)', '#C89B2C']], $BT);
+$DS = [['actuel', 'Version actuelle', 'Vert et or (initial)', '#C89B2C'], ['d', 'Modèle 1', 'Vagues pétrole et orange', '#0A6B84'], ['e', 'Modèle 2', 'Cadre doré étoilé', '#B8862B'], ['f', 'Modèle 3', 'Losanges vert et orange', '#0B6A3A']];
 $DC = [['actuel', 'Version actuelle', 'Vert (initial)', '#2E9A4C'], ['a', 'Proposition 1', 'Vagues vert et orange', '#3CB34A'], ['b', 'Proposition 2', 'Bande latérale vert profond', '#3F6B52'], ['c', 'Proposition 3', 'Rubans bleu pétrole', '#0A6B84']];
 $AB = [['formateur', 'Badge', 'Formateur', '#0B8A4E'], ['media', 'Badge', 'Média', '#16A870'], ['stand', 'Badge', 'Stand', '#F77F00'], ['visiteur', 'Badge', 'Visiteur', '#0B8A4E']];
 $TK = [['a', 'Ticket', 'N° JOS-0001-K7QM', '#0B8A4E'], ['b', 'Ticket', 'N° JOS-0002-R4XT', '#0B8A4E'], ['c', 'Ticket', 'N° JOS-0003-H9WE', '#F77F00'], ['d', 'Ticket', 'N° JOS-0004-P2ZN', '#F77F00']];
-$OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#0A6B84'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#A63A58'], ['anthracite', 'Proposition 3', 'Anthracite', '#6A7077']];
+$OF = [['petrole', 'Modèle 1', 'Cadre sombre rayé', '#0A6B84'], ['b', 'Modèle 2', 'Bordeaux et or', '#6B1F33'], ['c', 'Modèle 3', 'Noir et or', '#D4A94A'], ['d', 'Modèle 4', 'Cercles vert et orange', '#0B6A3A']];
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -126,16 +126,52 @@ button{font-family:inherit}
 .tag::before{content:"";width:46px;height:3px;background:var(--o);box-shadow:0 0 14px var(--o)}
 .prog{position:absolute;left:0;bottom:0;height:7px;width:100%;z-index:30;background:rgba(255,255,255,.08)}
 .prog b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--t),var(--o));box-shadow:0 0 18px var(--o);transition:width .8s cubic-bezier(.3,0,.2,1)}
-/* ---------- transition « balayage » ---------- */
+/* ---------- transitions (6 modèles) ---------- */
 #wipe{position:absolute;inset:0;z-index:40;pointer-events:none;overflow:hidden}
-#wipe b{position:absolute;top:-15%;bottom:-15%;left:-80%;width:75%;transform:skewX(-16deg)}
-#wipe b:nth-child(1){background:linear-gradient(90deg,#ff5e00,#ff9a3d)}
-#wipe b:nth-child(2){background:linear-gradient(90deg,#0b6b7a,#12c2b0)}
-#wipe b:nth-child(3){background:#031a21}
-#wipe.go b{animation:wp 1.15s cubic-bezier(.75,0,.25,1) both}
-#wipe.go b:nth-child(2){animation-delay:.09s}
-#wipe.go b:nth-child(3){animation-delay:.18s}
+#wipe b{position:absolute;display:none;will-change:transform}
+#wipe.go b{display:block}
+/* t0 : bandes obliques */
+#wipe.t0 b{top:-15%;bottom:-15%;left:-80%;width:75%;transform:skewX(-16deg);animation:wp 1.15s cubic-bezier(.75,0,.25,1) both}
+#wipe.t0 b:nth-child(1){background:linear-gradient(90deg,#ff5e00,#ff9a3d)}
+#wipe.t0 b:nth-child(2){background:linear-gradient(90deg,#0b6b7a,#12c2b0);animation-delay:.09s}
+#wipe.t0 b:nth-child(3){background:#031a21;animation-delay:.18s}
+#wipe.t0 b:nth-child(n+4){display:none}
 @keyframes wp{from{transform:skewX(-16deg) translateX(0)}to{transform:skewX(-16deg) translateX(330%)}}
+/* t1 : volets verticaux */
+#wipe.t1 b{top:0;height:100%;width:12.6%;animation:vv 1.2s cubic-bezier(.7,0,.3,1) both}
+#wipe.t1 b:nth-child(odd){background:#031a21}#wipe.t1 b:nth-child(even){background:linear-gradient(180deg,#ff5e00,#ff9a3d)}
+#wipe.t1 b:nth-child(1){left:0}#wipe.t1 b:nth-child(2){left:12.5%;animation-delay:.05s}#wipe.t1 b:nth-child(3){left:25%;animation-delay:.1s}#wipe.t1 b:nth-child(4){left:37.5%;animation-delay:.15s}
+#wipe.t1 b:nth-child(5){left:50%;animation-delay:.2s}#wipe.t1 b:nth-child(6){left:62.5%;animation-delay:.25s}#wipe.t1 b:nth-child(7){left:75%;animation-delay:.3s}#wipe.t1 b:nth-child(8){left:87.5%;animation-delay:.35s}
+@keyframes vv{0%{transform:translateY(-101%)}40%,55%{transform:translateY(0)}100%{transform:translateY(101%)}}
+/* t2 : stores horizontaux */
+#wipe.t2 b{left:0;width:100%;height:12.6%;animation:hh 1.2s cubic-bezier(.7,0,.3,1) both}
+#wipe.t2 b:nth-child(odd){background:#0b6b7a}#wipe.t2 b:nth-child(even){background:#031a21}
+#wipe.t2 b:nth-child(1){top:0}#wipe.t2 b:nth-child(2){top:12.5%;animation-delay:.05s}#wipe.t2 b:nth-child(3){top:25%;animation-delay:.1s}#wipe.t2 b:nth-child(4){top:37.5%;animation-delay:.15s}
+#wipe.t2 b:nth-child(5){top:50%;animation-delay:.2s}#wipe.t2 b:nth-child(6){top:62.5%;animation-delay:.25s}#wipe.t2 b:nth-child(7){top:75%;animation-delay:.3s}#wipe.t2 b:nth-child(8){top:87.5%;animation-delay:.35s}
+@keyframes hh{0%{transform:translateX(-101%)}40%,55%{transform:translateX(0)}100%{transform:translateX(101%)}}
+/* t3 : iris */
+#wipe.t3 b:nth-child(1){inset:0;background:radial-gradient(circle,#0b6b7a 0,#031a21 70%);animation:ir 1.2s cubic-bezier(.7,0,.3,1) both}
+#wipe.t3 b:nth-child(2){left:50%;top:50%;width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;border-radius:50%;border:14px solid #ff7a1a;animation:ir2 1.2s cubic-bezier(.7,0,.3,1) both}
+@keyframes ir{0%{clip-path:circle(0% at 50% 50%)}45%,60%{clip-path:circle(75% at 50% 50%)}100%{clip-path:circle(75% at 50% 50%);opacity:0}}
+@keyframes ir2{0%{transform:scale(0);opacity:1}45%{transform:scale(1);opacity:1}60%,100%{transform:scale(1.15);opacity:0}}
+/* t4 : flash + zoom */
+#wipe.t4 b:nth-child(1){inset:0;background:radial-gradient(circle,#fff 0,#ffb46b 30%,#ff5e00 70%);animation:fl 1s ease-in-out both}
+#wipe.t4 b:nth-child(2){inset:0;background:#031a21;animation:fl2 1s ease-in-out both}
+@keyframes fl{0%{opacity:0;transform:scale(.6)}45%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes fl2{0%{opacity:0}40%,55%{opacity:.9}100%{opacity:0}}
+/* t5 : rideau en diagonale */
+#wipe.t5 b{top:-60%;left:-10%;width:130%;height:34%;transform:rotate(-20deg) translateX(-130%);animation:dg 1.2s cubic-bezier(.7,0,.3,1) both}
+#wipe.t5 b:nth-child(odd){background:#031a21}#wipe.t5 b:nth-child(even){background:linear-gradient(90deg,#ff5e00,#ff9a3d)}
+#wipe.t5 b:nth-child(1){top:-30%}#wipe.t5 b:nth-child(2){top:-10%;animation-delay:.06s}#wipe.t5 b:nth-child(3){top:10%;animation-delay:.12s}#wipe.t5 b:nth-child(4){top:30%;animation-delay:.18s}
+#wipe.t5 b:nth-child(5){top:50%;animation-delay:.24s}#wipe.t5 b:nth-child(6){top:70%;animation-delay:.3s}#wipe.t5 b:nth-child(7){top:90%;animation-delay:.36s}#wipe.t5 b:nth-child(8){display:none}
+@keyframes dg{0%{transform:rotate(-20deg) translateX(-130%)}40%,55%{transform:rotate(-20deg) translateX(0)}100%{transform:rotate(-20deg) translateX(130%)}}
+/* entrées de diapositive variées */
+.slide.actif.e1 .cadre{animation:e1 1s cubic-bezier(.16,.9,.25,1) .45s both}
+.slide.actif.e2 .cadre{animation:e2 1s cubic-bezier(.16,.9,.25,1) .45s both}
+.slide.actif.e3 .cadre{animation:e3 1s cubic-bezier(.16,.9,.25,1) .45s both}
+@keyframes e1{from{opacity:0;transform:scale(1.18);filter:blur(14px)}to{opacity:1;transform:none;filter:none}}
+@keyframes e2{from{opacity:0;transform:perspective(1600px) rotateX(18deg) translateY(60px)}to{opacity:1;transform:none}}
+@keyframes e3{from{opacity:0;transform:translateX(160px)}to{opacity:1;transform:none}}
 /* ---------- diapositives ---------- */
 .slide{position:absolute;inset:0;display:none}
 .slide.actif{display:block}
@@ -283,7 +319,7 @@ body.cache{cursor:none}
   </div></section>
 
   <canvas id="fete" width="1920" height="1080"></canvas>
-  <div id="wipe"><b></b><b></b><b></b></div>
+  <div id="wipe"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
   <div class="prog"><b id="prog"></b></div>
 </div>
 <div class="cmd">
@@ -334,7 +370,7 @@ body.cache{cursor:none}
     if(i<0||i>=n)return;
     if(i===c){st=step;maj();return}
     function bascule(){
-      sl.forEach(function(s,k){s.classList.toggle('actif',k===i)});
+      sl.forEach(function(s,k){s.classList.toggle('actif',k===i);s.classList.remove('e1','e2','e3');if(k===i&&i%4)s.classList.add('e'+(i%4))});
       c=i;st=step;maj();
       cpt.textContent=(i+1)+' / '+n;prog.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
@@ -342,8 +378,8 @@ body.cache{cursor:none}
       if(sl[i].classList.contains('fin'))setTimeout(fete,1100);
     }
     if(direct||c<0){bascule();return}
-    busy=true;wipe.className='';void wipe.offsetWidth;wipe.className='go';
-    setTimeout(bascule,520);setTimeout(function(){wipe.className='';busy=false},1500);
+    var T=i%6;busy=true;wipe.className='';void wipe.offsetWidth;wipe.className='go t'+T;
+    setTimeout(bascule,T===4?420:560);setTimeout(function(){wipe.className='';busy=false},1500);
   }
   function suivant(){if(busy)return;var max=parseInt(sl[c].getAttribute('data-steps'),10)-1;if(st<max){st++;maj()}else go(c+1,0)}
   function precedent(){if(busy)return;if(st>0){st--;maj()}else if(c>0){go(c-1,parseInt(sl[c-1].getAttribute('data-steps'),10)-1)}}
