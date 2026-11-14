@@ -275,7 +275,8 @@ function pdfDiplomeSeminariste($nom, $S = 2.0) {
     $W = (int)round(1123 * $S); $H = (int)round(793 * $S);
     $im = pdfToile($W, $H);
     pdfModele($im, 'certificat_seminariste.jpg', $W, $H);
-    $noir = imagecolorallocate($im, 0, 0, 0);
+    $nc = $GLOBALS['pdfNomCouleur'] ?? [0, 0, 0];
+    $noir = imagecolorallocate($im, $nc[0], $nc[1], $nc[2]);
     pdfTexteBoite($im, $S, 'anton-latin-400-normal.ttf', 52, 0.98, mb_strtoupper($nom, 'UTF-8'), 190, 343, 750, 62, $noir, true, 0.52);
     return $im;
 }
@@ -286,7 +287,9 @@ function pdfDiplomeCommission($nom, $qualite, $S = 1.75) {
     $im = pdfToile($W, $H);
     pdfModele($im, 'certificat.jpg', $W, $H);
     $noir = imagecolorallocate($im, 17, 17, 17);
-    pdfTexteBoite($im, $S, 'barlow-latin-700-normal.ttf', 56, 0.98, mb_strtoupper($nom, 'UTF-8'), 214, 378, 910, 54, $noir, true, 56 * 0.03);
+    $nc = $GLOBALS['pdfNomCouleur'] ?? [17, 17, 17];
+    $couleurNom = imagecolorallocate($im, $nc[0], $nc[1], $nc[2]);
+    pdfTexteBoite($im, $S, 'barlow-latin-700-normal.ttf', 56, 0.98, mb_strtoupper($nom, 'UTF-8'), 214, 378, 910, 54, $couleurNom, true, 56 * 0.03);
 
     // « (JOSPIA) en qualité de XXX , tenue » avec segments en gras
     $segments = [['(', 0], ['JOSPIA', 1], [')', 0], [' en qualité de ', 0], [mb_strtoupper($qualite, 'UTF-8'), 1], [' , tenue', 0]];

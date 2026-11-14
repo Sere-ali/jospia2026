@@ -32,17 +32,16 @@ function afficherActivite($num, $nom, $sous, $obj, $labelR, $res, $labelO = 'OBJ
     </div>
   </div></section>
 <?php }
-function afficherBadges($num, $nom, $cle) {
-    $vars = [['orange', 'Version actuelle', 'Orange', '#F28B1E'], ['vert', 'Proposition 1', 'Vert', '#1FA64A'], ['bleu', 'Proposition 2', 'Bleu', '#2F5BD6']]; ?>
+function afficherVariantes($num, $nom, $dossier, $cle, $vars, $ext = 'webp', $paysage = false) { ?>
   <section class="slide" data-steps="4"><div class="contenu">
     <div class="entete">
       <?php if ($num !== ''): ?><span class="n"><?= e($num) ?></span><?php endif; ?>
       <h2 class="degrade"><?= mots($nom) ?></h2>
     </div>
-    <div class="revs">
+    <div class="revs<?= $paysage ? ' paysage' : '' ?>">
       <?php foreach ($vars as $k => [$f, $lib, $coul, $hex]): ?>
       <figure class="rev" style="--k:<?= $k ?>">
-        <img src="<?= BASE_URL ?>/assets/img/pres/badges/<?= e($cle) ?>_<?= e($f) ?>.webp" width="638" height="1016" alt="Badge <?= e($cle) ?> — <?= e($coul) ?>">
+        <img src="<?= BASE_URL ?>/assets/img/pres/<?= e($dossier) ?>/<?= e($cle) ?>_<?= e($f) ?>.<?= e($ext) ?>" <?= $paysage ? 'width="900" height="636"' : 'width="638" height="1016"' ?> alt="<?= e($nom) ?> — <?= e($coul) ?>">
         <figcaption><i style="background:<?= $hex ?>"></i><b><?= e($lib) ?></b><span><?= e($coul) ?></span></figcaption>
       </figure>
       <?php endforeach; ?>
@@ -179,6 +178,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .revs{display:flex;justify-content:center;align-items:flex-start;gap:clamp(10px,2.4vw,30px);margin-top:clamp(6px,1.4vh,16px)}
 .rev{flex:0 1 31%;max-width:300px;text-align:center;opacity:0;transform:translateY(46px) scale(.94);transition:opacity .7s,transform .8s cubic-bezier(.2,.8,.2,1)}
 .rev.on{opacity:1;transform:none}
+.revs.paysage{gap:clamp(8px,1.6vw,20px)}.revs.paysage .rev{flex-basis:32%;max-width:400px}.revs.paysage .rev img{max-height:calc(var(--vh)*40);border-radius:8px}
 .rev img{display:block;width:100%;height:auto;max-height:calc(var(--vh)*52);object-fit:contain;border-radius:16px;background:#fff;box-shadow:0 16px 36px rgba(20,48,31,.22);border:1px solid #e3efe8}
 .rev figcaption{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:clamp(12px,min(1.5vw,calc(var(--vh)*2.6)),18px);flex-wrap:wrap}
 .rev figcaption i{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px rgba(20,48,31,.1)}
@@ -254,7 +254,15 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     <p class="sous-titre el" style="--i:5">Bataille de Kirina — réalisations, travaux non effectués et difficultés</p>
     <div class="trait"></div>
   </div></section>
-  <?php afficherBadges('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'seminariste'); afficherBadges('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'commission'); ?>
+  <?php
+  $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['vert', 'Proposition 2', 'Vert profond', '#385747'], ['nuit', 'Proposition 3', 'Bleu nuit', '#1B2F6B']];
+  $OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#6B1F33'], ['anthracite', 'Proposition 3', 'Anthracite', '#2B2F33']];
+  afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DU SÉMINARISTE', 'badges', 'seminariste', $BT);
+  afficherVariantes('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BT);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $BT, 'jpg', true);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $BT, 'jpg', true);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
+  ?>
   <?php foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) { afficherActivite($num, $nom, '', [], '', $res, '', $gras, $deux); } ?>
   <section class="slide final" data-steps="1"><div class="contenu merci">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
