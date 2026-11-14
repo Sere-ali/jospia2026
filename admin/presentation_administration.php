@@ -261,10 +261,11 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   $AC = ['actuel', 'Version actuelle', 'Orange et vert (initial)', '#F28B1E'];
   $BT = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['vert', 'Proposition 2', 'Vert profond', '#385747'], ['nuit', 'Proposition 3', 'Bleu nuit', '#1B2F6B']];
   $BA = array_merge([$AC], $BT);
+  $DC = [['actuel', 'Version actuelle', 'Vert et orange (initial)', '#1E6B34'], ['a', 'Proposition 1', 'Vagues vert et orange', '#1E6B34'], ['b', 'Proposition 2', 'Bande latérale vert profond', '#2B4A39'], ['c', 'Proposition 3', 'Rubans bleu pétrole', '#003E4D']];
   $OF = [['petrole', 'Proposition 1', 'Bleu pétrole', '#003E4D'], ['bordeaux', 'Proposition 2', 'Bordeaux', '#6B1F33'], ['anthracite', 'Proposition 3', 'Anthracite', '#2B2F33']];
   afficherVariantes('I-', 'RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('', 'RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
-  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $BA, 'jpg', true);
+  afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
   afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $BA, 'jpg', true);
   afficherVariantes('', 'RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
   ?>
