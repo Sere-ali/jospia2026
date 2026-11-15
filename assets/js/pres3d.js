@@ -173,7 +173,7 @@ if (R) {
       const th = i * .42;
       S.camT.set(Math.sin(th) * 3.2, Math.cos(th * 1.3) * 1.6, 14.5 + Math.sin(th * .7) * 1.4);
       S.kick = S.kind === 'chap' ? 4.5 : S.kind === 'c' ? 2.5 : 4; S.flash = 1; S.idx = i;
-      S.show = S.kind !== 'c'; cv.style.opacity = S.show ? 1 : 0; /* 3D seulement sur les pages de grands titres */
+      S.show = S.kind === 'intro' || S.kind === 'chap' || S.kind === 'fin'; cv.style.opacity = S.show ? 1 : 0; /* 3D seulement sur les pages de grands titres */
       const teal = c.contains('b') && c.contains('site');
       lo.color.set(teal ? 0x2fd8c4 : 0xffa24a); lt.color.set(teal ? 0xffa24a : 0x2fd8c4);
       set(T.A, 0, 0, 0, 0); set(T.M, 0, 0, 0, 0); set(T.Mq, 0, -2, -6, 0); set(T.H, 0, 0, -10, 0);

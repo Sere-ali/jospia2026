@@ -962,6 +962,6 @@ body.g3dok .grid{opacity:.1}
   go(h>=1&&h<=n?h-1:0,0,true);
 })();
 </script>
-<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=6"></script>
+<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=7"></script>
 </body>
 </html>
