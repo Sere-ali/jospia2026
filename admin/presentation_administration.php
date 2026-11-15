@@ -122,12 +122,6 @@ $SITE = [
    ["Rapports", "Lecture des rapports journaliers des commissions"],
    ["Sorties", "Le MG / MGA accepte ou refuse les demandes de sortie"],
    ["Rôles", "Le super administrateur attribue le MG / MGA"]]],
- ['BACK-END', "LES COULISSES DU SITE", 'jospia26.site', [
-   ["Technologies", "PHP 8.2 et base de données MariaDB"],
-   ["Hébergement", "Docker sur Render, en ligne 24h/24"],
-   ["Déploiement", "Automatique à chaque mise à jour"],
-   ["Protection", "Accès par rôle et journal d'activité"],
-   ["Documents", "PDF, QR codes et badges générés par le site"]]],
 ];
 
 
@@ -310,9 +304,9 @@ $OF = [['1', 'Modèle 1', 'Cercles vert et orange', '#0B6A3A'], ['2', 'Modèle 2
 @font-face{font-family:'BarlowSC';font-weight:600;font-display:swap;src:url(<?= BASE_URL ?>/assets/fonts/barlow-semi-condensed-latin-600-normal.woff2) format('woff2')}
 :root{--s:1;--o:#FF7A1A;--o2:#FFB36B;--t:#12C2B0;--bg:#03141A;--bg2:#062F3A;--tx:#F4FAF9;--mu:#9DB9BD}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#010a0d;color:var(--tx);font-family:'Barlow','Inter',system-ui,Arial,sans-serif;overscroll-behavior:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#06303a 0,#010a0d 75%);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;color:var(--tx);font-family:'Barlow','Inter',system-ui,Arial,sans-serif;overscroll-behavior:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button{font-family:inherit}
-#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform:scale(var(--s));transform-origin:center;overflow:hidden;background:var(--bg);isolation:isolate}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform:rotate(var(--r,0deg)) scale(var(--s));transform-origin:center;overflow:hidden;background:var(--bg);isolation:isolate;contain:layout paint}
 /* ---------- décor animé ---------- */
 .bg{position:absolute;inset:0;background:radial-gradient(1200px 800px at 82% 8%,#0b4a58 0,transparent 60%),radial-gradient(1000px 800px at 5% 100%,#0a3a32 0,transparent 60%),linear-gradient(160deg,#021015,#062a34 55%,#03141a);z-index:-3}
 .grid{position:absolute;inset:-200px;z-index:-2;opacity:.16;background-image:linear-gradient(rgba(120,220,215,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(120,220,215,.5) 1px,transparent 1px);background-size:96px 96px;transform:perspective(900px) rotateX(58deg) translateY(0) scale(1.8);transform-origin:center 85%;animation:gr 14s linear infinite;-webkit-mask-image:linear-gradient(transparent 5%,#000 60%);mask-image:linear-gradient(transparent 5%,#000 60%)}
@@ -673,11 +667,77 @@ body.actifs .cmd{opacity:1;pointer-events:auto}
 .cmd button:disabled{opacity:.3;pointer-events:none}
 .cmd .cp{min-width:70px;text-align:right;font-weight:800;color:#cfe7e8;font-size:18px}
 body.cache{cursor:none}
+
+/* =====================================================================
+   COUCHE v3 : design system, profondeur, mouvement, responsive
+   ===================================================================== */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{
+  --ease-out:cubic-bezier(.16,.95,.25,1);--ease-spring:cubic-bezier(.3,1.45,.4,1);--ease-io:cubic-bezier(.7,0,.3,1);
+  --glass:linear-gradient(155deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+  --edge:rgba(255,255,255,.18);--shadow-1:0 14px 40px rgba(0,0,0,.35);--shadow-2:0 30px 90px rgba(0,0,0,.55);
+  --glow:color-mix(in srgb,var(--z,var(--o)) 45%,transparent);
+}
+.cadre{perspective:1800px}
+/* profondeur : vignette + grain + projecteur qui suit le pointeur */
+#stage::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(0,0,0,.5) 100%)}
+#spot{position:absolute;left:0;top:0;width:900px;height:900px;margin:-450px 0 0 -450px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(255,170,90,.22),rgba(18,194,176,.10) 45%,transparent 70%);transform:translate(960px,540px);transition:transform .35s ease-out;mix-blend-mode:screen}
+/* comètes */
+.cm{position:absolute;left:0;top:0;width:340px;height:3px;border-radius:3px;z-index:-1;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95));filter:drop-shadow(0 0 10px #fff);animation:cmt 9s linear infinite}
+.cm.c2{animation-delay:-3s;animation-duration:11s;width:260px;background:linear-gradient(90deg,transparent,#ffb36b)}
+.cm.c3{animation-delay:-6s;animation-duration:13s;background:linear-gradient(90deg,transparent,#5ff0df)}
+@keyframes cmt{0%{opacity:0;transform:translate(-400px,140px) rotate(24deg)}6%{opacity:1}30%{opacity:0;transform:translate(1500px,820px) rotate(24deg)}100%{opacity:0;transform:translate(1500px,820px) rotate(24deg)}}
+/* cartes verre : relief, flottement, bordure lumineuse tournante */
+.ac{background:var(--glass);backdrop-filter:blur(6px);border-color:var(--edge);box-shadow:var(--shadow-2),inset 0 1px 0 rgba(255,255,255,.25);rotate:var(--tilt,0 0 1 0deg);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring),rotate .25s ease-out}
+.ac.on{animation:fy 7s ease-in-out infinite}
+.ac.b.on{animation-delay:-3s}
+@keyframes fy{50%{translate:0 -14px}}
+.ac.on::after,.sp.cur::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:3px;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 68%,var(--z,var(--o)) 84%,#fff 92%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ang 3.2s linear infinite}
+.ac{position:relative;--z:var(--o)}.ac.b{--z:var(--t)}
+.sp{position:relative}
+@keyframes ang{to{--ang:360deg}}
+.ac li{transition:transform .5s var(--ease-spring)}
+.ac.on li{animation:li2 .8s var(--ease-spring) both}
+.ac.on li:nth-child(2){animation-delay:.12s}.ac.on li:nth-child(3){animation-delay:.24s}
+@keyframes li2{from{opacity:0;transform:translateX(-40px)}}
+/* fenêtre de navigateur : scan, flottement, inclinaison 3D */
+.slide.actif .mock.a{animation:ap 1s var(--ease-out) both,fyy 8s 2.6s ease-in-out infinite;animation-delay:calc(.6s + var(--d,0)*.12s),2.6s}
+@keyframes fyy{50%{translate:0 -10px}}
+.mock{rotate:var(--tilt,0 0 1 0deg);transition:rotate .25s ease-out}
+.mock::after{content:"";position:absolute;left:0;right:0;top:-160px;height:160px;pointer-events:none;background:linear-gradient(transparent,rgba(18,194,176,.28),rgba(255,255,255,.5),transparent);animation:scan 4.5s 2.2s linear infinite}
+@keyframes scan{to{top:105%}}
+/* zones et points : ressort + halo */
+.zn{transition:opacity .6s var(--ease-out),transform .8s var(--ease-spring),border-color .4s,box-shadow .5s}
+.zn.on{box-shadow:0 10px 26px rgba(8,40,48,.12)}
+.zn.cur{animation:zp 1.8s ease-in-out infinite}
+@keyframes zp{50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--z) 14%,transparent),0 18px 40px rgba(0,0,0,.25)}}
+.sp{transition:opacity .8s var(--ease-out),transform .9s var(--ease-spring),filter .6s,background .5s,border-color .5s}
+.sp.cur{box-shadow:0 18px 50px rgba(0,0,0,.35),0 0 60px var(--glow);transform:translateX(-14px) scale(1.03)}
+.sp.cur b{animation:pb 1.6s ease-in-out infinite}
+@keyframes pb{50%{transform:scale(1.14) rotate(-4deg)}}
+.sp h4{letter-spacing:.005em}
+/* titres, pastilles */
+.kz{position:relative;overflow:hidden}
+.kz::after{content:"";position:absolute;top:0;bottom:0;width:80px;left:-120px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:kzs 3.6s 1.5s ease-in-out infinite}
+@keyframes kzs{0%{left:-120px}40%,100%{left:120%}}
+/* intro et fin : halo rotatif */
+.slide.intro .cadre::after,.slide.fin .cadre::after{content:"";position:absolute;right:-180px;top:50%;width:980px;height:980px;margin-top:-490px;border-radius:50%;pointer-events:none;z-index:-1;background:conic-gradient(from var(--ang),transparent 0 55%,rgba(255,122,26,.55) 75%,rgba(18,194,176,.55) 90%,transparent);-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 61%,transparent 62%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 61%,transparent 62%);animation:ang 9s linear infinite;filter:drop-shadow(0 0 24px rgba(255,122,26,.6))}
+/* barre de commandes */
+.cmd{padding:14px max(22px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(22px,env(safe-area-inset-left))}
+.cmd button,.cmd a{border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.cmd button:focus-visible,.cmd a:focus-visible{outline:3px solid var(--o);outline-offset:3px}
+body.cache{cursor:none}
+/* responsive : la scène s'adapte à toutes les tailles ; en portrait elle pivote */
+@media (max-width:820px),(max-height:520px){.cmd button,.cmd a{width:44px;height:44px;font-size:19px}.cmd{padding-top:8px}.cmd .cp{font-size:15px}}
+@media (hover:none){.cmd{opacity:1;pointer-events:auto}body.cache{cursor:auto}}
+@media (prefers-color-scheme:light){html,body{background:radial-gradient(120% 90% at 50% 40%,#06303a 0,#010a0d 75%)}}
+#stage,#stage *{-webkit-font-smoothing:antialiased}
+.slide.actif .cadre{will-change:transform,opacity}
 </style>
 </head>
 <body>
 <div id="stage">
-  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
+  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><div id="spot"></div><i class="cm"></i><i class="cm c2"></i><i class="cm c3"></i><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
   <div class="logo"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
   <div class="tag">Bataille de Kirina</div>
 
@@ -726,7 +786,7 @@ body.cache{cursor:none}
 <script>
 (function(){
   var stage=document.getElementById('stage');
-  function echelle(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.setProperty('--s',s)}
+  var pivot=false;function echelle(){var w=innerWidth,h=innerHeight;pivot=h>w*1.15;var s=pivot?Math.min(h/1920,w/1080):Math.min(w/1920,h/1080);stage.style.setProperty('--s',s);stage.style.setProperty('--r',pivot?'90deg':'0deg')}
   echelle();addEventListener('resize',echelle);addEventListener('orientationchange',echelle);
 
   /* particules lumineuses */
@@ -819,6 +879,10 @@ body.cache{cursor:none}
   document.addEventListener('mousemove',function(e){
     var x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
     [].forEach.call(document.querySelectorAll('.slide.actif .hero'),function(h){h.style.transform='rotateY('+(x*7)+'deg) rotateX('+(-y*5)+'deg)'});
+    var sr=stage.getBoundingClientRect(),k=sr.width/1920||1;
+    if(!pivot){var sx=(e.clientX-sr.left)/k,sy=(e.clientY-sr.top)/k;document.getElementById('spot').style.transform='translate('+sx+'px,'+sy+'px)';
+      var ang=Math.sqrt(x*x+y*y)*9,tl=(-y)+' '+x+' 0 '+ang+'deg';
+      [].forEach.call(document.querySelectorAll('.slide.actif .mock,.slide.actif .ac'),function(m){m.style.setProperty('--tilt',tl)})}
     document.body.classList.add('actifs');document.body.classList.remove('cache');clearTimeout(document._m);document._m=setTimeout(function(){document.body.classList.remove('actifs');document.body.classList.add('cache')},3000);
   });
   /* feu d'artifice de fin */
