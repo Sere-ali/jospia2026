@@ -459,6 +459,41 @@ button{font-family:inherit}
 .arch.fx .fl{opacity:1}
 .bandeau-s{position:absolute;left:90px;right:90px;bottom:70px;text-align:center;font-size:44px;font-weight:800;color:var(--o2);letter-spacing:.04em;opacity:0;transition:opacity 1s}
 .arch.fx .bandeau-s{opacity:1}
+
+/* ---------- mouvement, éclats, explosions ---------- */
+#geo{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+#geo i{position:absolute;display:block;opacity:.5}
+#geo .g1,#geo .g4,#geo .g7{width:90px;height:90px;border:4px solid var(--o);border-radius:14px;animation:gt 14s linear infinite}
+#geo .g2,#geo .g5,#geo .g8{width:140px;height:140px;border:3px solid var(--t);border-radius:50%;animation:gf 11s ease-in-out infinite}
+#geo .g3,#geo .g6,#geo .g9{width:26px;height:26px;background:var(--o);transform:rotate(45deg);box-shadow:0 0 30px var(--o);animation:gp 5s ease-in-out infinite}
+#geo .g10{width:300px;height:300px;border:2px dashed rgba(18,194,176,.5);border-radius:50%;animation:gt 30s linear infinite}
+#geo .g1{left:5%;top:70%}#geo .g2{left:88%;top:62%}#geo .g3{left:44%;top:90%}#geo .g4{left:92%;top:12%;animation-duration:19s}#geo .g5{left:2%;top:34%;animation-delay:-4s}
+#geo .g6{left:70%;top:80%;animation-delay:-2s}#geo .g7{left:36%;top:4%;animation-duration:23s}#geo .g8{left:80%;top:40%;animation-delay:-7s}#geo .g9{left:18%;top:12%;animation-delay:-3s}#geo .g10{left:60%;top:-6%}
+@keyframes gt{to{transform:rotate(360deg) translateY(-40px)}}
+@keyframes gf{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-70px) scale(1.2)}}
+@keyframes gp{0%,100%{transform:rotate(45deg) scale(1);opacity:.4}50%{transform:rotate(225deg) scale(1.8);opacity:1}}
+/* titres : reflet lumineux qui passe */
+.tete h2 .w i,.sh .w i,.intro h1 .w i{background-image:linear-gradient(100deg,#fff 40%,#ffd9b0 50%,#fff 60%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:mot 1s cubic-bezier(.16,.95,.25,1) both,rf 4.5s 2s ease-in-out infinite !important;animation-delay:calc(.5s + var(--d)*.11s),calc(2s + var(--d)*.12s)}
+.intro h1 .l2 .w i{-webkit-text-fill-color:transparent;background-image:none}
+/* le reflet rend le texte transparent : l'ombre passe sur le parent */
+.tete h2,.sh,.intro h1{text-shadow:none !important;filter:drop-shadow(0 6px 22px rgba(0,0,0,.45))}
+@keyframes rf{0%{background-position:140% 0}55%,100%{background-position:-60% 0}}
+/* éclats et chocs */
+.shock{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:7px solid var(--o);z-index:34;pointer-events:none;animation:shk 1.1s cubic-bezier(.1,.7,.3,1) forwards}
+.shock.t{border-color:var(--t);animation-delay:.12s}
+@keyframes shk{from{transform:scale(.2);opacity:1}to{transform:scale(16);opacity:0;border-width:1px}}
+.pts li.cur i,.sp.cur b,.zn.cur small{animation:pul 1.6s ease-in-out infinite}
+@keyframes pul{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5) drop-shadow(0 0 16px var(--o))}}
+.pts li.cur span,.sp.cur h4{animation:vib .9s cubic-bezier(.2,.9,.2,1)}
+@keyframes vib{0%{transform:translateX(-30px) scale(.96);filter:blur(6px)}100%{transform:none;filter:none}}
+.sp.cur{animation:cadre 2.2s ease-in-out infinite}
+@keyframes cadre{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--z) 0%,transparent)}50%{box-shadow:0 0 50px 4px color-mix(in srgb,var(--z) 45%,transparent)}}
+.mock{animation:fm 7s ease-in-out infinite}
+@keyframes fm{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.mock::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);background-size:300% 100%;animation:ms 5s 2.5s ease-in-out infinite}
+@keyframes ms{0%{background-position:130% 0}45%,100%{background-position:-50% 0}}
+.var .hero::after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.45) 50%,transparent 60%);background-size:300% 100%;animation:ms 4.5s 1.2s ease-in-out infinite}
+.carte b,.num{animation:pul 2.4s ease-in-out infinite}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -472,7 +507,7 @@ body.cache{cursor:none}
 </head>
 <body>
 <div id="stage">
-  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
+  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
   <div class="logo"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
   <div class="tag">Bataille de Kirina</div>
 
@@ -527,7 +562,7 @@ body.cache{cursor:none}
       px.beginPath();px.fillStyle='rgba('+p.c+','+p.a+')';px.shadowColor='rgba('+p.c+',.9)';px.shadowBlur=14;px.arc(p.x,p.y,p.r,0,6.283);px.fill()});
     requestAnimationFrame(anim)})(0);
 
-  var sl=[].slice.call(document.querySelectorAll('.slide')),n=sl.length,c=-1,st=0,busy=false;
+  var sl=[].slice.call(document.querySelectorAll('.slide')),n=sl.length,c=-1,st=0,busy=false,dC=-2,dS=-1;
   var wipe=document.getElementById('wipe'),prog=document.getElementById('prog'),cpt=document.getElementById('cpt');
 
   function compter(s){
@@ -562,6 +597,8 @@ body.cache{cursor:none}
       var li=s.querySelectorAll('li');
       [].forEach.call(li,function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
     }
+    if(st>0&&(c!==dC||st!==dS)){var cur=s.querySelector('.pts li.cur,.sp.cur');if(cur)exploser(cur,true);else if(s.classList.contains('var')&&st<s.querySelectorAll('.hv').length)exploser(s.querySelector('.hero'),false)}
+    dC=c;dS=st;
     document.getElementById('prec').disabled=(c===0&&st===0);
     document.getElementById('suiv').disabled=(c===n-1&&st>=ns-1);
   }
@@ -574,6 +611,7 @@ body.cache{cursor:none}
       cpt.textContent=(i+1)+' / '+n;prog.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       compter(sl[i]);
+      setTimeout(function(){boom(960,300,70);choc(960,300)},900);
       if(sl[i].classList.contains('fin'))setTimeout(fete,1100);
     }
     if(direct||c<0){bascule();return}
@@ -607,6 +645,14 @@ body.cache{cursor:none}
   });
   /* feu d'artifice de fin */
   var fc=document.getElementById('fete'),fx=fc.getContext('2d'),F=[],run=false,col=['255,122,26','18,194,176','255,255,255','255,179,107'];
+  var stg=document.getElementById('stage');
+  function boom(x,y,n){for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
+  function choc(x,y){[0,1].forEach(function(t){var d=document.createElement('div');d.className='shock'+(t?' t':'');d.style.left=x+'px';d.style.top=y+'px';stg.appendChild(d);setTimeout(function(){d.remove()},1400)})}
+  function exploser(el,gauche){
+    if(!el)return;var r=el.getBoundingClientRect(),sr=stg.getBoundingClientRect(),k=sr.width/1920||1;
+    var x=gauche?(r.left-sr.left)/k+50:(r.left-sr.left+r.width/2)/k,y=(r.top-sr.top+r.height/2)/k;
+    boom(x,y,55);choc(x,y);
+  }
   function fete(){
     for(var b=0;b<9;b++)(function(b){setTimeout(function(){var cx=300+Math.random()*1320,cy=200+Math.random()*420;
       for(var k=0;k<70;k++){var a=Math.random()*6.283,v=3+Math.random()*7;F.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:col[k%4]})}

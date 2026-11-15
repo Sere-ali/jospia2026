@@ -8,6 +8,7 @@ const PRES_ADMIN_RUBRIQUES = [
 ];
 /** Texte proposé par défaut tant que la rubrique n'a jamais été enregistrée depuis le formulaire. */
 const PRES_ADMIN_EFFECTUE_DEFAUT = "Diffusion des informations sur les réunions et les audiences\nAnimation des réunions, en ligne comme en présentiel\nRédaction des courriers\nParticipation aux différentes audiences tenues";
+const PRES_ADMIN_NONEFFECTUE_DEFAUT = "Rédaction des procès-verbaux (PV) des réunions\nRetard dans la rédaction des contenus";
 function presAdminTable() {
     static $ok = false; global $pdo;
     if ($ok) return;
@@ -22,7 +23,8 @@ function presAdminLire() {
         $vu = [];
         foreach ($pdo->query("SELECT cle, valeur FROM pres_administration")->fetchAll() as $l) { if (isset($r[$l['cle']])) { $r[$l['cle']] = (string)$l['valeur']; $vu[$l['cle']] = true; } }
         if (empty($vu['effectue'])) $r['effectue'] = PRES_ADMIN_EFFECTUE_DEFAUT;
-    } catch (Throwable $e) { $r['effectue'] = PRES_ADMIN_EFFECTUE_DEFAUT; }
+        if (empty($vu['non_effectue'])) $r['non_effectue'] = PRES_ADMIN_NONEFFECTUE_DEFAUT;
+    } catch (Throwable $e) { $r['effectue'] = PRES_ADMIN_EFFECTUE_DEFAUT; $r['non_effectue'] = PRES_ADMIN_NONEFFECTUE_DEFAUT; }
     return $r;
 }
 function presAdminEnregistrer(array $valeurs) {
