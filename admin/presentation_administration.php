@@ -733,6 +733,24 @@ body.cache{cursor:none}
 @media (prefers-color-scheme:light){html,body{background:radial-gradient(120% 90% at 50% 40%,#06303a 0,#010a0d 75%)}}
 #stage,#stage *{-webkit-font-smoothing:antialiased}
 .slide.actif .cadre{will-change:transform,opacity}
+
+/* sélecteur de pages */
+#nav{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(1,10,13,.72);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s}
+#nav.ouvert{opacity:1;pointer-events:auto}
+.nv{width:min(1100px,100%);max-height:100%;overflow:auto;border-radius:24px;padding:22px;background:linear-gradient(160deg,rgba(14,60,70,.96),rgba(3,20,26,.97));border:1px solid rgba(255,255,255,.18);box-shadow:0 40px 120px rgba(0,0,0,.7);transform:translateY(24px) scale(.97);transition:transform .4s cubic-bezier(.3,1.4,.4,1)}
+#nav.ouvert .nv{transform:none}
+.nvh{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.nvh b{font-size:24px;font-weight:800;color:#fff}.nvh span{flex:1;color:#9DB9BD;font-size:15px;font-weight:600}
+.nvh button{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:18px;cursor:pointer}
+.nvh button:hover{background:#FF7A1A}
+.nvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.nvg button{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#e8f4f4;font:700 14px/1.15 'Barlow',system-ui,sans-serif;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.nvg button i{flex:none;min-width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:16px;background:rgba(255,255,255,.14);color:#fff}
+.nvg button span{overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.nvg button:hover,.nvg button:focus-visible{transform:translateY(-3px);background:rgba(255,122,26,.22);border-color:#FF7A1A;outline:0}
+.nvg button.cur{background:#FF7A1A;border-color:#FFB36B;color:#031a21}.nvg button.cur i{background:#031a21;color:#FFB36B}
+.nvg button.ch{border-color:rgba(18,194,176,.6)}
+#sauter{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:90;padding:10px 22px;border-radius:30px;background:#FF7A1A;color:#031a21;font:800 26px 'Barlow',sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
 </style>
 </head>
 <body>
@@ -781,8 +799,9 @@ body.cache{cursor:none}
 </div>
 <div class="cmd">
   <div class="g"><button id="prec" type="button" aria-label="Précédent">&#8592;</button><button id="suiv" type="button" aria-label="Suivant">&#8594;</button></div>
-  <div class="g"><?php if (!defined('PRESENTATION_PUBLIQUE')): ?><a href="<?= BASE_URL ?>/admin/administration" title="Quitter" aria-label="Quitter">&#10005;</a><?php endif; ?><button id="plein" type="button" title="Plein écran" aria-label="Plein écran">&#x26F6;</button><div class="cp" id="cpt"></div></div>
+  <div class="g"><?php if (!defined('PRESENTATION_PUBLIQUE')): ?><a href="<?= BASE_URL ?>/admin/administration" title="Quitter" aria-label="Quitter">&#10005;</a><?php endif; ?><button id="menu" type="button" title="Aller à une page (G)" aria-label="Liste des pages">&#9638;</button><button id="plein" type="button" title="Plein écran" aria-label="Plein écran">&#x26F6;</button><div class="cp" id="cpt"></div></div>
 </div>
+<div id="nav" aria-hidden="true"><div class="nv"><div class="nvh"><b>Aller à une page</b><span>Cliquez sur un numéro · ou tapez le numéro puis Entrée</span><button type="button" id="nvx" aria-label="Fermer">&#10005;</button></div><div class="nvg" id="nvg"></div></div></div>
 <script>
 (function(){
   var stage=document.getElementById('stage');
@@ -885,6 +904,37 @@ body.cache{cursor:none}
       [].forEach.call(document.querySelectorAll('.slide.actif .mock,.slide.actif .ac'),function(m){m.style.setProperty('--tilt',tl)})}
     document.body.classList.add('actifs');document.body.classList.remove('cache');clearTimeout(document._m);document._m=setTimeout(function(){document.body.classList.remove('actifs');document.body.classList.add('cache')},3000);
   });
+
+  /* sélecteur de pages : un bouton par page */
+  (function(){
+    var nav=document.getElementById('nav'),g=document.getElementById('nvg'),saisie='',tm=null;
+    sl.forEach(function(el,i){
+      var t=el.querySelector('h2,h1'),txt=(t?t.textContent:'').replace(/\s+/g,' ').trim();
+      if(!txt)txt=el.classList.contains('fin')?'Merci':'Page '+(i+1);
+      if(el.classList.contains('intro'))txt='Titre';
+      txt=txt.replace(/^RÉALISATIONS\s*:\s*/i,'').replace(/^LA COMMISSION /i,'Commission ').replace(/^L'INSCRIPTION DES /i,'Inscription ').replace(/^MEMBRES DANS LA COMMISSION ADMINISTRATION/i,'Les membres');
+      var b=document.createElement('button');b.type='button';b.title=txt;
+      if(el.classList.contains('chap'))b.className='ch';
+      b.innerHTML='<i>'+(i+1)+'</i><span></span>';b.lastChild.textContent=txt.length>44?txt.slice(0,43)+'…':txt;
+      b.onclick=function(){fermer();go(i,0,true)};g.appendChild(b);
+    });
+    function marquer(){[].forEach.call(g.children,function(b,i){b.classList.toggle('cur',i===c)})}
+    function ouvrir(){marquer();nav.classList.add('ouvert');nav.setAttribute('aria-hidden','false');var cb=g.children[c];if(cb)cb.focus({preventScroll:false})}
+    function fermer(){nav.classList.remove('ouvert');nav.setAttribute('aria-hidden','true')}
+    document.getElementById('menu').onclick=function(){nav.classList.contains('ouvert')?fermer():ouvrir()};
+    document.getElementById('nvx').onclick=fermer;
+    nav.addEventListener('click',function(e){if(e.target===nav)fermer()});
+    var bulle=document.createElement('div');bulle.id='sauter';document.body.appendChild(bulle);
+    document.addEventListener('keydown',function(e){
+      var ouvert=nav.classList.contains('ouvert');
+      if(e.key==='g'||e.key==='G'){e.preventDefault();ouvert?fermer():ouvrir();return}
+      if(e.key==='Escape'&&ouvert){fermer();return}
+      if(/^[0-9]$/.test(e.key)&&!ouvert){saisie+=e.key;bulle.textContent='Page '+saisie;bulle.style.display='block';clearTimeout(tm);tm=setTimeout(function(){saisie='';bulle.style.display='none'},2500);return}
+      if(e.key==='Enter'&&saisie&&!ouvert){var k=parseInt(saisie,10);saisie='';bulle.style.display='none';if(k>=1&&k<=n)go(k-1,0,true);e.stopImmediatePropagation();e.preventDefault()}
+    },true);
+    /* les flèches du clavier ne naviguent pas quand le sélecteur est ouvert */
+    document.addEventListener('keydown',function(e){if(nav.classList.contains('ouvert')&&['ArrowRight','ArrowLeft','PageDown','PageUp',' ','Enter','Backspace','Home','End'].indexOf(e.key)>=0){e.stopImmediatePropagation()}},true);
+  })();
   /* feu d'artifice de fin */
   var fc=document.getElementById('fete'),fx=fc.getContext('2d'),F=[],run=false,col=['255,122,26','18,194,176','255,255,255','255,179,107'];
   var stg=document.getElementById('stage');
