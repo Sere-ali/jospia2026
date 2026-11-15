@@ -35,6 +35,122 @@ function afficherListe($num, $nom, $res, $gras) { ?>
   </div></section>
 <?php }
 
+
+/* ---------- Le site JOSPIA : explication page par page ---------- */
+$SITE = [
+ ['FRONT-END', "L'ACCUEIL", '/', [
+   ["Présentation", "L'événement, les dates et le lieu"],
+   ["3 étapes", "S'inscrire, payer, passer le test"],
+   ["Accès direct", "Formulaires séminariste, commission, visiteur"],
+   ["Mobile", "Adapté au téléphone et installable"]]],
+ ['FRONT-END', "L'INSCRIPTION DES SÉMINARISTES", '/inscription_seminariste', [
+   ["Formulaire", "Identité, niveau, sous-comité, section"],
+   ["Photo", "Téléversée en ligne avec le dossier"],
+   ["Matricule", "JOS-001, JOS-002… attribué automatiquement"],
+   ["Dortoir", "Hommes, Femmes ou Pépinière, affecté automatiquement"]]],
+ ['FRONT-END', "L'INSCRIPTION DES COMMISSIONS", '/inscription_commission', [
+   ["Commission", "Choix parmi les 13 commissions"],
+   ["Identité", "Nom, contact et photo"],
+   ["Badge", "Généré automatiquement"],
+   ["Compte", "Identifiants créés automatiquement"]]],
+ ['FRONT-END', "LE PAIEMENT ET SON SUIVI", '/paiement  ·  /statut', [
+   ["Paiement", "Déclaré en ligne, réglé en espèces"],
+   ["Reçu", "Avec QR code unique"],
+   ["Suivi", "Statut visible à tout moment"],
+   ["Validation", "Confirmée par la commission Finance"]]],
+ ['FRONT-END', "LE TEST D'ENTRÉE", '/quiz', [
+   ["20 questions", "Coran, Fiqh, Aqida, culture, AEEMCI"],
+   ["Minuteur", "20 minutes, correction automatique"],
+   ["Note sur 20", "Niveau attribué : Primaire à Leader"],
+   ["Correction", "Détaillée, question par question"],
+   ["Diplôme", "Généré automatiquement"]]],
+ ['FRONT-END', "LES VISITEURS", '/visiteur', [
+   ["Arrivée", "Enregistrement du visiteur"],
+   ["Sortie", "Heure de départ enregistrée"],
+   ["Suivi", "Consultable par la commission Sécurité"]]],
+ ['FRONT-END', "L'ESPACE PERSONNEL", '/espace', [
+   ["Fiche", "D'inscription imprimable"],
+   ["Badge", "Aperçu et téléchargement"],
+   ["Bulletin", "Notes et niveau obtenus"],
+   ["Services", "Critiques, rapports, sortie du camp"]]],
+ ['FRONT-END', "LA CONNEXION ET LE COMPTE", '/login  ·  /compte', [
+   ["Identifiants", "Générés à l'inscription"],
+   ["Rôles", "Séminariste, membre, admin, finance, sécurité…"],
+   ["Sécurité", "Mots de passe chiffrés"],
+   ["Compte", "Changement du mot de passe"]]],
+ ['BACK-END', "LE TABLEAU DE BORD", '/admin/dashboard', [
+   ["En direct", "Inscrits, affectations, tests complétés"],
+   ["Finances", "Encaissements et paiements en attente"],
+   ["Répartitions", "Par commission, sous-comité et section"],
+   ["Niveaux", "Résultats du test d'entrée"]]],
+ ['BACK-END', "L'ADMINISTRATION", '/admin/administration', [
+   ["Inscrits", "Consulter, modifier, supprimer"],
+   ["Dortoirs", "Listes imprimables par dortoir"],
+   ["Documents", "Badges et diplômes en lot"],
+   ["Comptes", "Comptes admin et paramètres du site"]]],
+ ['BACK-END', "LA COMMISSION SCIENTIFIQUE", '/admin/commission_scientifique', [
+   ["Notes", "Saisie par matière et par séminariste"],
+   ["Bulletins", "Calcul et impression automatiques"],
+   ["Test d'entrée", "Questions, matières, seuils de niveau"],
+   ["Programme", "Programme journalier et archives"]]],
+ ['BACK-END', "LA COMMISSION FINANCE", '/finance', [
+   ["Paiements", "Validation des paiements en attente"],
+   ["Scanner", "Vérification des reçus par QR code"],
+   ["Tickets", "Génération et impression des tickets"]]],
+ ['BACK-END', "LA COMMISSION SÉCURITÉ", '/securite', [
+   ["Visiteurs", "Contrôle des arrivées et des sorties"],
+   ["Sorties du camp", "Autorisation et suivi des demandes"],
+   ["Retours", "Historique des retours"]]],
+ ['BACK-END', "LE COMITÉ MANAGÉRIAL", '/admin/comite_manageriale', [
+   ["Rapports", "Rapports des commissions"],
+   ["Sorties", "Autorisations de sortie du camp"],
+   ["Présentations", "Lancement et bilans projetés"]]],
+ ['TECHNIQUE', "LES COULISSES DU SITE", 'jospia26.site', [
+   ["Technologies", "PHP 8.2 et base de données MariaDB"],
+   ["Hébergement", "Docker sur Render, en ligne 24h/24"],
+   ["Déploiement", "Automatique à chaque mise à jour"],
+   ["Protection", "Accès par rôle et journal d'activité"],
+   ["Documents", "PDF, QR codes et badges générés par le site"]]],
+];
+
+function afficherSiteArchi() { ?>
+  <section class="slide site arch" data-steps="5"><div class="cadre">
+    <header class="tete"><div class="kz a" style="--d:0">LE SITE JOSPIA</div></header>
+    <h2 class="sh"><?= mots("RÉALISATIONS : LE SITE JOSPIA", 1) ?></h2>
+    <div class="ar">
+      <?php foreach ([
+        ['FRONT-END', 'Ce que voit l\'utilisateur', ['Pages et formulaires', 'Design adapté mobile', 'Espace personnel'], 'f'],
+        ['BACK-END', 'Le cerveau du site', ['Règles et calculs', 'Rôles et sécurité', 'PDF, badges, QR codes'], 'b'],
+        ['DONNÉES', 'La base de données du site', ['Inscrits et paiements', 'Notes et bulletins', 'Journal d\'activité'], 't'],
+      ] as $i => [$t, $d, $l, $c]): ?>
+      <div class="ac <?= $c ?>"><b><?= $i + 1 ?></b><h3><?= e($t) ?></h3><p><?= e($d) ?></p><ul><?php foreach ($l as $x): ?><li><?= e($x) ?></li><?php endforeach; ?></ul></div>
+      <?php if ($i < 2): ?><div class="fl"><u></u><u></u><u></u></div><?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+    <div class="bandeau-s">Du clic de l'utilisateur jusqu'à l'enregistrement des données</div>
+  </div></section>
+<?php }
+
+function afficherSite($zone, $titre, $url, $pts) {
+    $n = count($pts); $cl = $zone === 'FRONT-END' ? 'f' : ($zone === 'BACK-END' ? 'b' : 't');
+    ?>
+  <section class="slide site pg <?= $cl ?> n<?= $n ?>" data-steps="<?= $n + 1 ?>"><div class="cadre">
+    <header class="tete"><div class="kz a" style="--d:0"><?= e($zone) ?></div></header>
+    <h2 class="sh"><?= mots($titre, 1) ?></h2>
+    <div class="mock a" style="--d:3">
+      <div class="bar"><i></i><i></i><i></i><div class="url"><span style="--len:<?= mb_strlen($url) ?>"><?= e($url) ?></span></div></div>
+      <div class="corps">
+        <div class="nav"><u></u><u class="ac"></u><u></u><u></u><s></s></div>
+        <?php foreach ($pts as $k => $p): ?><div class="zn z<?= $k ?>"><small><?= $k + 1 ?></small><em><?= e($p[0]) ?></em><span></span><span></span><span class="c"></span></div><?php endforeach; ?>
+        <div class="curs"></div>
+      </div>
+    </div>
+    <ul class="sps">
+      <?php foreach ($pts as $k => $p): ?><li class="sp"><b><?= $k + 1 ?></b><div><h4><?= e($p[0]) ?></h4><p><?= e($p[1]) ?></p></div></li><?php endforeach; ?>
+    </ul>
+  </div></section>
+<?php }
+
 /** Diapositive de chiffres clés : compteurs animés. */
 function afficherChiffres($nom, $res) { ?>
   <section class="slide chiffres" data-steps="1"><div class="cadre">
@@ -155,10 +271,10 @@ button{font-family:inherit}
 @keyframes ir{0%{clip-path:circle(0% at 50% 50%)}45%,60%{clip-path:circle(75% at 50% 50%)}100%{clip-path:circle(75% at 50% 50%);opacity:0}}
 @keyframes ir2{0%{transform:scale(0);opacity:1}45%{transform:scale(1);opacity:1}60%,100%{transform:scale(1.15);opacity:0}}
 /* t4 : flash + zoom */
-#wipe.t4 b:nth-child(1){inset:0;background:radial-gradient(circle,#fff 0,#ffb46b 30%,#ff5e00 70%);animation:fl 1s ease-in-out both}
-#wipe.t4 b:nth-child(2){inset:0;background:#031a21;animation:fl2 1s ease-in-out both}
-@keyframes fl{0%{opacity:0;transform:scale(.6)}45%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.7)}}
-@keyframes fl2{0%{opacity:0}40%,55%{opacity:.9}100%{opacity:0}}
+#wipe.t4 b:nth-child(1){inset:0;background:radial-gradient(circle,#fff 0,#ffb46b 30%,#ff5e00 70%);animation:flsh 1s ease-in-out both}
+#wipe.t4 b:nth-child(2){inset:0;background:#031a21;animation:flsh2 1s ease-in-out both}
+@keyframes flsh{0%{opacity:0;transform:scale(.6)}45%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes flsh2{0%{opacity:0}40%,55%{opacity:.9}100%{opacity:0}}
 /* t5 : rideau en diagonale */
 #wipe.t5 b{top:-60%;left:-10%;width:130%;height:34%;transform:rotate(-20deg) translateX(-130%);animation:dg 1.2s cubic-bezier(.7,0,.3,1) both}
 #wipe.t5 b:nth-child(odd){background:#031a21}#wipe.t5 b:nth-child(even){background:linear-gradient(90deg,#ff5e00,#ff9a3d)}
@@ -276,6 +392,73 @@ button{font-family:inherit}
 .tick.land.n4 .grille figure img{width:840px;height:auto}
 .tick.land.n5 .grille{left:90px;right:90px;top:270px;bottom:60px;gap:26px 30px}
 .tick.land.n5 .grille figure img{width:560px;height:auto}
+
+/* ---------- le site JOSPIA ---------- */
+.site{--z:var(--o)}
+.site.b{--z:var(--t)}.site.t{--z:#E8C25A}
+.kz{display:inline-block;padding:10px 34px;border-radius:40px;background:var(--z);color:#031a21;font-size:30px;font-weight:800;letter-spacing:.3em;box-shadow:0 10px 34px rgba(0,0,0,.4),0 0 40px color-mix(in srgb,var(--z) 55%,transparent)}
+.site .sh{position:absolute;left:90px;right:90px;top:222px;font-size:76px;line-height:1;font-weight:800;text-transform:uppercase;text-shadow:0 6px 30px rgba(0,0,0,.4)}
+.site.arch .sh{font-size:92px}
+.mock{position:absolute;left:90px;top:360px;width:880px;height:600px;border-radius:26px;background:#f4f8f8;overflow:hidden;box-shadow:0 40px 110px rgba(0,0,0,.65),0 0 0 3px rgba(255,255,255,.12),0 0 90px color-mix(in srgb,var(--z) 30%,transparent)}
+.mock .bar{height:62px;background:#dfe8e9;display:flex;align-items:center;gap:10px;padding:0 20px}
+.mock .bar i{width:16px;height:16px;border-radius:50%;background:#ff6b5f}.mock .bar i:nth-child(2){background:#ffbd2e}.mock .bar i:nth-child(3){background:#28c940}
+.mock .url{margin-left:18px;flex:1;height:38px;border-radius:19px;background:#fff;display:flex;align-items:center;padding:0 22px;font-size:24px;font-weight:700;color:#12383f;overflow:hidden}
+.mock .url span{display:inline-block;overflow:hidden;white-space:nowrap;width:0;border-right:3px solid var(--z)}
+.slide.actif .mock .url span{animation:ty 1.6s 1.4s steps(var(--len)) both}
+@keyframes ty{from{width:0}to{width:calc(var(--len)*1ch + 4px)}}
+.corps{position:relative;height:538px;padding:22px 26px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:20px;background:linear-gradient(#f4f8f8,#e8f0f0)}
+.nav{grid-column:1/3;height:44px;border-radius:12px;background:#0b3b46;display:flex;align-items:center;gap:20px;padding:0 20px}
+.nav u{width:86px;height:12px;border-radius:6px;background:rgba(255,255,255,.35)}
+.nav u.ac{background:var(--z);box-shadow:0 0 14px var(--z)}
+.nav s{margin-left:auto;width:60px;height:24px;border-radius:12px;background:var(--o)}
+.zn{position:relative;border-radius:18px;background:#fff;border:3px solid #d3e0e1;padding:44px 22px 18px;display:flex;flex-direction:column;gap:12px;opacity:.35;transform:scale(.97);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+.n3 .zn:nth-child(4){grid-column:1/3}
+.n5 .zn:nth-child(6){grid-column:1/3}
+.zn small{position:absolute;left:16px;top:12px;width:30px;height:30px;border-radius:9px;background:#b9c9cb;color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.zn em{position:absolute;left:58px;top:12px;font-style:normal;font-size:24px;font-weight:800;color:#12383f}
+.zn span{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,#d6e3e4 30%,#eef5f5 50%,#d6e3e4 70%);background-size:300% 100%}
+.zn span.c{width:60%}
+.zn.on{opacity:1;transform:none}
+.zn.cur{border-color:var(--z);box-shadow:0 0 0 4px color-mix(in srgb,var(--z) 30%,transparent),0 18px 40px rgba(0,0,0,.25)}
+.zn.cur small{background:var(--z);color:#031a21}
+.zn.on span{animation:sh 2.4s linear infinite}
+@keyframes sh{to{background-position:-300% 0}}
+.curs{position:absolute;left:0;top:0;width:34px;height:34px;pointer-events:none;transition:transform .9s cubic-bezier(.3,.9,.2,1);transform:translate(420px,60px);filter:drop-shadow(0 6px 8px rgba(0,0,0,.4))}
+.curs::before{content:"";position:absolute;inset:0;background:#031a21;clip-path:polygon(0 0,0 100%,28% 78%,46% 100%,60% 92%,44% 70%,82% 70%);border:0}
+.curs::after{content:"";position:absolute;left:-14px;top:-14px;width:62px;height:62px;border-radius:50%;border:4px solid var(--z);opacity:0}
+.curs.clic::after{animation:rip .8s .85s ease-out both}
+@keyframes rip{from{opacity:1;transform:scale(.2)}to{opacity:0;transform:scale(1.4)}}
+.sps{position:absolute;left:1030px;right:90px;top:360px;list-style:none;display:flex;flex-direction:column;gap:18px}
+.sp{display:flex;gap:26px;align-items:center;padding:16px 26px;border-radius:22px;border:2px solid transparent;opacity:0;transform:translateX(120px);filter:blur(8px);transition:opacity .8s cubic-bezier(.2,.9,.2,1),transform .9s cubic-bezier(.2,.9,.2,1),filter .6s,background .5s,border-color .5s}
+.sp b{flex:none;width:68px;height:68px;border-radius:20px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800}
+.sp h4{font-size:44px;line-height:1.05;font-weight:800;color:#fff}
+.sp p{margin-top:6px;font-size:30px;line-height:1.15;font-weight:600;color:var(--mu)}
+.sp.on{opacity:.5;transform:none;filter:none}
+.sp.cur{opacity:1;background:linear-gradient(90deg,color-mix(in srgb,var(--z) 22%,transparent),rgba(255,255,255,.03));border-color:var(--z)}
+.sp.cur b{background:var(--z);color:#031a21;box-shadow:0 0 30px var(--z)}
+.sp.cur h4{color:var(--z)}
+.sp.cur p{color:#e3f1f1}
+.n3 .sps{gap:30px}.n3 .sp{padding:24px 26px}
+.n5 .sps{gap:10px}.n5 .sp{padding:10px 24px}
+/* architecture */
+.ar{position:absolute;left:90px;right:90px;top:380px;display:flex;align-items:center;justify-content:space-between}
+.ac{width:540px;padding:56px 40px;border-radius:30px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.16);box-shadow:0 24px 70px rgba(0,0,0,.4);opacity:0;transform:translateY(80px) scale(.92);transition:all .9s cubic-bezier(.2,.9,.2,1)}
+.ac.on{opacity:1;transform:none}
+.ac b{display:flex;width:76px;height:76px;border-radius:22px;align-items:center;justify-content:center;font-size:46px;font-weight:800;color:#031a21;background:var(--o);margin-bottom:22px;box-shadow:0 0 34px var(--o)}
+.ac.b b{background:var(--t);box-shadow:0 0 34px var(--t)}.ac.t b{background:#E8C25A;box-shadow:0 0 34px #E8C25A}
+.ac h3{font-size:56px;font-weight:800;line-height:1}
+.ac p{margin-top:12px;font-size:36px;font-weight:700;color:var(--mu)}
+.ac ul{margin-top:30px;list-style:none;display:flex;flex-direction:column;gap:20px}
+.ac li{font-size:38px;font-weight:700;padding-left:34px;position:relative}
+.ac li::before{content:"";position:absolute;left:0;top:14px;width:14px;height:14px;border-radius:4px;background:var(--o);transform:rotate(45deg)}
+.fl{flex:1;height:10px;position:relative;display:flex;justify-content:space-around;align-items:center;opacity:0;transition:opacity .8s}
+.fl::before{content:"";position:absolute;left:8px;right:8px;top:4px;height:2px;background:rgba(255,255,255,.25)}
+.fl u{width:18px;height:18px;border-radius:50%;background:var(--o);box-shadow:0 0 18px var(--o);position:relative;animation:fw 1.6s linear infinite}
+.fl u:nth-child(2){animation-delay:.5s}.fl u:nth-child(3){animation-delay:1s}
+@keyframes fw{0%{transform:translateX(-60px);opacity:0}30%,70%{opacity:1}100%{transform:translateX(60px);opacity:0}}
+.arch.fx .fl{opacity:1}
+.bandeau-s{position:absolute;left:90px;right:90px;bottom:70px;text-align:center;font-size:44px;font-weight:800;color:var(--o2);letter-spacing:.04em;opacity:0;transition:opacity 1s}
+.arch.fx .bandeau-s{opacity:1}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -308,6 +491,8 @@ body.cache{cursor:none}
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
   afficherVariantes('RÉALISATIONS : LES AUTRES BADGES', 'badges', 'autre', $AB, 'jpg');
   afficherVariantes('RÉALISATIONS : LES TICKETS', 'tickets', 'ticket', $TK, 'jpg', true);
+  afficherSiteArchi();
+  foreach ($SITE as [$z, $t, $u, $pp]) { afficherSite($z, $t, $u, $pp); }
   foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) {
       if ($nom === 'LA COMMISSION EN CHIFFRES') { afficherChiffres($nom, $res); }
       else { afficherListe($num, $nom, $res, $gras); }
@@ -360,6 +545,18 @@ body.cache{cursor:none}
       [].forEach.call(s.querySelectorAll('.info'),function(o,i){o.classList.toggle('on',i===idx)});
       [].forEach.call(s.querySelectorAll('.vg'),function(o,i){o.classList.toggle('on',i===idx)});
       s.classList.toggle('ov',st>=k);
+    }
+    if(s.classList.contains('site')){
+      if(s.classList.contains('arch')){
+        [].forEach.call(s.querySelectorAll('.ac'),function(o,i){o.classList.toggle('on',st>=i+1)});
+        s.classList.toggle('fx',st>=4);
+      }else{
+        [].forEach.call(s.querySelectorAll('.sp'),function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
+        var zs=s.querySelectorAll('.zn');
+        [].forEach.call(zs,function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
+        var cu=s.querySelector('.curs'),z=zs[Math.max(0,st-1)];
+        if(cu&&z){cu.style.transform='translate('+(z.offsetLeft+z.offsetWidth*.62)+'px,'+(z.offsetTop+z.offsetHeight*.62)+'px)';cu.classList.remove('clic');void cu.offsetWidth;if(st>0)cu.classList.add('clic')}
+      }
     }
     if(s.classList.contains('liste')){
       var li=s.querySelectorAll('li');
