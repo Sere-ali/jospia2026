@@ -137,7 +137,8 @@ function afficherProfils($membres) {
     foreach ($membres as $m) { if (empty($m['fiche'])) continue;
         $an = (int)($m['annee'] ?? 0); $dur = $an ? max(1, (int)date('Y') - $an) : 0;
         $lignes = [];
-        if (!empty($m['classe'])) $lignes[] = ['CLASSE', 'Élève en classe de ' . $m['classe']];
+        if (!empty($m['etudes'])) $lignes[] = ['PARCOURS', $m['etudes']];
+        elseif (!empty($m['classe'])) $lignes[] = ['CLASSE', 'Élève en classe de ' . $m['classe']];
         if (!empty($m['profil'])) $lignes[] = ['PROFIL DANS LA COMMISSION', $m['profil']];
         if ($an) $lignes[] = ['DÉBUT DU MILITANTISME', $an . '  ·  ' . $dur . ' an' . ($dur > 1 ? 's' : '') . ' d\'engagement'];
         ?>
