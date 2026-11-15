@@ -24,8 +24,8 @@ function liTxt($r, $gras) {
 }
 
 /** Diapositive de liste : les points apparaissent un à un, le point courant est mis en avant. */
-function afficherListe($num, $nom, $res, $gras) { ?>
-  <section class="slide liste" data-steps="<?= count($res) + 1 ?>"><div class="cadre">
+function afficherListe($num, $nom, $res, $gras, $cl = '') { ?>
+  <section class="slide liste<?= $cl ? ' ' . $cl : '' ?>" data-steps="<?= count($res) + 1 ?>"><div class="cadre">
     <header class="tete">
       <?php if ($num !== ''): ?><b class="num a" style="--d:0"><?= e(rtrim($num, '-')) ?></b><?php endif; ?>
       <h2><?= mots($nom, 1) ?></h2>
@@ -406,6 +406,7 @@ button{font-family:inherit}
 .pts li{display:flex;gap:34px;align-items:flex-start;font-size:54px;line-height:1.2;font-weight:700;color:#e9f6f5;opacity:0;transform:translateX(-120px);transition:opacity .8s cubic-bezier(.2,.9,.2,1),transform .9s cubic-bezier(.2,.9,.2,1),filter .6s;filter:blur(8px)}
 .pts li.on{opacity:.38;transform:none;filter:none}
 .pts li.cur{opacity:1}
+.dense .pts{top:290px;gap:20px}.dense .pts li{font-size:41px}.dense .pts li i{width:20px;height:20px;margin-top:13px}
 .pts li i{flex:none;width:26px;height:26px;margin-top:20px;border-radius:7px;background:var(--o);transform:rotate(45deg);box-shadow:0 0 22px rgba(255,122,26,.8)}
 .pts li strong{color:var(--o2);font-weight:800}
 .pts li.cur span{text-shadow:0 0 40px rgba(18,194,176,.35)}
@@ -770,6 +771,7 @@ body.vert .fin h1{font-size:230px}
 body.vert .fin p{font-size:59px;max-width:900px}
 body.vert .pts{left:50px;right:50px;top:340px;gap:34px}
 body.vert .pts li{font-size:81px;gap:28px}
+body.vert .dense .pts{top:320px;gap:22px}body.vert .dense .pts li{font-size:56px}
 body.vert .pts li i{margin-top:14px;width:20px;height:20px}
 /* annonce des membres */
 body.vert .bign b{font-size:260px}
@@ -885,6 +887,22 @@ body.lite .intro h1 .l2{text-shadow:none}
     <div class="ligne"></div>
   </div></section>
 
+  <?php
+  afficherListe('', 'CAHIER DES CHARGES : LES MISSIONS', [
+    "S'occuper des affaires administratives avant, pendant et après le séminaire",
+    "Saisir et imprimer les diplômes, concevoir et tirer les badges et tous autres documents concernant le séminaire",
+    "Donner de la qualité à l'administration du séminaire",
+    "Participer aux différentes réunions et travaux préliminaires du séminaire, et faire de même pour ses auxiliaires ou collaborateurs",
+    "Élaborer et présenter le plan d'action ainsi que le budget de la commission",
+    "Porter secours à d'autres commissions pendant ses temps libres, sous l'autorisation des Managers Généraux",
+    "Participer activement à l'aménagement du site avant et après le séminaire"], false, 'dense');
+  afficherListe('', 'CAHIER DES CHARGES : BON À SAVOIR', [
+    "Sollicitations financières : seule la commission Finances est habilitée à solliciter officiellement les personnes physiques ou morales pour le compte du séminaire",
+    "Restauration : la commission Restauration assure les repas de tous les participants",
+    "Matériel et logistique : chaque commission réunit son matériel, la commission Logistique, Transport et Hébergement l'achemine",
+    "Bilan : chaque commission transmet son bilan d'activités dans un délai maximal de dix (10) jours après la clôture du séminaire",
+    "Effectif : la commission Administration est plafonnée à six (6) membres"], true, 'dense');
+  ?>
   <?php
   if ($membresAdmin) { afficherAnnonceMembres($membresAdmin); afficherProfils($membresAdmin); }
   afficherChapitre('01', 'LES BADGES', 'Séminaristes · Membres de commission · Médias, visiteurs, formateurs', 'rideau');
