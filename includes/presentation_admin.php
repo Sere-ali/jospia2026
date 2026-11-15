@@ -99,6 +99,5 @@ function presAdminMembres() {
         }
     } catch (Throwable $e) { }
     $r = array_values($r);
-    usort($r, function ($a, $b) { return ((int)$b['resp'] - (int)$a['resp']) ?: 0; }); // responsable en premier (tri stable à partir de PHP 8)
     return $r;
 }
