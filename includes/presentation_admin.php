@@ -7,7 +7,7 @@ const PRES_ADMIN_RUBRIQUES = [
     'perspectives' => ['PERSPECTIVES ET SUGGESTIONS', 'Perspectives et suggestions (facultatif)', 'Une proposition par ligne. Laissez vide pour ne pas afficher cette diapositive.'],
 ];
 /** Texte proposé par défaut tant que la rubrique n'a jamais été enregistrée depuis le formulaire. */
-const PRES_ADMIN_EFFECTUE_DEFAUT = "Diffusion des informations sur les réunions et les audiences\nAnimation des réunions, en ligne comme en présentiel\nRédaction des courriers\nParticipation aux différentes audiences tenues\nTravaux menés malgré de nombreuses difficultés";
+const PRES_ADMIN_EFFECTUE_DEFAUT = "Diffusion des informations sur les réunions et les audiences\nAnimation des réunions, en ligne comme en présentiel\nRédaction des courriers\nParticipation aux différentes audiences tenues";
 function presAdminTable() {
     static $ok = false; global $pdo;
     if ($ok) return;
