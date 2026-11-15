@@ -6,6 +6,7 @@ require_once __DIR__ . '/../includes/presentation_admin.php';
 $contenuPres = presAdminLire();
 $stats = presAdminChiffres();
 $slidesAdmin = presAdminDiapositives($contenuPres, $stats);
+$membresAdmin = presAdminMembres();
 
 /** Mots révélés un à un (masque + glissement), pour l'effet « titre cinéma ». */
 function mots($s, $base = 0) {
@@ -112,6 +113,25 @@ $SITE = [
    ["Protection", "Accès par rôle et journal d'activité"],
    ["Documents", "PDF, QR codes et badges générés par le site"]]],
 ];
+
+
+function afficherEquipe($membres) {
+    $pages = array_chunk($membres, 8); $tot = count($membres);
+    foreach ($pages as $pi => $pg): $n = count($pg); ?>
+  <section class="slide site equipe" data-steps="<?= $n + 1 ?>"><div class="cadre">
+    <header class="tete"><div class="kz a" style="--d:0"><?= $tot ?> MEMBRES</div></header>
+    <h2 class="sh"><?= mots($pi === 0 ? "L'ÉQUIPE DE LA COMMISSION ADMINISTRATION" : "L'ÉQUIPE : SUITE", 1) ?></h2>
+    <div class="eq">
+      <?php foreach ($pg as $k => $m): $ini = ''; foreach (preg_split('/\s+/', trim($m['nom'])) as $w) { if ($w !== '' && mb_strlen($ini) < 2) $ini .= mb_strtoupper(mb_substr($w, 0, 1)); } ?>
+      <div class="mb<?= $m['resp'] ? ' rs' : '' ?>">
+        <div class="ph"><?php if ($m['photo'] !== ''): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e($m['photo']) ?>" alt=""><?php else: ?><span><?= e($ini) ?></span><?php endif; ?></div>
+        <h4><?= e($m['nom']) ?></h4>
+        <small><?= $m['resp'] ? 'RESPONSABLE' : 'MEMBRE' ?></small>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div></section>
+<?php endforeach; }
 
 function afficherSiteArchi() { ?>
   <section class="slide site arch" data-steps="5"><div class="cadre">
@@ -494,6 +514,19 @@ button{font-family:inherit}
 @keyframes ms{0%{background-position:130% 0}45%,100%{background-position:-50% 0}}
 .var .hero::after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.45) 50%,transparent 60%);background-size:300% 100%;animation:ms 4.5s 1.2s ease-in-out infinite}
 .carte b,.num{animation:pul 2.4s ease-in-out infinite}
+
+/* ---------- équipe ---------- */
+.eq{position:absolute;left:90px;right:90px;top:340px;bottom:70px;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:34px 34px}
+.mb{width:410px;height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;border-radius:28px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.14);box-shadow:0 20px 60px rgba(0,0,0,.4);opacity:0;transform:translateY(90px) scale(.8) rotate(-3deg);filter:blur(8px);transition:all .9s cubic-bezier(.2,1.1,.3,1)}
+.mb.on{opacity:.6;transform:none;filter:none}
+.mb.cur{opacity:1;transform:scale(1.07);border-color:var(--o);background:linear-gradient(160deg,rgba(255,122,26,.25),rgba(255,255,255,.05));box-shadow:0 0 70px rgba(255,122,26,.5),0 24px 70px rgba(0,0,0,.5)}
+.mb .ph{width:190px;height:190px;border-radius:50%;overflow:hidden;border:5px solid var(--t);background:linear-gradient(135deg,#0b6b7a,#031a21);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(18,194,176,.45)}
+.mb.cur .ph{border-color:var(--o);animation:pul 1.6s ease-in-out infinite}
+.mb .ph img{width:100%;height:100%;object-fit:cover}
+.mb .ph span{font-size:76px;font-weight:800;color:#fff}
+.mb h4{margin-top:18px;font-size:38px;line-height:1.05;font-weight:800;text-align:center;text-transform:uppercase}
+.mb small{margin-top:10px;padding:4px 18px;border-radius:20px;background:rgba(255,255,255,.14);font-size:20px;font-weight:800;letter-spacing:.22em;color:var(--mu)}
+.mb.rs small{background:var(--o);color:#031a21}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -519,6 +552,7 @@ body.cache{cursor:none}
   </div></section>
 
   <?php
+  if ($membresAdmin) afficherEquipe($membresAdmin);
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
@@ -581,7 +615,8 @@ body.cache{cursor:none}
       [].forEach.call(s.querySelectorAll('.vg'),function(o,i){o.classList.toggle('on',i===idx)});
       s.classList.toggle('ov',st>=k);
     }
-    if(s.classList.contains('site')){
+    if(s.classList.contains('equipe')){[].forEach.call(s.querySelectorAll('.mb'),function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)})}
+    else if(s.classList.contains('site')){
       if(s.classList.contains('arch')){
         [].forEach.call(s.querySelectorAll('.ac'),function(o,i){o.classList.toggle('on',st>=i+1)});
         s.classList.toggle('fx',st>=4);
@@ -597,7 +632,7 @@ body.cache{cursor:none}
       var li=s.querySelectorAll('li');
       [].forEach.call(li,function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
     }
-    if(st>0&&(c!==dC||st!==dS)){var cur=s.querySelector('.pts li.cur,.sp.cur');if(cur)exploser(cur,true);else if(s.classList.contains('var')&&st<s.querySelectorAll('.hv').length)exploser(s.querySelector('.hero'),false)}
+    if(st>0&&(c!==dC||st!==dS)){var cur=s.querySelector('.pts li.cur,.sp.cur,.mb.cur');if(cur)exploser(cur,true);else if(s.classList.contains('var')&&st<s.querySelectorAll('.hv').length)exploser(s.querySelector('.hero'),false)}
     dC=c;dS=st;
     document.getElementById('prec').disabled=(c===0&&st===0);
     document.getElementById('suiv').disabled=(c===n-1&&st>=ns-1);

@@ -69,3 +69,18 @@ function presAdminDiapositives(array $contenu, array $chiffres) {
     }
     return $s;
 }
+
+
+/** Membres de la commission Administration (responsable en premier), pour la diapositive « Notre équipe ». */
+function presAdminMembres() {
+    $r = [];
+    try {
+        $pdo = $GLOBALS['pdo'];
+        responsablePreparer($pdo);
+        foreach ($pdo->query("SELECT nom_prenoms, commission, photo, responsable FROM membres_commission ORDER BY responsable DESC, nom_prenoms ASC")->fetchAll() as $m) {
+            if (normaliserCommission($m['commission']) !== 'ADMINISTRATION') continue;
+            $r[] = ['nom' => (string)$m['nom_prenoms'], 'photo' => (string)$m['photo'], 'resp' => (int)$m['responsable'] === 1];
+        }
+    } catch (Throwable $e) { }
+    return $r;
+}
