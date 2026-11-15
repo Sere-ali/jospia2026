@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
-exigerRole(['admin', 'superadmin']);
+if (!defined('PRESENTATION_PUBLIQUE')) { exigerRole(['admin', 'superadmin']); }
 require_once __DIR__ . '/../includes/presentation_admin.php';
 
 $contenuPres = presAdminLire();
