@@ -133,6 +133,20 @@ function afficherEquipe($membres) {
   </div></section>
 <?php endforeach; }
 
+function afficherAnnonceMembres($membres) {
+    $f = array_values(array_filter($membres, function ($m) { return !empty($m['fiche']); })); $n = count($f);
+    if (!$n) return; ?>
+  <section class="slide ann"><div class="cadre">
+    <div class="kz a" style="--d:0">NOTRE ÉQUIPE</div>
+    <div class="bign a" style="--d:2"><b data-n="<?= $n ?>">0</b></div>
+    <h2 class="annt"><?= mots($n > 1 ? "MEMBRES DANS LA COMMISSION ADMINISTRATION" : "MEMBRE DANS LA COMMISSION ADMINISTRATION", 4) ?></h2>
+    <p class="anns a" style="--d:9">Une équipe constituée et engagée au service de la JOSPIA</p>
+    <div class="avs">
+      <?php foreach ($f as $k => $m): ?><div class="av" style="--k:<?= $k ?>"><img src="<?= e($m['src']) ?>" alt=""></div><?php endforeach; ?>
+    </div>
+  </div></section>
+<?php }
+
 function afficherProfils($membres) {
     foreach ($membres as $m) { if (empty($m['fiche'])) continue;
         $an = (int)($m['annee'] ?? 0); $dur = $an ? max(1, (int)date('Y') - $an) : 0;
@@ -565,6 +579,19 @@ button{font-family:inherit}
 .pr.cur{opacity:1;background:linear-gradient(90deg,rgba(255,122,26,.25),rgba(255,255,255,.03));border-color:var(--o);box-shadow:0 0 60px rgba(255,122,26,.35)}
 .prof.lg .pfn{font-size:88px;top:262px}
 .prof.lg .prs{top:500px}
+
+/* ---------- annonce des membres ---------- */
+.ann{--z:var(--o)}
+.ann .cadre{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-top:40px}
+.ann .kz{margin-bottom:6px}
+.bign b{display:block;font-size:360px;line-height:1;font-weight:800;background:linear-gradient(180deg,#fff 20%,#ffb46b 60%,#ff7a1a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 60px rgba(255,122,26,.55))}
+.annt{margin-top:-10px;font-size:68px;line-height:1.05;font-weight:800;max-width:1500px;text-transform:uppercase;filter:drop-shadow(0 6px 22px rgba(0,0,0,.45))}
+.anns{margin-top:26px;font-size:40px;font-weight:600;color:var(--o2)}
+.avs{margin-top:44px;display:flex;gap:30px;justify-content:center}
+.av{width:150px;height:150px;border-radius:50%;overflow:hidden;border:5px solid var(--o);box-shadow:0 0 36px rgba(255,122,26,.55);opacity:0;transform:scale(0) rotate(-40deg)}
+.av img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.slide.actif .av{animation:avp .9s cubic-bezier(.2,1.3,.3,1) both,fm 5s 2s ease-in-out infinite;animation-delay:calc(3.2s + var(--k)*.28s),calc(4s + var(--k)*.3s)}
+@keyframes avp{to{opacity:1;transform:none}}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -590,7 +617,7 @@ body.cache{cursor:none}
   </div></section>
 
   <?php
-  if ($membresAdmin) { afficherProfils($membresAdmin); }
+  if ($membresAdmin) { afficherAnnonceMembres($membresAdmin); afficherProfils($membresAdmin); }
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
@@ -685,6 +712,7 @@ body.cache{cursor:none}
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       compter(sl[i]);
       setTimeout(function(){boom(960,300,70);choc(960,300)},900);
+      if(sl[i].classList.contains('ann')){[].forEach.call(sl[i].querySelectorAll('.av'),function(a,k){setTimeout(function(){exploser(a,false)},3300+k*280)});setTimeout(function(){boom(960,420,120);choc(960,420)},1900)}
       if(sl[i].classList.contains('fin'))setTimeout(fete,1100);
     }
     if(direct||c<0){bascule();return}
