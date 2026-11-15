@@ -842,6 +842,34 @@ body.vert .zn{padding-top:58px}
 body.vert .mock .url{font-size:30px;height:48px}body.vert .mock .bar{height:78px}
 body.vert .info h3,body.vert .land .info h3{margin-top:16px;font-size:60px}body.vert .tick .info h3{font-size:50px}
 body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
+
+/* =====================================================================
+   MODE LÉGER (téléphones et appareils modestes) : mêmes animations clés,
+   sans les effets coûteux (flous, ombres portées animées, fondus de couleur)
+   ===================================================================== */
+body.lite *,body.lite *::before,body.lite *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.lite .orb{filter:none;animation:none;opacity:.35}
+body.lite .grid,body.lite .balayage,body.lite #spot,body.lite .cm{display:none}
+body.lite #geo i{animation:none}
+body.lite #geo .g1,body.lite #geo .g2,body.lite #geo .g3{animation:gt 30s linear infinite}
+body.lite #geo .g4,body.lite #geo .g5,body.lite #geo .g6,body.lite #geo .g7,body.lite #geo .g8,body.lite #geo .g9,body.lite #geo .g10{display:none}
+body.lite .ac.on,body.lite .slide.actif .mock.a{animation:none}
+body.lite .ac.on::after,body.lite .sp.cur::after,body.lite .mock::after,body.lite .kz::after,body.lite .slide.intro .cadre::after,body.lite .slide.fin .cadre::after,body.lite .pfi::after{display:none}
+body.lite .ac,body.lite .carte{box-shadow:0 10px 30px rgba(0,0,0,.35)}
+body.lite .sp.cur{box-shadow:none;transform:none}
+body.lite .sp.cur b,body.lite .zn.cur,body.lite .num,body.lite .carte b{animation:none}
+body.lite .sp,body.lite .pr,body.lite .mb{filter:none!important}
+body.lite .ct,body.lite .bign b,body.lite .annt,body.lite .stars u,body.lite .stars i{filter:none!important}
+body.lite .zn.on span{animation:none}
+body.lite .pfi{animation:none}
+body.lite .s1,body.lite .s2{animation-duration:2s!important}
+body.lite .slide.actif .s1,body.lite .slide.actif .s2{animation:sa 1.6s .4s cubic-bezier(.2,.9,.2,1) both}
+body.lite .slide.actif .s3{animation:sa 1.2s .6s cubic-bezier(.2,.9,.2,1) both}
+body.lite .stars u:nth-child(n+8){display:none}
+body.lite .var .hero img.on{animation:none}
+body.lite .slide.actif .av{animation:avp .9s cubic-bezier(.2,1.3,.3,1) both}
+body.lite #stage::after{display:none}
+body.lite .intro h1 .l2{text-shadow:none}
 </style>
 </head>
 <body>
@@ -896,6 +924,8 @@ body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
 <script>
 (function(){
   var stage=document.getElementById('stage');
+  var LITE=(/[?&]lite=1/.test(location.search))||(!/[?&]full=1/.test(location.search)&&(matchMedia('(hover:none)').matches||innerWidth<900||(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4));
+  if(LITE)document.body.classList.add('lite');
   /* sécurité téléphone : si la page est zoomée (pincement, zoom d'accessibilité), on remet le zoom à 1 */
   function dezoom(){var m=document.getElementById('vp');if(!m)return;var vv=window.visualViewport;if(vv&&vv.scale>1.02){m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover');setTimeout(function(){m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')},300)}}
   if(window.visualViewport){visualViewport.addEventListener('resize',dezoom)}
@@ -910,10 +940,10 @@ body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
 
   /* particules lumineuses */
   var pc=document.getElementById('ptc'),px=pc.getContext('2d'),PT=[];
-  for(var i=0;i<60;i++)PT.push({x:Math.random()*1920,y:Math.random()*1080,r:1.5+Math.random()*4,v:.15+Math.random()*.6,a:.15+Math.random()*.45,c:Math.random()<.5?'255,140,50':'80,220,205',p:Math.random()*6});
-  (function anim(t){px.clearRect(0,0,SW,SH);
+  for(var i=0;i<(LITE?14:60);i++)PT.push({x:Math.random()*1920,y:Math.random()*1080,r:1.5+Math.random()*4,v:.15+Math.random()*.6,a:.15+Math.random()*.45,c:Math.random()<.5?'255,140,50':'80,220,205',p:Math.random()*6});
+  var sk=0;(function anim(t){if(LITE&&(sk=!sk)){requestAnimationFrame(anim);return}px.clearRect(0,0,SW,SH);
     PT.forEach(function(p){p.y-=p.v;p.x+=Math.sin(t/2000+p.p)*.35;if(p.y<-10){p.y=SH+10;p.x=Math.random()*SW}if(p.x>SW+20)p.x=Math.random()*SW
-      px.beginPath();px.fillStyle='rgba('+p.c+','+p.a+')';px.shadowColor='rgba('+p.c+',.9)';px.shadowBlur=14;px.arc(p.x,p.y,p.r,0,6.283);px.fill()});
+      px.beginPath();px.fillStyle='rgba('+p.c+','+p.a+')';if(!LITE){px.shadowColor='rgba('+p.c+',.9)';px.shadowBlur=8}px.arc(p.x,p.y,p.r,0,6.283);px.fill()});
     requestAnimationFrame(anim)})(0);
 
   var sl=[].slice.call(document.querySelectorAll('.slide')),n=sl.length,c=-1,st=0,busy=false,dC=-2,dS=-1;
@@ -1038,8 +1068,8 @@ body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
   /* feu d'artifice de fin */
   var fc=document.getElementById('fete'),fx=fc.getContext('2d'),F=[],run=false,col=['255,122,26','18,194,176','255,255,255','255,179,107'];
   var stg=document.getElementById('stage');
-  function boom(x,y,n,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
-  function choc(x,y,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}[0,1].forEach(function(t){var d=document.createElement('div');d.className='shock'+(t?' t':'');d.style.left=x+'px';d.style.top=y+'px';stg.appendChild(d);setTimeout(function(){d.remove()},1400)})}
+  function boom(x,y,n,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}if(LITE)n=Math.round(n*.4);for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
+  function choc(x,y,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}(LITE?[0]:[0,1]).forEach(function(t){var d=document.createElement('div');d.className='shock'+(t?' t':'');d.style.left=x+'px';d.style.top=y+'px';stg.appendChild(d);setTimeout(function(){d.remove()},1400)})}
   function exploser(el,gauche){
     if(!el)return;var r=el.getBoundingClientRect(),sr=stg.getBoundingClientRect(),k=sr.width/SW||1;
     var x=gauche?(r.left-sr.left)/k+50:(r.left-sr.left+r.width/2)/k,y=(r.top-sr.top+r.height/2)/k;
@@ -1047,12 +1077,12 @@ body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
   }
   function fete(){
     for(var b=0;b<9;b++)(function(b){setTimeout(function(){var cx=(300+Math.random()*1320)*SW/1920,cy=(200+Math.random()*420)*SH/1080;
-      for(var k=0;k<70;k++){var a=Math.random()*6.283,v=3+Math.random()*7;F.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:col[k%4]})}
+      for(var k=0;k<(LITE?30:70);k++){var a=Math.random()*6.283,v=3+Math.random()*7;F.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:col[k%4]})}
       if(!run){run=true;bo()}},b*420)})(b);
   }
   function bo(){fx.clearRect(0,0,SW,SH);
     F=F.filter(function(p){return p.l>0});
-    F.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.vx*=.985;p.l-=.011;fx.beginPath();fx.fillStyle='rgba('+p.c+','+Math.max(p.l,0)+')';fx.shadowColor='rgba('+p.c+',1)';fx.shadowBlur=12;fx.arc(p.x,p.y,3,0,6.283);fx.fill()});
+    F.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.vx*=.985;p.l-=.011;fx.beginPath();fx.fillStyle='rgba('+p.c+','+Math.max(p.l,0)+')';if(!LITE){fx.shadowColor='rgba('+p.c+',1)';fx.shadowBlur=8}fx.arc(p.x,p.y,3,0,6.283);fx.fill()});
     if(F.length)requestAnimationFrame(bo);else run=false}
   var h=parseInt((location.hash||'').slice(1),10);
   go(h>=1&&h<=n?h-1:0,0,true);
