@@ -167,6 +167,7 @@ if (R) {
   const set = (o, x, y, z, s) => { o.p.set(x, y, z); o.s = s; };
 
   window.P3 = {
+    resize(w, h) { R.setSize(Math.round(w * .83), Math.round(h * .83), false); cam.aspect = w / h; cam.fov = w < h ? 74 : 45; cam.updateProjectionMatrix(); },
     slide(i, el) {
       const c = el.classList;
       S.kind = c.contains('intro') ? 'intro' : c.contains('fin') ? 'fin' : c.contains('chap') ? 'chap' : c.contains('ann') ? 'ann' : 'c';
@@ -176,8 +177,11 @@ if (R) {
       S.show = S.kind === 'intro' || S.kind === 'chap' || S.kind === 'fin'; cv.style.opacity = S.show ? 1 : 0; /* 3D seulement sur les pages de grands titres */
       const teal = c.contains('b') && c.contains('site');
       lo.color.set(teal ? 0x2fd8c4 : 0xffa24a); lt.color.set(teal ? 0xffa24a : 0x2fd8c4);
+      const V = document.body.classList.contains('vert');
       set(T.A, 0, 0, 0, 0); set(T.M, 0, 0, 0, 0); set(T.Mq, 0, -2, -6, 0); set(T.H, 0, 0, -10, 0);
-      if (S.kind === 'intro' || S.kind === 'fin') { if (S.kind === 'intro') { set(T.A, 10.4, -5.2, -5, 3.7); set(T.M, -10.4, -5.2, -5, 3.4); } else { set(T.A, 11.6, .6, -5, 4.2); set(T.M, -11.6, .9, -5, 3.9); } set(T.H, 0, 0, -11, 8.5); }
+      if (V && (S.kind === 'intro' || S.kind === 'fin')) { set(T.A, 0, -10.4, -5, 4.2); set(T.M, 0, 10.6, -5, 3.8); set(T.H, 0, 0, -11, 6); }
+      else if (V && S.kind === 'chap') { set(T.Mq, 0, -10.8, -6.5, .95); set(T.H, 0, .6, -11, 6); }
+      else if (S.kind === 'intro' || S.kind === 'fin') { if (S.kind === 'intro') { set(T.A, 10.4, -5.2, -5, 3.7); set(T.M, -10.4, -5.2, -5, 3.4); } else { set(T.A, 11.6, .6, -5, 4.2); set(T.M, -11.6, .9, -5, 3.9); } set(T.H, 0, 0, -11, 8.5); }
       else if (S.kind === 'chap') { set(T.Mq, 0, -6.6, -6.5, .95); set(T.H, 0, .6, -11, 9); }
       else if (S.kind === 'ann') { set(T.Mq, 10.2, -4.6, -4, .5); }
       shapes.forEach(s => s.v.addScaledVector(s.o.position.clone().sub(new THREE.Vector3(0, 0, 4)).normalize(), S.kind === 'chap' ? .5 : .2));
@@ -189,6 +193,7 @@ if (R) {
       shapes.forEach(s => { const d = s.o.position.clone().sub(b); s.v.addScaledVector(d.normalize(), 1.3 / (1 + d.length() * .12)); });
     }
   };
+  P3.resize(document.body.classList.contains('vert') ? 1080 : 1920, document.body.classList.contains('vert') ? 1920 : 1080);
   const cur = document.querySelector('.slide.actif'), all = [].slice.call(document.querySelectorAll('.slide'));
   if (cur) P3.slide(all.indexOf(cur), cur);
   document.body.classList.add('g3dok');
