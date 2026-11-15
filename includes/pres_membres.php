@@ -9,4 +9,5 @@ return [
     ['nom' => 'Ahoua ZONO', 'classe' => 'Terminale', 'profil' => 'Membre de la commission Administration', 'annee' => 2022, 'photo' => 'ahoua_zono.jpg'],
     ['nom' => 'Amidou OUANDE', 'etudes' => 'Étudiant en L1 Communication digitale à l\'Université Virtuelle de Côte d\'Ivoire', 'profil' => 'Membre de la commission Administration', 'annee' => 2024, 'photo' => 'amidou_ouande.jpg'],
     ['nom' => 'SEKONGO Katchenefoha Issa', 'etudes' => 'Admissible au BTS 2026 en Finance Comptabilité et Gestion des Entreprises', 'profil' => 'Membre de la commission Administration', 'annee' => 2020, 'photo' => 'issa_sekongo.jpg'],
+    ['nom' => 'Zaïnab DOUMBIA', 'etudes' => 'Étudiante en Licence 2 de Droit', 'profil' => 'Membre de la commission Administration', 'annee' => 2024, 'photo' => 'zainab_doumbia.jpg'],
 ];
