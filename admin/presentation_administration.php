@@ -161,7 +161,7 @@ function afficherAnnonceMembres($membres) {
     <div class="kz a" style="--d:0">NOTRE ÉQUIPE</div>
     <div class="bign a" style="--d:2"><b data-n="<?= $n ?>">0</b></div>
     <h2 class="annt"><?= mots($n > 1 ? "MEMBRES DANS LA COMMISSION ADMINISTRATION" : "MEMBRE DANS LA COMMISSION ADMINISTRATION", 4) ?></h2>
-    <p class="anns a" style="--d:9">Une équipe constituée et engagée au service de la JOSPIA</p>
+    <p class="anns a" style="--d:9">Une équipe constituée et engagée au service des JOSPIA</p>
     <div class="avs">
       <?php foreach ($f as $k => $m): ?><div class="av" style="--k:<?= $k ?>"><img src="<?= e($m['src']) ?>" alt=""></div><?php endforeach; ?>
     </div>
