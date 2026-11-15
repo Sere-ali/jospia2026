@@ -751,11 +751,15 @@ body.cache{cursor:none}
 .nvg button.cur{background:#FF7A1A;border-color:#FFB36B;color:#031a21}.nvg button.cur i{background:#031a21;color:#FFB36B}
 .nvg button.ch{border-color:rgba(18,194,176,.6)}
 #sauter{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:90;padding:10px 22px;border-radius:30px;background:#FF7A1A;color:#031a21;font:800 26px 'Barlow',sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
+#g3d{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:-1;pointer-events:none}
+body.g3dok .orb{opacity:.3}
+body.g3dok .grid{opacity:.1}
 </style>
+<script type="importmap">{"imports":{"three":"<?= BASE_URL ?>/assets/js/three.module.min.js"}}</script>
 </head>
 <body>
 <div id="stage">
-  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><div id="spot"></div><i class="cm"></i><i class="cm c2"></i><i class="cm c3"></i><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
+  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><canvas id="g3d" width="1600" height="900"></canvas><div id="spot"></div><i class="cm"></i><i class="cm c2"></i><i class="cm c3"></i><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
   <div class="logo"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
   <div class="tag">Bataille de Kirina</div>
 
@@ -826,7 +830,7 @@ body.cache{cursor:none}
       setTimeout(function(){(function f(t){if(t0===null)t0=t;var p=Math.min(1,(t-t0)/1500),e=1-Math.pow(1-p,4);b.textContent=Math.round(cible*e).toLocaleString('fr-FR');if(p<1)requestAnimationFrame(f)})(performance.now())},delai)
     });
   }
-  function maj(){
+  function maj(){if(window.P3&&st>0)P3.step();
     var s=sl[c],ns=parseInt(s.getAttribute('data-steps'),10);
     if(s.classList.contains('var')){
       var k=s.querySelectorAll('.hv').length,idx=Math.min(st,k-1);
@@ -863,7 +867,7 @@ body.cache{cursor:none}
     function bascule(){
       sl.forEach(function(s,k){s.classList.toggle('actif',k===i);s.classList.remove('e1','e2','e3');if(k===i&&i%4)s.classList.add('e'+(i%4))});
       c=i;st=step;maj();
-      cpt.textContent=(i+1)+' / '+n;prog.style.width=((i+1)/n*100)+'%';
+      cpt.textContent=(i+1)+' / '+n;if(window.P3)P3.slide(i,sl[i]);prog.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       compter(sl[i]);
       setTimeout(function(){boom(960,300,70);choc(960,300)},900);
@@ -938,7 +942,7 @@ body.cache{cursor:none}
   /* feu d'artifice de fin */
   var fc=document.getElementById('fete'),fx=fc.getContext('2d'),F=[],run=false,col=['255,122,26','18,194,176','255,255,255','255,179,107'];
   var stg=document.getElementById('stage');
-  function boom(x,y,n){for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
+  function boom(x,y,n){if(window.P3)P3.burst(x,y);for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
   function choc(x,y){[0,1].forEach(function(t){var d=document.createElement('div');d.className='shock'+(t?' t':'');d.style.left=x+'px';d.style.top=y+'px';stg.appendChild(d);setTimeout(function(){d.remove()},1400)})}
   function exploser(el,gauche){
     if(!el)return;var r=el.getBoundingClientRect(),sr=stg.getBoundingClientRect(),k=sr.width/1920||1;
@@ -958,5 +962,6 @@ body.cache{cursor:none}
   go(h>=1&&h<=n?h-1:0,0,true);
 })();
 </script>
+<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=1"></script>
 </body>
 </html>
