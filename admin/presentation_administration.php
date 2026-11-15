@@ -771,7 +771,7 @@ body.vert .fin h1{font-size:230px}
 body.vert .fin p{font-size:59px;max-width:900px}
 body.vert .pts{left:50px;right:50px;top:340px;gap:34px}
 body.vert .pts li{font-size:81px;gap:28px}
-body.vert .dense .pts{top:320px;gap:22px}body.vert .dense .pts li{font-size:56px}
+body.vert .dense .pts{top:320px;gap:22px}body.vert .dense .pts li{font-size:51px}
 body.vert .pts li i{margin-top:14px;width:20px;height:20px}
 /* annonce des membres */
 body.vert .bign b{font-size:260px}
@@ -905,7 +905,43 @@ body.lite .intro h1 .l2{text-shadow:none}
   ?>
   <?php
   if ($membresAdmin) { afficherAnnonceMembres($membresAdmin); afficherProfils($membresAdmin); }
-  afficherChapitre('01', 'LES BADGES', 'Séminaristes · Membres de commission · Médias, visiteurs, formateurs', 'rideau');
+  afficherListe('', "PLAN D'ACTION : L'ÉQUIPE", [
+    "Cabinet du séminaire : gestion administrative complète, avant, pendant et après l'événement",
+    "SERE ALI : Responsable, supervision générale",
+    "BARRO Addoul Karim : 1er adjoint, appui à la supervision",
+    "SEKONGO : Membre, gestion documentaire",
+    "ILIACE : Membre, badges et accréditations",
+    "ZONO : Membre, logistique administrative",
+    "ZEÏNAB : Membre, secrétariat et archives"], true, 'dense');
+  afficherListe('', "PLAN D'ACTION : AVANT LE SÉMINAIRE", [
+    "SERE ALI : Convoquer et animer les réunions, valider le plan d'action et le budget, assurer le lien avec les Managers Généraux",
+    "BARRO Addoul Karim : Seconder le responsable, vérifier l'avancement des tâches, le remplacer en son absence",
+    "SEKONGO : Préparer les modèles de diplômes, collecter la liste officielle des participants, classer et archiver les documents",
+    "ILIACE : Concevoir les gabarits de badges par catégorie, imprimer et plastifier les badges, préparer le kit d'accueil",
+    "ZONO : Inventorier le matériel (imprimante, cartouches, plastifieuse…), coordonner son acheminement avec la commission Logistique",
+    "ZEÏNAB : Rédiger et diffuser les convocations, tenir le registre des décisions, gérer la correspondance"], true, 'dense');
+  afficherListe('', "PLAN D'ACTION : PENDANT LE SÉMINAIRE", [
+    "SERE ALI : Veiller au bon déroulement des activités administratives, autoriser les soutiens aux autres commissions, remonter les problèmes aux Managers Généraux",
+    "BARRO Addoul Karim : Coordonner les membres sur site, gérer les imprévus administratifs, tenir un journal de bord journalier",
+    "SEKONGO : Finaliser et imprimer les diplômes, gérer les corrections de dernière minute, archiver chaque document produit",
+    "ILIACE : Distribuer les badges à l'arrivée, gérer les badges perdus ou manquants, tenir le registre des présences",
+    "ZONO : Superviser le matériel (encre, papier…), appuyer les autres commissions si temps libre, gérer l'espace de travail",
+    "ZEÏNAB : Prendre les notes des séances plénières, rédiger les PV à chaud, classer les documents au fil des sessions"], true, 'dense');
+  afficherListe('', "PLAN D'ACTION : APRÈS LE SÉMINAIRE", [
+    "SERE ALI : Valider le bilan d'activités, le transmettre aux Managers Généraux dans les 10 jours, évaluer les performances de l'équipe",
+    "BARRO Addoul Karim : Compiler les rapports de chaque membre, rédiger la première version du bilan, assister SERE ALI dans la finalisation",
+    "SEKONGO : Distribuer les diplômes aux lauréats, constituer et classer les archives complètes, numériser les documents importants",
+    "ILIACE : Dresser le bilan des accréditations, récupérer et inventorier les badges restants, rédiger son rapport individuel",
+    "ZONO : Inventorier et restituer le matériel, signaler les pertes ou dommages, rédiger son rapport logistique",
+    "ZEÏNAB : Finaliser et classer les PV et comptes-rendus, préparer le dossier d'archivage définitif, rédiger son rapport de secrétariat"], true, 'dense');
+  afficherListe('', "PLAN D'ACTION : RÈGLES DE FONCTIONNEMENT", [
+    "Finances : seule la commission Finances sollicite officiellement des sponsors, l'Administration peut proposer des noms de donateurs",
+    "Restauration : la commission Restauration gère les repas, toute dérogation est signalée à l'avance",
+    "Matériel : chaque membre réunit son propre matériel, la commission Logistique se charge uniquement de l'acheminement",
+    "Bilan d'activités : délai maximum de 10 jours après la clôture pour le transmettre aux Managers Généraux",
+    "Soutien inter-commissions : uniquement avec l'autorisation de SERE ALI ou BARRO Addoul Karim, pendant les temps libres",
+    "Effectif : plafonné à 6 membres conformément au cahier des charges"], true, 'dense');
+    afficherChapitre('01', 'LES BADGES', 'Séminaristes · Membres de commission · Médias, visiteurs, formateurs', 'rideau');
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('RÉALISATIONS : LES AUTRES BADGES', 'badges', 'autre', $AB, 'jpg');
