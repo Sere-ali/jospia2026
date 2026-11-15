@@ -71,16 +71,32 @@ function presAdminDiapositives(array $contenu, array $chiffres) {
 }
 
 
-/** Membres de la commission Administration (responsable en premier), pour la diapositive « Notre équipe ». */
+/** Clé de comparaison de noms (majuscules, sans accents, sans espaces multiples). */
+function presAdminCleNom($n) {
+    $n = mb_strtoupper(trim(preg_replace('/\s+/', ' ', (string)$n)));
+    $t = @iconv('UTF-8', 'ASCII//TRANSLIT', $n);
+    return preg_replace('/[^A-Z ]/', '', $t !== false ? $t : $n);
+}
+
+/** Membres de la commission Administration : fiches détaillées (includes/pres_membres.php) puis membres inscrits sur le site. */
 function presAdminMembres() {
-    $r = [];
+    $r = []; $vu = [];
+    $fiches = is_file(__DIR__ . '/pres_membres.php') ? (include __DIR__ . '/pres_membres.php') : [];
+    foreach ($fiches as $f) {
+        $f['resp'] = false;
+        $chemin = __DIR__ . '/../assets/img/pres/membres/' . $f['photo'];
+        $f['src'] = BASE_URL . '/assets/img/pres/membres/' . rawurlencode($f['photo']) . (is_file($chemin) ? '?v=' . filemtime($chemin) : '');
+        $f['fiche'] = true; $r[presAdminCleNom($f['nom'])] = $f;
+    }
     try {
         $pdo = $GLOBALS['pdo'];
         responsablePreparer($pdo);
         foreach ($pdo->query("SELECT nom_prenoms, commission, photo, responsable FROM membres_commission ORDER BY responsable DESC, nom_prenoms ASC")->fetchAll() as $m) {
             if (normaliserCommission($m['commission']) !== 'ADMINISTRATION') continue;
-            $r[] = ['nom' => (string)$m['nom_prenoms'], 'photo' => (string)$m['photo'], 'resp' => (int)$m['responsable'] === 1];
+            $k = presAdminCleNom($m['nom_prenoms']);
+            if (isset($r[$k])) { $r[$k]['resp'] = (int)$m['responsable'] === 1; continue; }
+            $r[$k] = ['nom' => (string)$m['nom_prenoms'], 'src' => $m['photo'] !== '' ? BASE_URL . '/uploads/photos/' . rawurlencode((string)$m['photo']) : '', 'resp' => (int)$m['responsable'] === 1, 'fiche' => false];
         }
     } catch (Throwable $e) { }
-    return $r;
+    return array_values($r);
 }

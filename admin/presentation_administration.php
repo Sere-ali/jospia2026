@@ -124,7 +124,7 @@ function afficherEquipe($membres) {
     <div class="eq">
       <?php foreach ($pg as $k => $m): $ini = ''; foreach (preg_split('/\s+/', trim($m['nom'])) as $w) { if ($w !== '' && mb_strlen($ini) < 2) $ini .= mb_strtoupper(mb_substr($w, 0, 1)); } ?>
       <div class="mb<?= $m['resp'] ? ' rs' : '' ?>">
-        <div class="ph"><?php if ($m['photo'] !== ''): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e($m['photo']) ?>" alt=""><?php else: ?><span><?= e($ini) ?></span><?php endif; ?></div>
+        <div class="ph"><?php if ($m['src'] !== ''): ?><img src="<?= e($m['src']) ?>" alt=""><?php else: ?><span><?= e($ini) ?></span><?php endif; ?></div>
         <h4><?= e($m['nom']) ?></h4>
         <small><?= $m['resp'] ? 'RESPONSABLE' : 'MEMBRE' ?></small>
       </div>
@@ -132,6 +132,24 @@ function afficherEquipe($membres) {
     </div>
   </div></section>
 <?php endforeach; }
+
+function afficherProfils($membres) {
+    foreach ($membres as $m) { if (empty($m['fiche'])) continue;
+        $an = (int)($m['annee'] ?? 0); $dur = $an ? max(1, (int)date('Y') - $an) : 0;
+        $lignes = [];
+        if (!empty($m['classe'])) $lignes[] = ['CLASSE', 'Élève en classe de ' . $m['classe']];
+        if (!empty($m['profil'])) $lignes[] = ['PROFIL DANS LA COMMISSION', $m['profil']];
+        if ($an) $lignes[] = ['DÉBUT DU MILITANTISME', $an . '  ·  ' . $dur . ' an' . ($dur > 1 ? 's' : '') . ' d\'engagement'];
+        ?>
+  <section class="slide site prof" data-steps="<?= count($lignes) + 1 ?>"><div class="cadre">
+    <header class="tete"><div class="kz a" style="--d:0">MEMBRE DE LA COMMISSION</div></header>
+    <div class="pfo a" style="--d:2"><i class="r1"></i><i class="r2"></i><div class="pfi"><img src="<?= e($m['src']) ?>" alt=""></div></div>
+    <h2 class="pfn"><?= mots(mb_strtoupper($m['nom']), 2) ?></h2>
+    <ul class="prs">
+      <?php foreach ($lignes as $l): ?><li class="pr"><small><?= e($l[0]) ?></small><strong><?= e($l[1]) ?></strong></li><?php endforeach; ?>
+    </ul>
+  </div></section>
+<?php } }
 
 function afficherSiteArchi() { ?>
   <section class="slide site arch" data-steps="5"><div class="cadre">
@@ -527,6 +545,22 @@ button{font-family:inherit}
 .mb h4{margin-top:18px;font-size:38px;line-height:1.05;font-weight:800;text-align:center;text-transform:uppercase}
 .mb small{margin-top:10px;padding:4px 18px;border-radius:20px;background:rgba(255,255,255,.14);font-size:20px;font-weight:800;letter-spacing:.22em;color:var(--mu)}
 .mb.rs small{background:var(--o);color:#031a21}
+
+/* ---------- fiche profil ---------- */
+.pfo{position:absolute;left:150px;top:250px;width:560px;height:730px}
+.pfi{position:absolute;inset:0;border-radius:44px;overflow:hidden;border:6px solid var(--o);box-shadow:0 0 0 12px rgba(255,122,26,.15),0 0 90px rgba(255,122,26,.5),0 40px 100px rgba(0,0,0,.6);animation:fm 7s ease-in-out infinite}
+.pfi img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.pfi::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%);background-size:300% 100%;animation:ms 5s 2s ease-in-out infinite}
+.pfo i{position:absolute;border-radius:50%;pointer-events:none}
+.pfo .r1{left:-70px;top:-70px;right:-70px;bottom:-70px;border:3px dashed rgba(18,194,176,.6);animation:gt 26s linear infinite;border-radius:70px}
+.pfo .r2{left:-40px;top:-40px;right:-40px;bottom:-40px;border:3px solid rgba(255,122,26,.4);border-radius:60px;animation:gt 40s linear infinite reverse}
+.pfn{position:absolute;left:850px;right:90px;top:270px;font-size:118px;line-height:.98;font-weight:800;text-transform:uppercase;text-shadow:none !important}
+.prs{position:absolute;left:850px;right:70px;top:440px;list-style:none;display:flex;flex-direction:column;gap:20px}
+.pr{padding:18px 34px;border-radius:24px;border:2px solid transparent;opacity:0;transform:translateX(140px) scale(.95);filter:blur(8px);transition:all .9s cubic-bezier(.2,.9,.2,1)}
+.pr small{display:block;font-size:26px;font-weight:800;letter-spacing:.26em;color:var(--o2)}
+.pr strong{display:block;margin-top:6px;font-size:44px;line-height:1.08;font-weight:800}
+.pr.on{opacity:.55;transform:none;filter:none}
+.pr.cur{opacity:1;background:linear-gradient(90deg,rgba(255,122,26,.25),rgba(255,255,255,.03));border-color:var(--o);box-shadow:0 0 60px rgba(255,122,26,.35)}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -552,7 +586,7 @@ body.cache{cursor:none}
   </div></section>
 
   <?php
-  if ($membresAdmin) afficherEquipe($membresAdmin);
+  if ($membresAdmin) { afficherEquipe($membresAdmin); afficherProfils($membresAdmin); }
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
@@ -615,7 +649,7 @@ body.cache{cursor:none}
       [].forEach.call(s.querySelectorAll('.vg'),function(o,i){o.classList.toggle('on',i===idx)});
       s.classList.toggle('ov',st>=k);
     }
-    if(s.classList.contains('equipe')){[].forEach.call(s.querySelectorAll('.mb'),function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)})}
+    if(s.classList.contains('equipe')||s.classList.contains('prof')){[].forEach.call(s.querySelectorAll('.mb,.pr'),function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)})}
     else if(s.classList.contains('site')){
       if(s.classList.contains('arch')){
         [].forEach.call(s.querySelectorAll('.ac'),function(o,i){o.classList.toggle('on',st>=i+1)});
@@ -632,7 +666,7 @@ body.cache{cursor:none}
       var li=s.querySelectorAll('li');
       [].forEach.call(li,function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
     }
-    if(st>0&&(c!==dC||st!==dS)){var cur=s.querySelector('.pts li.cur,.sp.cur,.mb.cur');if(cur)exploser(cur,true);else if(s.classList.contains('var')&&st<s.querySelectorAll('.hv').length)exploser(s.querySelector('.hero'),false)}
+    if(st>0&&(c!==dC||st!==dS)){var cur=s.querySelector('.pts li.cur,.sp.cur,.mb.cur,.pr.cur');if(cur)exploser(cur,true);else if(s.classList.contains('var')&&st<s.querySelectorAll('.hv').length)exploser(s.querySelector('.hero'),false)}
     dC=c;dS=st;
     document.getElementById('prec').disabled=(c===0&&st===0);
     document.getElementById('suiv').disabled=(c===n-1&&st>=ns-1);
