@@ -751,9 +751,6 @@ body.cache{cursor:none}
 .nvg button.cur{background:#FF7A1A;border-color:#FFB36B;color:#031a21}.nvg button.cur i{background:#031a21;color:#FFB36B}
 .nvg button.ch{border-color:rgba(18,194,176,.6)}
 #sauter{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:90;padding:10px 22px;border-radius:30px;background:#FF7A1A;color:#031a21;font:800 26px 'Barlow',sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
-#g3d{transition:opacity .7s;position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:-1;pointer-events:none}
-body.g3dok .orb{opacity:.3}
-body.g3dok .grid{opacity:.1}
 
 /* =====================================================================
    MODE VERTICAL (téléphones et tablettes en portrait) : scène 1080 × 1920
@@ -762,49 +759,49 @@ body.vert .logo{left:36px;top:28px;height:64px;padding:5px 14px}
 body.vert .tag{display:none}
 body.vert .cadre{padding:0 50px}
 body.vert .tete{left:50px;right:50px;top:150px;gap:22px}
-body.vert .num{min-width:76px;height:76px;font-size:46px;border-radius:20px}
-body.vert .tete h2{font-size:62px}
-body.vert .kz{font-size:24px;padding:8px 24px;letter-spacing:.22em}
+body.vert .num{min-width:76px;height:76px;font-size:62px;border-radius:20px}
+body.vert .tete h2{font-size:84px}
+body.vert .kz{font-size:32px;padding:8px 24px;letter-spacing:.22em}
 body.vert .intro h1{font-size:138px}
 body.vert .intro h1 .l2{font-size:.72em}
-body.vert .intro .k{font-size:26px;letter-spacing:.24em}
-body.vert .intro .ss{font-size:38px;max-width:900px}
+body.vert .intro .k{font-size:35px;letter-spacing:.24em}
+body.vert .intro .ss{font-size:51px;max-width:900px}
 body.vert .fin h1{font-size:230px}
-body.vert .fin p{font-size:44px;max-width:900px}
+body.vert .fin p{font-size:59px;max-width:900px}
 body.vert .pts{left:50px;right:50px;top:340px;gap:34px}
-body.vert .pts li{font-size:60px;gap:28px}
+body.vert .pts li{font-size:81px;gap:28px}
 body.vert .pts li i{margin-top:14px;width:20px;height:20px}
 /* annonce des membres */
 body.vert .bign b{font-size:260px}
-body.vert .annt{font-size:50px;max-width:900px}
-body.vert .anns{font-size:32px}
+body.vert .annt{font-size:68px;max-width:900px}
+body.vert .anns{font-size:43px}
 body.vert .avs{gap:16px;flex-wrap:wrap}
 body.vert .av{width:118px;height:118px}
 /* pages d'annonce */
 body.vert .ct{font-size:128px;max-width:960px}
-body.vert .cs{font-size:36px;max-width:900px}
-body.vert .cn{font-size:28px;padding:10px 34px}
+body.vert .cs{font-size:49px;max-width:900px}
+body.vert .cn{font-size:38px;padding:10px 34px}
 body.vert .cl{width:400px}
 body.vert .s1{width:2400px;height:2400px}body.vert .s2{width:1500px;height:1500px}
 body.vert .spot{width:1000px;margin-left:-500px}
 /* fiche profil */
 body.vert .pfo{left:190px;top:260px;width:700px;height:820px}
-body.vert .pfn{left:50px;right:50px;top:1160px;font-size:84px;text-align:center}
-body.vert .prof.lg .pfn{font-size:58px;top:1170px}
+body.vert .pfn{left:50px;right:50px;top:1160px;font-size:113px;text-align:center}
+body.vert .prof.lg .pfn{font-size:78px;top:1170px}
 body.vert .prs{left:50px;right:50px;top:1340px;gap:14px}
 body.vert .prof.lg .prs{top:1360px}
-body.vert .pr{padding:12px 28px}body.vert .pr small{font-size:22px}body.vert .pr strong{font-size:38px}
+body.vert .pr{padding:12px 28px}body.vert .pr small{font-size:30px}body.vert .pr strong{font-size:51px}
 /* badges, diplômes, tickets */
-body.vert .titre{left:50px;right:50px;top:150px;font-size:46px;white-space:normal;line-height:1.08}
+body.vert .titre{left:50px;right:50px;top:150px;font-size:62px;white-space:normal;line-height:1.08}
 body.vert .var.port .hero{left:190px;top:330px;width:700px;height:900px}
 body.vert .var.port .panneau{left:50px;right:50px;top:1270px;height:560px}
 body.vert .var.land .hero{left:50px;top:330px;width:980px;height:690px}
 body.vert .var.land .panneau{left:50px;right:50px;top:1070px;height:760px}
 body.vert .infos{height:230px}
-body.vert .info h3{font-size:70px}body.vert .land .info h3{font-size:60px}
-body.vert .info small{font-size:26px}
+body.vert .info h3{font-size:94px}body.vert .land .info h3{font-size:81px}
+body.vert .info small{font-size:35px}
 body.vert .land .vg{flex:0 0 calc(33.333% - 14px)}
-body.vert .vg span{font-size:24px}
+body.vert .vg span{font-size:32px}
 body.vert .var .grille{left:50px;right:50px;top:310px;bottom:60px;gap:24px;flex-wrap:wrap}
 body.vert .grille img{height:380px}
 body.vert .land .grille img{width:900px;height:auto}
@@ -813,37 +810,43 @@ body.vert .land.n4 .grille{left:50px;right:50px}
 body.vert .tick.land .hero{left:50px;top:330px;width:980px;height:340px}
 body.vert .tick.land .panneau{left:50px;right:50px;top:710px;height:520px}
 body.vert .tick .infos{position:relative;width:100%;height:170px}
-body.vert .tick .info h3{font-size:48px}
+body.vert .tick .info h3{font-size:65px}
 body.vert .tick.land .vg{flex:1 1 0;min-width:0}body.vert .tick .vg{min-width:0}body.vert .tick .vg img{width:100%}
 body.vert .tick .vign{position:relative;left:auto;right:auto;bottom:auto;width:100%;margin-top:14px;flex-wrap:nowrap;gap:10px}
 body.vert .tick.land.n4 .grille,body.vert .tick.land.n5 .grille{left:50px;right:50px;top:310px;bottom:60px;gap:22px}
 body.vert .tick.land.n4 .grille figure img,body.vert .tick.land.n5 .grille figure img{width:470px;height:auto}
 /* le site : fenêtre + points */
-body.vert .site .sh{left:50px;right:50px;top:230px;font-size:68px}
-body.vert .site.arch .sh{font-size:60px}
+body.vert .site .sh{left:50px;right:50px;top:230px;font-size:92px}
+body.vert .site.arch .sh{font-size:81px}
 body.vert .mock{left:50px;top:400px;width:980px;height:640px}
 body.vert .corps{height:578px}
 body.vert .sps{left:50px;right:50px;top:1090px;gap:14px}
 body.vert .sp{padding:12px 22px;gap:20px}
-body.vert .sp h4{font-size:50px}body.vert .sp p{font-size:36px}
+body.vert .sp h4{font-size:68px}body.vert .sp p{font-size:49px}
 body.vert .n3 .sps{gap:24px}body.vert .n5 .sps{gap:8px}body.vert .n5 .sp{padding:8px 20px}
 body.vert .ar{left:50px;right:50px;top:470px;flex-direction:column;justify-content:flex-start}
 body.vert .ac{width:100%;padding:36px 44px}
-body.vert .ac b{width:64px;height:64px;font-size:38px;margin-bottom:16px}
-body.vert .ac h3{font-size:64px}body.vert .ac p{font-size:38px}body.vert .ac li{font-size:44px}
+body.vert .ac b{width:64px;height:64px;font-size:51px;margin-bottom:16px}
+body.vert .ac h3{font-size:86px}body.vert .ac p{font-size:51px}body.vert .ac li{font-size:59px}
 body.vert .ac ul{margin-top:22px;gap:14px}
 body.vert .fl{flex:none;width:14px;height:120px;flex-direction:column}
 body.vert .fl::before{left:6px;right:auto;top:8px;bottom:8px;width:2px;height:auto}
 body.vert .fl u{animation-name:fwv}
 @keyframes fwv{0%{transform:translateY(-40px);opacity:0}30%,70%{opacity:1}100%{transform:translateY(40px);opacity:0}}
-body.vert .bandeau-s{bottom:200px;font-size:40px;left:50px;right:50px}
+body.vert .bandeau-s{bottom:200px;font-size:54px;left:50px;right:50px}
 body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
+body.vert .site .sh,body.vert .site.arch .sh{font-size:64px;line-height:1.02;top:225px}
+body.vert .titre{font-size:56px}
+body.vert .zn em{font-size:32px;left:70px;top:10px}body.vert .zn small{width:40px;height:40px;font-size:26px}
+body.vert .zn{padding-top:58px}
+body.vert .mock .url{font-size:30px;height:48px}body.vert .mock .bar{height:78px}
+body.vert .info h3,body.vert .land .info h3{margin-top:16px;font-size:60px}body.vert .tick .info h3{font-size:50px}
+body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
 </style>
-<script type="importmap">{"imports":{"three":"<?= BASE_URL ?>/assets/js/three.module.min.js"}}</script>
 </head>
 <body>
 <div id="stage">
-  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><canvas id="g3d" width="1600" height="900"></canvas><div id="spot"></div><i class="cm"></i><i class="cm c2"></i><i class="cm c3"></i><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
+  <div class="bg"></div><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div><div id="spot"></div><i class="cm"></i><i class="cm c2"></i><i class="cm c3"></i><div id="geo"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i><i class="g7"></i><i class="g8"></i><i class="g9"></i><i class="g10"></i></div><canvas id="ptc" width="1920" height="1080"></canvas><div class="balayage"></div>
   <div class="logo"><img src="<?= BASE_URL ?>/assets/img/pres_bandeau.png" alt="AEEMCI — Secrétariat Régional Abidjan Nord — Sous-comités Anyama 1 &amp; 2 — JOSPIA"></div>
   <div class="tag">Bataille de Kirina</div>
 
@@ -895,10 +898,9 @@ body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
   var stage=document.getElementById('stage');
   var pivot=false,SW=1920,SH=1080,vert=null;
   function echelle(){var w=innerWidth,h=innerHeight,v=h>w;
-    if(v!==vert||(v&&SH!==Math.max(1920,Math.min(2400,Math.round(1080*h/w))))){vert=v;SW=v?1080:1920;SH=v?Math.max(1920,Math.min(2400,Math.round(1080*h/w))):1080;document.body.classList.toggle('vert',v);stage.style.setProperty('--W',SW+'px');stage.style.setProperty('--H',SH+'px');
+    if(v!==vert||(v&&SH!==Math.max(1920,Math.min(2700,Math.round(1080*h/w))))){vert=v;SW=v?1080:1920;SH=v?Math.max(1920,Math.min(2700,Math.round(1080*h/w))):1080;document.body.classList.toggle('vert',v);stage.style.setProperty('--W',SW+'px');stage.style.setProperty('--H',SH+'px');
       ['ptc','fete'].forEach(function(id){var c=document.getElementById(id);if(c){c.width=SW;c.height=SH}});
-      var g=document.getElementById('g3d');if(g){g.style.width=SW+'px';g.style.height=SH+'px'}
-      if(window.P3&&P3.resize)P3.resize(SW,SH)}
+            }
     stage.style.setProperty('--s',Math.min(w/SW,h/SH));stage.style.setProperty('--r','0deg')}
   echelle();addEventListener('resize',echelle);addEventListener('orientationchange',echelle);
 
@@ -920,7 +922,7 @@ body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
       setTimeout(function(){(function f(t){if(t0===null)t0=t;var p=Math.min(1,(t-t0)/1500),e=1-Math.pow(1-p,4);b.textContent=Math.round(cible*e).toLocaleString('fr-FR');if(p<1)requestAnimationFrame(f)})(performance.now())},delai)
     });
   }
-  function maj(){if(window.P3&&st>0)P3.step();
+  function maj(){
     var s=sl[c],ns=parseInt(s.getAttribute('data-steps'),10);
     if(s.classList.contains('var')){
       var k=s.querySelectorAll('.hv').length,idx=Math.min(st,k-1);
@@ -957,7 +959,7 @@ body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
     function bascule(){
       sl.forEach(function(s,k){s.classList.toggle('actif',k===i);s.classList.remove('e1','e2','e3');if(k===i&&i%4)s.classList.add('e'+(i%4))});
       c=i;st=step;maj();
-      cpt.textContent=(i+1)+' / '+n;if(window.P3)P3.slide(i,sl[i]);prog.style.width=((i+1)/n*100)+'%';
+      cpt.textContent=(i+1)+' / '+n;prog.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       compter(sl[i]);
       setTimeout(function(){boom(960,300,70);choc(960,300)},900);
@@ -1032,7 +1034,7 @@ body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
   /* feu d'artifice de fin */
   var fc=document.getElementById('fete'),fx=fc.getContext('2d'),F=[],run=false,col=['255,122,26','18,194,176','255,255,255','255,179,107'];
   var stg=document.getElementById('stage');
-  function boom(x,y,n,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}if(window.P3)P3.burst(x*1920/SW,y*1080/SH);for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
+  function boom(x,y,n,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}for(var k=0;k<n;k++){var a=Math.random()*6.283,v=3+Math.random()*10;F.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c:col[k%4]})}if(!run){run=true;bo()}}
   function choc(x,y,abs){if(!abs){x=x*SW/1920;y=y*SH/1080}[0,1].forEach(function(t){var d=document.createElement('div');d.className='shock'+(t?' t':'');d.style.left=x+'px';d.style.top=y+'px';stg.appendChild(d);setTimeout(function(){d.remove()},1400)})}
   function exploser(el,gauche){
     if(!el)return;var r=el.getBoundingClientRect(),sr=stg.getBoundingClientRect(),k=sr.width/SW||1;
@@ -1052,6 +1054,5 @@ body.vert .cmd{padding-bottom:max(14px,env(safe-area-inset-bottom))}
   go(h>=1&&h<=n?h-1:0,0,true);
 })();
 </script>
-<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=8"></script>
 </body>
 </html>
