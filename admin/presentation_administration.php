@@ -142,7 +142,7 @@ function afficherProfils($membres) {
         if (!empty($m['profil'])) $lignes[] = ['PROFIL DANS LA COMMISSION', $m['profil']];
         if ($an) $lignes[] = ['DÉBUT DU MILITANTISME', $an . '  ·  ' . $dur . ' an' . ($dur > 1 ? 's' : '') . ' d\'engagement'];
         ?>
-  <section class="slide site prof" data-steps="<?= count($lignes) + 1 ?>"><div class="cadre">
+  <section class="slide site prof<?= mb_strlen($m['nom']) > 18 ? ' lg' : '' ?>" data-steps="<?= count($lignes) + 1 ?>"><div class="cadre">
     <header class="tete"><div class="kz a" style="--d:0">MEMBRE DE LA COMMISSION</div></header>
     <div class="pfo a" style="--d:2"><i class="r1"></i><i class="r2"></i><div class="pfi"><img src="<?= e($m['src']) ?>" alt=""></div></div>
     <h2 class="pfn"><?= mots(mb_strtoupper($m['nom']), 2) ?></h2>
@@ -562,6 +562,8 @@ button{font-family:inherit}
 .pr strong{display:block;margin-top:6px;font-size:44px;line-height:1.08;font-weight:800}
 .pr.on{opacity:.55;transform:none;filter:none}
 .pr.cur{opacity:1;background:linear-gradient(90deg,rgba(255,122,26,.25),rgba(255,255,255,.03));border-color:var(--o);box-shadow:0 0 60px rgba(255,122,26,.35)}
+.prof.lg .pfn{font-size:88px;top:262px}
+.prof.lg .prs{top:500px}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
