@@ -6,6 +6,8 @@ const PRES_ADMIN_RUBRIQUES = [
     'difficultes'  => ['DIFFICULTÉS RENCONTRÉES', 'Difficultés rencontrées', 'Une difficulté par ligne.'],
     'perspectives' => ['PERSPECTIVES ET SUGGESTIONS', 'Perspectives et suggestions (facultatif)', 'Une proposition par ligne. Laissez vide pour ne pas afficher cette diapositive.'],
 ];
+/** Texte proposé par défaut tant que la rubrique n'a jamais été enregistrée depuis le formulaire. */
+const PRES_ADMIN_EFFECTUE_DEFAUT = "Diffusion des informations sur les réunions et les audiences\nAnimation des réunions, en ligne comme en présentiel\nTravaux menés malgré de nombreuses difficultés";
 function presAdminTable() {
     static $ok = false; global $pdo;
     if ($ok) return;
@@ -17,8 +19,10 @@ function presAdminLire() {
     $r = array_fill_keys(array_keys(PRES_ADMIN_RUBRIQUES), '');
     try {
         presAdminTable();
-        foreach ($pdo->query("SELECT cle, valeur FROM pres_administration")->fetchAll() as $l) { if (isset($r[$l['cle']])) $r[$l['cle']] = (string)$l['valeur']; }
-    } catch (Throwable $e) { }
+        $vu = [];
+        foreach ($pdo->query("SELECT cle, valeur FROM pres_administration")->fetchAll() as $l) { if (isset($r[$l['cle']])) { $r[$l['cle']] = (string)$l['valeur']; $vu[$l['cle']] = true; } }
+        if (empty($vu['effectue'])) $r['effectue'] = PRES_ADMIN_EFFECTUE_DEFAUT;
+    } catch (Throwable $e) { $r['effectue'] = PRES_ADMIN_EFFECTUE_DEFAUT; }
     return $r;
 }
 function presAdminEnregistrer(array $valeurs) {
