@@ -41,72 +41,88 @@ function afficherListe($num, $nom, $res, $gras) { ?>
 $SITE = [
  ['FRONT-END', "L'ACCUEIL", '/', [
    ["Présentation", "L'événement, les dates et le lieu"],
-   ["3 étapes", "S'inscrire, payer, passer le test"],
-   ["Accès direct", "Formulaires séminariste, commission, visiteur"],
-   ["Mobile", "Adapté au téléphone et installable"]]],
+   ["Compte à rebours", "Décompte jusqu'à l'ouverture"],
+   ["3 étapes", "S'inscrire, recevoir ses identifiants, consulter son espace"],
+   ["Accès direct", "Formulaires séminariste, commission et visiteurs"]]],
  ['FRONT-END', "L'INSCRIPTION DES SÉMINARISTES", '/inscription_seminariste', [
-   ["Formulaire", "Identité, niveau, sous-comité, section"],
-   ["Photo", "Téléversée en ligne avec le dossier"],
+   ["Formulaire", "Rempli en ligne par le séminariste"],
    ["Matricule", "JOS-001, JOS-002… attribué automatiquement"],
-   ["Dortoir", "Hommes, Femmes ou Pépinière, affecté automatiquement"]]],
+   ["Dortoir", "Hommes, Femmes ou Pépinière, affecté automatiquement"],
+   ["Compte", "Créé automatiquement, identifiants après paiement"]]],
  ['FRONT-END', "L'INSCRIPTION DES COMMISSIONS", '/inscription_commission', [
    ["Commission", "Choix parmi les 13 commissions"],
-   ["Identité", "Nom, contact et photo"],
    ["Badge", "Généré automatiquement"],
+   ["Diplôme", "Généré automatiquement"],
    ["Compte", "Identifiants créés automatiquement"]]],
  ['FRONT-END', "LE PAIEMENT ET SON SUIVI", '/paiement  ·  /statut', [
-   ["Paiement", "Déclaré en ligne, réglé en espèces"],
+   ["Paiement", "Frais remis en espèces à la commission Finance"],
    ["Reçu", "Avec QR code unique"],
-   ["Suivi", "Statut visible à tout moment"],
+   ["Suivi", "Statut du paiement consultable en ligne"],
    ["Validation", "Confirmée par la commission Finance"]]],
  ['FRONT-END', "LE TEST D'ENTRÉE", '/quiz', [
-   ["20 questions", "Coran, Fiqh, Aqida, culture, AEEMCI"],
-   ["Minuteur", "20 minutes, correction automatique"],
-   ["Note sur 20", "Niveau attribué : Primaire à Leader"],
-   ["Correction", "Détaillée, question par question"],
-   ["Diplôme", "Généré automatiquement"]]],
+   ["Test en ligne", "Composé par le séminariste après son inscription"],
+   ["Minuteur", "Soumission automatique à la fin du temps"],
+   ["Note sur 20", "Calculée automatiquement"],
+   ["Niveau et dortoir", "Déterminés d'après la note"],
+   ["Correction", "Consultable question par question"]]],
  ['FRONT-END', "LES VISITEURS", '/visiteur', [
-   ["Arrivée", "Enregistrement du visiteur"],
-   ["Sortie", "Heure de départ enregistrée"],
-   ["Suivi", "Consultable par la commission Sécurité"]]],
+   ["Arrivée", "Le visiteur enregistre son arrivée et son motif"],
+   ["Sortie", "Validée par la commission Sécurité"],
+   ["Suivi", "Liste réservée à la commission Sécurité"]]],
  ['FRONT-END', "L'ESPACE PERSONNEL", '/espace', [
-   ["Fiche", "D'inscription imprimable"],
-   ["Badge", "Aperçu et téléchargement"],
-   ["Bulletin", "Notes et niveau obtenus"],
-   ["Services", "Critiques, rapports, sortie du camp"]]],
+   ["Fiche", "D'inscription, téléchargeable en PDF"],
+   ["Badge", "Aperçu dans l'espace après paiement validé"],
+   ["Diplôme", "Aperçu dans l'espace après paiement validé"],
+   ["Bulletin", "Notes et niveau du séminariste"]]],
+ ['FRONT-END', "BADGES ET DIPLÔMES AUTOMATIQUES", '/espace', [
+   ["Badge séminariste", "Généré automatiquement"],
+   ["Diplôme séminariste", "Généré automatiquement"],
+   ["Badge membre", "Généré automatiquement"],
+   ["Diplôme membre", "Généré automatiquement, membre de commission"],
+   ["Impression", "Téléchargement et impression par les administrateurs"]]],
+ ['FRONT-END', "LA DEMANDE DE SORTIE DU CAMP", '/espace/sortie', [
+   ["1. La demande", "Motif, heure de sortie et heure de retour"],
+   ["2. MG ou MGA", "Accepte ou refuse la demande"],
+   ["3. Sécurité", "Confirme la sortie par le bouton OK"],
+   ["4. Le retour", "La personne signale son retour sur le camp"]]],
+ ['FRONT-END', "LES RAPPORTS JOURNALIERS", '/espace/rapport', [
+   ["Qui", "Le responsable de chaque commission"],
+   ["Contenu", "Activités, difficultés et prévisions du jour"],
+   ["Gestion", "Modifier ou supprimer ses propres rapports"],
+   ["Lecture", "Rapports consultables par le Comité managérial"]]],
  ['FRONT-END', "LA CONNEXION ET LE COMPTE", '/login  ·  /compte', [
-   ["Identifiants", "Générés à l'inscription"],
-   ["Rôles", "Séminariste, membre, admin, finance, sécurité…"],
+   ["Identifiants", "Créés automatiquement à l'inscription"],
+   ["Rôles", "Chaque compte accède à ses pages"],
    ["Sécurité", "Mots de passe chiffrés"],
    ["Compte", "Changement du mot de passe"]]],
  ['BACK-END', "LE TABLEAU DE BORD", '/admin/dashboard', [
-   ["En direct", "Inscrits, affectations, tests complétés"],
-   ["Finances", "Encaissements et paiements en attente"],
-   ["Répartitions", "Par commission, sous-comité et section"],
-   ["Niveaux", "Résultats du test d'entrée"]]],
+   ["Finances", "Statistiques des paiements en espèces"],
+   ["Commissions", "Répartition par commission"],
+   ["Sous-comités et sections", "Répartition des séminaristes"],
+   ["Niveaux", "Répartition selon le test d'entrée"]]],
  ['BACK-END', "L'ADMINISTRATION", '/admin/administration', [
-   ["Inscrits", "Consulter, modifier, supprimer"],
-   ["Dortoirs", "Listes imprimables par dortoir"],
-   ["Documents", "Badges et diplômes en lot"],
+   ["Inscrits", "Consulter et modifier séminaristes et membres"],
+   ["Dortoirs", "Listes par dortoir et par niveau"],
+   ["Documents", "Badges et diplômes : aperçu et impression"],
    ["Comptes", "Comptes admin et paramètres du site"]]],
  ['BACK-END', "LA COMMISSION SCIENTIFIQUE", '/admin/commission_scientifique', [
-   ["Notes", "Saisie par matière et par séminariste"],
-   ["Bulletins", "Calcul et impression automatiques"],
-   ["Test d'entrée", "Questions, matières, seuils de niveau"],
+   ["Notes", "Saisie des notes"],
+   ["Bulletins", "Consultation et impression"],
+   ["Test d'entrée", "Questions, matières et niveaux selon les notes"],
    ["Programme", "Programme journalier et archives"]]],
- ['BACK-END', "LA COMMISSION FINANCE", '/finance', [
-   ["Paiements", "Validation des paiements en attente"],
-   ["Scanner", "Vérification des reçus par QR code"],
-   ["Tickets", "Génération et impression des tickets"]]],
+ ['BACK-END', "LA COMMISSION FINANCE", '/finance/paiements', [
+   ["Paiements", "Gestion des paiements en espèces"],
+   ["Scanner", "Vérification d'un reçu par son QR code"],
+   ["Tickets", "Gestion et impression des tickets"]]],
  ['BACK-END', "LA COMMISSION SÉCURITÉ", '/securite', [
-   ["Visiteurs", "Contrôle des arrivées et des sorties"],
-   ["Sorties du camp", "Autorisation et suivi des demandes"],
-   ["Retours", "Historique des retours"]]],
+   ["Visiteurs", "Arrivées et sorties des visiteurs"],
+   ["Sorties du camp", "Confirmation des sorties acceptées par le MG / MGA"],
+   ["Retours", "Suivi des personnes sorties et rentrées"]]],
  ['BACK-END', "LE COMITÉ MANAGÉRIAL", '/admin/comite_manageriale', [
-   ["Rapports", "Rapports des commissions"],
-   ["Sorties", "Autorisations de sortie du camp"],
-   ["Présentations", "Lancement et bilans projetés"]]],
- ['TECHNIQUE', "LES COULISSES DU SITE", 'jospia26.site', [
+   ["Rapports", "Lecture des rapports journaliers des commissions"],
+   ["Sorties", "Le MG / MGA accepte ou refuse les demandes de sortie"],
+   ["Rôles", "Le super administrateur attribue le MG / MGA"]]],
+ ['BACK-END', "LES COULISSES DU SITE", 'jospia26.site', [
    ["Technologies", "PHP 8.2 et base de données MariaDB"],
    ["Hébergement", "Docker sur Render, en ligne 24h/24"],
    ["Déploiement", "Automatique à chaque mise à jour"],
@@ -189,17 +205,16 @@ function afficherProfils($membres) {
 <?php } }
 
 function afficherSiteArchi() { ?>
-  <section class="slide site arch" data-steps="5"><div class="cadre">
+  <section class="slide site arch" data-steps="4"><div class="cadre">
     <header class="tete"><div class="kz a" style="--d:0">LE SITE JOSPIA</div></header>
     <h2 class="sh"><?= mots("RÉALISATIONS : LE SITE JOSPIA", 1) ?></h2>
     <div class="ar">
       <?php foreach ([
-        ['FRONT-END', 'Ce que voit l\'utilisateur', ['Pages et formulaires', 'Design adapté mobile', 'Espace personnel'], 'f'],
-        ['BACK-END', 'Le cerveau du site', ['Règles et calculs', 'Rôles et sécurité', 'PDF, badges, QR codes'], 'b'],
-        ['DONNÉES', 'La base de données du site', ['Inscrits et paiements', 'Notes et bulletins', 'Journal d\'activité'], 't'],
+        ['FRONT-END', 'Ce que voit l\'utilisateur', ['Pages et formulaires', 'Espace personnel', 'Demandes de sortie et rapports'], 'f'],
+        ['BACK-END', 'Le cerveau et la base de données', ['Règles, rôles et sécurité', 'PDF, badges, QR codes', 'Base de données du site'], 'b'],
       ] as $i => [$t, $d, $l, $c]): ?>
       <div class="ac <?= $c ?>"><b><?= $i + 1 ?></b><h3><?= e($t) ?></h3><p><?= e($d) ?></p><ul><?php foreach ($l as $x): ?><li><?= e($x) ?></li><?php endforeach; ?></ul></div>
-      <?php if ($i < 2): ?><div class="fl"><u></u><u></u><u></u></div><?php endif; ?>
+      <?php if ($i < 1): ?><div class="fl"><u></u><u></u><u></u></div><?php endif; ?>
       <?php endforeach; ?>
     </div>
     <div class="bandeau-s">Du clic de l'utilisateur jusqu'à l'enregistrement des données</div>
@@ -517,7 +532,7 @@ button{font-family:inherit}
 .n5 .sps{gap:10px}.n5 .sp{padding:10px 24px}
 /* architecture */
 .ar{position:absolute;left:90px;right:90px;top:380px;display:flex;align-items:center;justify-content:space-between}
-.ac{width:540px;padding:56px 40px;border-radius:30px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.16);box-shadow:0 24px 70px rgba(0,0,0,.4);opacity:0;transform:translateY(80px) scale(.92);transition:all .9s cubic-bezier(.2,.9,.2,1)}
+.ac{width:800px;padding:56px 40px;border-radius:30px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.16);box-shadow:0 24px 70px rgba(0,0,0,.4);opacity:0;transform:translateY(80px) scale(.92);transition:all .9s cubic-bezier(.2,.9,.2,1)}
 .ac.on{opacity:1;transform:none}
 .ac b{display:flex;width:76px;height:76px;border-radius:22px;align-items:center;justify-content:center;font-size:46px;font-weight:800;color:#031a21;background:var(--o);margin-bottom:22px;box-shadow:0 0 34px var(--o)}
 .ac.b b{background:var(--t);box-shadow:0 0 34px var(--t)}.ac.t b{background:#E8C25A;box-shadow:0 0 34px #E8C25A}
@@ -745,7 +760,7 @@ body.cache{cursor:none}
     else if(s.classList.contains('site')){
       if(s.classList.contains('arch')){
         [].forEach.call(s.querySelectorAll('.ac'),function(o,i){o.classList.toggle('on',st>=i+1)});
-        s.classList.toggle('fx',st>=4);
+        s.classList.toggle('fx',st>=3);
       }else{
         [].forEach.call(s.querySelectorAll('.sp'),function(o,i){o.classList.toggle('on',st>=i+1);o.classList.toggle('cur',st===i+1)});
         var zs=s.querySelectorAll('.zn');
