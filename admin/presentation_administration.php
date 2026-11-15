@@ -296,7 +296,7 @@ $OF = [['1', 'Modèle 1', 'Cercles vert et orange', '#0B6A3A'], ['2', 'Modèle 2
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" id="vp" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Commission Administration — Bataille de Kirina — JOSPIA 2026</title>
 <style>
 @font-face{font-family:'Barlow';font-weight:800;font-display:swap;src:url(<?= BASE_URL ?>/assets/fonts/barlow-latin-800-normal.woff2) format('woff2')}
@@ -896,6 +896,10 @@ body.vert .cmd button,body.vert .cmd a{width:48px;height:48px}
 <script>
 (function(){
   var stage=document.getElementById('stage');
+  /* sécurité téléphone : si la page est zoomée (pincement, zoom d'accessibilité), on remet le zoom à 1 */
+  function dezoom(){var m=document.getElementById('vp');if(!m)return;var vv=window.visualViewport;if(vv&&vv.scale>1.02){m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover');setTimeout(function(){m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')},300)}}
+  if(window.visualViewport){visualViewport.addEventListener('resize',dezoom)}
+  addEventListener('load',dezoom);
   var pivot=false,SW=1920,SH=1080,vert=null;
   function echelle(){var w=innerWidth,h=innerHeight,v=h>w;
     if(v!==vert||(v&&SH!==Math.max(1920,Math.min(2700,Math.round(1080*h/w))))){vert=v;SW=v?1080:1920;SH=v?Math.max(1920,Math.min(2700,Math.round(1080*h/w))):1080;document.body.classList.toggle('vert',v);stage.style.setProperty('--W',SW+'px');stage.style.setProperty('--H',SH+'px');
