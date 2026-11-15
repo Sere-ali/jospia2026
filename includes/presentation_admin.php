@@ -94,7 +94,7 @@ function presAdminMembres() {
         foreach ($pdo->query("SELECT nom_prenoms, commission, photo, responsable FROM membres_commission ORDER BY responsable DESC, nom_prenoms ASC")->fetchAll() as $m) {
             if (normaliserCommission($m['commission']) !== 'ADMINISTRATION') continue;
             $k = presAdminCleNom($m['nom_prenoms']);
-            if (isset($r[$k])) { $r[$k]['resp'] = (int)$m['responsable'] === 1; continue; }
+            if (isset($r[$k])) continue; // la fiche prime sur le site (le responsable est défini dans pres_membres.php)
             $r[$k] = ['nom' => (string)$m['nom_prenoms'], 'src' => $m['photo'] !== '' ? BASE_URL . '/uploads/photos/' . rawurlencode((string)$m['photo']) : '', 'resp' => (int)$m['responsable'] === 1, 'fiche' => false];
         }
     } catch (Throwable $e) { }

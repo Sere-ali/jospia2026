@@ -590,7 +590,7 @@ body.cache{cursor:none}
   </div></section>
 
   <?php
-  if ($membresAdmin) { afficherEquipe($membresAdmin); afficherProfils($membresAdmin); }
+  if ($membresAdmin) { afficherProfils($membresAdmin); }
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
