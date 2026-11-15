@@ -133,6 +133,27 @@ function afficherEquipe($membres) {
   </div></section>
 <?php endforeach; }
 
+function afficherChapitre($num, $titre, $sous, $style) {
+    $pts = [];
+    for ($i = 0; $i < 32; $i++) { $a = $i * M_PI / 16 - M_PI / 2; $r = ($i % 2 === 0) ? 50 : 33; $pts[] = round(50 + $r * cos($a), 2) . '% ' . round(50 + $r * sin($a), 2) . '%'; }
+    $poly = implode(',', $pts); ?>
+  <section class="slide chap <?= $style ?>"><div class="cadre">
+    <?php if ($style === 'etoile'): ?>
+    <div class="stars"><i class="s1" style="clip-path:polygon(<?= $poly ?>)"></i><i class="s2" style="clip-path:polygon(<?= $poly ?>)"></i><i class="s3" style="clip-path:polygon(<?= $poly ?>)"></i>
+      <?php for ($k = 0; $k < 12; $k++): ?><u style="--k:<?= $k ?>;left:<?= 6 + (($k * 37) % 88) ?>%;top:<?= 8 + (($k * 53) % 80) ?>%"></u><?php endfor; ?></div>
+    <?php else: ?>
+    <div class="spot"></div>
+    <div class="rid"><b class="g"></b><b class="d"></b><em></em></div>
+    <?php endif; ?>
+    <div class="ccn">
+      <div class="cn a" style="--d:<?= $style === 'etoile' ? 1 : 7 ?>">RÉALISATION <?= e($num) ?></div>
+      <h2 class="ct"><?= mots($titre, $style === 'etoile' ? 3 : 9) ?></h2>
+      <div class="cl a" style="--d:<?= $style === 'etoile' ? 8 : 15 ?>"></div>
+      <p class="cs a" style="--d:<?= $style === 'etoile' ? 9 : 16 ?>"><?= e($sous) ?></p>
+    </div>
+  </div></section>
+<?php }
+
 function afficherAnnonceMembres($membres) {
     $f = array_values(array_filter($membres, function ($m) { return !empty($m['fiche']); })); $n = count($f);
     if (!$n) return; ?>
@@ -592,6 +613,42 @@ button{font-family:inherit}
 .av img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
 .slide.actif .av{animation:avp .9s cubic-bezier(.2,1.3,.3,1) both,fm 5s 2s ease-in-out infinite;animation-delay:calc(3.2s + var(--k)*.28s),calc(4s + var(--k)*.3s)}
 @keyframes avp{to{opacity:1;transform:none}}
+
+/* ---------- pages d'annonce (rideau / étoile) ---------- */
+.chap .cadre{display:flex;align-items:center;justify-content:center;padding:0}
+.ccn{position:relative;z-index:3;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cn{padding:12px 44px;border-radius:40px;background:var(--o);color:#031a21;font-size:34px;font-weight:800;letter-spacing:.34em;box-shadow:0 0 50px rgba(255,122,26,.6)}
+.ct{margin-top:34px;font-size:230px;line-height:.95;font-weight:800;text-transform:uppercase;max-width:1700px;filter:drop-shadow(0 10px 40px rgba(0,0,0,.6))}
+.cl{margin-top:34px;width:560px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--t),var(--o))}
+.cs{margin-top:30px;font-size:46px;font-weight:700;color:#ffc58f;max-width:1500px;text-shadow:0 3px 18px rgba(0,0,0,.8)}
+/* rideau */
+.spot{position:absolute;left:50%;top:-10%;width:1300px;height:1300px;margin-left:-650px;background:radial-gradient(ellipse at 50% 0,rgba(255,200,140,.35),transparent 60%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:0}
+.slide.actif .spot{animation:spt 2s 1.5s ease-out both}
+@keyframes spt{to{opacity:1}}
+.rid{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.rid b{position:absolute;top:0;bottom:0;width:51%;background:repeating-linear-gradient(90deg,#0d7d8e 0 64px,#08515f 64px 128px,#0b6b7a 128px 192px);box-shadow:inset 0 0 120px rgba(0,0,0,.55)}
+.rid b::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 25%,rgba(0,0,0,.35));}
+.rid b.g{left:0;border-right:10px solid var(--o2)}.rid b.d{right:0;border-left:10px solid var(--o2)}
+.rid em{position:absolute;left:0;right:0;top:0;height:90px;background:radial-gradient(circle at 50% 100%,transparent 44px,#ff7a1a 46px) 0 0/120px 90px repeat-x,#ff7a1a;background:linear-gradient(#ff7a1a,#ff7a1a) 0 0/100% 60px no-repeat,radial-gradient(circle at 50% 0,#ff7a1a 58px,transparent 60px) 0 50px/120px 50px repeat-x;filter:drop-shadow(0 12px 18px rgba(0,0,0,.5))}
+.slide.actif .rid b.g{animation:rg 1.6s .55s cubic-bezier(.7,0,.2,1) both}
+.slide.actif .rid b.d{animation:rd 1.6s .55s cubic-bezier(.7,0,.2,1) both}
+.slide.actif .rid em{animation:rv 1s 2.1s ease-in both}
+@keyframes rg{to{transform:translateX(-105%)}}@keyframes rd{to{transform:translateX(105%)}}
+@keyframes rv{to{transform:translateY(-130%)}}
+/* étoile */
+.stars{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.stars i{position:absolute;left:50%;top:50%;border-radius:0;transform:translate(-50%,-50%) scale(0) rotate(0)}
+.s1{width:1900px;height:1900px;background:conic-gradient(from 0deg,rgba(255,122,26,.32),rgba(18,194,176,.28),rgba(255,122,26,.32))}
+.s2{width:1250px;height:1250px;background:conic-gradient(from 90deg,rgba(18,194,176,.4),rgba(255,140,60,.3),rgba(18,194,176,.4))}
+.s3{width:760px;height:760px;background:radial-gradient(circle,rgba(255,255,255,.22),rgba(255,122,26,.25) 60%,transparent 70%)}
+.slide.actif .s1{animation:sa 2.2s .5s cubic-bezier(.2,.9,.2,1) both,sr 40s 2.7s linear infinite}
+.slide.actif .s2{animation:sa 2s .8s cubic-bezier(.2,.9,.2,1) both,sr 28s 2.8s linear infinite reverse}
+.slide.actif .s3{animation:sa 1.6s 1.1s cubic-bezier(.2,.9,.2,1) both,pul 3s 2.7s ease-in-out infinite}
+@keyframes sa{from{transform:translate(-50%,-50%) scale(0) rotate(-180deg);opacity:0}to{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes sr{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.stars u{position:absolute;width:34px;height:34px;background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0;filter:drop-shadow(0 0 10px #fff)}
+.slide.actif .stars u{animation:tw 2.4s infinite;animation-delay:calc(1.5s + var(--k)*.25s)}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1.6) rotate(90deg)}}
 /* contrôles */
 .cmd{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;opacity:0;transition:opacity .5s;pointer-events:none}
 body.actifs .cmd{opacity:1;pointer-events:auto}
@@ -618,13 +675,17 @@ body.cache{cursor:none}
 
   <?php
   if ($membresAdmin) { afficherAnnonceMembres($membresAdmin); afficherProfils($membresAdmin); }
+  afficherChapitre('01', 'LES BADGES', 'Séminaristes · Membres de commission · Médias, visiteurs, formateurs', 'rideau');
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
+  afficherVariantes('RÉALISATIONS : LES AUTRES BADGES', 'badges', 'autre', $AB, 'jpg');
+  afficherChapitre('02', 'LES DIPLÔMES', 'Membres de commission · Séminaristes · Officiels', 'etoile');
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES MEMBRES DE COMMISSION', 'diplomes', 'commission', $DC, 'jpg', true);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DU SÉMINARISTE', 'diplomes', 'seminariste', $DS, 'jpg', true);
   afficherVariantes('RÉALISATIONS : LE DIPLÔME DES OFFICIELS', 'diplomes', 'officiel', $OF, 'jpg', true);
-  afficherVariantes('RÉALISATIONS : LES AUTRES BADGES', 'badges', 'autre', $AB, 'jpg');
+  afficherChapitre('03', 'LES TICKETS', 'Cinq modèles de tickets avec souche à conserver', 'rideau');
   afficherVariantes('RÉALISATIONS : LES TICKETS', 'tickets', 'ticket', $TK, 'jpg', true);
+  afficherChapitre('04', 'LE SITE JOSPIA', 'Du front-end au back-end, page par page', 'etoile');
   afficherSiteArchi();
   foreach ($SITE as [$z, $t, $u, $pp]) { afficherSite($z, $t, $u, $pp); }
   foreach ($slidesAdmin as [$num, $nom, $res, $gras, $deux]) {
@@ -712,6 +773,7 @@ body.cache{cursor:none}
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       compter(sl[i]);
       setTimeout(function(){boom(960,300,70);choc(960,300)},900);
+      if(sl[i].classList.contains('chap')){var rd=sl[i].classList.contains('rideau');[0,1,2].forEach(function(k){setTimeout(function(){boom(960,540,90);choc(960,540)},(rd?1800:1100)+k*350)})}
       if(sl[i].classList.contains('ann')){[].forEach.call(sl[i].querySelectorAll('.av'),function(a,k){setTimeout(function(){exploser(a,false)},3300+k*280)});setTimeout(function(){boom(960,420,120);choc(960,420)},1900)}
       if(sl[i].classList.contains('fin'))setTimeout(fete,1100);
     }
