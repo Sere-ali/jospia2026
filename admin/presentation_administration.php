@@ -913,11 +913,6 @@ body.lite .intro h1 .l2{text-shadow:none}
     "ZONO : Matériel et logistique administrative",
     "ZEÏNAB : Secrétariat, convocations, procès-verbaux",
     "OUANDE Amidou : Appui à SEKONGO, ILIACE et ZONO"], true, 'dense');
-  afficherListe('', "PLAN D'ACTION : LES 3 PHASES", [
-    "Avant le séminaire : réunions, plan d'action et budget, modèles de diplômes, gabarits de badges, inventaire du matériel, convocations",
-    "Pendant le séminaire : impression des diplômes, distribution des badges, suivi des présences, supervision du matériel, procès-verbaux",
-    "Après le séminaire : distribution des diplômes, archivage complet, restitution du matériel, rapports individuels, bilan transmis aux Managers Généraux sous 10 jours",
-    "Soutien aux autres commissions : uniquement avec l'autorisation du responsable ou de son adjoint, pendant les temps libres"], true, 'dense');
     afficherChapitre('01', 'LES BADGES', 'Séminaristes · Membres de commission · Médias, visiteurs, formateurs', 'rideau');
   afficherVariantes('RÉALISATIONS : LE BADGE DES SÉMINARISTES', 'badges', 'seminariste', $BA);
   afficherVariantes('RÉALISATIONS : LE BADGE DES MEMBRES DE COMMISSION', 'badges', 'commission', $BA);
