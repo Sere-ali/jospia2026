@@ -162,7 +162,7 @@ if (R) {
 
   /* ---------- pilotage par la présentation ---------- */
   const T = {A: {p: new THREE.Vector3(8, 0, -5), s: 0}, M: {p: new THREE.Vector3(-8, 0, -5), s: 0}, Mq: {p: new THREE.Vector3(0, -2, -6), s: 0}, H: {p: new THREE.Vector3(0, 0, -9), s: 0}};
-  const S = {idx: 0, kind: 'c', kick: 0, flash: 0, camT: new THREE.Vector3(0, 0, 15), mx: 0, my: 0};
+  const S = {show: true, idx: 0, kind: 'c', kick: 0, flash: 0, camT: new THREE.Vector3(0, 0, 15), mx: 0, my: 0};
   addEventListener('mousemove', e => { S.mx = e.clientX / innerWidth - .5; S.my = e.clientY / innerHeight - .5; });
   const set = (o, x, y, z, s) => { o.p.set(x, y, z); o.s = s; };
 
@@ -173,6 +173,7 @@ if (R) {
       const th = i * .42;
       S.camT.set(Math.sin(th) * 3.2, Math.cos(th * 1.3) * 1.6, 14.5 + Math.sin(th * .7) * 1.4);
       S.kick = S.kind === 'chap' ? 4.5 : S.kind === 'c' ? 2.5 : 4; S.flash = 1; S.idx = i;
+      S.show = S.kind !== 'c'; cv.style.opacity = S.show ? 1 : 0; /* 3D seulement sur les pages de grands titres */
       const teal = c.contains('b') && c.contains('site');
       lo.color.set(teal ? 0x2fd8c4 : 0xffa24a); lt.color.set(teal ? 0xffa24a : 0x2fd8c4);
       set(T.A, 0, 0, 0, 0); set(T.M, 0, 0, 0, 0); set(T.Mq, 0, -2, -6, 0); set(T.H, 0, 0, -10, 0);
@@ -193,7 +194,7 @@ if (R) {
   document.body.classList.add('g3dok');
 
   /* ---------- boucle de rendu ---------- */
-  const clock = new THREE.Clock(), tmp = new THREE.Vector3();
+  const clock = new THREE.Clock(), tmp = new THREE.Vector3(); let cvOff = false; setInterval(() => { cvOff = !S.show; }, 900);
   function glide(o, tg, k, sway, t, ph) {
     o.position.lerp(tg.p, k); const s = o.scale.x + (tg.s * (1 + S.flash * .06) - o.scale.x) * k; o.scale.setScalar(Math.max(s, .001));
     o.visible = s > .02;
@@ -202,6 +203,7 @@ if (R) {
   (function tick() {
     requestAnimationFrame(tick);
     if (document.hidden) return;
+    if (!S.show && cv.style.opacity === '0') { clock.getDelta(); if (cvOff) return; }
     const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime, k = 1 - Math.pow(.04, dt);
     S.kick *= Math.pow(.04, dt);
     tmp.copy(S.camT); tmp.z += S.kick; tmp.x += S.mx * 2.4; tmp.y -= S.my * 1.5;

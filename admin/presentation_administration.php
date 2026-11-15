@@ -751,7 +751,7 @@ body.cache{cursor:none}
 .nvg button.cur{background:#FF7A1A;border-color:#FFB36B;color:#031a21}.nvg button.cur i{background:#031a21;color:#FFB36B}
 .nvg button.ch{border-color:rgba(18,194,176,.6)}
 #sauter{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:90;padding:10px 22px;border-radius:30px;background:#FF7A1A;color:#031a21;font:800 26px 'Barlow',sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
-#g3d{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:-1;pointer-events:none}
+#g3d{transition:opacity .7s;position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:-1;pointer-events:none}
 body.g3dok .orb{opacity:.3}
 body.g3dok .grid{opacity:.1}
 </style>
@@ -962,6 +962,6 @@ body.g3dok .grid{opacity:.1}
   go(h>=1&&h<=n?h-1:0,0,true);
 })();
 </script>
-<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=5"></script>
+<script type="module" src="<?= BASE_URL ?>/assets/js/pres3d.js?v=6"></script>
 </body>
 </html>
