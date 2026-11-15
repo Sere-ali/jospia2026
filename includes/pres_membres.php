@@ -11,4 +11,5 @@ return [
     ['nom' => 'SEKONGO Katchenefoha Issa', 'etudes' => 'Admissible au BTS 2026 en Finance Comptabilité et Gestion des Entreprises', 'profil' => 'Membre de la commission Administration', 'annee' => 2020, 'photo' => 'issa_sekongo.jpg'],
     ['nom' => 'Zaïnab DOUMBIA', 'etudes' => 'Étudiante en Licence 2 de Droit', 'profil' => 'Membre de la commission Administration', 'annee' => 2024, 'photo' => 'zainab_doumbia.jpg'],
     ['nom' => 'BARRO Bassabana Abdoul Karim', 'metier' => 'Dessinateur Projeteur en Génie Civil Bâtiment', 'profil' => 'Membre de la commission Administration', 'annee' => 2019, 'photo' => 'karim_barro.jpg'],
+    ['nom' => 'SERE Ali', 'metier' => 'Informaticien programmeur, gestionnaire de base de données à QUALICOM.CI', 'profil' => 'Responsable de la commission Administration', 'annee' => 2015, 'photo' => 'ali_sere.jpg', 'resp' => true],
 ];

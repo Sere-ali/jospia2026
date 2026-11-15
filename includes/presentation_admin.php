@@ -83,7 +83,7 @@ function presAdminMembres() {
     $r = []; $vu = [];
     $fiches = is_file(__DIR__ . '/pres_membres.php') ? (include __DIR__ . '/pres_membres.php') : [];
     foreach ($fiches as $f) {
-        $f['resp'] = false;
+        $f['resp'] = !empty($f['resp']);
         $chemin = __DIR__ . '/../assets/img/pres/membres/' . $f['photo'];
         $f['src'] = BASE_URL . '/assets/img/pres/membres/' . rawurlencode($f['photo']) . (is_file($chemin) ? '?v=' . filemtime($chemin) : '');
         $f['fiche'] = true; $r[presAdminCleNom($f['nom'])] = $f;
@@ -98,5 +98,7 @@ function presAdminMembres() {
             $r[$k] = ['nom' => (string)$m['nom_prenoms'], 'src' => $m['photo'] !== '' ? BASE_URL . '/uploads/photos/' . rawurlencode((string)$m['photo']) : '', 'resp' => (int)$m['responsable'] === 1, 'fiche' => false];
         }
     } catch (Throwable $e) { }
-    return array_values($r);
+    $r = array_values($r);
+    usort($r, function ($a, $b) { return ((int)$b['resp'] - (int)$a['resp']) ?: 0; }); // responsable en premier (tri stable à partir de PHP 8)
+    return $r;
 }

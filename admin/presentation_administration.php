@@ -144,7 +144,7 @@ function afficherProfils($membres) {
         if ($an) $lignes[] = ['DÉBUT DU MILITANTISME', $an . '  ·  ' . $dur . ' an' . ($dur > 1 ? 's' : '') . ' d\'engagement'];
         ?>
   <section class="slide site prof<?= mb_strlen($m['nom']) > 18 ? ' lg' : '' ?>" data-steps="<?= count($lignes) + 1 ?>"><div class="cadre">
-    <header class="tete"><div class="kz a" style="--d:0">MEMBRE DE LA COMMISSION</div></header>
+    <header class="tete"><div class="kz a" style="--d:0"><?= !empty($m['resp']) ? 'RESPONSABLE DE LA COMMISSION' : 'MEMBRE DE LA COMMISSION' ?></div></header>
     <div class="pfo a" style="--d:2"><i class="r1"></i><i class="r2"></i><div class="pfi"><img src="<?= e($m['src']) ?>" alt=""></div></div>
     <h2 class="pfn"><?= mots(mb_strtoupper($m['nom']), 2) ?></h2>
     <ul class="prs">
