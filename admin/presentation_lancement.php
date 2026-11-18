@@ -302,14 +302,14 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 <div id="scene">
 <?php /* Présentation du thème, de la vision, des objectifs et du budget : passe avant les grandes activités */ ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
-    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
     <h1 class="degrade titreintro"><?= mots($introTitre, 1) ?></h1>
     <div class="trait"></div>
   </div></section>
   <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) { afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux); } ?>
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
-    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
     <span class="num degrade"><?= mots($rom) ?></span>
     <h1 class="degrade"><?= mots($titre, 2) ?></h1>
     <div class="trait"></div>
@@ -317,7 +317,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   <?php foreach ($items as [$num, $nom, $sous, $obj, $labelR, $res]) { afficherActivite($num, $nom, $sous, $obj, $labelR, $res); } ?>
 <?php endforeach; ?>
   <section class="slide final" data-steps="1"><div class="contenu merci">
-    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png" alt="JOSPIA 2026"></div>
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
     <h1 class="degrade"><?= mots('MERCI') ?></h1>
     <p class="el" style="--i:6">Je vous remercie pour votre aimable attention.</p>
     <div class="trait"></div>
