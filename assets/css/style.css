@@ -982,8 +982,8 @@ footer a { color: #fff; font-weight: 600; }
 .page-badges .jos-badge { max-width: 300px; }
 .jos-badge .jos-doc__stage { --u: calc(100cqw / 638); aspect-ratio: 638 / 1016; background: #fff; }
 .jos-badge__photo {
-    position: absolute; left: calc(var(--u) * 28); top: calc(var(--u) * 359);
-    width: calc(var(--u) * 192); height: calc(var(--u) * 446);
+    position: absolute; left: calc(var(--u) * 20); top: calc(var(--u) * 334);
+    width: calc(var(--u) * 222); height: calc(var(--u) * 500);
     overflow: hidden; background: #fff;
 }
 .jos-badge__photo img, .jos-badge-sem__photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; max-width: none; }

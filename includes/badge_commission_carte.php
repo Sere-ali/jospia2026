@@ -5,8 +5,8 @@
  * Repère de mise en page : 638 x 1016 (voir .jos-badge dans style.css et pdfBadgeCommission dans pdf_docs.php).
  */
 $__avatar = BASE_URL . '/assets/img/avatar.svg';
-$__c = !empty($membre['photo']) ? photoCadrage($GLOBALS['pdo'], $membre['photo'], 192 / 446, 0.5) : null;
-$__f = $__c ? [0.5, 0.2] : photoFocus($GLOBALS['pdo'], $membre['photo'] ?? '', 192 / 446);
+$__c = !empty($membre['photo']) ? photoCadrage($GLOBALS['pdo'], $membre['photo'], 222 / 500, 0.5) : null;
+$__f = $__c ? [0.5, 0.2] : photoFocus($GLOBALS['pdo'], $membre['photo'] ?? '', 222 / 500);
 $__photo = !empty($membre['photo']) ? BASE_URL . '/uploads/photos/' . rawurlencode($membre['photo']) : $__avatar;
 $__mep = josBadgeCommissionMiseEnPage($membre['nom_prenoms'], $membre['commission']);
 ?>

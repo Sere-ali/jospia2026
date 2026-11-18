@@ -204,7 +204,7 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
     // Modèle orange 638 x 1016 (mise en page identique à .jos-badge dans style.css)
     $W = (int)round(638 * $S); $H = (int)round(1016 * $S);
     $im = pdfToile($W, $H);
-    pdfPhotoCadree($pdo, $im, $m['photo'] ?? '', 28 * $S, 359 * $S, 192 * $S, 446 * $S, 0.5);
+    pdfPhotoCadree($pdo, $im, $m['photo'] ?? '', 20 * $S, 334 * $S, 222 * $S, 500 * $S, 0.5);
     pdfModele($im, 'badge_commission.webp', $W, $H);
     $mep = josBadgeCommissionMiseEnPage($m['nom_prenoms'], $m['commission']);
     $police = 'barlow-latin-800-normal.ttf';
