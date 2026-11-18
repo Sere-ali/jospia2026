@@ -992,12 +992,12 @@ footer a { color: #fff; font-weight: 600; }
     color: #fff; font-weight: 800; display: flex; flex-direction: column; justify-content: flex-start;
 }
 .jos-badge__n1 {
-    top: calc(var(--u) * (450.5 + var(--dy, 0))); height: calc(var(--u) * 73);
+    top: calc(var(--u) * var(--nt, 450.5)); height: calc(var(--u) * 73);
     text-transform: uppercase; letter-spacing: .01em;
     font-size: calc(var(--u) * 73 * var(--fit, 1)); line-height: calc(var(--u) * 73);
 }
 .jos-badge__n2 {
-    top: calc(var(--u) * (519.7 + var(--dy, 0)));
+    top: calc(var(--u) * var(--pt, 456));
     font-size: calc(var(--u) * var(--prs, 44) * var(--fit, 1)); line-height: calc(var(--u) * var(--prp, 44));
 }
 .jos-badge__n1 span, .jos-badge__n2 span { display: block; width: max-content; white-space: nowrap; text-shadow: 0 calc(var(--u) * 1.5) calc(var(--u) * 5) rgba(120,40,0,.45), 0 0 calc(var(--u) * 2) rgba(150,50,0,.35); }
@@ -1053,10 +1053,11 @@ footer a { color: #fff; font-weight: 600; }
     font-size: calc(var(--u) * var(--sz) * var(--fit, 1)); line-height: 1;
 }
 .jos-badge-sem__t span { white-space: nowrap; }
-.jos-badge-sem__t.t-nom { --cy: 418.7; --sz: 46; text-transform: uppercase; letter-spacing: .01em; }
-.jos-badge-sem__t.t-pre { --cy: 461.9; --sz: 30; font-weight: 700; }
+.jos-badge-sem__t.t-nom { --cy: 463; --sz: 46; text-transform: uppercase; letter-spacing: .01em; }
+.jos-badge-sem__t.t-pre { --cy: 413; --sz: 30; font-weight: 700; }
 .jos-badge-sem__t.t-mat { --cy: 517.3; --sz: 42; letter-spacing: .04em; }
 .jos-badge-sem__t.t-dor { --cy: 575; --sz: 29; font-family: 'JosSemi', 'Barlow', Arial, sans-serif; font-weight: 600; }
+.jos-badge-sem__t.t-nom.seul { --cy: 418.7; }
 .jos-badge-sem__t.t-niv { --x: 66; --w: 198; --cy: 713.5; --sz: 41; justify-content: center; text-transform: uppercase; }
 
 .jos-cert-sem .jos-doc__stage { --u: calc(100cqw / 1123); aspect-ratio: 1123 / 793; }

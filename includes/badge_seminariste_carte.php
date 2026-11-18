@@ -14,7 +14,7 @@ $__t = josBadgeSeminaristeTextes($s);
     <div class="jos-doc__stage">
         <div class="jos-badge-sem__photo"><img src="<?= e($__photo) ?>" alt="" style="<?= $__c ? e(photoStyleCadrage($__c)) : 'object-position:' . round($__f[0]*100) . '% ' . round($__f[1]*100) . '%;' ?>" onerror="this.onerror=null;this.style.cssText='';this.src='<?= e($__avatar) ?>'"></div>
         <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_seminariste.webp?v=<?= @filemtime(__DIR__ . '/../assets/img/modeles/badge_seminariste.webp') ?>" alt="Badge JOSPIA 2026 - Séminariste">
-        <div class="jos-badge-sem__t t-nom" data-fit="1"><span><?= e($__t['nom']) ?></span></div>
+        <div class="jos-badge-sem__t t-nom<?= $__t['prenoms'] === '' ? ' seul' : '' ?>" data-fit="1"><span><?= e($__t['nom']) ?></span></div>
         <?php if ($__t['prenoms'] !== ''): ?><div class="jos-badge-sem__t t-pre" data-fit="1"><span><?= e($__t['prenoms']) ?></span></div><?php endif; ?>
         <div class="jos-badge-sem__t t-mat" data-fit="1"><span><?= e($__t['matricule']) ?></span></div>
         <div class="jos-badge-sem__t t-dor" data-fit="1"><span><?= e($__t['dortoir']) ?></span></div>

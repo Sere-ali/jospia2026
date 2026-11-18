@@ -148,8 +148,8 @@ function pdfBadgeSeminariste(PDO $pdo, array $s, $S = 2.0) {
     if (!is_file(PDF_FONTS . $semi)) { $semi = 'barlow-semi-condensed-latin-700-normal.ttf'; }
     // [texte, police, corps, centre y, x, largeur, interlettre (em), centré]
     $zones = [
-        [$t['nom'], $b800, 46, 418.7, 276, 310, 0.01, false],
-        [$t['prenoms'], $b700, 30, 461.9, 276, 310, 0.0, false],
+        [$t['nom'], $b800, 46, $t['prenoms'] === '' ? 418.7 : 463, 276, 310, 0.01, false],
+        [$t['prenoms'], $b700, 30, 413, 276, 310, 0.0, false],
         [$t['matricule'], $b800, 42, 517.3, 276, 310, 0.04, false],
         [$t['dortoir'], $semi, 29, 575, 276, 310, 0.0, false],
         [$t['niveau'], $b800, 41, 713.5, 66, 198, 0.0, true],
@@ -216,7 +216,7 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
     $taille = 73 * $S; $ls = 0.01 * $taille;
     $l = pdfLargeurTexte($taille, $police, $mep['nom'], $ls);
     if ($l > $dispo) { $taille *= $dispo / $l; $ls = 0.01 * $taille; }
-    $yn = pdfBaseline($police, $taille, (487 + $mep['dy']) * $S);
+    $yn = pdfBaseline($police, $taille, ($mep['nt'] + 36.5) * $S);
     pdfEcrire($im, $taille, $x0, $yn + 2 * $S, $ombre, $police, $mep['nom'], $ls);
     pdfEcrire($im, $taille, $x0, $yn, $blanc, $police, $mep['nom'], $ls);
 
@@ -226,7 +226,7 @@ function pdfBadgeCommission(PDO $pdo, array $m, $S = 2.0) {
         foreach ($mep['prenoms'] as $t) { $maxL = max($maxL, pdfLargeurTexte($taille, $police, $t, 0.0)); }
         if ($maxL > $dispo) { $taille *= $dispo / $maxL; }
         foreach ($mep['prenoms'] as $i => $t) {
-            $cy = (519.7 + $mep['dy'] + ($i + 0.5) * $mep['prPas']) * $S;
+            $cy = ($mep['pt'] + ($i + 0.5) * $mep['prPas']) * $S;
             $yp = pdfBaseline($police, $taille, $cy);
             pdfEcrire($im, $taille, $x0, $yp + 2 * $S, $ombre, $police, $t, 0.0);
             pdfEcrire($im, $taille, $x0, $yp, $blanc, $police, $t, 0.0);
@@ -277,7 +277,7 @@ function pdfDiplomeSeminariste($nom, $S = 2.0) {
     pdfModele($im, 'certificat_seminariste.jpg', $W, $H);
     $nc = $GLOBALS['pdfNomCouleur'] ?? [0, 0, 0];
     $noir = imagecolorallocate($im, $nc[0], $nc[1], $nc[2]);
-    pdfTexteBoite($im, $S, 'anton-latin-400-normal.ttf', 52, 0.98, mb_strtoupper($nom, 'UTF-8'), 190, 343, 750, 62, $noir, true, 0.52);
+    pdfTexteBoite($im, $S, 'anton-latin-400-normal.ttf', 52, 0.98, mb_strtoupper(josPrenomsNom($nom), 'UTF-8'), 190, 343, 750, 62, $noir, true, 0.52);
     return $im;
 }
 
@@ -289,7 +289,7 @@ function pdfDiplomeCommission($nom, $qualite, $S = 1.75) {
     $noir = imagecolorallocate($im, 17, 17, 17);
     $nc = $GLOBALS['pdfNomCouleur'] ?? [17, 17, 17];
     $couleurNom = imagecolorallocate($im, $nc[0], $nc[1], $nc[2]);
-    pdfTexteBoite($im, $S, 'barlow-latin-700-normal.ttf', 56, 0.98, mb_strtoupper($nom, 'UTF-8'), 214, 378, 910, 54, $couleurNom, true, 56 * 0.03);
+    pdfTexteBoite($im, $S, 'barlow-latin-700-normal.ttf', 56, 0.98, mb_strtoupper(josPrenomsNom($nom), 'UTF-8'), 214, 378, 910, 54, $couleurNom, true, 56 * 0.03);
 
     // « (JOSPIA) en qualité de XXX , tenue » avec segments en gras
     $segments = [['(', 0], ['JOSPIA', 1], [')', 0], [' en qualité de ', 0], [mb_strtoupper($qualite, 'UTF-8'), 1], [' , tenue', 0]];

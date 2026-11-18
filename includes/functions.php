@@ -415,6 +415,11 @@ function josNomPrenoms($nomPrenoms) {
 }
 
 /** Textes du badge séminariste (modèle orange 638 x 1016). */
+function josPrenomsNom($nomPrenoms) {
+    [$nom, $prenoms] = josNomPrenoms($nomPrenoms);
+    return trim($prenoms . ' ' . $nom);
+}
+
 function josBadgeSeminaristeTextes(array $s) {
     [$nom, $prenoms] = josNomPrenoms($s['nom_prenoms']);
     $d = trim((string)($s['dortoir'] ?? ''));
@@ -437,6 +442,8 @@ function josBadgeCommissionMiseEnPage($nomPrenoms, $commission) {
     return [
         'nom' => $nom, 'prenoms' => $prLignes,
         'dy' => $deuxLignes ? -22 : 0,
+        // prénoms d'abord (petits), NOM ensuite (grand) : positions hautes (repère 638 x 1016)
+        'pt' => $deuxLignes ? 436 : 456, 'nt' => $prLignes ? ($deuxLignes ? 513.5 : 496) : 450.5,
         'prTaille' => $deuxLignes ? 36 : 44, 'prPas' => $deuxLignes ? 40 : 44,
         'com' => $comLignes, 'comTaille' => count($comLignes) > 1 ? 58 : 80,
     ];

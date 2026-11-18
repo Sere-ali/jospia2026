@@ -11,7 +11,7 @@ $__photo = !empty($membre['photo']) ? BASE_URL . '/uploads/photos/' . rawurlenco
 $__mep = josBadgeCommissionMiseEnPage($membre['nom_prenoms'], $membre['commission']);
 ?>
 <div class="jos-doc jos-badge">
-    <div class="jos-doc__stage" style="--dy:<?= (int)$__mep['dy'] ?>;--prs:<?= (int)$__mep['prTaille'] ?>;--prp:<?= (int)$__mep['prPas'] ?>;--cos:<?= (int)$__mep['comTaille'] ?>;">
+    <div class="jos-doc__stage" style="--nt:<?= $__mep['nt'] ?>;--pt:<?= $__mep['pt'] ?>;--prs:<?= (int)$__mep['prTaille'] ?>;--prp:<?= (int)$__mep['prPas'] ?>;--cos:<?= (int)$__mep['comTaille'] ?>;">
         <div class="jos-badge__photo"><img src="<?= e($__photo) ?>" alt="" style="<?= $__c ? e(photoStyleCadrage($__c)) : 'object-position:' . round($__f[0]*100) . '% ' . round($__f[1]*100) . '%;' ?>" onerror="this.onerror=null;this.style.cssText='';this.src='<?= e($__avatar) ?>'"></div>
         <img class="jos-doc__modele" src="<?= BASE_URL ?>/assets/img/modeles/badge_commission.webp?v=<?= @filemtime(__DIR__ . "/../assets/img/modeles/badge_commission.webp") ?>" alt="Badge JOSPIA 2026 - Commission">
         <div class="jos-badge__n1" data-fit="1"><span><?= e($__mep['nom']) ?></span></div>
