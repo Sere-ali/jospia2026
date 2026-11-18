@@ -282,7 +282,11 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .fit .w i{transform:none!important;animation:none!important}
 .fit .contenu{animation:none!important}
 .fit .objb,.fit .bloc li{opacity:1!important;transition:none!important}
-@media(min-width:821px){.fit .cols{grid-template-columns:1fr 1fr!important;column-gap:26px!important}}
+.fit .cols:not(.solo) .objb{display:none!important}
+.fit .cols{grid-template-columns:1fr!important;column-gap:0!important}
+.cols.s2:not(.solo){grid-template-columns:0fr 1fr;column-gap:0}
+.cols.s2:not(.solo) .objb{max-height:0;align-self:start;opacity:0;transform:translateX(-70px);padding:0;border-width:0;box-shadow:none;pointer-events:none;transition:opacity .6s,transform .9s cubic-bezier(.16,.95,.25,1),padding .9s,border-width .9s}
+@media(max-width:820px){.cols.s2:not(.solo){grid-template-columns:1fr;row-gap:0}.cols.s2:not(.solo) .objb{display:none}}
 @media(max-width:820px){.cols{grid-template-columns:1fr;row-gap:0}.cols.s2{grid-template-columns:1fr;row-gap:14px}.res{display:none}.s2 .res{display:block}.slide{align-items:flex-start}.points{display:none}}
 @media(max-height:520px) and (orientation:landscape){.slide{bottom:66px}.nav button,.nav a{width:42px;height:42px}.partie .logo,.merci .logo{width:90px}}
 @media(orientation:portrait){.bloc .obj{font-size:clamp(16px,3.6vw,26px)}.bloc li{font-size:clamp(15px,3.2vw,22px)}.entete h2{font-size:clamp(22px,6.4vw,52px)}.entete p{font-size:clamp(14px,3vw,24px)}.bloc h3{font-size:clamp(12px,2.6vw,16px)}.partie h1{font-size:clamp(26px,8vw,68px)}}
