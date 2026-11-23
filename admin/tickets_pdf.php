@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/pdf_docs.php';
 ticketsPreparer($pdo);
 $de = max(1, (int)($_GET['de'] ?? 1));
 $a = max($de, (int)($_GET['a'] ?? $de));
-if ($a - $de > 399) { $a = $de + 399; }
+if ($a - $de > 499) { $a = $de + 499; }
 $st = $pdo->prepare("SELECT numero, code FROM tickets WHERE numero BETWEEN ? AND ? ORDER BY numero");
 $st->execute([$de, $a]);
 $liste = $st->fetchAll();

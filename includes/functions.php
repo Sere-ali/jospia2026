@@ -540,21 +540,32 @@ function ticketsPreparer(PDO $pdo) {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE KEY uniq_ticket_numero (numero), UNIQUE KEY uniq_ticket_code (code)) ENGINE=InnoDB");
 }
 
-/** Génère $n nouveaux tickets à la suite des précédents ; retourne [premier numéro, dernier numéro]. */
-function ticketsGenerer(PDO $pdo, $n) {
+/** Séries de tickets : 5 séries (KI, AS, MS, OK, NS) de 5 souches de 20 tickets = 500 tickets. */
+const TICKETS_SERIES = ['KI', 'AS', 'MS', 'OK', 'NS'];
+const TICKETS_PAR_SOUCHE = 20;
+const TICKETS_SOUCHES_PAR_SERIE = 5;
+
+/** Infos d'un ticket d'après son numéro global (1 à 500) : série, rang dans la série, souche, code (ex. KI001). */
+function ticketInfo($numero) {
+    $par = TICKETS_PAR_SOUCHE * TICKETS_SOUCHES_PAR_SERIE;
+    $n = max(1, (int)$numero) - 1;
+    $serie = TICKETS_SERIES[min(intdiv($n, $par), count(TICKETS_SERIES) - 1)];
+    $rang = $n % $par + 1;
+    $souche = intdiv($rang - 1, TICKETS_PAR_SOUCHE) + 1;
+    $d = ($souche - 1) * TICKETS_PAR_SOUCHE + 1; $f = $souche * TICKETS_PAR_SOUCHE;
+    return ['serie' => $serie, 'rang' => $rang, 'souche' => $souche, 'code' => $serie . str_pad((string)$rang, 3, '0', STR_PAD_LEFT),
+            'plage' => $serie . str_pad((string)$d, 3, '0', STR_PAD_LEFT) . ' à ' . $serie . str_pad((string)$f, 3, '0', STR_PAD_LEFT)];
+}
+
+/** Génère (ou actualise) les 500 tickets : numéros 1 à 500, codes KI001…KI100, AS001…AS100, MS, OK, NS. */
+function ticketsGenerer(PDO $pdo) {
     ticketsPreparer($pdo);
-    $n = max(1, min(400, (int)$n));
-    $alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // sans 0/O/1/I/L : lisible à la main
-    $debut = (int)$pdo->query("SELECT COALESCE(MAX(numero), 0) FROM tickets")->fetchColumn() + 1;
-    $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?)");
-    for ($num = $debut; $num < $debut + $n; $num++) {
-        for ($essai = 0; $essai < 10; $essai++) {
-            $suffixe = '';
-            for ($k = 0; $k < 4; $k++) { $suffixe .= $alphabet[random_int(0, strlen($alphabet) - 1)]; }
-            try { $ins->execute([$num, 'JOS-' . str_pad((string)$num, 4, '0', STR_PAD_LEFT) . '-' . $suffixe]); break; } catch (Throwable $e) { /* code déjà pris : on retente */ }
-        }
-    }
-    return [$debut, $debut + $n - 1];
+    $total = count(TICKETS_SERIES) * TICKETS_PAR_SOUCHE * TICKETS_SOUCHES_PAR_SERIE;
+    $pdo->exec("DELETE FROM tickets WHERE numero > $total");
+    $pdo->exec("UPDATE tickets SET code = CONCAT('~', id) WHERE numero <= $total"); // libère les anciens codes
+    $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)");
+    for ($num = 1; $num <= $total; $num++) { $ins->execute([$num, ticketInfo($num)['code']]); }
+    return [1, $total];
 }
 
 /** Enregistre une action dans le journal (ne provoque jamais d'erreur visible). */

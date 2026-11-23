@@ -4,14 +4,9 @@ exigerRole(['finance', 'admin', 'superadmin']);
 ticketsPreparer($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'generer') {
-    $n = (int)($_POST['quantite'] ?? 0);
-    if ($n < 1 || $n > 400) {
-        $_SESSION['flash_erreur'] = "Indiquez une quantité entre 1 et 400.";
-        redirect('/admin/tickets');
-    }
-    [$de, $a] = ticketsGenerer($pdo, $n);
-    journaliser($pdo, "Tickets générés : n° $de à $a", '');
-    redirect('/admin/tickets_pdf?de=' . $de . '&a=' . $a);
+    [$de, $a] = ticketsGenerer($pdo);
+    journaliser($pdo, "Tickets générés : n° $de à $a (KI, AS, MS, OK, NS)", '');
+    redirect('/admin/tickets');
 }
 
 $total = (int)$pdo->query("SELECT COUNT(*) FROM tickets")->fetchColumn();
@@ -30,15 +25,26 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
         <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
 
         <div class="carte" style="margin-bottom:20px;">
-            <h3>Générer des tickets</h3>
-            <form method="post" data-no-ajax style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+            <h3>Générer les 500 tickets</h3>
+            <form method="post" data-no-ajax>
                 <input type="hidden" name="action" value="generer">
-                <div><label for="quantite" style="display:block;font-weight:600;">Nombre de tickets</label>
-                <input type="number" name="quantite" id="quantite" min="1" max="400" value="40" required style="padding:10px;border:1px solid #ccc;border-radius:8px;width:140px;"></div>
-                <button type="submit" class="btn btn-primaire">Générer et télécharger le PDF</button>
+                <button type="submit" class="btn btn-primaire">Générer / actualiser les 500 tickets</button>
             </form>
-            <small style="color:var(--texte-doux);display:block;margin-top:8px;">Les numéros continuent à la suite des précédents (aucun numéro n'est réutilisé). PDF : 4 tickets par page A4, à découper et à détacher le long du pointillé. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
+            <small style="color:var(--texte-doux);display:block;margin-top:8px;">5 séries <strong>KI, AS, MS, OK, NS</strong>, chacune de 5 souches de 20 tickets (ex. KI001 à KI020 = 1re souche KI, KI021 à KI040 = 2e souche…). Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA. PDF : 4 tickets par page A4, à découper le long du pointillé.</small>
         </div>
+
+        <?php if ($total): ?>
+        <div class="carte" style="margin-bottom:20px;">
+            <h3>Télécharger par souche</h3>
+            <div class="table-wrap" style="box-shadow:none;"><table>
+                <thead><tr><th>Série</th><th>Souche</th><th>Numéros</th><th></th></tr></thead>
+                <tbody><?php for ($n0 = 1; $n0 <= $max; $n0 += TICKETS_PAR_SOUCHE): $i0 = ticketInfo($n0); $i1 = ticketInfo($n0 + TICKETS_PAR_SOUCHE - 1); ?>
+                    <tr><td><strong><?= e($i0['serie']) ?></strong></td><td><?= (int)$i0['souche'] ?> / <?= TICKETS_SOUCHES_PAR_SERIE ?></td><td class="mono"><?= e($i0['plage']) ?></td>
+                    <td><a class="btn btn-outline btn-sm" href="<?= BASE_URL ?>/admin/tickets_pdf?de=<?= $n0 ?>&a=<?= $n0 + TICKETS_PAR_SOUCHE - 1 ?>">PDF</a></td></tr>
+                <?php endfor; ?></tbody>
+            </table></div>
+        </div>
+        <?php endif; ?>
 
         <div class="carte">
             <h3>Retélécharger des tickets déjà générés</h3>
