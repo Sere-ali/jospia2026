@@ -258,6 +258,29 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .fit .cols.solo{grid-template-columns:1fr!important;column-gap:0!important}
 
 
+
+/* ===== Décor : cercles orange et verts qui tournent ===== */
+.par{position:absolute;inset:0;transform:translate(calc(var(--mx,0)*var(--f,20)*1px),calc(var(--my,0)*var(--f,20)*1px));transition:transform .5s ease-out}
+.p1{--f:-26}.p2{--f:30}.p3{--f:-14}.p4{--f:46}
+.cer{position:absolute;border-radius:50%;transition:translate 1.6s cubic-bezier(.2,.8,.2,1)}
+.cer:after{content:"";position:absolute;border-radius:50%;left:50%;top:0;width:var(--d,22px);height:var(--d,22px);margin:calc(var(--d,22px)/-2) 0 0 calc(var(--d,22px)/-2);background:var(--dc,var(--o));box-shadow:0 0 18px 3px var(--dc,var(--o))}
+.r1{left:-15vmax;top:-17vmax;width:50vmax;height:50vmax;border:3px solid rgba(247,127,0,.55);background:radial-gradient(circle,rgba(247,127,0,.10),transparent 70%);animation:spin 80s linear infinite;translate:calc(sin(var(--p,0)*1.7rad)*5vmax) calc(cos(var(--p,0)*1.3rad)*4vmax)}
+.r2{left:-6vmax;top:-8vmax;width:34vmax;height:34vmax;border:2px dashed rgba(11,138,78,.55);animation:spin 55s linear infinite reverse;--dc:var(--v);--d:16px;translate:calc(cos(var(--p,0)*1.1rad)*4vmax) calc(sin(var(--p,0)*1.9rad)*3vmax)}
+.r2b{left:2vmax;top:0;width:18vmax;height:18vmax;border:6px double rgba(247,127,0,.4);animation:spin 38s linear infinite;--d:12px}
+.r3{right:-17vmax;bottom:-19vmax;width:56vmax;height:56vmax;border:3px solid rgba(11,138,78,.55);background:radial-gradient(circle,rgba(11,138,78,.10),transparent 70%);animation:spin 95s linear infinite reverse;--dc:var(--v);translate:calc(cos(var(--p,0)*1.5rad)*5vmax) calc(sin(var(--p,0)*1.2rad)*4vmax)}
+.r4{right:-6vmax;bottom:-9vmax;width:38vmax;height:38vmax;border:2px dashed rgba(247,127,0,.6);animation:spin 60s linear infinite;--d:18px;translate:calc(sin(var(--p,0)*1.4rad)*-4vmax) calc(cos(var(--p,0)*1.8rad)*3vmax)}
+.r4b{right:3vmax;bottom:0;width:20vmax;height:20vmax;border:6px double rgba(11,138,78,.4);animation:spin 42s linear infinite reverse;--dc:var(--v);--d:12px}
+.r5{right:7vw;top:20vh;width:15vmax;height:15vmax;border:2px solid rgba(247,127,0,.5);animation:spin 28s linear infinite;--d:12px;translate:calc(sin(var(--p,0)*2.1rad)*3vmax) calc(cos(var(--p,0)*1.6rad)*3vmax)}
+.r6{left:5vw;bottom:24vh;width:11vmax;height:11vmax;border:2px dashed rgba(11,138,78,.55);animation:spin 24s linear infinite reverse;--dc:var(--v);--d:10px;translate:calc(cos(var(--p,0)*2.3rad)*3vmax) calc(sin(var(--p,0)*1.4rad)*3vmax)}
+.bu{position:absolute;border-radius:50%;opacity:.5;animation:flot 9s ease-in-out infinite alternate}
+.b1{left:12%;top:30%;width:26px;height:26px;background:var(--o)}.b2{left:30%;top:80%;width:18px;height:18px;background:var(--v);animation-delay:-2s}
+.b3{left:72%;top:14%;width:20px;height:20px;background:var(--v);animation-delay:-4s}.b4{left:88%;top:62%;width:30px;height:30px;background:var(--o);animation-delay:-1s}
+.b5{left:50%;top:90%;width:14px;height:14px;background:var(--r);animation-delay:-5s}.b6{left:60%;top:42%;width:12px;height:12px;background:var(--oc);animation-delay:-3s}
+@keyframes flot{to{transform:translate(30px,-46px) scale(1.4)}}
+.actif .entete:after{content:"";display:block;height:5px;width:0;border-radius:5px;background:linear-gradient(90deg,var(--o),var(--v));margin-top:12px;animation:tr2 1.2s 1.1s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes tr2{to{width:min(260px,45%)}}
+.actif .bloc{animation:bloc3 1.1s .9s cubic-bezier(.16,.95,.25,1) backwards}
+@keyframes bloc3{from{opacity:0;transform:perspective(1200px) rotateX(14deg) translateY(60px) scale(.94)}to{opacity:1;transform:none}}
 /* ===== Ouverture cinématique + transitions renforcées ===== */
 .fond:before,.fond:after{content:"";position:absolute;border-radius:50%;width:60vmax;height:60vmax;will-change:transform}
 .fond:before{left:-15vmax;top:-22vmax;background:radial-gradient(circle,rgba(247,127,0,.20),transparent 65%);animation:derive 16s ease-in-out infinite alternate}
@@ -400,7 +423,12 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 </style>
 </head>
 <body>
-<div class="fond" id="fond"></div>
+<div class="fond" id="fond">
+  <div class="par p1"><div class="cer r1"></div><div class="cer r2"></div><div class="cer r2b"></div></div>
+  <div class="par p2"><div class="cer r3"></div><div class="cer r4"></div><div class="cer r4b"></div></div>
+  <div class="par p3"><div class="cer r5"></div><div class="cer r6"></div></div>
+  <div class="par p4"><i class="bu b1"></i><i class="bu b2"></i><i class="bu b3"></i><i class="bu b4"></i><i class="bu b5"></i><i class="bu b6"></i></div>
+</div>
 <div class="brille"></div>
 <div class="barre" id="barre"></div>
 <div id="flash"></div><div id="ring"></div>
@@ -534,6 +562,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
       sl.forEach(function(s,k){s.classList.toggle('actif',k===i);s.classList.remove('e1','e2','e3');if(k===i&&i%4)s.classList.add('e'+(i%4));if(k===i)s.scrollTop=0;if(k!==i){var cc=s.querySelector('.cols');if(cc){cc.classList.remove('s1','s2');[].forEach.call(cc.querySelectorAll('li'),function(li){li.classList.remove('on')})}}});
       [].forEach.call(pts.children,function(p,k){p.classList.toggle('on',k===i)});
       cpt.textContent=(i+1)+' / '+n;
+      document.getElementById('fond').style.setProperty('--p',i);
       bar.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
       [].forEach.call(sl[i].querySelectorAll('[data-cu]'),cu);
@@ -574,6 +603,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     if(!document.fullscreenElement){(d.requestFullscreen||d.webkitRequestFullscreen||function(){}).call(d)}
     else{(document.exitFullscreen||document.webkitExitFullscreen).call(document)}}
   document.getElementById('plein').onclick=pl;
+  document.addEventListener('mousemove',function(e){var f=document.getElementById('fond');f.style.setProperty('--mx',(e.clientX/innerWidth-.5).toFixed(3));f.style.setProperty('--my',(e.clientY/innerHeight-.5).toFixed(3))});
   // interactivité : bulles qui suivent la souris, étincelles au clic, cartes inclinées
   document.addEventListener('mousemove',function(e){
     var x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
