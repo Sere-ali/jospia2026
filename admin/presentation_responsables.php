@@ -305,6 +305,59 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .rowf b em{font-style:normal;color:var(--v);font-size:.7em;font-weight:800;margin-left:.5em}
 .vide{text-align:center}
 .vide h2{font-size:clamp(24px,5vw,60px);font-weight:900;color:var(--vf)}
+
+/* ===== THÈME « Nuit & Or » (propre à la présentation des responsables) ===== */
+:root{--v:#2F6BD8;--vf:#0A1A3F;--o:#D9A441;--oc:#F2D28B;--r:#A8741A;--tx:#EAF0FF}
+html,body{background:#071229}
+.fond{background:radial-gradient(ellipse at 18% 0,#173a80 0,transparent 55%),radial-gradient(ellipse at 100% 100%,#0f2d63 0,transparent 60%),#071229}
+.fond:before{background:radial-gradient(circle,rgba(217,164,65,.22),transparent 65%)}
+.fond:after{background:radial-gradient(circle,rgba(47,107,216,.34),transparent 65%)}
+.r1{border-color:rgba(217,164,65,.55);background:radial-gradient(circle,rgba(217,164,65,.08),transparent 70%)}
+.r2{border-color:rgba(127,167,240,.55);--dc:#7FA7F0}.r2b{border-color:rgba(217,164,65,.4)}
+.r3{border-color:rgba(127,167,240,.5);background:radial-gradient(circle,rgba(47,107,216,.14),transparent 70%);--dc:#7FA7F0}
+.r4{border-color:rgba(217,164,65,.6)}.r4b{border-color:rgba(127,167,240,.4);--dc:#7FA7F0}
+.r5{border-color:rgba(217,164,65,.5)}.r6{border-color:rgba(127,167,240,.55);--dc:#7FA7F0}
+.brille{opacity:.25}
+.haut img{mix-blend-mode:normal;background:#fff;border-radius:24px;padding:4px 16px;box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 2px rgba(217,164,65,.55);-webkit-mask-image:none;mask-image:none}
+.logo{filter:drop-shadow(0 0 22px rgba(255,255,255,.6))}
+.degrade .w i{background-image:linear-gradient(90deg,#F6DFA4,#D9A441,#FFF3CF,#D9A441,#F6DFA4)}
+.titreintro,.partie h1{color:#fff}
+.invite,.merci p{color:var(--oc)}
+.rayons:before{background:repeating-conic-gradient(from 0deg,rgba(217,164,65,.30) 0 5deg,rgba(47,107,216,.22) 5deg 10deg,transparent 10deg 20deg)}
+.vide h2{color:#fff}.vide p{color:#c9d6f3}
+.bas{background:linear-gradient(transparent,rgba(7,18,41,.92) 40%)}
+.nav button,.nav a{background:linear-gradient(135deg,#F2D28B,#D9A441);color:#0A1A3F;box-shadow:0 8px 20px rgba(217,164,65,.35)}
+.nav .sec{background:#0f2d63;color:#fff;border:2px solid var(--o);box-shadow:none}
+.points span{background:#2a4378}.points span.on{background:var(--o)}
+.cpt{color:var(--oc)}
+.barre{box-shadow:0 0 12px rgba(217,164,65,.7)}
+/* fiche */
+.fiche2{display:flex;align-items:center;justify-content:center;gap:clamp(26px,5.5vw,100px);flex-wrap:wrap}
+.pic{position:relative;margin:0;flex:0 0 auto;line-height:0}
+.pic img{display:block;position:relative;z-index:1;width:auto;height:auto;max-width:min(40vw,580px);max-height:min(calc(var(--vh)*64),720px);border-radius:6px;box-shadow:0 34px 80px rgba(0,0,0,.6)}
+.pic .ini2{position:relative;z-index:1;width:min(32vw,calc(var(--vh)*44),400px);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:#0f2d63;color:var(--o);font-size:clamp(60px,12vw,170px);font-weight:300;line-height:1;border-radius:6px}
+.pic .cadre{position:absolute;left:20px;top:20px;right:-20px;bottom:-20px;border:3px solid var(--o);border-radius:8px;z-index:0;opacity:0}
+.actif .pic .cadre{animation:cadre 1.2s .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cadre{from{opacity:0;transform:translate(-26px,-26px)}to{opacity:1;transform:none}}
+.actif .pic img,.actif .pic .ini2{animation:revel 1.3s .45s cubic-bezier(.7,0,.2,1) both}
+@keyframes revel{from{clip-path:inset(0 100% 0 0);transform:scale(1.08)}to{clip-path:inset(0);transform:none}}
+.txt{flex:1 1 420px;min-width:0;max-width:980px}
+.etiq{display:flex;align-items:center;gap:.9em;color:var(--oc);font-weight:800;letter-spacing:.26em;text-transform:uppercase;font-size:clamp(13px,min(2vw,calc(var(--vh)*3.6)),32px);opacity:0}
+.actif .etiq{animation:ap 1s .6s cubic-bezier(.16,.95,.25,1) both}
+.etiq i{display:block;width:0;height:3px;background:var(--o);flex:0 0 auto}
+.actif .etiq i{animation:tr3 1.1s .9s ease forwards}
+@keyframes tr3{to{width:clamp(36px,6vw,110px)}}
+.nomf{font-size:clamp(28px,min(5.4vw,calc(var(--vh)*9.6)),104px);font-weight:800;text-transform:uppercase;line-height:1.04;margin:.3em 0 .55em;color:#fff}
+.nomf .w i{color:#fff;-webkit-text-fill-color:#fff;background:none}
+.lig{display:grid;grid-template-columns:auto 1fr;gap:1em;align-items:center;padding:.55em 0;border-top:1px solid rgba(217,164,65,.5);opacity:0}
+.lig:last-child{border-bottom:1px solid rgba(217,164,65,.5)}
+.actif .lig{animation:ligin .9s calc(1.3s + var(--k)*.4s) cubic-bezier(.16,.95,.25,1) both}
+@keyframes ligin{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+.lig .nb{font-size:clamp(22px,min(3.6vw,calc(var(--vh)*6.4)),68px);font-weight:300;color:var(--o);font-variant-numeric:tabular-nums;min-width:1.5em}
+.lig small{display:block;color:#9fb3da;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-size:clamp(11px,min(1.5vw,calc(var(--vh)*2.6)),24px)}
+.lig b{display:block;color:#fff;font-weight:600;font-size:clamp(18px,min(3.2vw,calc(var(--vh)*5.6)),62px);line-height:1.2}
+.lig b em{color:var(--oc);font-style:normal;font-size:.62em;font-weight:600;margin-left:.6em;letter-spacing:.02em}
+@media(orientation:portrait),(max-width:820px){.pic img{max-width:min(74vw,480px);max-height:min(calc(var(--vh)*34),420px)}.pic .ini2{width:min(50vw,calc(var(--vh)*30))}.pic .cadre{left:12px;top:12px;right:-12px;bottom:-12px}.lig .nb{display:none}.lig{grid-template-columns:1fr}.lig b em{display:block;margin-left:0}}
 </style>
 </head>
 <body>
@@ -335,14 +388,14 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 <?php foreach ($responsables as $r):
   $ini = mb_strtoupper(mb_substr(trim($r['nom_prenoms']), 0, 1));
   $ans = $r['annee_debut'] ? max(0, (int)date('Y') - (int)$r['annee_debut']) : null; ?>
-  <section class="slide" data-steps="1"><div class="contenu fiche">
-    <div class="ph"><?php if ($r['photo'] !== ''): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e(rawurlencode($r['photo'])) ?>" alt="<?= e($r['nom_prenoms']) ?>"><?php else: ?><div class="ini"><?= e($ini) ?></div><?php endif; ?></div>
-    <div class="info">
-      <span class="com">Commission <?= e($r['commission']) ?></span>
-      <h2 class="nomf degrade"><?= mots($r['nom_prenoms'], 2) ?></h2>
-      <div class="rowf" style="--k:0"><small>Profil au sein de la commission</small><b><?= e($r['profil']) ?></b></div>
-      <div class="rowf" style="--k:1"><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>(<?= $ans ?> an<?= $ans > 1 ? 's' : '' ?>)</em><?php endif; ?></b></div>
-      <div class="rowf" style="--k:2"><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div>
+  <section class="slide" data-steps="1"><div class="contenu fiche2">
+    <figure class="pic"><span class="cadre"></span><?php if ($r['photo'] !== ''): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e(rawurlencode($r['photo'])) ?>" alt="<?= e($r['nom_prenoms']) ?>"><?php else: ?><div class="ini2"><?= e($ini) ?></div><?php endif; ?></figure>
+    <div class="txt">
+      <div class="etiq"><i></i>Commission <?= e($r['commission']) ?></div>
+      <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
+      <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Profil au sein de la commission</small><b><?= e($r['profil']) ?></b></div></div>
+      <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
+      <div class="lig" style="--k:2"><span class="nb">03</span><div><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
     </div>
   </div></section>
 <?php endforeach; ?>
@@ -452,7 +505,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     if(bl){var r=bl.getBoundingClientRect();var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;bl.style.transform='perspective(900px) rotateY('+(px*8)+'deg) rotateX('+(-py*8)+'deg) translateY(-4px)'}
   });
   [].forEach.call(document.querySelectorAll('.bloc'),function(b){b.addEventListener('mouseleave',function(){b.style.transform=''})});
-  var coul=['#F77F00','#0B8A4E','#E8431E','#FFA43A','#12A862'];
+  var coul=['#D9A441','#F2D28B','#2F6BD8','#FFFFFF','#7FA7F0'];
   document.addEventListener('click',function(e){
     if(e.target.closest('.bas'))return;
     for(var k=0;k<12;k++){var s=document.createElement('div');s.className='etincelle';var a=Math.random()*6.28,d=40+Math.random()*70;
