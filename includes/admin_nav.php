@@ -11,7 +11,7 @@ $dansAdministration = in_array($pageAdmin, $pagesAdministration, true) || $dansS
 $roleMg = (utilisateurCourant()['role'] ?? '') === 'mg';
 $accueilNav = $roleMg ? 'comite_manageriale.php' : (estAdmin() ? 'dashboard.php' : 'commission_scientifique.php');
 $surAccueil = ($pageAdmin === $accueilNav);
-if (in_array($pageAdmin, ['sorties_mg.php', 'rapports.php', 'rapport_pdf.php'], true) && estComiteManagerial()) { $urlRetour = BASE_URL . '/admin/comite_manageriale'; }
+if (in_array($pageAdmin, ['sorties_mg.php', 'rapports.php', 'rapport_pdf.php', 'responsables_inscriptions.php'], true) && estComiteManagerial()) { $urlRetour = BASE_URL . '/admin/comite_manageriale'; }
 elseif ($pageAdmin === 'sorties_roles.php') { $urlRetour = BASE_URL . '/espace/sorties_mg'; }
 elseif ($pageAdmin === 'sorties.php') { $urlRetour = BASE_URL . '/securite/visiteurs'; }
 elseif ($dansScientifique && $pageAdmin !== 'commission_scientifique.php') { $urlRetour = BASE_URL . '/admin/commission_scientifique'; }
