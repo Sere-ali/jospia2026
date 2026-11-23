@@ -16,14 +16,23 @@ function respPresPreparer(PDO $pdo) {
         ) DEFAULT CHARSET=utf8mb4");
     } catch (Throwable $e) { error_log('Migration responsables : ' . $e->getMessage()); }
 }
-/** Liste triée selon l'ordre des commissions. */
+/** Rang d'affichage d'une commission (ordre de la présentation des responsables). */
+function respPresRang($commission) {
+    $n = normaliserCommission($commission);
+    if ($n === 'MG' || $n === 'MANAGER GENERAL') return 0;
+    if ($n === 'MGA' || strpos($n, 'MANAGER GENERAL') === 0 || strpos($n, 'ADJOINT') !== false) return 1;
+    foreach ([['SCIENTIFIQUE', 2], ['ADMINISTRATION', 3], ['LOGISTIQUE', 4], ['MOBILISATION', 5], ['MIC', 5], ['INFORMATION', 5], ['COMMUNICATION', 5],
+              ['RESTAURATION', 6], ['PROTOCOLE', 7], ['SECURITE', 8], ['SANTE', 9], ['HYGIENE', 10], ['PEPINIERE', 11]] as [$k, $r]) {
+        if (strpos($n, $k) !== false) return $r;
+    }
+    return 99;
+}
+/** Liste triée : Managers généraux, puis commissions dans l'ordre voulu. */
 function respPresListe(PDO $pdo) {
     respPresPreparer($pdo);
     $l = $pdo->query("SELECT * FROM presentation_responsables")->fetchAll();
-    $ordre = array_flip(listeCommissions());
-    usort($l, function ($a, $b) use ($ordre) {
-        $x = $ordre[$a['commission']] ?? 99; $y = $ordre[$b['commission']] ?? 99;
-        return $x <=> $y ?: strcasecmp($a['nom_prenoms'], $b['nom_prenoms']);
+    usort($l, function ($a, $b) {
+        return respPresRang($a['commission']) <=> respPresRang($b['commission']) ?: strcasecmp($a['nom_prenoms'], $b['nom_prenoms']);
     });
     return $l;
 }
