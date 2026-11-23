@@ -25,7 +25,7 @@ $derniers = $pdo->query("SELECT numero, code, created_at FROM tickets ORDER BY n
 
 $titrePage = "Tickets de paiement";
 require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'finance_nav.php');
+require_once __DIR__ . '/../includes/' . 'finance_nav.php';
 ?>
 <section class="section">
     <div class="container" style="max-width:820px;">

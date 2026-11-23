@@ -46,7 +46,7 @@ foreach ($tous as $p) {
 }
 
 require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . (estAdmin() ? '/../includes/admin_nav.php' : '/../includes/finance_nav.php');
+require_once __DIR__ . '/../includes/finance_nav.php';
 ?>
 
 <section class="section">
