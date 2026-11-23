@@ -9,12 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (trim((string)($_POST['site'] ?? '')) !== '') { http_response_code(400); exit; } // anti-robot
     $nom = trim($_POST['nom_prenoms'] ?? '');
     $commission = trim($_POST['commission'] ?? '');
-    $profil = trim($_POST['profil'] ?? '');
+    $profil = 'Responsable'; // présentation des responsables : profil automatique
     $annee = (int)($_POST['annee_debut'] ?? 0);
     $niveau = trim($_POST['niveau_fonction'] ?? '');
     if ($nom === '') $erreurs[] = "Le nom et prénom(s) sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir votre commission.";
-    if ($profil === '') $erreurs[] = "Précisez votre profil au sein de la commission.";
     if ($annee < 1990 || $annee > $anneeMax) $erreurs[] = "L'année de début doit être comprise entre 1990 et $anneeMax.";
     if ($niveau === '') $erreurs[] = "Indiquez votre niveau d'études / fonction.";
     $existant = null;
@@ -57,15 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group"><label>Commission <span class="req">*</span></label>
                         <select name="commission" required><option value="">- Choisir ma commission -</option>
                         <?php foreach (listeCommissions() as $c): ?><option value="<?= e($c) ?>" <?= (($_POST['commission'] ?? '') === $c) ? 'selected' : '' ?>><?= e($c) ?></option><?php endforeach; ?></select></div>
-                    <div class="form-group"><label>2- Profil au sein de la commission <span class="req">*</span></label>
-                        <input type="text" name="profil" list="profils" required placeholder="Ex : Responsable, Responsable adjoint…" value="<?= e($_POST['profil'] ?? '') ?>">
-                        <datalist id="profils"><option value="Responsable"><option value="Responsable adjoint"><option value="Secrétaire"><option value="Trésorier(ère)"><option value="Membre"></datalist></div>
-                    <div class="form-group"><label>3- Année de début de militantisme ou de participation aux JOSPIA <span class="req">*</span></label>
+                    <div class="form-group"><label>2- Année de début de militantisme ou de participation aux JOSPIA <span class="req">*</span></label>
                         <input type="number" name="annee_debut" inputmode="numeric" min="1990" max="<?= $anneeMax ?>" required placeholder="Ex : 2015" value="<?= e($_POST['annee_debut'] ?? '') ?>"></div>
-                    <div class="form-group"><label>4- Photo d'identité <span class="req">*</span></label>
+                    <div class="form-group"><label>3- Photo d'identité <span class="req">*</span></label>
                         <input type="file" name="photo" accept="image/*">
                         <div class="help-text">Format jpg/png/webp, 5 Mo max. Photo nette, visage bien visible.</div></div>
-                    <div class="form-group"><label>5- Niveau d'études / fonction <span class="req">*</span></label>
+                    <div class="form-group"><label>4- Niveau d'études / fonction <span class="req">*</span></label>
                         <input type="text" name="niveau_fonction" required placeholder="Ex : Master 2 en Droit / Enseignant" value="<?= e($_POST['niveau_fonction'] ?? '') ?>"></div>
                 </fieldset>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Envoyer ma fiche</span><i aria-hidden="true">→</i></button>

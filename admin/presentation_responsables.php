@@ -393,7 +393,7 @@ html,body{background:#071229}
     <div class="txt">
       <div class="etiq"><i></i>Commission <?= e($r['commission']) ?></div>
       <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
-      <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Profil au sein de la commission</small><b><?= e($r['profil']) ?></b></div></div>
+      <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Profil au sein de la commission</small><b>Responsable</b></div></div>
       <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
       <div class="lig" style="--k:2"><span class="nb">03</span><div><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
     </div>
