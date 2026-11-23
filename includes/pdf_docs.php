@@ -987,7 +987,114 @@ function pdfTicket(array $t) {
     return $im;
 }
 
-/** Tickets : 4 par page A4 portrait, repères de découpe en pointillés. */
+/** Pages de couverture d'une souche (carnet de 20 tickets) : 1 = 1re de couverture, 2 = 2e, 3 = 3e, 4 = 4e. $codes : les 20 codes de la souche. */
+function pdfCouverture($n, array $codes) {
+    require_once __DIR__ . '/qrcode_php.php';
+    $W = 1240; $H = 1754;
+    $R = 'tinos-latin-400-normal.ttf'; $B = 'tinos-latin-700-normal.ttf'; $BA = 'barlow-latin-800-normal.ttf';
+    $im = pdfToile($W, $H); imageantialias($im, true);
+    $vertF = imagecolorallocate($im, 6, 83, 47); $vert = imagecolorallocate($im, 11, 138, 78); $orange = imagecolorallocate($im, 247, 127, 0);
+    $noir = imagecolorallocate($im, 30, 38, 33); $gris = imagecolorallocate($im, 100, 112, 105); $blanc = imagecolorallocate($im, 255, 255, 255);
+    $creme = imagecolorallocate($im, 255, 244, 230); $grisC = imagecolorallocate($im, 225, 230, 227);
+    $premier = (string)$codes[0]; $dernier = (string)$codes[count($codes) - 1];
+    $ti = ticketInfoCode($premier); $serie = $ti['serie'];
+    $m1 = number_format(FRAIS_PARTICIPATION, 0, ',', ' ') . ' FCFA';
+    $totalF = number_format(FRAIS_PARTICIPATION * count($codes), 0, ',', ' ') . ' FCFA';
+    $centre = function ($taille, $y, $coul, $police, $texte, $ls = 0) use ($im, $W) {
+        $w = pdfLargeurTexte($taille, $police, $texte, $ls); pdfEcrire($im, $taille, ($W - $w) / 2, $y, $coul, $police, $texte, $ls);
+    };
+    // cadre
+    imagesetthickness($im, 8); imagerectangle($im, 10, 10, $W - 11, $H - 11, $vert); imagesetthickness($im, 1);
+    imagefilledrectangle($im, 11, 11, (int)($W / 3), 30, $orange); imagefilledrectangle($im, (int)($W * 2 / 3), 11, $W - 12, 30, $vert);
+    $src = imagecreatefrompng(__DIR__ . '/../assets/img/ticket_entete.png');
+    $ex = imagesx($src); $ey = imagesy($src);
+    $ent = imagecreatetruecolor($ex, $ey); imagefill($ent, 0, 0, imagecolorallocate($ent, 255, 255, 255));
+    imagealphablending($ent, true); imagecopy($ent, $src, 0, 0, 0, 0, $ex, $ey); imagedestroy($src);
+    $penteH = (int)round($ey * 0.205); $logoY0 = (int)round($ey * 0.25); $logoH = $ey - $logoY0;
+    $entete = function ($y) use ($im, $ent, $ex, $penteH, $W) { $w = 1000; $h = (int)round($w * $penteH / $ex); imagecopyresampled($im, $ent, (int)(($W - $w) / 2), $y, 0, 0, $w, $h, $ex, $penteH); return $h; };
+    $pied = function ($texte) use ($centre, $H, $vertF, $B) { $centre(20, $H - 60, $vertF, $B, $texte); };
+
+    if ($n === 1) {            // ---------- 1re de couverture ----------
+        $entete(70);
+        $lw = 760; $lh = (int)round($lw * $logoH / $ex);
+        imagecopyresampled($im, $ent, (int)(($W - $lw) / 2), 250, 0, $logoY0, $lw, $lh, $ex, $logoH);
+        $y = 250 + $lh + 40;
+        imagefilledrectangle($im, 170, $y, $W - 170, $y + 96, $orange);
+        $centre(52, $y + 70, $blanc, $BA, 'CARNET DE TICKETS', 8);
+        $centre(330, $y + 480, $vertF, $BA, $serie, 10);
+        $centre(52, $y + 580, $orange, $BA, 'SOUCHE n° ' . $ti['souche'] . ' / ' . TICKETS_SOUCHES_PAR_SERIE, 6);
+        $centre(40, $y + 660, $noir, $BA, 'Tickets ' . $premier . ' à ' . $dernier, 3);
+        $centre(26, $y + 720, $gris, $B, count($codes) . ' tickets × ' . $m1 . ' = ' . $totalF);
+        $champ = function ($lib, $yy) use ($im, $noir, $gris, $B) { pdfEcrire($im, 24, 170, $yy, $noir, $B, $lib . ' :'); for ($px = 170 + pdfLargeurTexte(24, $B, $lib . ' :') + 16; $px < 1070; $px += 12) imagefilledrectangle($im, (int)$px, $yy + 5, (int)$px + 6, $yy + 6, $gris); };
+        $champ('Responsable du carnet', $y + 830); $champ('Remis le', $y + 900);
+        $pied('15e ÉDITION · Du 22 au 28 décembre 2026 · Collège privé Henriette Dagri-Diabaté d\'Anyama');
+    } elseif ($n === 2) {      // ---------- 2e de couverture ----------
+        $h = $entete(70);
+        imagefilledrectangle($im, 170, 240, $W - 170, 240 + 90, $orange);
+        $centre(46, 240 + 64, $blanc, $BA, "MODE D'EMPLOI DU CARNET", 5);
+        $lignes = [
+            ['1.', "Ce carnet contient " . count($codes) . " tickets numérotés de $premier à $dernier. Utilisez-les dans l'ordre."],
+            ['2.', "Chaque ticket est vendu " . $m1 . ". Un ticket = un participant."],
+            ['3.', "À la vente, remplissez la SOUCHE (nom, prénoms, contact, contact d'un parent, date de paiement) puis remplissez le TICKET (nom, contact, date)."],
+            ['4.', "Détachez le ticket le long du pointillé et remettez-le à l'acheteur. La souche reste dans le carnet."],
+            ['5.', "L'acheteur scanne le QR code du ticket pour s'inscrire sur le site, avec son numéro de ticket."],
+            ['6.', "Ne laissez jamais un ticket sans souche remplie. Un ticket perdu ou abîmé doit être signalé à la commission Finance."],
+            ['7.', "Remettez l'argent encaissé et le carnet (souches comprises) à la commission Finance. Un ticket non vendu est restitué avec sa souche."],
+        ];
+        $y = 440; $maxw = $W - 340 - 70;
+        foreach ($lignes as [$num, $txt]) {
+            pdfEcrire($im, 30, 170, $y, $orange, $BA, $num);
+            $mots = explode(' ', $txt); $l = '';
+            foreach ($mots as $mot) {
+                $essai = $l === '' ? $mot : $l . ' ' . $mot;
+                if (pdfLargeurTexte(26, $R, $essai) > $maxw) { pdfEcrire($im, 26, 240, $y, $noir, $R, $l); $y += 46; $l = $mot; } else { $l = $essai; }
+            }
+            if ($l !== '') { pdfEcrire($im, 26, 240, $y, $noir, $R, $l); }
+            $y += 86;
+        }
+        $pied('JOSPIA 2026 · Carnet ' . $serie . ' n° ' . $ti['souche'] . '/' . TICKETS_SOUCHES_PAR_SERIE);
+    } elseif ($n === 3) {      // ---------- 3e de couverture ----------
+        $entete(70);
+        imagefilledrectangle($im, 80, 230, $W - 80, 230 + 90, $orange);
+        $centre(46, 230 + 64, $blanc, $BA, 'FICHE DE SUIVI · ' . $premier . ' à ' . $dernier, 4);
+        $x0 = 80; $x1 = $W - 80; $cols = [$x0, $x0 + 150, $x0 + 590, $x0 + 830, $x0 + 960, $x1];
+        $y = 350; $hr = 52;
+        imagefilledrectangle($im, $x0, $y, $x1, $y + $hr, $vertF);
+        foreach (['N° ticket', "Nom de l'acheteur", 'Contact', 'Date', 'Payé'] as $i => $t) pdfEcrire($im, 21, $cols[$i] + 14, $y + 38, $blanc, $BA, $t);
+        $y += $hr;
+        foreach ($codes as $k => $c) {
+            if ($k % 2 === 0) imagefilledrectangle($im, $x0, $y, $x1, $y + $hr, $creme);
+            pdfEcrire($im, 22, $cols[0] + 14, $y + 38, $vertF, $BA, (string)$c);
+            imagerectangle($im, $cols[4] + 40, $y + 14, $cols[4] + 70, $y + 44, $gris);
+            $y += $hr;
+        }
+        imagesetthickness($im, 2);
+        for ($i = 0; $i < count($cols); $i++) imageline($im, $cols[$i], 350, $cols[$i], $y, $gris);
+        for ($yy = 350; $yy <= $y; $yy += $hr) imageline($im, $x0, $yy, $x1, $yy, $gris);
+        imagesetthickness($im, 1);
+        pdfEcrire($im, 24, 80, $y + 60, $noir, $B, 'Tickets vendus : ........ / ' . count($codes) . '      Montant remis à la Finance : ...................... FCFA');
+        pdfEcrire($im, 22, 80, $y + 110, $noir, $B, 'Date de remise : ................      Signature du responsable : ............................');
+        $pied('Carnet ' . $serie . ' n° ' . $ti['souche'] . '/' . TICKETS_SOUCHES_PAR_SERIE . ' · à restituer à la commission Finance');
+    } else {                   // ---------- 4e de couverture ----------
+        $entete(70);
+        $lw = 640; $lh = (int)round($lw * $logoH / $ex);
+        imagecopyresampled($im, $ent, (int)(($W - $lw) / 2), 260, 0, $logoY0, $lw, $lh, $ex, $logoH);
+        $y = 260 + $lh + 70;
+        imagefilledrectangle($im, 170, $y, $W - 170, $y + 8, $orange);
+        $centre(40, $y + 110, $vertF, $BA, 'JOSPIA, votre formation, notre priorité !', 2);
+        $centre(36, $y + 190, $orange, $BA, 'AEEMCI, pour une identité islamique !', 2);
+        $qr = QRCode::getMinimumQRCode(urlSite() . '/inscription_seminariste', QR_ERROR_CORRECT_LEVEL_M);
+        $nb = $qr->getModuleCount(); $cell = max(3, (int)floor(300 / $nb)); $q = $nb * $cell; $qx = (int)(($W - $q) / 2); $qy = $y + 270;
+        for ($r = 0; $r < $nb; $r++) for ($c = 0; $c < $nb; $c++) if ($qr->isDark($r, $c)) imagefilledrectangle($im, $qx + $c * $cell, $qy + $r * $cell, $qx + ($c + 1) * $cell - 1, $qy + ($r + 1) * $cell - 1, $noir);
+        $centre(24, $qy + $q + 50, $vert, $R, "Scannez pour vous inscrire aux JOSPIA 2026");
+        $centre(24, $qy + $q + 100, $noir, $R, 'Du 22 au 28 décembre 2026 · Collège privé Henriette Dagri-Diabaté d\'Anyama');
+        $pied('Secrétariat Régional Abidjan Nord · Sous-comités Anyama 1 & 2');
+    }
+    imagedestroy($ent);
+    return $im;
+}
+
+/** Tickets : 4 par page A4 portrait, repères de découpe en pointillés. Chaque souche complète (20 tickets) est précédée des 1re et 2e de couverture et suivie des 3e et 4e. */
 function pdfTicketsA4(array $tickets, $nomFichier) {
     @set_time_limit(600);
     @ini_set('memory_limit', '512M');
@@ -995,15 +1102,27 @@ function pdfTicketsA4(array $tickets, $nomFichier) {
     $A4w = 595.28; $A4h = 841.89;
     $ch = $A4h / 4; $marge = 8;
     $w = $A4w - 2 * 18; $h = $w * 570 / 1680;
-    foreach (array_chunk($tickets, 4) as $groupe) {
-        $images = [];
-        foreach ($groupe as $i => $t) {
-            $im = pdfTicket($t);
-            $jpeg = pdfJpeg($im, 90); $wpx = imagesx($im); $hpx = imagesy($im); imagedestroy($im);
-            $images[] = [$jpeg, $wpx, $hpx, ($A4w - $w) / 2, $i * $ch + ($ch - $h) / 2, $w, $h];
+    $couv = function ($n, $codes) use ($pdf, $A4w, $A4h) {
+        $im = pdfCouverture($n, $codes); $jpeg = pdfJpeg($im, 90); $wpx = imagesx($im); $hpx = imagesy($im); imagedestroy($im);
+        $pdf->page($A4w, $A4h, [[$jpeg, $wpx, $hpx, 0, 0, $A4w, $A4h]], []);
+    };
+    $souches = [];
+    foreach ($tickets as $t) { $souches[intdiv(((int)$t['numero']) - 1, TICKETS_PAR_SOUCHE)][] = $t; }
+    foreach ($souches as $groupeSouche) {
+        $complete = count($groupeSouche) === TICKETS_PAR_SOUCHE;
+        $codes = array_map(function ($t) { return (string)$t['code']; }, $groupeSouche);
+        if ($complete) { $couv(1, $codes); $couv(2, $codes); }
+        foreach (array_chunk($groupeSouche, 4) as $groupe) {
+            $images = [];
+            foreach ($groupe as $i => $t) {
+                $im = pdfTicket($t);
+                $jpeg = pdfJpeg($im, 90); $wpx = imagesx($im); $hpx = imagesy($im); imagedestroy($im);
+                $images[] = [$jpeg, $wpx, $hpx, ($A4w - $w) / 2, $i * $ch + ($ch - $h) / 2, $w, $h];
+            }
+            $traits = [[0, $ch, $A4w, $ch], [0, 2 * $ch, $A4w, 2 * $ch], [0, 3 * $ch, $A4w, 3 * $ch]];
+            $pdf->page($A4w, $A4h, $images, $traits);
         }
-        $traits = [[0, $ch, $A4w, $ch], [0, 2 * $ch, $A4w, 2 * $ch], [0, 3 * $ch, $A4w, 3 * $ch]];
-        $pdf->page($A4w, $A4h, $images, $traits);
+        if ($complete) { $couv(3, $codes); $couv(4, $codes); }
     }
     if (!$tickets) { $pdf->page($A4w, $A4h, []); }
     $pdf->fin();

@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect('/admin/tickets_pdf?de=' . $r[0] . '&a=' . $r[1]);
     }
     if ($act === 'reinitialiser') {
+        if (!estAdmin()) { $_SESSION['flash_erreur'] = "Seuls les administrateurs peuvent supprimer des tickets."; redirect('/admin/tickets'); }
         ticketsReinitialiser($pdo);
         journaliser($pdo, "Tickets réinitialisés (tous supprimés)", '');
         redirect('/admin/tickets');
@@ -80,10 +81,12 @@ require_once __DIR__ . '/../includes/' . 'finance_nav.php';
                 <thead><tr><th>N°</th><th>Code</th><th>Généré le</th></tr></thead>
                 <tbody><?php foreach ($derniers as $t): ?><tr><td><?= (int)$t['numero'] ?></td><td class="mono"><strong><?= e($t['code']) ?></strong></td><td><?= e(date('d/m/Y H:i', strtotime($t['created_at']))) ?></td></tr><?php endforeach; ?></tbody>
             </table></div>
+            <?php if (estAdmin()): ?>
             <form method="post" data-no-ajax style="margin-top:14px;" onsubmit="return confirm('Supprimer TOUS les tickets générés et recommencer à zéro ? À ne faire que si rien n\'a été imprimé.');">
                 <input type="hidden" name="action" value="reinitialiser">
                 <button type="submit" class="btn btn-outline btn-sm">Recommencer à zéro (supprime tous les tickets)</button>
             </form>
+            <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
