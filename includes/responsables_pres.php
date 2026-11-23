@@ -27,12 +27,12 @@ function respPresRang($commission) {
     }
     return 99;
 }
-/** Liste triée : Managers généraux, puis commissions dans l'ordre voulu. */
+/** Liste triée dans l'ordre de passage : de la 11e commission aux Managers généraux (MGA puis MG). */
 function respPresListe(PDO $pdo) {
     respPresPreparer($pdo);
     $l = $pdo->query("SELECT * FROM presentation_responsables")->fetchAll();
     usort($l, function ($a, $b) {
-        return respPresRang($a['commission']) <=> respPresRang($b['commission']) ?: strcasecmp($a['nom_prenoms'], $b['nom_prenoms']);
+        return respPresRang($b['commission']) <=> respPresRang($a['commission']) ?: strcasecmp($a['nom_prenoms'], $b['nom_prenoms']);
     });
     return $l;
 }
