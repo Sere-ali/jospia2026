@@ -393,12 +393,15 @@ html,body{background:#071229}
     <div class="txt">
       <?php $cn = mb_strtoupper(trim($r['commission']), 'UTF-8'); $cn = strtr($cn, ['É'=>'E','È'=>'E']);
             if ($cn === 'MG' || $cn === 'MGA' || strpos($cn, 'MANAGER GENERAL') === 0) { $libEt = ($cn === 'MG' || $cn === 'MANAGER GENERAL') ? 'Manager Général' : 'Manager Général Adjoint'; }
-            else { $libEt = 'Commission ' . $r['commission']; } ?>
+            else { $libEt = 'Commission ' . $r['commission']; }
+            // Fonctions cumulées : libellé particulier
+            $nn = strtr(mb_strtoupper(trim($r['nom_prenoms']), 'UTF-8'), ['É'=>'E','È'=>'E','Ï'=>'I']);
+            $cumuls = ['KONE OUSMANE' => 'Manager Général / Protocole'];
+            foreach ($cumuls as $k => $v) { if (strpos($nn, $k) !== false) $libEt = $v; } ?>
       <div class="etiq"><i></i><?= e($libEt) ?></div>
       <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
-      <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Profil au sein de la commission</small><b>Responsable</b></div></div>
-      <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
-      <div class="lig" style="--k:2"><span class="nb">03</span><div><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
+      <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
+      <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
     </div>
   </div></section>
 <?php endforeach; ?>
