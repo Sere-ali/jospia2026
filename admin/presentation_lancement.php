@@ -62,7 +62,7 @@ $sections = [
   ]],
 ];
 
-$introTitre = 'PRÉSENTATION DU THÈME, DE LA VISION, DES OBJECTIFS ET DU BUDGET GLOBAL ESTIMATIF DES JOSPIA 2026';
+$introTitre = 'PRÉSENTATION DU THÈME, DE LA VISION, DES OBJECTIFS ET DU BUDGET PRÉVISIONNEL DES JOSPIA 2026';
 // [num, nom, [objectif ou vide], labelObjectif, labelListe, liste, gras, deuxColonnes]
 $intro = [
   ['I-', 'THÈME CENTRAL POUR CETTE 15è ÉDITION', ["Thème central : « LE TRANSFERT ENTRE GÉNÉRATIONS À L'ÉPREUVE DU TEMPS : PÉRENNISER L'HÉRITAGE DE L'AEEMCI »"], '', '', [], false, false],
@@ -107,12 +107,11 @@ $intro = [
       'Commission Santé : 190.000 Fcfa',
       'Commission Restauration : 4.090.125 Fcfa',
       'Imprévus : 689.625 Fcfa',
-      'Total global : 6.841.035 Fcfa'], true, true],
+      'Budget prévisionnel : 6.841.035 Fcfa'], true, true],
   ['IV-2', 'LES DIFFÉRENTES SOURCES DE FINANCEMENT', [], '', '', [
       "Participation des séminaristes\n450×5.000F = 2.250 000 Fcfa",
       "Participation des membres du comité d’organisation\n94×2.000f = 188.000 Fcfa",
-      'Apports extérieurs : 4.403.035 Fcfa',
-      'JOSPIA, votre formation, notre priorité !'], false, false],
+      'Apports extérieurs : 4.403.035 Fcfa'], false, false],
 ];
 function pTxt($s) { return str_replace('15e édition', '15<sup>e</sup> édition', e($s)); }
 $total = 0; foreach ($sections as $s) { $total += 1 + count($s[2]); }
@@ -253,6 +252,13 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .cols.solo,.cols.solo.s2{grid-template-columns:1fr;column-gap:0}
 .cols.solo .objb{display:none}
 .fit .cols.solo{grid-template-columns:1fr!important;column-gap:0!important}
+.titrebud{font-size:clamp(22px,min(5vw,calc(var(--vh)*8)),62px)!important;margin-top:12px}
+.montant{font-size:clamp(46px,min(14vw,calc(var(--vh)*22)),180px);font-weight:900;line-height:1.05;margin-top:18px;letter-spacing:.01em}
+.montant{background:linear-gradient(90deg,var(--v),var(--o),var(--r));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.montant small{font-size:.45em;font-weight:800}
+.slogan{font-size:clamp(28px,min(7.5vw,calc(var(--vh)*13)),96px)!important;margin-top:18px;line-height:1.15}
+.res.deux li:last-child{font-size:1.35em;font-weight:900;color:var(--vf);list-style:none}
+.res.deux li:last-child strong{color:var(--o)}
 .titreintro{font-size:clamp(20px,min(4.2vw,calc(var(--vh)*7.5)),54px)!important;margin-top:14px}
 .bloc li strong{color:var(--vf)}
 @media(min-width:700px){.res.deux ul{grid-auto-flow:column;grid-template-rows:repeat(6,auto);column-gap:clamp(16px,3vw,40px)}}
@@ -306,7 +312,20 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     <h1 class="degrade titreintro"><?= mots($introTitre, 1) ?></h1>
     <div class="trait"></div>
   </div></section>
-  <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) { afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux); } ?>
+  <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) { afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux);
+    if ($num === 'IV-1') { ?>
+  <section class="slide" data-steps="1"><div class="contenu partie grand">
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
+    <h1 class="degrade titrebud"><?= mots('BUDGET PRÉVISIONNEL DU SÉMINAIRE', 1) ?></h1>
+    <p class="montant degrade el" style="--i:6">6.841.035 <small>Fcfa</small></p>
+    <div class="trait"></div>
+  </div></section>
+<?php } } ?>
+  <section class="slide" data-steps="1"><div class="contenu partie grand">
+    <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
+    <h1 class="degrade slogan"><?= mots('JOSPIA, votre formation, notre priorité !', 1) ?></h1>
+    <div class="trait"></div>
+  </div></section>
 <?php foreach ($sections as [$rom, $titre, $items]): ?>
   <section class="slide" data-steps="1"><div class="contenu partie">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
