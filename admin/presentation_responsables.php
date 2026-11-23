@@ -13,7 +13,7 @@ function mots($s, $base = 0) { $o = ''; $i = $base; foreach (preg_split('/\s+/',
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Les responsables de commission — JOSPIA 2026</title>
 <style>
-:root{--vh:1vh;--v:#0B8A4E;--vf:#06532F;--o:#F77F00;--oc:#FFA43A;--r:#E8431E;--tx:#14301F;--hw:min(100vw - 20px,940px,calc(var(--vh)*125));--haut:calc(var(--hw)*.128 + 24px)}
+:root{--vh:1vh;--v:#0B8A4E;--vf:#06532F;--o:#F77F00;--oc:#FFA43A;--r:#E8431E;--tx:#14301F;--hw:min(100vw - 20px,600px,calc(var(--vh)*80));--haut:calc(var(--hw)*.128 + 24px)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:#fff;color:var(--tx);font-family:'Inter',system-ui,'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 .fond{position:fixed;inset:0;background:radial-gradient(ellipse at 15% 0,#fff4e4 0,transparent 50%),radial-gradient(ellipse at 100% 100%,#e6f7ee 0,transparent 55%),#fff;overflow:hidden}
