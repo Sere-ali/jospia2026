@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nom === '') $erreurs[] = "Le nom et prénom(s) sont obligatoires.";
     if (!in_array($commission, listeCommissions(), true)) $erreurs[] = "Veuillez choisir votre commission.";
     if ($annee < 1990 || $annee > $anneeMax) $erreurs[] = "L'année de début doit être comprise entre 1990 et $anneeMax.";
-    if ($niveau === '') $erreurs[] = "Indiquez votre niveau d'études / fonction.";
+    if ($niveau === '') $erreurs[] = "Indiquez votre profession.";
     $existant = null;
     if (!$erreurs) {
         $st = $pdo->prepare("SELECT * FROM presentation_responsables WHERE commission = ? AND nom_prenoms = ?");
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group"><label>3- Photo d'identité <span class="req">*</span></label>
                         <input type="file" name="photo" accept="image/*">
                         <div class="help-text">Format jpg/png/webp, 5 Mo max. Photo nette, visage bien visible.</div></div>
-                    <div class="form-group"><label>4- Niveau d'études / fonction <span class="req">*</span></label>
+                    <div class="form-group"><label>4- Profession <span class="req">*</span></label>
                         <input type="text" name="niveau_fonction" required placeholder="Ex : Master 2 en Droit / Enseignant" value="<?= e($_POST['niveau_fonction'] ?? '') ?>"></div>
                 </fieldset>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Envoyer ma fiche</span><i aria-hidden="true">→</i></button>

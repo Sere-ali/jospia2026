@@ -40,14 +40,14 @@ require_once __DIR__ . '/../includes/admin_nav.php';
     <div class="carte" style="overflow-x:auto;">
         <h3><?= count($liste) ?> fiche(s) reçue(s)</h3>
         <?php if (!$liste): ?><p>Aucune fiche pour le moment.</p><?php else: ?>
-        <table class="table" style="width:100%;"><thead><tr><th>Photo</th><th>Nom et prénom(s)</th><th>Commission</th><th>Depuis</th><th>Niveau d'études / fonction</th><th></th></tr></thead><tbody>
+        <table class="table" style="width:100%;"><thead><tr><th>Photo</th><th>Nom et prénom(s)</th><th>Commission</th><th>Depuis</th><th>Profession</th><th></th></tr></thead><tbody>
         <?php foreach ($liste as $r): if ($editId === (int)$r['id']): ?><tr><td colspan="6">
             <form method="post" enctype="multipart/form-data" class="form-pro" style="display:grid;gap:8px;max-width:640px;">
                 <input type="hidden" name="action" value="modifier"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>"><input type="hidden" name="jeton" value="<?= e(resJeton()) ?>">
                 <label>Nom et prénom(s)<input type="text" name="nom_prenoms" value="<?= e($r['nom_prenoms']) ?>" required></label>
                 <label>Commission<select name="commission"><?php foreach (listeCommissions() as $c): ?><option <?= $c === $r['commission'] ? 'selected' : '' ?>><?= e($c) ?></option><?php endforeach; ?></select></label>
                 <label>Année de début<input type="number" name="annee_debut" min="1990" max="<?= (int)date('Y') ?>" value="<?= e($r['annee_debut']) ?>"></label>
-                <label>Niveau d'études / fonction<textarea name="niveau_fonction" rows="3"><?= e($r['niveau_fonction']) ?></textarea></label>
+                <label>Profession<textarea name="niveau_fonction" rows="3"><?= e($r['niveau_fonction']) ?></textarea></label>
                 <label>Nouvelle photo (facultatif)<input type="file" name="photo" accept="image/*"></label>
                 <div><button class="btn btn-primaire btn-sm" type="submit">Enregistrer</button> <a class="btn btn-outline btn-sm" href="<?= BASE_URL ?>/admin/responsables_inscriptions">Annuler</a></div>
             </form></td></tr>
