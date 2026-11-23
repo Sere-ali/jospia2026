@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'gener
 
 $total = (int)$pdo->query("SELECT COUNT(*) FROM tickets")->fetchColumn();
 $max = (int)$pdo->query("SELECT COALESCE(MAX(numero), 0) FROM tickets")->fetchColumn();
+$codes = $pdo->query("SELECT numero, code FROM tickets ORDER BY numero")->fetchAll(PDO::FETCH_KEY_PAIR);
 $derniers = $pdo->query("SELECT numero, code, created_at FROM tickets ORDER BY numero DESC LIMIT 12")->fetchAll();
 
 $titrePage = "Tickets de paiement";
@@ -30,16 +31,16 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
                 <input type="hidden" name="action" value="generer">
                 <button type="submit" class="btn btn-primaire">Générer / actualiser les 500 tickets</button>
             </form>
-            <small style="color:var(--texte-doux);display:block;margin-top:8px;">5 séries <strong>KI, AS, MS, OK, NS</strong>, chacune de 5 souches de 20 tickets (ex. KI001 à KI020 = 1re souche KI, KI021 à KI040 = 2e souche…). Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA. PDF : 4 tickets par page A4, à découper le long du pointillé.</small>
+            <small style="color:var(--texte-doux);display:block;margin-top:8px;">5 séries <strong>KI, AS, MS, OK, NS</strong>, chacune de 5 souches de 20 tickets (ex. KI001 à KI020 = 1re souche KI, KI021 à KI040 = 2e souche KI…). L'ordre des souches est tiré au hasard, mais après les 20 tickets d'une lettre on passe toujours à une autre lettre. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA. PDF : 4 tickets par page A4, à découper le long du pointillé.</small>
         </div>
 
         <?php if ($total): ?>
         <div class="carte" style="margin-bottom:20px;">
             <h3>Télécharger par souche</h3>
             <div class="table-wrap" style="box-shadow:none;"><table>
-                <thead><tr><th>Série</th><th>Souche</th><th>Numéros</th><th></th></tr></thead>
-                <tbody><?php for ($n0 = 1; $n0 <= $max; $n0 += TICKETS_PAR_SOUCHE): $i0 = ticketInfo($n0); $i1 = ticketInfo($n0 + TICKETS_PAR_SOUCHE - 1); ?>
-                    <tr><td><strong><?= e($i0['serie']) ?></strong></td><td><?= (int)$i0['souche'] ?> / <?= TICKETS_SOUCHES_PAR_SERIE ?></td><td class="mono"><?= e($i0['plage']) ?></td>
+                <thead><tr><th>N° d'impression</th><th>Série</th><th>Souche</th><th>Numéros</th><th></th></tr></thead>
+                <tbody><?php for ($n0 = 1; $n0 <= $max; $n0 += TICKETS_PAR_SOUCHE): $i0 = ticketInfoCode($codes[$n0] ?? 'KI001'); ?>
+                    <tr><td><?= intdiv($n0 - 1, TICKETS_PAR_SOUCHE) + 1 ?></td><td><strong><?= e($i0['serie']) ?></strong></td><td><?= (int)$i0['souche'] ?> / <?= TICKETS_SOUCHES_PAR_SERIE ?></td><td class="mono"><?= e($i0['plage']) ?></td>
                     <td><a class="btn btn-outline btn-sm" href="<?= BASE_URL ?>/admin/tickets_pdf?de=<?= $n0 ?>&a=<?= $n0 + TICKETS_PAR_SOUCHE - 1 ?>">PDF</a></td></tr>
                 <?php endfor; ?></tbody>
             </table></div>

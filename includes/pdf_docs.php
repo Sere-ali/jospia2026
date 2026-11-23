@@ -926,7 +926,7 @@ function pdfTicket(array $t) {
     $penteH = (int)round($ey * 0.205);        // hauteur de la pastille d'entête (en haut de la maquette)
     $logoY0 = (int)round($ey * 0.25); $logoH = $ey - $logoY0; // grand logo (en dessous)
     $code = (string)$t['code'];
-    $ti = ticketInfo((int)($t['numero'] ?? 1));
+    $ti = ticketInfoCode($code);
     // Le QR code ouvre le formulaire d'inscription du site : la personne qui achète le ticket scanne et s'inscrit.
     $qrTexte = urlSite() . '/inscription_seminariste';
 
