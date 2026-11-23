@@ -36,12 +36,13 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
 
         <?php if ($total): ?>
         <div class="carte" style="margin-bottom:20px;">
-            <h3>Télécharger par souche</h3>
+            <h3>Les 25 lots (souches de 20 tickets)</h3>
+            <p style="margin:0 0 10px;color:var(--texte-doux);">Un <strong>lot = une souche de 20 tickets d'une même lettre</strong>. Utilisez les lots dans l'ordre <strong>1, 2, 3…</strong> : la lettre change à chaque lot (jamais deux lots de la même lettre à la suite). Chaque lettre a 5 lots : <strong>KI001–KI100</strong>, <strong>AS001–AS100</strong>, <strong>MS001–MS100</strong>, <strong>OK001–OK100</strong>, <strong>NS001–NS100</strong>.</p>
             <div class="table-wrap" style="box-shadow:none;"><table>
-                <thead><tr><th>N° d'impression</th><th>Série</th><th>Souche</th><th>Numéros</th><th></th></tr></thead>
+                <thead><tr><th>Lot n°</th><th>Tickets</th><th>Lettre</th><th></th></tr></thead>
                 <tbody><?php for ($n0 = 1; $n0 <= $max; $n0 += TICKETS_PAR_SOUCHE): $i0 = ticketInfoCode($codes[$n0] ?? 'KI001'); ?>
-                    <tr><td><?= intdiv($n0 - 1, TICKETS_PAR_SOUCHE) + 1 ?></td><td><strong><?= e($i0['serie']) ?></strong></td><td><?= (int)$i0['souche'] ?> / <?= TICKETS_SOUCHES_PAR_SERIE ?></td><td class="mono"><?= e($i0['plage']) ?></td>
-                    <td><a class="btn btn-outline btn-sm" href="<?= BASE_URL ?>/admin/tickets_pdf?de=<?= $n0 ?>&a=<?= $n0 + TICKETS_PAR_SOUCHE - 1 ?>">PDF</a></td></tr>
+                    <tr><td><strong><?= intdiv($n0 - 1, TICKETS_PAR_SOUCHE) + 1 ?></strong></td><td class="mono"><?= e($i0['plage']) ?></td><td><strong><?= e($i0['serie']) ?></strong> (souche <?= (int)$i0['souche'] ?>/<?= TICKETS_SOUCHES_PAR_SERIE ?>)</td>
+                    <td><a class="btn btn-outline btn-sm" href="<?= BASE_URL ?>/admin/tickets_pdf?de=<?= $n0 ?>&a=<?= $n0 + TICKETS_PAR_SOUCHE - 1 ?>">Télécharger le lot</a></td></tr>
                 <?php endfor; ?></tbody>
             </table></div>
         </div>
