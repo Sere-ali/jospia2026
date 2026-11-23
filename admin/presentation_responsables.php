@@ -396,12 +396,12 @@ html,body{background:#071229}
             else { $libEt = 'Commission ' . $r['commission']; }
             // Fonctions cumulées : libellé particulier
             $nn = strtr(mb_strtoupper(trim($r['nom_prenoms']), 'UTF-8'), ['É'=>'E','È'=>'E','Ï'=>'I']);
-            $cumuls = ['KONE OUSMANE' => 'Manager Général Adjoint / Protocole'];
+            $cumuls = ['KONE OUSMANE' => 'Manager Général Adjoint'];
             foreach ($cumuls as $k => $v) { if (strpos($nn, $k) !== false) $libEt = $v; } ?>
       <div class="etiq"><i></i><?= e($libEt) ?></div>
       <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
       <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
-      <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Niveau d'études / fonction</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
+      <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Profession</small><b><?= e($r['niveau_fonction']) ?></b></div></div>
     </div>
   </div></section>
 <?php endforeach; ?>
