@@ -41,7 +41,7 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
                 <input type="hidden" name="action" value="generer">
                 <button type="submit" class="btn btn-primaire" <?= $total >= 500 ? 'disabled' : '' ?>><?= $total ? 'Générer le lot suivant (20 tickets)' : 'Générer le premier lot (20 tickets)' ?></button>
             </form>
-            <small style="color:var(--texte-doux);display:block;margin-top:8px;">On commence <strong>obligatoirement par 20 tickets</strong> (une souche), puis on ajoute 20 tickets à chaque fois, jusqu'à 25 lots = 500 tickets. Chaque lot porte une seule lettre (<strong>KI, AS, MS, OK, NS</strong>, 5 lots chacune), tirée au hasard : jamais la même lettre que le lot précédent. Le PDF du lot se télécharge directement. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
+            <small style="color:var(--texte-doux);display:block;margin-top:8px;">On commence <strong>obligatoirement par 20 tickets</strong> (une souche), puis on ajoute 20 tickets à chaque fois, jusqu'à 25 lots = 500 tickets. Chaque lot porte une seule lettre (<strong>KI, AS, MS, OK, NS</strong>, 5 lots chacune). Les lettres sortent dans un ordre aléatoire, par tours de 5 lots : après une lettre, on passe obligatoirement par les 4 autres avant de la retrouver. Le PDF du lot se télécharge directement. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
         </div>
 
         <?php if ($total): ?>

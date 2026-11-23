@@ -564,21 +564,16 @@ function ticketsGenererLot(PDO $pdo) {
     ticketsPreparer($pdo);
     $codes = $pdo->query("SELECT code FROM tickets ORDER BY numero")->fetchAll(PDO::FETCH_COLUMN);
     $utilises = array_fill_keys(TICKETS_SERIES, 0);
-    foreach (array_chunk($codes, TICKETS_PAR_SOUCHE) as $lot) { if (isset($utilises[substr($lot[0], 0, 2)])) $utilises[substr($lot[0], 0, 2)]++; }
-    $dernier = $codes ? substr($codes[count($codes) - 1], 0, 2) : '';
-    $reste = []; foreach ($utilises as $l => $u) { $reste[$l] = TICKETS_SOUCHES_PAR_SERIE - $u; }
-    if (array_sum($reste) <= 0) return null;
-    // lettres possibles : pas la même que le lot précédent, et le reste doit pouvoir être ordonné sans deux lots identiques de suite
-    $candidats = [];
-    foreach ($reste as $l => $r) {
-        if ($r <= 0 || $l === $dernier) continue;
-        $apres = $reste; $apres[$l]--; $T = array_sum($apres);
-        $ok = true;
-        foreach ($apres as $m => $rm) { if ($rm > intdiv($T + 1, 2) || ($m === $l && $rm > intdiv($T, 2))) { $ok = false; break; } }
-        if ($ok) $candidats[] = $l;
-    }
-    if (!$candidats) { foreach ($reste as $l => $r) { if ($r > 0 && $l !== $dernier) $candidats[] = $l; } }
-    if (!$candidats) { foreach ($reste as $l => $r) { if ($r > 0) $candidats[] = $l; } }
+    $lots = [];
+    foreach (array_chunk($codes, TICKETS_PAR_SOUCHE) as $lot) { $l = substr($lot[0], 0, 2); $lots[] = $l; if (isset($utilises[$l])) $utilises[$l]++; }
+    if (count($lots) >= count(TICKETS_SERIES) * TICKETS_SOUCHES_PAR_SERIE) return null;
+    // Par tour de 5 lots, chaque lettre passe une fois (ordre aléatoire) : après les 20 tickets d'une lettre,
+    // on passe obligatoirement par toutes les autres lettres avant de la retrouver.
+    $n = count(TICKETS_SERIES);
+    $dansTour = array_slice($lots, intdiv(count($lots), $n) * $n);
+    $dernier = $lots ? $lots[count($lots) - 1] : '';
+    $candidats = array_values(array_diff(TICKETS_SERIES, $dansTour));
+    if (!$dansTour && count($candidats) > 1) { $candidats = array_values(array_diff($candidats, [$dernier])); } // début de tour : pas la même lettre que la fin du tour précédent
     $lettre = $candidats[random_int(0, count($candidats) - 1)];
     $k = $utilises[$lettre] + 1;
     $debut = count($codes) + 1;
