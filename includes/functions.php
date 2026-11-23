@@ -556,31 +556,42 @@ function ticketInfoCode($code) {
 }
 
 /**
- * Génère (ou actualise) les 500 tickets : 25 souches de 20 (5 souches par lettre KI, AS, MS, OK, NS).
- * L'ordre des souches est tiré au hasard, mais deux souches de même lettre ne se suivent jamais :
- * après les 20 tickets d'une lettre, on passe obligatoirement à une autre lettre.
+ * Génère le LOT SUIVANT : 20 tickets (une souche) d'une seule lettre. On commence par un lot de 20, puis on en ajoute 20 à la fois (25 lots = 500 tickets).
+ * La lettre est tirée au hasard, jamais la même que celle du lot précédent, et chaque lettre a au plus 5 lots.
+ * Retourne [premier numéro, dernier numéro] ou null si les 500 tickets existent déjà.
  */
-function ticketsGenerer(PDO $pdo) {
+function ticketsGenererLot(PDO $pdo) {
     ticketsPreparer($pdo);
-    $souches = [];
-    foreach (TICKETS_SERIES as $serie) { for ($k = 1; $k <= TICKETS_SOUCHES_PAR_SERIE; $k++) { $souches[] = [$serie, $k]; } }
-    do {
-        for ($i = count($souches) - 1; $i > 0; $i--) { $j = random_int(0, $i); [$souches[$i], $souches[$j]] = [$souches[$j], $souches[$i]]; }
+    $codes = $pdo->query("SELECT code FROM tickets ORDER BY numero")->fetchAll(PDO::FETCH_COLUMN);
+    $utilises = array_fill_keys(TICKETS_SERIES, 0);
+    foreach (array_chunk($codes, TICKETS_PAR_SOUCHE) as $lot) { if (isset($utilises[substr($lot[0], 0, 2)])) $utilises[substr($lot[0], 0, 2)]++; }
+    $dernier = $codes ? substr($codes[count($codes) - 1], 0, 2) : '';
+    $reste = []; foreach ($utilises as $l => $u) { $reste[$l] = TICKETS_SOUCHES_PAR_SERIE - $u; }
+    if (array_sum($reste) <= 0) return null;
+    // lettres possibles : pas la même que le lot précédent, et le reste doit pouvoir être ordonné sans deux lots identiques de suite
+    $candidats = [];
+    foreach ($reste as $l => $r) {
+        if ($r <= 0 || $l === $dernier) continue;
+        $apres = $reste; $apres[$l]--; $T = array_sum($apres);
         $ok = true;
-        for ($i = 1; $i < count($souches); $i++) { if ($souches[$i][0] === $souches[$i - 1][0]) { $ok = false; break; } }
-    } while (!$ok);
-    $total = count($souches) * TICKETS_PAR_SOUCHE;
-    $pdo->exec("DELETE FROM tickets WHERE numero > $total");
-    $pdo->exec("UPDATE tickets SET code = CONCAT('~', id) WHERE numero <= $total"); // libère les anciens codes
-    $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)");
-    $num = 0;
-    foreach ($souches as [$serie, $k]) {
-        for ($i = 1; $i <= TICKETS_PAR_SOUCHE; $i++) {
-            $num++;
-            $ins->execute([$num, $serie . str_pad((string)(($k - 1) * TICKETS_PAR_SOUCHE + $i), 3, '0', STR_PAD_LEFT)]);
-        }
+        foreach ($apres as $m => $rm) { if ($rm > intdiv($T + 1, 2) || ($m === $l && $rm > intdiv($T, 2))) { $ok = false; break; } }
+        if ($ok) $candidats[] = $l;
     }
-    return [1, $total];
+    if (!$candidats) { foreach ($reste as $l => $r) { if ($r > 0 && $l !== $dernier) $candidats[] = $l; } }
+    if (!$candidats) { foreach ($reste as $l => $r) { if ($r > 0) $candidats[] = $l; } }
+    $lettre = $candidats[random_int(0, count($candidats) - 1)];
+    $k = $utilises[$lettre] + 1;
+    $debut = count($codes) + 1;
+    $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?)");
+    for ($i = 1; $i <= TICKETS_PAR_SOUCHE; $i++) { $ins->execute([$debut + $i - 1, $lettre . str_pad((string)(($k - 1) * TICKETS_PAR_SOUCHE + $i), 3, '0', STR_PAD_LEFT)]); }
+    return [$debut, $debut + TICKETS_PAR_SOUCHE - 1];
+}
+
+/** Supprime tous les tickets générés (pour recommencer à zéro). */
+function ticketsReinitialiser(PDO $pdo) {
+    ticketsPreparer($pdo);
+    $pdo->exec("DELETE FROM tickets");
+    $pdo->exec("ALTER TABLE tickets AUTO_INCREMENT = 1");
 }
 
 /** Enregistre une action dans le journal (ne provoque jamais d'erreur visible). */

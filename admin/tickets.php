@@ -3,10 +3,19 @@ require_once __DIR__ . '/../includes/init.php';
 exigerRole(['finance', 'admin', 'superadmin']);
 ticketsPreparer($pdo);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'generer') {
-    [$de, $a] = ticketsGenerer($pdo);
-    journaliser($pdo, "Tickets générés : n° $de à $a (KI, AS, MS, OK, NS)", '');
-    redirect('/admin/tickets');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $act = $_POST['action'] ?? '';
+    if ($act === 'generer') {
+        $r = ticketsGenererLot($pdo);
+        if (!$r) { $_SESSION['flash_erreur'] = "Les 500 tickets (25 lots) sont déjà générés."; redirect('/admin/tickets'); }
+        journaliser($pdo, "Lot de tickets généré : n° {$r[0]} à {$r[1]}", '');
+        redirect('/admin/tickets_pdf?de=' . $r[0] . '&a=' . $r[1]);
+    }
+    if ($act === 'reinitialiser') {
+        ticketsReinitialiser($pdo);
+        journaliser($pdo, "Tickets réinitialisés (tous supprimés)", '');
+        redirect('/admin/tickets');
+    }
 }
 
 $total = (int)$pdo->query("SELECT COUNT(*) FROM tickets")->fetchColumn();
@@ -26,12 +35,13 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
         <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
 
         <div class="carte" style="margin-bottom:20px;">
-            <h3>Générer les 500 tickets</h3>
-            <form method="post" data-no-ajax>
+            <h3>Générer un lot de 20 tickets</h3>
+            <p style="margin:0 0 10px;">Lots générés : <strong><?= intdiv($total, TICKETS_PAR_SOUCHE) ?> / <?= count(TICKETS_SERIES) * TICKETS_SOUCHES_PAR_SERIE ?></strong> (<?= $total ?> tickets sur 500).</p>
+            <form method="post" data-no-ajax style="display:inline;">
                 <input type="hidden" name="action" value="generer">
-                <button type="submit" class="btn btn-primaire">Générer / actualiser les 500 tickets</button>
+                <button type="submit" class="btn btn-primaire" <?= $total >= 500 ? 'disabled' : '' ?>><?= $total ? 'Générer le lot suivant (20 tickets)' : 'Générer le premier lot (20 tickets)' ?></button>
             </form>
-            <small style="color:var(--texte-doux);display:block;margin-top:8px;">5 séries <strong>KI, AS, MS, OK, NS</strong>, chacune de 5 souches de 20 tickets (ex. KI001 à KI020 = 1re souche KI, KI021 à KI040 = 2e souche KI…). L'ordre des souches est tiré au hasard, mais après les 20 tickets d'une lettre on passe toujours à une autre lettre. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA. PDF : 4 tickets par page A4, à découper le long du pointillé.</small>
+            <small style="color:var(--texte-doux);display:block;margin-top:8px;">On commence <strong>obligatoirement par 20 tickets</strong> (une souche), puis on ajoute 20 tickets à chaque fois, jusqu'à 25 lots = 500 tickets. Chaque lot porte une seule lettre (<strong>KI, AS, MS, OK, NS</strong>, 5 lots chacune), tirée au hasard : jamais la même lettre que le lot précédent. Le PDF du lot se télécharge directement. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
         </div>
 
         <?php if ($total): ?>
@@ -61,6 +71,10 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
                 <thead><tr><th>N°</th><th>Code</th><th>Généré le</th></tr></thead>
                 <tbody><?php foreach ($derniers as $t): ?><tr><td><?= (int)$t['numero'] ?></td><td class="mono"><strong><?= e($t['code']) ?></strong></td><td><?= e(date('d/m/Y H:i', strtotime($t['created_at']))) ?></td></tr><?php endforeach; ?></tbody>
             </table></div>
+            <form method="post" data-no-ajax style="margin-top:14px;" onsubmit="return confirm('Supprimer TOUS les tickets générés et recommencer à zéro ? À ne faire que si rien n\'a été imprimé.');">
+                <input type="hidden" name="action" value="reinitialiser">
+                <button type="submit" class="btn btn-outline btn-sm">Recommencer à zéro (supprime tous les tickets)</button>
+            </form>
             <?php endif; ?>
         </div>
     </div>
