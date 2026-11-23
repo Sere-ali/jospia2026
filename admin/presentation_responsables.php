@@ -396,7 +396,7 @@ html,body{background:#071229}
             else { $libEt = 'Commission ' . $r['commission']; }
             // Fonctions cumulées : libellé particulier
             $nn = strtr(mb_strtoupper(trim($r['nom_prenoms']), 'UTF-8'), ['É'=>'E','È'=>'E','Ï'=>'I']);
-            $cumuls = ['KONE OUSMANE' => 'Manager Général / Protocole'];
+            $cumuls = ['KONE OUSMANE' => 'Manager Général Adjoint / Protocole'];
             foreach ($cumuls as $k => $v) { if (strpos($nn, $k) !== false) $libEt = $v; } ?>
       <div class="etiq"><i></i><?= e($libEt) ?></div>
       <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
