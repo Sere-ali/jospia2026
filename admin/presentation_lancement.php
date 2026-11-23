@@ -113,6 +113,10 @@ $intro = [
       "Participation des membres du comité d’organisation\n94×2.000f = 188.000 Fcfa",
       'Apports extérieurs : 4.403.035 Fcfa'], false, false],
 ];
+$commissions = [['Scientifique',283970],['Mobilisation, Information et Communication',392000],['Hygiène et Cadre de Vie',100000],['Administration',412000],['Logistique, Transport et Hébergement',280200],['Sécurité',146500],['Protocole',207615],['Pépinière',114000],['Santé',190000],['Restauration',4090125],['Imprévus',689625]];
+$totalBudget = 6841035; $maxCom = max(array_column($commissions, 1));
+$sourcesFin = [['Participation des séminaristes','450 × 5.000 F',2250000,'#0B8A4E'],['Comité d’organisation','94 × 2.000 F',188000,'#F77F00'],['Apports extérieurs','Partenaires, dons et soutiens',4403035,'#E8431E']];
+function fmtF($n) { return number_format($n, 0, ',', '.'); }
 function pTxt($s) { return str_replace('15e édition', '15<sup>e</sup> édition', e($s)); }
 $total = 0; foreach ($sections as $s) { $total += 1 + count($s[2]); }
 function mots($s, $base = 0) { $o = ''; $i = $base; foreach (preg_split('/\s+/', trim($s)) as $m) { $t = ($m === '15e') ? '15<sup>e</sup>' : e($m); $o .= '<span class="w"><i style="--d:' . $i++ . '">' . $t . '</i></span> '; } return $o; }
@@ -252,6 +256,58 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 .cols.solo,.cols.solo.s2{grid-template-columns:1fr;column-gap:0}
 .cols.solo .objb{display:none}
 .fit .cols.solo{grid-template-columns:1fr!important;column-gap:0!important}
+
+/* ===== Budget : barres, montant, donut ===== */
+.bars{display:grid;gap:clamp(5px,.9vh,10px);padding:clamp(10px,min(1.6vw,calc(var(--vh)*2.6)),24px)}
+.br{display:grid;grid-template-columns:minmax(0,34%) minmax(0,1fr) auto;align-items:center;gap:clamp(8px,1.4vw,18px);font-size:clamp(11px,min(1.5vw,calc(var(--vh)*2.6)),19px);opacity:0;transform:translateX(-36px);transition:transform .25s}
+.actif .br{animation:brin .8s cubic-bezier(.16,.95,.25,1) both;animation-delay:calc(.5s + var(--k)*.12s)}
+@keyframes brin{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+.br .nm{font-weight:700;color:var(--vf);line-height:1.2}
+.br .tr{height:clamp(10px,1.9vh,18px);border-radius:20px;background:#e9f3ed;overflow:hidden;position:relative}
+.br .tr i{display:block;height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,var(--v),var(--o));position:relative;overflow:hidden;transition:width 1.4s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.7s + var(--k)*.12s)}
+.actif .br .tr i{width:var(--w)}
+.br .tr i:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.7) 50%,transparent 70%);transform:translateX(-120%)}
+.actif .br .tr i:after{animation:lueur 3.2s calc(2.4s + var(--k)*.15s) ease-in-out infinite}
+@keyframes lueur{0%{transform:translateX(-120%)}45%,100%{transform:translateX(120%)}}
+.br.top .tr i{background:linear-gradient(90deg,var(--o),var(--r))}
+.br .vl{font-weight:800;text-align:right;white-space:nowrap;color:var(--tx);min-width:9.5em}
+.br .vl em{font-style:normal;font-weight:700;color:var(--o);margin-left:.6em;font-size:.85em}
+.br:hover{transform:scale(1.015)}
+.br:hover .tr i{filter:brightness(1.12) saturate(1.2)}
+.br.tot{grid-template-columns:1fr auto;margin-top:clamp(4px,1vh,10px);padding:clamp(8px,1.4vh,14px) clamp(12px,2vw,24px);border-radius:16px;background:linear-gradient(100deg,var(--vf),var(--v) 45%,var(--o));color:#fff;box-shadow:0 12px 26px rgba(247,127,0,.35);font-size:clamp(14px,min(2.3vw,calc(var(--vh)*4)),30px)}
+.br.tot .nm{color:#fff;letter-spacing:.06em;font-weight:900}
+.br.tot .vl{color:#fff;font-weight:900;min-width:0}
+.actif .br.tot{animation:brin .8s calc(.5s + 11*.12s) cubic-bezier(.16,.95,.25,1) both,puls 2.6s 3s ease-in-out infinite}
+.grand{position:relative}
+.grand:before{content:"";position:absolute;left:50%;top:52%;width:min(70vw,calc(var(--vh)*80));height:min(70vw,calc(var(--vh)*80));transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(247,127,0,.22),rgba(11,138,78,.10) 45%,transparent 68%);z-index:-1;opacity:0}
+.actif .grand:before{animation:halo 4s ease-in-out infinite;opacity:1}
+@keyframes halo{0%,100%{transform:translate(-50%,-50%) scale(.85);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}
+.montant{background:linear-gradient(90deg,var(--v),var(--o),var(--r),var(--o),var(--v));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-variant-numeric:tabular-nums;filter:drop-shadow(0 8px 18px rgba(247,127,0,.3))}
+.actif .montant{animation:ap 1s .6s cubic-bezier(.16,.95,.25,1) both,coul 6s linear infinite}
+.devise{font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--vf);font-size:clamp(11px,min(1.9vw,calc(var(--vh)*3.2)),22px);margin-top:14px}
+.fin{display:flex;align-items:center;justify-content:center;gap:clamp(16px,4vw,56px);flex-wrap:wrap}
+.dn{position:relative;width:min(38vw,calc(var(--vh)*46),420px);aspect-ratio:1;flex:0 0 auto}
+.dn svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible;filter:drop-shadow(0 14px 22px rgba(11,138,78,.18))}
+.dn circle{fill:none;stroke-width:26}
+.dn .fond{stroke:#eaf3ee}
+.dn .seg{stroke:var(--c);stroke-dasharray:0 600;stroke-dashoffset:var(--o);stroke-linecap:butt;transition:stroke-dasharray 1.5s cubic-bezier(.2,.8,.2,1),opacity .3s,stroke-width .3s;transition-delay:calc(.7s + var(--k)*.45s),0s,0s;cursor:pointer}
+.actif .dn .seg{stroke-dasharray:var(--l) 600}
+.dn[data-hl] .seg{opacity:.25}
+.dn[data-hl="0"] .s0,.dn[data-hl="1"] .s1,.dn[data-hl="2"] .s2{opacity:1;stroke-width:32}
+.dn .ct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+.dn .ct b{font-size:clamp(18px,min(3.4vw,calc(var(--vh)*6)),44px);font-weight:900;color:var(--vf);font-variant-numeric:tabular-nums}
+.dn .ct small{font-weight:800;letter-spacing:.18em;color:var(--o);font-size:clamp(9px,1.2vw,15px)}
+.lg{display:grid;gap:clamp(8px,1.6vh,16px);flex:1 1 320px;max-width:560px}
+.it{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;background:#fff;border:1px solid #e3efe8;border-left:8px solid var(--c);border-radius:18px;padding:clamp(10px,1.8vh,18px) clamp(12px,1.6vw,22px);box-shadow:0 12px 26px rgba(11,138,78,.12);opacity:0;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.actif .it{animation:brin .9s cubic-bezier(.16,.95,.25,1) both;animation-delay:calc(.9s + var(--k)*.35s)}
+.it:hover,.it.on{transform:translateX(8px) scale(1.02);box-shadow:0 18px 34px rgba(247,127,0,.25)}
+.it .pt{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 22%,transparent)}
+.it h4{font-size:clamp(13px,min(1.6vw,calc(var(--vh)*2.8)),20px);font-weight:800;color:var(--vf);line-height:1.2}
+.it p{font-size:clamp(11px,min(1.2vw,calc(var(--vh)*2.1)),15px);color:#5a7364;margin-top:3px}
+.it .mt{text-align:right;font-weight:900;font-size:clamp(14px,min(1.9vw,calc(var(--vh)*3.3)),24px);color:var(--tx);white-space:nowrap;font-variant-numeric:tabular-nums}
+.it .mt em{display:block;font-style:normal;color:var(--c);font-size:.78em;font-weight:800}
+.slogan{background-size:300% 100%}
+@media(orientation:portrait){.br{grid-template-columns:1fr auto;grid-template-areas:"nm vl" "tr tr"}.br .nm{grid-area:nm}.br .vl{grid-area:vl;min-width:0}.br .tr{grid-area:tr}.br.tot{grid-template-areas:none}.dn{width:min(70vw,calc(var(--vh)*34))}.lg{flex-basis:100%}}
 .titrebud{font-size:clamp(22px,min(5vw,calc(var(--vh)*8)),62px)!important;margin-top:12px}
 .montant{font-size:clamp(46px,min(14vw,calc(var(--vh)*22)),180px);font-weight:900;line-height:1.05;margin-top:18px;letter-spacing:.01em}
 .montant{background:linear-gradient(90deg,var(--v),var(--o),var(--r));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -312,15 +368,56 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
     <h1 class="degrade titreintro"><?= mots($introTitre, 1) ?></h1>
     <div class="trait"></div>
   </div></section>
-  <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) { afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux);
+  <?php foreach ($intro as [$num, $nom, $obj, $lo, $lr, $res, $gras, $deux]) {
     if ($num === 'IV-1') { ?>
+  <section class="slide" data-steps="1"><div class="contenu">
+    <div class="entete"><span class="n">IV-1</span><h2 class="degrade"><?= mots('BUDGET DÉTAILLÉ PAR COMMISSION') ?></h2></div>
+    <div class="bloc bars">
+      <?php foreach ($commissions as $k => [$cn, $cm]): $pc = $cm / $totalBudget * 100; ?>
+      <div class="br<?= $cm === $maxCom ? ' top' : '' ?>" style="--w:<?= max(3, round($cm / $maxCom * 100, 1)) ?>%;--k:<?= $k ?>">
+        <span class="nm"><?= $cn === 'Imprévus' ? 'Imprévus' : 'Commission ' . e($cn) ?></span>
+        <span class="tr"><i></i></span>
+        <span class="vl"><b data-cu="<?= $cm ?>" data-d="<?= 700 + $k * 120 ?>">0</b> F<em><?= number_format($pc, 1, ',', '') ?> %</em></span>
+      </div>
+      <?php endforeach; ?>
+      <div class="br tot" style="--k:11"><span class="nm">BUDGET PRÉVISIONNEL</span><span class="vl"><b data-cu="<?= $totalBudget ?>" data-d="2200">0</b> Fcfa</span></div>
+    </div>
+  </div></section>
   <section class="slide" data-steps="1"><div class="contenu partie grand">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
     <h1 class="degrade titrebud"><?= mots('BUDGET PRÉVISIONNEL DU SÉMINAIRE', 1) ?></h1>
-    <p class="montant degrade el" style="--i:6">6.841.035 <small>Fcfa</small></p>
+    <p class="montant el" style="--i:6"><span data-cu="6841035" data-d="1300">0</span> <small>Fcfa</small></p>
+    <p class="el devise" style="--i:9">Formation · Innovation · Participation · Impact social</p>
     <div class="trait"></div>
   </div></section>
-<?php } } ?>
+<?php continue; }
+    if ($num === 'IV-2') { $C = 2 * M_PI * 80; $off = 0; ?>
+  <section class="slide" data-steps="1"><div class="contenu">
+    <div class="entete"><span class="n">IV-2</span><h2 class="degrade"><?= mots('LES DIFFÉRENTES SOURCES DE FINANCEMENT') ?></h2></div>
+    <div class="fin">
+      <div class="dn" id="dn">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="fond" cx="100" cy="100" r="80"/>
+        <?php foreach ($sourcesFin as $k => [$a, $b, $m, $col]): $L = $m / $totalBudget * $C; ?>
+          <circle class="seg s<?= $k ?>" data-k="<?= $k ?>" cx="100" cy="100" r="80" style="--l:<?= round($L - 2.5, 2) ?>;--o:<?= round(-$off, 2) ?>;--c:<?= $col ?>;--k:<?= $k ?>"/>
+        <?php $off += $L; endforeach; ?>
+        </svg>
+        <div class="ct"><small>TOTAL</small><b data-cu="<?= $totalBudget ?>" data-d="900">0</b><small>Fcfa</small></div>
+      </div>
+      <div class="lg">
+        <?php foreach ($sourcesFin as $k => [$a, $b, $m, $col]): ?>
+        <div class="it" data-k="<?= $k ?>" style="--c:<?= $col ?>;--k:<?= $k ?>">
+          <span class="pt"></span>
+          <div><h4><?= e($a) ?></h4><p><?= e($b) ?></p></div>
+          <div class="mt"><b data-cu="<?= $m ?>" data-d="<?= 900 + $k * 300 ?>">0</b> F<em><?= number_format($m / $totalBudget * 100, 1, ',', '') ?> %</em></div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div></section>
+<?php continue; }
+    afficherActivite($num, $nom, '', $obj, $lr, $res, $lo, $gras, $deux); }
+?>
+
   <section class="slide" data-steps="1"><div class="contenu partie grand">
     <div class="el" style="--i:0"><img class="logo" src="<?= BASE_URL ?>/assets/img/pres_logo.png?v=2" alt="JOSPIA 2026"></div>
     <h1 class="degrade slogan"><?= mots('JOSPIA, votre formation, notre priorité !', 1) ?></h1>
@@ -369,6 +466,11 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   addEventListener('resize',replanifier);addEventListener('orientationchange',replanifier);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajuster);
   sl.forEach(function(s,i){var d=document.createElement('span');d.onclick=function(){if(!busy)go(i,0)};pts.appendChild(d)});
+  function fm(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+  function cu(el){var v=+el.getAttribute('data-cu'),d=+el.getAttribute('data-d')||0,t0=null;el.textContent='0';
+    if(el._r)cancelAnimationFrame(el._r);
+    function f(t){if(t0===null)t0=t;var p=(t-t0-d)/1700;if(p<0){el._r=requestAnimationFrame(f);return}p=Math.min(1,p);el.textContent=fm(v*(1-Math.pow(1-p,3)));if(p<1)el._r=requestAnimationFrame(f)}
+    el._r=requestAnimationFrame(f)}
   function maj(){
     var s=sl[c],cols=s.querySelector('.cols');
     if(cols){var solo=cols.classList.contains('solo'),off=solo?1:2;
@@ -388,6 +490,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
       cpt.textContent=(i+1)+' / '+n;
       bar.style.width=((i+1)/n*100)+'%';
       try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+      [].forEach.call(sl[i].querySelectorAll('[data-cu]'),cu);
       if(sl[i].classList.contains('final'))setTimeout(fete,1100);
       c=i;st=step;maj();
     }
@@ -437,6 +540,10 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
       s.style.cssText='left:'+e.clientX+'px;top:'+e.clientY+'px;background:'+coul[k%5]+';--dx:'+Math.cos(a)*d+'px;--dy:'+Math.sin(a)*d+'px';
       document.body.appendChild(s);setTimeout(function(x){x.remove()},900,s)}
   });
+  var dn=document.getElementById('dn');
+  if(dn){[].forEach.call(document.querySelectorAll('.it,.dn .seg'),function(x){
+    x.addEventListener('mouseenter',function(){var k=x.getAttribute('data-k');dn.setAttribute('data-hl',k);[].forEach.call(document.querySelectorAll('.it'),function(i){i.classList.toggle('on',i.getAttribute('data-k')===k)})});
+    x.addEventListener('mouseleave',function(){dn.removeAttribute('data-hl');[].forEach.call(document.querySelectorAll('.it'),function(i){i.classList.remove('on')})})})}
   // confettis de la fin
   var cv=document.getElementById('confetti'),cx=cv.getContext('2d'),P=[],run=false;
   function fete(){
