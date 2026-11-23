@@ -391,7 +391,10 @@ html,body{background:#071229}
   <section class="slide" data-steps="1"><div class="contenu fiche2">
     <figure class="pic"><span class="cadre"></span><?php if ($r['photo'] !== ''): ?><img src="<?= BASE_URL ?>/uploads/photos/<?= e(rawurlencode($r['photo'])) ?>" alt="<?= e($r['nom_prenoms']) ?>"><?php else: ?><div class="ini2"><?= e($ini) ?></div><?php endif; ?></figure>
     <div class="txt">
-      <div class="etiq"><i></i>Commission <?= e($r['commission']) ?></div>
+      <?php $cn = mb_strtoupper(trim($r['commission']), 'UTF-8'); $cn = strtr($cn, ['É'=>'E','È'=>'E']);
+            if ($cn === 'MG' || $cn === 'MGA' || strpos($cn, 'MANAGER GENERAL') === 0) { $libEt = ($cn === 'MG' || $cn === 'MANAGER GENERAL') ? 'Manager Général' : 'Manager Général Adjoint'; }
+            else { $libEt = 'Commission ' . $r['commission']; } ?>
+      <div class="etiq"><i></i><?= e($libEt) ?></div>
       <h2 class="nomf"><?= mots($r['nom_prenoms'], 2) ?></h2>
       <div class="lig" style="--k:0"><span class="nb">01</span><div><small>Profil au sein de la commission</small><b>Responsable</b></div></div>
       <div class="lig" style="--k:1"><span class="nb">02</span><div><small>Militant(e) depuis</small><b><?= e($r['annee_debut']) ?><?php if ($ans): ?><em>— <?= $ans ?> an<?= $ans > 1 ? 's' : '' ?> d'engagement</em><?php endif; ?></b></div></div>
