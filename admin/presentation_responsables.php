@@ -286,12 +286,13 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
 
 /* ===== Fiches responsables ===== */
 .fiche{display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,64px);flex-wrap:wrap}
-.ph{position:relative;width:min(34vw,calc(var(--vh)*46),460px);aspect-ratio:1;flex:0 0 auto;padding:10px;border-radius:34px;background:linear-gradient(135deg,var(--o),var(--v),var(--r),var(--o),var(--v));background-size:300% 300%;box-shadow:0 22px 50px rgba(247,127,0,.35)}
+.ph{position:relative;flex:0 0 auto;padding:10px;border-radius:30px;background:linear-gradient(135deg,var(--o),var(--v),var(--r),var(--o),var(--v));background-size:300% 300%;box-shadow:0 22px 50px rgba(247,127,0,.35);line-height:0}
 .actif .ph{animation:phin 1.3s .5s cubic-bezier(.2,1.2,.3,1) both,gp 5s linear infinite}
 @keyframes phin{from{opacity:0;transform:scale(.3) rotate(-14deg)}to{opacity:1;transform:none}}
 @keyframes gp{to{background-position:300% 300%}}
-.ph img,.ph .ini{width:100%;height:100%;object-fit:cover;border-radius:26px;display:block;background:#fff}
-.ph .ini{display:flex;align-items:center;justify-content:center;font-size:clamp(50px,12vw,160px);font-weight:900;color:var(--o)}
+.ph img{display:block;width:auto;height:auto;max-width:min(42vw,560px);max-height:min(calc(var(--vh)*64),680px);border-radius:22px;background:#fff}
+.ph .ini{width:min(34vw,calc(var(--vh)*46),420px);aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:22px;background:#fff;font-size:clamp(50px,12vw,160px);font-weight:900;color:var(--o);line-height:1}
+@media(orientation:portrait),(max-width:820px){.ph img{max-width:min(78vw,520px);max-height:min(calc(var(--vh)*36),460px)}}
 .info{flex:1 1 380px;min-width:0;max-width:980px}
 .com{display:inline-block;background:linear-gradient(135deg,var(--o),var(--r));color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;border-radius:14px;padding:.3em .9em;font-size:clamp(14px,min(2.4vw,calc(var(--vh)*4.2)),40px);box-shadow:0 8px 18px rgba(247,127,0,.35)}
 .actif .com{animation:ap 1s .7s cubic-bezier(.16,.95,.25,1) both,puls 2.6s 2.4s ease-in-out infinite}
@@ -378,6 +379,7 @@ html,body{width:100%;height:100%;max-width:100%;overflow:hidden;overscroll-behav
   var rt;function replanifier(){clearTimeout(rt);rt=setTimeout(ajuster,120)}
   addEventListener('resize',replanifier);addEventListener('orientationchange',replanifier);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajuster);
+  [].forEach.call(document.querySelectorAll('.ph img'),function(im){if(im.complete)replanifier();else im.addEventListener('load',replanifier)});
   sl.forEach(function(s,i){var d=document.createElement('span');d.onclick=function(){if(!busy)go(i,0)};pts.appendChild(d)});
   function fm(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
   function cu(el){var v=+el.getAttribute('data-cu'),d=+el.getAttribute('data-d')||0,t0=null;el.textContent='0';

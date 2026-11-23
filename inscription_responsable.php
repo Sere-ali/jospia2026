@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st = $pdo->prepare("SELECT * FROM presentation_responsables WHERE commission = ? AND nom_prenoms = ?");
         $st->execute([$commission, $nom]); $existant = $st->fetch();
     }
-    if (!$erreurs && empty($_FILES['photo']['name']) && !$existant) $erreurs[] = "La photo d'identité (format 4x4) est obligatoire.";
+    if (!$erreurs && empty($_FILES['photo']['name']) && !$existant) $erreurs[] = "La photo d'identité est obligatoire.";
     $photo = $existant['photo'] ?? '';
     if (!$erreurs && !empty($_FILES['photo']['name'])) {
         $p = uploadPhoto($_FILES['photo']);
@@ -62,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <datalist id="profils"><option value="Responsable"><option value="Responsable adjoint"><option value="Secrétaire"><option value="Trésorier(ère)"><option value="Membre"></datalist></div>
                     <div class="form-group"><label>3- Année de début de militantisme ou de participation aux JOSPIA <span class="req">*</span></label>
                         <input type="number" name="annee_debut" inputmode="numeric" min="1990" max="<?= $anneeMax ?>" required placeholder="Ex : 2015" value="<?= e($_POST['annee_debut'] ?? '') ?>"></div>
-                    <div class="form-group"><label>4- Photo d'identité format 4x4 <span class="req">*</span></label>
+                    <div class="form-group"><label>4- Photo d'identité <span class="req">*</span></label>
                         <input type="file" name="photo" accept="image/*">
-                        <div class="help-text">Format jpg/png/webp, 5 Mo max. Une photo bien cadrée sur le visage.</div></div>
+                        <div class="help-text">Format jpg/png/webp, 5 Mo max. Photo nette, visage bien visible.</div></div>
                     <div class="form-group"><label>5- Niveau d'études / fonction <span class="req">*</span></label>
                         <input type="text" name="niveau_fonction" required placeholder="Ex : Master 2 en Droit / Enseignant" value="<?= e($_POST['niveau_fonction'] ?? '') ?>"></div>
                 </fieldset>
