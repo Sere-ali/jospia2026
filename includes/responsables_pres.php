@@ -31,6 +31,19 @@ function respPresRang($commission) {
 function respPresListe(PDO $pdo) {
     respPresPreparer($pdo);
     $l = $pdo->query("SELECT * FROM presentation_responsables")->fetchAll();
+    // Une même personne inscrite deux fois dans le groupe des managers (ex. Manager Général Adjoint + responsable de la commission Protocole) :
+    // la 1re fiche reste « Manager Général Adjoint », la 2e est classée dans la commission Protocole.
+    $norm = function ($t) { return strtr(mb_strtoupper(trim($t), 'UTF-8'), ['É' => 'E', 'È' => 'E', 'Ï' => 'I']); };
+    $protocole = 'PROTOCOLE';
+    foreach (listeCommissions() as $c) { if (stripos(normaliserCommission($c), 'PROTOCOLE') !== false) { $protocole = $c; break; } }
+    $vus = [];
+    usort($l, function ($a, $b) { return (int)$a['id'] <=> (int)$b['id']; });
+    foreach ($l as $i => $r) {
+        if (respPresRang($r['commission']) > 1) continue;
+        $nom = $norm($r['nom_prenoms']);
+        if (isset($vus[$nom])) { $l[$i]['commission'] = $protocole; }
+        else { $vus[$nom] = true; if (strpos($nom, 'KONE OUSMANE') !== false) $l[$i]['commission'] = 'MANAGER GÉNÉRAL ADJOINT'; }
+    }
     usort($l, function ($a, $b) {
         return respPresRang($b['commission']) <=> respPresRang($a['commission']) ?: strcasecmp($a['nom_prenoms'], $b['nom_prenoms']);
     });
