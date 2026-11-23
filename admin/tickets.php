@@ -6,9 +6,9 @@ ticketsPreparer($pdo);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $act = $_POST['action'] ?? '';
     if ($act === 'generer') {
-        $r = ticketsGenererLot($pdo);
-        if (!$r) { $_SESSION['flash_erreur'] = "Les 500 tickets (25 lots) sont déjà générés."; redirect('/admin/tickets'); }
-        journaliser($pdo, "Lot de tickets généré : n° {$r[0]} à {$r[1]}", '');
+        $r = ticketsGenererLot($pdo, $_POST['lettre'] ?? '');
+        if (is_string($r)) { $_SESSION['flash_erreur'] = $r; redirect('/admin/tickets'); }
+        journaliser($pdo, "Lot de tickets généré ({$_POST['lettre']}) : n° {$r[0]} à {$r[1]}", '');
         redirect('/admin/tickets_pdf?de=' . $r[0] . '&a=' . $r[1]);
     }
     if ($act === 'reinitialiser') {
@@ -36,12 +36,21 @@ require_once __DIR__ . '/../includes/' . (estAdmin() ? 'admin_nav.php' : 'financ
 
         <div class="carte" style="margin-bottom:20px;">
             <h3>Générer un lot de 20 tickets</h3>
+            <?php $etat = ticketsEtatLots($pdo); ?>
             <p style="margin:0 0 10px;">Lots générés : <strong><?= intdiv($total, TICKETS_PAR_SOUCHE) ?> / <?= count(TICKETS_SERIES) * TICKETS_SOUCHES_PAR_SERIE ?></strong> (<?= $total ?> tickets sur 500).</p>
-            <form method="post" data-no-ajax style="display:inline;">
+            <form method="post" data-no-ajax style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
                 <input type="hidden" name="action" value="generer">
-                <button type="submit" class="btn btn-primaire" <?= $total >= 500 ? 'disabled' : '' ?>><?= $total ? 'Générer le lot suivant (20 tickets)' : 'Générer le premier lot (20 tickets)' ?></button>
+                <div><label for="lettre" style="display:block;font-weight:600;">Lettre de la souche</label>
+                <select name="lettre" id="lettre" required style="padding:10px;border:1px solid #ccc;border-radius:8px;min-width:260px;">
+                    <option value="">- Choisir la lettre -</option>
+                    <?php foreach (TICKETS_SERIES as $L): $u = $etat['utilises'][$L]; $prochain = $L . str_pad((string)($u * TICKETS_PAR_SOUCHE + 1), 3, '0', STR_PAD_LEFT);
+                        $bloque = $u >= TICKETS_SOUCHES_PAR_SERIE || $etat['dernier'] === $L; ?>
+                        <option value="<?= $L ?>" <?= $bloque ? 'disabled' : '' ?>><?= $L ?> — <?= $u >= TICKETS_SOUCHES_PAR_SERIE ? 'terminé (5/5)' : 'souche ' . ($u + 1) . '/5 (' . $prochain . ' à ' . $L . str_pad((string)(($u + 1) * TICKETS_PAR_SOUCHE), 3, '0', STR_PAD_LEFT) . ')' . ($etat['dernier'] === $L ? ' — dernier lot, choisir une autre lettre' : '') ?></option>
+                    <?php endforeach; ?>
+                </select></div>
+                <button type="submit" class="btn btn-primaire" <?= $total >= 500 ? 'disabled' : '' ?>>Générer les 20 tickets et télécharger le PDF</button>
             </form>
-            <small style="color:var(--texte-doux);display:block;margin-top:8px;">On commence <strong>obligatoirement par 20 tickets</strong> (une souche), puis on ajoute 20 tickets à chaque fois, jusqu'à 25 lots = 500 tickets. Chaque lot porte une seule lettre (<strong>KI, AS, MS, OK, NS</strong>, 5 lots chacune). Les lettres sortent dans un ordre aléatoire, par tours de 5 lots : après une lettre, on passe obligatoirement par les 4 autres avant de la retrouver. Le PDF du lot se télécharge directement. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
+            <small style="color:var(--texte-doux);display:block;margin-top:8px;">Chaque génération crée <strong>20 tickets = 1 souche</strong> de la lettre choisie (KI, AS, MS, OK ou NS), 5 souches par lettre, soit 500 tickets en tout. Les numéros se suivent dans chaque lettre (KI001–KI020, puis KI021–KI040…). Après les 20 tickets d'une lettre, il faut choisir une autre lettre. Montant imprimé : <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA.</small>
         </div>
 
         <?php if ($total): ?>

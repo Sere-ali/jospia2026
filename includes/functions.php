@@ -555,28 +555,30 @@ function ticketInfoCode($code) {
             'plage' => $serie . str_pad((string)$d, 3, '0', STR_PAD_LEFT) . ' à ' . $serie . str_pad((string)$f, 3, '0', STR_PAD_LEFT)];
 }
 
-/**
- * Génère le LOT SUIVANT : 20 tickets (une souche) d'une seule lettre. On commence par un lot de 20, puis on en ajoute 20 à la fois (25 lots = 500 tickets).
- * La lettre est tirée au hasard, jamais la même que celle du lot précédent, et chaque lettre a au plus 5 lots.
- * Retourne [premier numéro, dernier numéro] ou null si les 500 tickets existent déjà.
- */
-function ticketsGenererLot(PDO $pdo) {
+/** État des lots : lots déjà générés par lettre, dernière lettre utilisée. */
+function ticketsEtatLots(PDO $pdo) {
     ticketsPreparer($pdo);
     $codes = $pdo->query("SELECT code FROM tickets ORDER BY numero")->fetchAll(PDO::FETCH_COLUMN);
-    $utilises = array_fill_keys(TICKETS_SERIES, 0);
-    $lots = [];
-    foreach (array_chunk($codes, TICKETS_PAR_SOUCHE) as $lot) { $l = substr($lot[0], 0, 2); $lots[] = $l; if (isset($utilises[$l])) $utilises[$l]++; }
-    if (count($lots) >= count(TICKETS_SERIES) * TICKETS_SOUCHES_PAR_SERIE) return null;
-    // Par tour de 5 lots, chaque lettre passe une fois (ordre aléatoire) : après les 20 tickets d'une lettre,
-    // on passe obligatoirement par toutes les autres lettres avant de la retrouver.
-    $n = count(TICKETS_SERIES);
-    $dansTour = array_slice($lots, intdiv(count($lots), $n) * $n);
-    $dernier = $lots ? $lots[count($lots) - 1] : '';
-    $candidats = array_values(array_diff(TICKETS_SERIES, $dansTour));
-    if (!$dansTour && count($candidats) > 1) { $candidats = array_values(array_diff($candidats, [$dernier])); } // début de tour : pas la même lettre que la fin du tour précédent
-    $lettre = $candidats[random_int(0, count($candidats) - 1)];
-    $k = $utilises[$lettre] + 1;
-    $debut = count($codes) + 1;
+    $utilises = array_fill_keys(TICKETS_SERIES, 0); $dernier = '';
+    foreach (array_chunk($codes, TICKETS_PAR_SOUCHE) as $lot) { $l = substr($lot[0], 0, 2); $dernier = $l; if (isset($utilises[$l])) $utilises[$l]++; }
+    return ['total' => count($codes), 'utilises' => $utilises, 'dernier' => $dernier];
+}
+
+/**
+ * Génère UN lot de 20 tickets (une souche) pour la lettre choisie (KI, AS, MS, OK ou NS).
+ * Règles : 5 lots au maximum par lettre ; on ne peut pas enchaîner deux lots de la même lettre
+ * (après les 20 tickets d'une lettre, on passe obligatoirement par une autre lettre).
+ * Retourne [premier numéro, dernier numéro] ou une chaîne d'erreur.
+ */
+function ticketsGenererLot(PDO $pdo, $lettre) {
+    $lettre = strtoupper(trim((string)$lettre));
+    if (!in_array($lettre, TICKETS_SERIES, true)) return "Choisissez une lettre dans la liste.";
+    $e = ticketsEtatLots($pdo);
+    if ($e['total'] >= count(TICKETS_SERIES) * TICKETS_PAR_SOUCHE * TICKETS_SOUCHES_PAR_SERIE) return "Les 500 tickets sont déjà générés.";
+    if ($e['utilises'][$lettre] >= TICKETS_SOUCHES_PAR_SERIE) return "La lettre $lettre a déjà ses " . TICKETS_SOUCHES_PAR_SERIE . " souches (" . $lettre . "001 à " . $lettre . "100).";
+    if ($e['dernier'] === $lettre) return "Le lot précédent est déjà en $lettre : après les 20 tickets d'une lettre, il faut passer par une autre lettre.";
+    $k = $e['utilises'][$lettre] + 1;
+    $debut = $e['total'] + 1;
     $ins = $pdo->prepare("INSERT INTO tickets (numero, code) VALUES (?, ?)");
     for ($i = 1; $i <= TICKETS_PAR_SOUCHE; $i++) { $ins->execute([$debut + $i - 1, $lettre . str_pad((string)(($k - 1) * TICKETS_PAR_SOUCHE + $i), 3, '0', STR_PAD_LEFT)]); }
     return [$debut, $debut + TICKETS_PAR_SOUCHE - 1];
