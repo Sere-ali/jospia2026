@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/../includes/questionnaires.php';
 exigerRole(['scientifique', 'superadmin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,10 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // La commission scientifique n'y accède que si le super administrateur a déverrouillé le test
 if (!estSuperAdmin()) { exigerAccesTest($pdo); }
 
+questionnairesPreparer($pdo);
 $nbTotal = (int)$pdo->query("SELECT COUNT(*) FROM seminaristes WHERE dortoir IS NULL OR dortoir <> 'Pépinière'")->fetchColumn();
 $nbFaits = (int)$pdo->query("SELECT COUNT(*) FROM seminaristes WHERE test_complete = 1")->fetchColumn();
-$nbQuestions = (int)$pdo->query("SELECT COUNT(*) FROM questions")->fetchColumn();
-$resultats = $pdo->query("SELECT id, matricule, nom_prenoms, note_test, niveau_affecte FROM seminaristes WHERE test_complete = 1 ORDER BY note_test DESC, nom_prenoms")->fetchAll();
+$nbQuestions = (int)$pdo->query("SELECT COUNT(*) FROM questions WHERE questionnaire IS NOT NULL")->fetchColumn();
+$resultats = $pdo->query("SELECT id, matricule, nom_prenoms, note_test, niveau_affecte, questionnaire_test FROM seminaristes WHERE test_complete = 1 ORDER BY note_test DESC, nom_prenoms")->fetchAll();
 
 $titrePage = "Test d'entrée";
 require_once __DIR__ . '/../includes/header.php';
@@ -33,7 +35,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-titre">
             <span class="eyebrow">Commission scientifique</span>
             <h2>Test d'entrée</h2>
-            <p>Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20.</p>
+            <p><?= TEST_NB_QUESTIONNAIRES ?> questionnaires de 10 questions. Chaque séminariste reçoit un questionnaire selon son ordre d'arrivée : le 1er → n° 1, le 2e → n° 2… le 50e → n° 50, puis le 51e retombe sur le n° 1. Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20 (2 points par bonne réponse).</p>
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
@@ -41,7 +43,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
 
         <div class="grid grid-3" style="margin-bottom:24px;">
             <div class="carte stat-card"><div class="chiffre"><?= $nbFaits ?> / <?= $nbTotal ?></div><div class="label">Tests composés</div></div>
-            <div class="carte stat-card"><div class="chiffre"><?= $nbQuestions ?></div><div class="label">Questions en banque</div></div>
+            <div class="carte stat-card"><div class="chiffre"><?= $nbQuestions ?></div><div class="label">Questions (<?= TEST_NB_QUESTIONNAIRES ?> questionnaires × 10)</div></div>
             <div class="carte stat-card"><div class="chiffre"><?= DUREE_TEST_MINUTES ?> min</div><div class="label">Durée du test</div></div>
         </div>
 
@@ -55,15 +57,15 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="carte" style="overflow-x:auto;">
             <h3>Résultats</h3>
             <table>
-                <thead><tr><th>Matricule</th><th>Nom et prénoms</th><th>Note /20</th><th>Niveau</th><th>Action</th></tr></thead>
+                <thead><tr><th>Matricule</th><th>Nom et prénoms</th><th>Questionnaire</th><th>Note /20</th><th>Niveau</th><th>Action</th></tr></thead>
                 <tbody>
                 <?php foreach ($resultats as $r): ?>
                     <tr>
-                        <td class="mono"><?= e($r['matricule']) ?></td><td><?= e($r['nom_prenoms']) ?></td><td><?= e($r['note_test']) ?></td><td><?= e($r['niveau_affecte']) ?></td>
+                        <td class="mono"><?= e($r['matricule']) ?></td><td><?= e($r['nom_prenoms']) ?></td><td><?= $r['questionnaire_test'] ? 'n° ' . (int)$r['questionnaire_test'] : '—' ?></td><td><?= e($r['note_test']) ?></td><td><?= e($r['niveau_affecte']) ?></td>
                         <td><a href="<?= BASE_URL ?>/admin/correction?id=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">Correction</a></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (!$resultats): ?><tr><td colspan="5" class="text-center">Aucun test composé pour le moment.</td></tr><?php endif; ?>
+                <?php if (!$resultats): ?><tr><td colspan="6" class="text-center">Aucun test composé pour le moment.</td></tr><?php endif; ?>
                 </tbody>
             </table>
         </div>

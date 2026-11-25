@@ -1,0 +1,5002 @@
+[
+{
+"questionnaire": 1,
+"ordre": 1,
+"enonce": "Quel est le premier pilier de l’Islam ?",
+"a": "Le jeûne du Ramadan",
+"b": "Le pèlerinage (Hajj)",
+"c": "L’attestation de foi (Chahada)",
+"d": "La Zakât",
+"rep": "C"
+},
+{
+"questionnaire": 1,
+"ordre": 2,
+"enonce": "Combien de piliers compte la foi (Imân) ?",
+"a": "6",
+"b": "7",
+"c": "5",
+"d": "4",
+"rep": "A"
+},
+{
+"questionnaire": 1,
+"ordre": 3,
+"enonce": "Quelle sourate ouvre le Coran ?",
+"a": "An-Nâs",
+"b": "Al-Ikhlâs",
+"c": "Al-Falaq",
+"d": "Al-Fâtiha",
+"rep": "D"
+},
+{
+"questionnaire": 1,
+"ordre": 4,
+"enonce": "Quel terme désigne la chaîne des transmetteurs d’un hadith ?",
+"a": "Matn",
+"b": "Isnâd",
+"c": "Fiqh",
+"d": "Tafsîr",
+"rep": "B"
+},
+{
+"questionnaire": 1,
+"ordre": 5,
+"enonce": "Dans quelle ville le Prophète Muhammad ﷺ est-il né ?",
+"a": "Médine",
+"b": "Taïf",
+"c": "La Mecque",
+"d": "Jérusalem",
+"rep": "C"
+},
+{
+"questionnaire": 1,
+"ordre": 6,
+"enonce": "Qui fut le premier calife après le décès du Prophète ﷺ ?",
+"a": "Othman ibn Affân",
+"b": "Omar ibn Al-Khattâb",
+"c": "Ali ibn Abî Tâlib",
+"d": "Abou Bakr As-Siddîq",
+"rep": "D"
+},
+{
+"questionnaire": 1,
+"ordre": 7,
+"enonce": "Quel prophète fut créé sans père ni mère ?",
+"a": "Adam",
+"b": "Nouh",
+"c": "Moussa",
+"d": "Ibrahim",
+"rep": "A"
+},
+{
+"questionnaire": 1,
+"ordre": 8,
+"enonce": "Combien de prières obligatoires le musulman accomplit-il chaque jour ?",
+"a": "6",
+"b": "5",
+"c": "3",
+"d": "4",
+"rep": "B"
+},
+{
+"questionnaire": 1,
+"ordre": 9,
+"enonce": "Quelle édition des JOSPIA se tient en 2026 à Anyama ?",
+"a": "16e",
+"b": "14e",
+"c": "13e",
+"d": "15e",
+"rep": "D"
+},
+{
+"questionnaire": 1,
+"ordre": 10,
+"enonce": "Quel est le thème central de la 15e JOSPIA ?",
+"a": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI",
+"b": "L’engagement citoyen de la jeunesse musulmane",
+"c": "La jeunesse musulmane face aux défis du numérique",
+"d": "L’éducation islamique au service du développement",
+"rep": "A"
+},
+{
+"questionnaire": 2,
+"ordre": 1,
+"enonce": "Parmi les éléments suivants, lequel est une condition de validité de la prière ?",
+"a": "Prier dans une grande mosquée",
+"b": "Être en état de purification",
+"c": "Connaître parfaitement l’arabe",
+"d": "Porter un turban",
+"rep": "B"
+},
+{
+"questionnaire": 2,
+"ordre": 2,
+"enonce": "Lequel de ces éléments ne fait pas partie des six piliers de la foi ?",
+"a": "Croire au Jour dernier",
+"b": "Croire aux prophètes",
+"c": "Croire aux anges",
+"d": "Croire aux compagnons",
+"rep": "D"
+},
+{
+"questionnaire": 2,
+"ordre": 3,
+"enonce": "Quelle sourate est couramment surnommée « la Mère du Coran » ?",
+"a": "Al-Fâtiha",
+"b": "Yâ-Sîn",
+"c": "Al-Mulk",
+"d": "Al-Baqara",
+"rep": "A"
+},
+{
+"questionnaire": 2,
+"ordre": 4,
+"enonce": "Dans la terminologie du hadith, le texte du récit est appelé :",
+"a": "Tafsîr",
+"b": "Fiqh",
+"c": "Matn",
+"d": "Isnâd",
+"rep": "C"
+},
+{
+"questionnaire": 2,
+"ordre": 5,
+"enonce": "Quel compagnon accompagna le Prophète ﷺ lors de l’Hégire ?",
+"a": "Othman",
+"b": "Abou Bakr",
+"c": "Ali",
+"d": "Omar",
+"rep": "B"
+},
+{
+"questionnaire": 2,
+"ordre": 6,
+"enonce": "Qui fut le premier calife de l’Islam ?",
+"a": "Abou Bakr",
+"b": "Omar",
+"c": "Othman",
+"d": "Ali",
+"rep": "A"
+},
+{
+"questionnaire": 2,
+"ordre": 7,
+"enonce": "Quel prophète est le père d’Ismaïl et d’Ishaq ?",
+"a": "Dawoud",
+"b": "Nouh",
+"c": "Moussa",
+"d": "Ibrahim",
+"rep": "D"
+},
+{
+"questionnaire": 2,
+"ordre": 8,
+"enonce": "Combien de jours compte le mois de Ramadan selon le calendrier lunaire ?",
+"a": "32",
+"b": "31",
+"c": "29 ou 30",
+"d": "28",
+"rep": "C"
+},
+{
+"questionnaire": 2,
+"ordre": 9,
+"enonce": "Les JOSPIA sont principalement un cadre de :",
+"a": "Formation islamique, académique et managériale",
+"b": "Compétition sportive exclusivement",
+"c": "Voyage touristique",
+"d": "Activité commerciale",
+"rep": "A"
+},
+{
+"questionnaire": 2,
+"ordre": 10,
+"enonce": "Quel enjeu est explicitement au cœur du thème des JOSPIA 2026 ?",
+"a": "La création d’une nouvelle organisation",
+"b": "L’expansion des activités commerciales",
+"c": "La modernisation des infrastructures uniquement",
+"d": "La transmission intergénérationnelle et la pérennisation de l’héritage de l’AEEMCI",
+"rep": "D"
+},
+{
+"questionnaire": 3,
+"ordre": 1,
+"enonce": "Le tayammoum peut remplacer :",
+"a": "La zakât",
+"b": "Le pèlerinage",
+"c": "Le jeûne",
+"d": "Les ablutions ou le ghusl, lorsque ses conditions sont réunies",
+"rep": "D"
+},
+{
+"questionnaire": 3,
+"ordre": 2,
+"enonce": "Quel livre a été révélé au prophète Moussa عليه السلام ?",
+"a": "L’Évangile",
+"b": "Le Coran",
+"c": "La Torah",
+"d": "Les Psaumes",
+"rep": "C"
+},
+{
+"questionnaire": 3,
+"ordre": 3,
+"enonce": "Quelle sourate est appelée « Umm al-Kitâb » (la Mère du Livre) ?",
+"a": "Yâ-Sîn",
+"b": "Al-Fâtiha",
+"c": "Al-Kahf",
+"d": "Al-Mulk",
+"rep": "B"
+},
+{
+"questionnaire": 3,
+"ordre": 4,
+"enonce": "Qui a principalement transmis les hadiths du Prophète ﷺ aux générations suivantes ?",
+"a": "Les compagnons",
+"b": "Les djinns",
+"c": "Les rois",
+"d": "Les anges",
+"rep": "A"
+},
+{
+"questionnaire": 3,
+"ordre": 5,
+"enonce": "Quel était le nom du père du Prophète Muhammad ﷺ ?",
+"a": "Hamza",
+"b": "Omar",
+"c": "Abou Talib",
+"d": "Abdallah",
+"rep": "D"
+},
+{
+"questionnaire": 3,
+"ordre": 6,
+"enonce": "Combien de califes bien guidés (al-Khulafâ’ ar-Râshidûn) sont généralement reconnus ?",
+"a": "5",
+"b": "4",
+"c": "6",
+"d": "3",
+"rep": "B"
+},
+{
+"questionnaire": 3,
+"ordre": 7,
+"enonce": "Quel prophète fut avalé par un grand poisson ?",
+"a": "Moussa",
+"b": "Ibrahim",
+"c": "Younous",
+"d": "Zakariya",
+"rep": "C"
+},
+{
+"questionnaire": 3,
+"ordre": 8,
+"enonce": "Quel mois est celui du jeûne obligatoire ?",
+"a": "Ramadan",
+"b": "Rajab",
+"c": "Mouharram",
+"d": "Chaabane",
+"rep": "A"
+},
+{
+"questionnaire": 3,
+"ordre": 9,
+"enonce": "Quel est le nom complet de l’activité désignée par l’acronyme JOSPIA ?",
+"a": "Journées Scientifiques et Professionnelles d’Anyama",
+"b": "Journées Spirituelles Islamiques d’Anyama",
+"c": "Journées Orientales de Sensibilisation et de Prévention Islamique d’Anyama",
+"d": "Journées Sociales Islamiques d’Anyama",
+"rep": "B"
+},
+{
+"questionnaire": 3,
+"ordre": 10,
+"enonce": "Dans le thème des JOSPIA 2026, quel héritage est à pérenniser ?",
+"a": "Celui des institutions politiques",
+"b": "L’héritage culturel de la Côte d’Ivoire uniquement",
+"c": "L’héritage de l’AEEMCI",
+"d": "Celui des familles uniquement",
+"rep": "C"
+},
+{
+"questionnaire": 4,
+"ordre": 1,
+"enonce": "La prière du vendredi est appelée :",
+"a": "Jumu‘a",
+"b": "Tarâwîh",
+"c": "Witr",
+"d": "Tahajjud",
+"rep": "A"
+},
+{
+"questionnaire": 4,
+"ordre": 2,
+"enonce": "Quel est le dernier Livre révélé à Muhammad ﷺ ?",
+"a": "Les Psaumes",
+"b": "L’Évangile",
+"c": "La Torah",
+"d": "Le Coran",
+"rep": "D"
+},
+{
+"questionnaire": 4,
+"ordre": 3,
+"enonce": "Combien de juz (parties) comporte le Coran ?",
+"a": "40",
+"b": "25",
+"c": "30",
+"d": "20",
+"rep": "C"
+},
+{
+"questionnaire": 4,
+"ordre": 4,
+"enonce": "Quel compagnon est réputé avoir rapporté le plus grand nombre de hadiths ?",
+"a": "Othman ibn Affân",
+"b": "Abou Houreira",
+"c": "Ali ibn Abî Tâlib",
+"d": "Bilal ibn Rabah",
+"rep": "B"
+},
+{
+"questionnaire": 4,
+"ordre": 5,
+"enonce": "Quel surnom était attribué au Prophète ﷺ avant sa mission prophétique, en raison de sa fiabilité ?",
+"a": "Al-Amîn",
+"b": "As-Siddîq",
+"c": "Al-Fârûq",
+"d": "Dhû an-Nûrayn",
+"rep": "A"
+},
+{
+"questionnaire": 4,
+"ordre": 6,
+"enonce": "Qui fut le quatrième calife bien guidé ?",
+"a": "Omar",
+"b": "Mu‘âwiya",
+"c": "Ali ibn Abî Tâlib",
+"d": "Hassan",
+"rep": "C"
+},
+{
+"questionnaire": 4,
+"ordre": 7,
+"enonce": "Quel prophète fut jeté dans le feu par son peuple ?",
+"a": "Ya‘qoub",
+"b": "Issa",
+"c": "Moussa",
+"d": "Ibrahim",
+"rep": "D"
+},
+{
+"questionnaire": 4,
+"ordre": 8,
+"enonce": "Combien de piliers compte l’Islam ?",
+"a": "7",
+"b": "5",
+"c": "6",
+"d": "4",
+"rep": "B"
+},
+{
+"questionnaire": 4,
+"ordre": 9,
+"enonce": "En quelle année se tient la 15e édition des JOSPIA ?",
+"a": "2024",
+"b": "2025",
+"c": "2026",
+"d": "2027",
+"rep": "C"
+},
+{
+"questionnaire": 4,
+"ordre": 10,
+"enonce": "Quelle expression figure dans le thème central des JOSPIA 2026 ?",
+"a": "L’unité dans la diversité",
+"b": "La jeunesse face à la mondialisation",
+"c": "L’excellence académique avant tout",
+"d": "Le transfert entre générations à l’épreuve du temps",
+"rep": "D"
+},
+{
+"questionnaire": 5,
+"ordre": 1,
+"enonce": "Combien de rak‘ât comporte la prière obligatoire de Fajr ?",
+"a": "3",
+"b": "4",
+"c": "2",
+"d": "5",
+"rep": "C"
+},
+{
+"questionnaire": 5,
+"ordre": 2,
+"enonce": "Croire au Jour dernier fait partie :",
+"a": "Des piliers de l’Islam",
+"b": "Des piliers de la foi",
+"c": "Des sunnas",
+"d": "Des recommandations seulement",
+"rep": "B"
+},
+{
+"questionnaire": 5,
+"ordre": 3,
+"enonce": "Quelle sourate commence par « Qul huwa Allâhu ahad » ?",
+"a": "Al-Ikhlâs",
+"b": "Al-Kawthar",
+"c": "Al-Falaq",
+"d": "An-Nâs",
+"rep": "A"
+},
+{
+"questionnaire": 5,
+"ordre": 4,
+"enonce": "Le mot « hadith » désigne notamment un :",
+"a": "Jeûne",
+"b": "Lieu de culte",
+"c": "Acte de prière",
+"d": "Récit ou propos rapporté",
+"rep": "D"
+},
+{
+"questionnaire": 5,
+"ordre": 5,
+"enonce": "Quel âge avait le Prophète ﷺ lorsqu’il est décédé, selon l’âge généralement retenu ?",
+"a": "60 ans",
+"b": "70 ans",
+"c": "63 ans",
+"d": "50 ans",
+"rep": "C"
+},
+{
+"questionnaire": 5,
+"ordre": 6,
+"enonce": "La première révélation au Prophète ﷺ eut lieu dans la région de :",
+"a": "La Mecque",
+"b": "Médine",
+"c": "Jérusalem",
+"d": "Damas",
+"rep": "A"
+},
+{
+"questionnaire": 5,
+"ordre": 7,
+"enonce": "Quel prophète reçut l’Évangile (Injîl) ?",
+"a": "Dawoud",
+"b": "Issa",
+"c": "Moussa",
+"d": "Ibrahim",
+"rep": "B"
+},
+{
+"questionnaire": 5,
+"ordre": 8,
+"enonce": "Combien de prières obligatoires le musulman accomplit-il par jour ?",
+"a": "3",
+"b": "4",
+"c": "6",
+"d": "5",
+"rep": "D"
+},
+{
+"questionnaire": 5,
+"ordre": 9,
+"enonce": "Quel sous-comité de l’AEEMCI accueille les JOSPIA mentionnées dans le questionnaire ?",
+"a": "Anyama 1",
+"b": "Anyama 2",
+"c": "Yopougon",
+"d": "Abobo",
+"rep": "A"
+},
+{
+"questionnaire": 5,
+"ordre": 10,
+"enonce": "Le thème des JOSPIA 2026 invite notamment à :",
+"a": "Remplacer les générations précédentes",
+"b": "Pérenniser l’héritage de l’AEEMCI",
+"c": "Oublier les expériences passées",
+"d": "Se limiter aux activités festives",
+"rep": "B"
+},
+{
+"questionnaire": 6,
+"ordre": 1,
+"enonce": "Parmi les éléments suivants, lequel peut annuler les ablutions ?",
+"a": "Donner une aumône",
+"b": "Faire une invocation",
+"c": "Lire le Coran",
+"d": "Le sommeil profond",
+"rep": "D"
+},
+{
+"questionnaire": 6,
+"ordre": 2,
+"enonce": "Quel est le premier pilier de la foi ?",
+"a": "Croire en Allah",
+"b": "Croire aux prophètes",
+"c": "Croire aux anges",
+"d": "Croire au destin",
+"rep": "A"
+},
+{
+"questionnaire": 6,
+"ordre": 3,
+"enonce": "Quelle sourate est récitée dans chaque rak‘a de la prière ?",
+"a": "Al-Kawthar",
+"b": "Al-Masad",
+"c": "Al-Fâtiha",
+"d": "Al-Ikhlâs",
+"rep": "C"
+},
+{
+"questionnaire": 6,
+"ordre": 4,
+"enonce": "Parmi les recueils de hadiths les plus réputés figure celui de :",
+"a": "Ibn Khaldoun",
+"b": "Al-Bukhari",
+"c": "Ibn Sina",
+"d": "Al-Ghazali",
+"rep": "B"
+},
+{
+"questionnaire": 6,
+"ordre": 5,
+"enonce": "Quel était le nom de la mère du Prophète Muhammad ﷺ ?",
+"a": "Khadija",
+"b": "Aïcha",
+"c": "Fatima",
+"d": "Amina",
+"rep": "D"
+},
+{
+"questionnaire": 6,
+"ordre": 6,
+"enonce": "Combien de califes bien guidés ont succédé au Prophète ﷺ ?",
+"a": "2",
+"b": "3",
+"c": "4",
+"d": "5",
+"rep": "C"
+},
+{
+"questionnaire": 6,
+"ordre": 7,
+"enonce": "Quel prophète est appelé Khalîlullâh (l’ami intime d’Allah) ?",
+"a": "Ibrahim",
+"b": "Youssouf",
+"c": "Issa",
+"d": "Moussa",
+"rep": "A"
+},
+{
+"questionnaire": 6,
+"ordre": 8,
+"enonce": "Vers quel lieu les musulmans se tournent-ils pour prier ?",
+"a": "La mosquée du Prophète",
+"b": "La Kaaba",
+"c": "Al-Aqsa",
+"d": "La grotte de Hira",
+"rep": "B"
+},
+{
+"questionnaire": 6,
+"ordre": 9,
+"enonce": "Quel est le numéro d’édition des JOSPIA en 2026 ?",
+"a": "13e",
+"b": "14e",
+"c": "15e",
+"d": "16e",
+"rep": "C"
+},
+{
+"questionnaire": 6,
+"ordre": 10,
+"enonce": "Quel concept le thème central met-il en avant ?",
+"a": "La transmission entre générations",
+"b": "L’isolement des jeunes",
+"c": "La compétition entre générations",
+"d": "La rupture avec l’héritage",
+"rep": "A"
+},
+{
+"questionnaire": 7,
+"ordre": 1,
+"enonce": "La grande ablution rituelle est appelée :",
+"a": "Wudû",
+"b": "Ghusl",
+"c": "Tayammum",
+"d": "Dhikr",
+"rep": "B"
+},
+{
+"questionnaire": 7,
+"ordre": 2,
+"enonce": "Quel ange est chargé de transmettre la révélation aux prophètes ?",
+"a": "Isrâfîl",
+"b": "Mikâ’îl",
+"c": "Jibrîl",
+"d": "Mâlik",
+"rep": "C"
+},
+{
+"questionnaire": 7,
+"ordre": 3,
+"enonce": "Dans quelle langue le Coran a-t-il été révélé ?",
+"a": "Syriaque",
+"b": "Turc",
+"c": "Hébreu",
+"d": "Arabe",
+"rep": "D"
+},
+{
+"questionnaire": 7,
+"ordre": 4,
+"enonce": "Le recueil Sahih le plus célèbre de l’imam Al-Bukhari est attribué à :",
+"a": "Al-Bukhari",
+"b": "Ibn Sina",
+"c": "Ibn Khaldoun",
+"d": "Al-Ghazali",
+"rep": "A"
+},
+{
+"questionnaire": 7,
+"ordre": 5,
+"enonce": "Qui fut la première épouse du Prophète Muhammad ﷺ ?",
+"a": "Aïcha",
+"b": "Khadija",
+"c": "Sawda",
+"d": "Hafsa",
+"rep": "B"
+},
+{
+"questionnaire": 7,
+"ordre": 6,
+"enonce": "Qui fut le deuxième calife bien guidé ?",
+"a": "Othman",
+"b": "Ali",
+"c": "Hassan",
+"d": "Omar ibn Al-Khattâb",
+"rep": "D"
+},
+{
+"questionnaire": 7,
+"ordre": 7,
+"enonce": "Quel prophète fut vendu par ses frères ?",
+"a": "Dawoud",
+"b": "Zakariya",
+"c": "Youssouf",
+"d": "Younous",
+"rep": "C"
+},
+{
+"questionnaire": 7,
+"ordre": 8,
+"enonce": "Quel mois précède directement le Ramadan ?",
+"a": "Chaabane",
+"b": "Rajab",
+"c": "Mouharram",
+"d": "Chawwal",
+"rep": "A"
+},
+{
+"questionnaire": 7,
+"ordre": 9,
+"enonce": "Quel est le thème central annoncé pour les JOSPIA 2026 ?",
+"a": "La jeunesse musulmane et l’excellence",
+"b": "L’éducation islamique pour tous",
+"c": "L’Islam et le développement durable",
+"d": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI",
+"rep": "D"
+},
+{
+"questionnaire": 7,
+"ordre": 10,
+"enonce": "Dans le cadre du thème des JOSPIA 2026, la transmission intergénérationnelle suppose notamment :",
+"a": "L’exclusion des anciens",
+"b": "Une rupture systématique avec le passé",
+"c": "La conservation et la valorisation de l’héritage reçu",
+"d": "La transmission sans apprentissage",
+"rep": "C"
+},
+{
+"questionnaire": 8,
+"ordre": 1,
+"enonce": "Combien de rak‘ât comporte la prière obligatoire de Maghrib ?",
+"a": "3",
+"b": "4",
+"c": "5",
+"d": "2",
+"rep": "A"
+},
+{
+"questionnaire": 8,
+"ordre": 2,
+"enonce": "Croire au destin, qu’il soit bon ou éprouvant, fait partie :",
+"a": "Des piliers de l’Islam",
+"b": "Des actes surérogatoires",
+"c": "Des piliers de la foi",
+"d": "Des sunnas",
+"rep": "C"
+},
+{
+"questionnaire": 8,
+"ordre": 3,
+"enonce": "Combien de juz comporte le Coran ?",
+"a": "40",
+"b": "30",
+"c": "25",
+"d": "20",
+"rep": "B"
+},
+{
+"questionnaire": 8,
+"ordre": 4,
+"enonce": "Un hadith jugé authentique est qualifié de :",
+"a": "Mawdû‘",
+"b": "Munkar",
+"c": "Da‘îf",
+"d": "Sahih",
+"rep": "D"
+},
+{
+"questionnaire": 8,
+"ordre": 5,
+"enonce": "À quel âge le Prophète Muhammad ﷺ reçut-il la première révélation ?",
+"a": "40 ans",
+"b": "35 ans",
+"c": "30 ans",
+"d": "25 ans",
+"rep": "A"
+},
+{
+"questionnaire": 8,
+"ordre": 6,
+"enonce": "Qui fut le troisième calife bien guidé ?",
+"a": "Omar",
+"b": "Othman",
+"c": "Ali",
+"d": "Hassan",
+"rep": "B"
+},
+{
+"questionnaire": 8,
+"ordre": 7,
+"enonce": "Quel prophète reçut les Psaumes (Zabûr) ?",
+"a": "Moussa",
+"b": "Issa",
+"c": "Nouh",
+"d": "Dawoud",
+"rep": "D"
+},
+{
+"questionnaire": 8,
+"ordre": 8,
+"enonce": "Combien de piliers compte la foi (Imân) ?",
+"a": "5",
+"b": "4",
+"c": "6",
+"d": "7",
+"rep": "C"
+},
+{
+"questionnaire": 8,
+"ordre": 9,
+"enonce": "À quelle édition des JOSPIA correspond l’année 2026 ?",
+"a": "16e",
+"b": "15e",
+"c": "17e",
+"d": "14e",
+"rep": "B"
+},
+{
+"questionnaire": 8,
+"ordre": 10,
+"enonce": "Le thème des JOSPIA 2026 porte sur la pérennisation de :",
+"a": "Une institution sportive",
+"b": "Une tradition étrangère",
+"c": "Un programme politique",
+"d": "L’héritage de l’AEEMCI",
+"rep": "D"
+},
+{
+"questionnaire": 9,
+"ordre": 1,
+"enonce": "Le jeûne obligatoire du mois de Ramadan se pratique durant :",
+"a": "Safar",
+"b": "Mouharram",
+"c": "Rajab",
+"d": "Ramadan",
+"rep": "D"
+},
+{
+"questionnaire": 9,
+"ordre": 2,
+"enonce": "Combien de Livres révélés sont généralement mentionnés dans les cours fondamentaux ?",
+"a": "5",
+"b": "4",
+"c": "3",
+"d": "2",
+"rep": "B"
+},
+{
+"questionnaire": 9,
+"ordre": 3,
+"enonce": "Quelle est la plus courte sourate du Coran en nombre de versets ?",
+"a": "Al-Kawthar",
+"b": "Al-Falaq",
+"c": "Al-Asr",
+"d": "An-Nâs",
+"rep": "A"
+},
+{
+"questionnaire": 9,
+"ordre": 4,
+"enonce": "Le terme « Sunna » désigne notamment :",
+"a": "Une ville",
+"b": "Une bataille",
+"c": "La voie et les enseignements du Prophète ﷺ",
+"d": "Une sourate",
+"rep": "C"
+},
+{
+"questionnaire": 9,
+"ordre": 5,
+"enonce": "Dans quelle grotte le Prophète ﷺ se retirait-il avant la première révélation ?",
+"a": "Thawr",
+"b": "Uhud",
+"c": "Badr",
+"d": "Hira",
+"rep": "D"
+},
+{
+"questionnaire": 9,
+"ordre": 6,
+"enonce": "Quelle bataille opposa notamment les forces d’Ali et de Mu‘âwiya ?",
+"a": "Siffîn",
+"b": "Tabouk",
+"c": "Badr",
+"d": "Uhud",
+"rep": "A"
+},
+{
+"questionnaire": 9,
+"ordre": 7,
+"enonce": "Quel prophète Allah fit parler directement ?",
+"a": "Haroun",
+"b": "Youssouf",
+"c": "Moussa",
+"d": "Ibrahim",
+"rep": "C"
+},
+{
+"questionnaire": 9,
+"ordre": 8,
+"enonce": "Combien de prières obligatoires y a-t-il chaque jour ?",
+"a": "6",
+"b": "5",
+"c": "4",
+"d": "7",
+"rep": "B"
+},
+{
+"questionnaire": 9,
+"ordre": 9,
+"enonce": "Quelle édition des JOSPIA est organisée en 2026 ?",
+"a": "15e",
+"b": "14e",
+"c": "17e",
+"d": "16e",
+"rep": "A"
+},
+{
+"questionnaire": 9,
+"ordre": 10,
+"enonce": "L’expression « pérenniser l’héritage » signifie principalement :",
+"a": "Le réserver à une seule génération",
+"b": "Le remplacer entièrement",
+"c": "Le préserver et le faire vivre dans la durée",
+"d": "Le faire disparaître",
+"rep": "C"
+},
+{
+"questionnaire": 10,
+"ordre": 1,
+"enonce": "Quel pilier de l’Islam consiste à verser une part déterminée de ses biens aux bénéficiaires prévus ?",
+"a": "Hajj",
+"b": "Chahada",
+"c": "Zakât",
+"d": "Sawm",
+"rep": "C"
+},
+{
+"questionnaire": 10,
+"ordre": 2,
+"enonce": "Combien de piliers compte l’Islam ?",
+"a": "6",
+"b": "4",
+"c": "7",
+"d": "5",
+"rep": "D"
+},
+{
+"questionnaire": 10,
+"ordre": 3,
+"enonce": "Quelle sourate est souvent appelée « le cœur du Coran » ?",
+"a": "Ar-Rahmân",
+"b": "Yâ-Sîn",
+"c": "Al-Baqara",
+"d": "Al-Mulk",
+"rep": "B"
+},
+{
+"questionnaire": 10,
+"ordre": 4,
+"enonce": "Qui est le dernier prophète envoyé par Allah ?",
+"a": "Muhammad ﷺ",
+"b": "Ibrahim",
+"c": "Issa",
+"d": "Moussa",
+"rep": "A"
+},
+{
+"questionnaire": 10,
+"ordre": 5,
+"enonce": "Quelle ville accueillit le Prophète ﷺ lors de l’Hégire ?",
+"a": "Taïf",
+"b": "Damas",
+"c": "Médine",
+"d": "Jérusalem",
+"rep": "C"
+},
+{
+"questionnaire": 10,
+"ordre": 6,
+"enonce": "Quel calife ordonna la diffusion de copies unifiées du Mushaf ?",
+"a": "Abou Bakr",
+"b": "Othman",
+"c": "Ali",
+"d": "Omar",
+"rep": "B"
+},
+{
+"questionnaire": 10,
+"ordre": 7,
+"enonce": "Quel prophète est couramment surnommé « père des prophètes » ?",
+"a": "Issa",
+"b": "Adam",
+"c": "Nouh",
+"d": "Ibrahim",
+"rep": "D"
+},
+{
+"questionnaire": 10,
+"ordre": 8,
+"enonce": "Quel est le cinquième pilier de l’Islam ?",
+"a": "Le Hajj",
+"b": "La prière",
+"c": "La Zakât",
+"d": "Le jeûne",
+"rep": "A"
+},
+{
+"questionnaire": 10,
+"ordre": 9,
+"enonce": "Quel événement de formation islamique porte le nom JOSPIA ?",
+"a": "Journées Sportives Interuniversitaires d’Anyama",
+"b": "Journées Spirituelles Islamiques d’Anyama",
+"c": "Journées Sociales et Professionnelles d’Anyama",
+"d": "Journées Scientifiques de l’AEEMCI",
+"rep": "B"
+},
+{
+"questionnaire": 10,
+"ordre": 10,
+"enonce": "Quel est le mot-clé qui résume l’enjeu du thème des JOSPIA 2026 ?",
+"a": "Individualisme",
+"b": "Rupture",
+"c": "Concurrence",
+"d": "Transmission",
+"rep": "D"
+},
+{
+"questionnaire": 11,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de rakats obligatoires comporte la prière du Dhouhr ?",
+"a": "3",
+"b": "2",
+"c": "4",
+"d": "5",
+"rep": "C"
+},
+{
+"questionnaire": 11,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire aux anges fait partie de :",
+"a": "Les piliers de la foi",
+"b": "Les piliers de l’Islam",
+"c": "Les traditions locales",
+"d": "Les règles de politesse",
+"rep": "A"
+},
+{
+"questionnaire": 11,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle est la dernière sourate du Coran ?",
+"a": "Al-Ikhlâs",
+"b": "Al-Fâtiha",
+"c": "Al-Baqara",
+"d": "An-Nâs",
+"rep": "D"
+},
+{
+"questionnaire": 11,
+"ordre": 4,
+"enonce": "(Hadith) Que signifie le terme « sahîh » en science du hadith ?",
+"a": "Rare",
+"b": "Authentique",
+"c": "Faible",
+"d": "Inventé",
+"rep": "B"
+},
+{
+"questionnaire": 11,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Qui prit en charge le Prophète ﷺ après la mort de son grand-père, Abd al-Muttalib ?",
+"a": "Son oncle Abou Talib",
+"b": "Omar ibn Al-Khattab",
+"c": "Waraqa ibn Nawfal",
+"d": "Abou Bakr",
+"rep": "A"
+},
+{
+"questionnaire": 11,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on les quatre premiers califes de l’Islam ?",
+"a": "Les émirs",
+"b": "Les gouverneurs",
+"c": "Les califes bien guidés",
+"d": "Les compagnons",
+"rep": "C"
+},
+{
+"questionnaire": 11,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète construisit la Kaaba avec son fils Ismaïl ?",
+"a": "Dawoud",
+"b": "Ibrahim",
+"c": "Nouh",
+"d": "Moussa",
+"rep": "B"
+},
+{
+"questionnaire": 11,
+"ordre": 8,
+"enonce": "(Culture islamique) Comment appelle-t-on le lieu de culte des musulmans ?",
+"a": "Le temple",
+"b": "La synagogue",
+"c": "L’église",
+"d": "La mosquée",
+"rep": "D"
+},
+{
+"questionnaire": 11,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) À quelle édition des JOSPIA Anyama les participants prennent-ils part en 2026 ?",
+"a": "13e",
+"b": "16e",
+"c": "15e",
+"d": "14e",
+"rep": "C"
+},
+{
+"questionnaire": 11,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel est le thème central de la 15e édition des JOSPIA 2026 ?",
+"a": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI",
+"b": "L’Islam et le développement durable",
+"c": "La jeunesse musulmane et l’excellence",
+"d": "L’éducation islamique pour tous",
+"rep": "A"
+},
+{
+"questionnaire": 12,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on l’appel à la prière ?",
+"a": "Le Tachahoud",
+"b": "L’Iqâma",
+"c": "Le Takbîr",
+"d": "L’Adhân",
+"rep": "D"
+},
+{
+"questionnaire": 12,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire aux livres révélés par Allah fait partie de :",
+"a": "Les coutumes",
+"b": "Les piliers de la foi",
+"c": "Les recommandations",
+"d": "Les piliers de l’Islam",
+"rep": "B"
+},
+{
+"questionnaire": 12,
+"ordre": 3,
+"enonce": "(Tafsir) Combien de sourates compte le Coran ?",
+"a": "114",
+"b": "120",
+"c": "110",
+"d": "100",
+"rep": "A"
+},
+{
+"questionnaire": 12,
+"ordre": 4,
+"enonce": "(Hadith) Qui a principalement transmis les hadiths du Prophète ﷺ à la communauté musulmane ?",
+"a": "Les rois",
+"b": "Les savants modernes",
+"c": "Les compagnons",
+"d": "Les anges",
+"rep": "C"
+},
+{
+"questionnaire": 12,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel métier le Prophète ﷺ exerça-t-il notamment avant la révélation ?",
+"a": "Forgeron",
+"b": "Berger et commerçant",
+"c": "Médecin",
+"d": "Agriculteur",
+"rep": "B"
+},
+{
+"questionnaire": 12,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle bataille opposa les musulmans aux Mecquois en l’an 2 de l’Hégire ?",
+"a": "Hunayn",
+"b": "Ohod",
+"c": "Khandaq",
+"d": "Badr",
+"rep": "D"
+},
+{
+"questionnaire": 12,
+"ordre": 7,
+"enonce": "(Prophètes) Quel est le premier prophète ?",
+"a": "Nouh",
+"b": "Idris",
+"c": "Adam",
+"d": "Ibrahim",
+"rep": "C"
+},
+{
+"questionnaire": 12,
+"ordre": 8,
+"enonce": "(Culture islamique) Quel est le livre sacré des musulmans ?",
+"a": "Le Coran",
+"b": "L’Évangile",
+"c": "Les Psaumes",
+"d": "La Thora",
+"rep": "A"
+},
+{
+"questionnaire": 12,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel objectif résume le mieux la vocation des JOSPIA ?",
+"a": "Remplacer les activités régulières de l’AEEMCI",
+"b": "Créer une activité commerciale",
+"c": "Organiser uniquement des compétitions sportives",
+"d": "Favoriser la formation islamique et l’épanouissement des séminaristes",
+"rep": "D"
+},
+{
+"questionnaire": 12,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Dans le thème des JOSPIA 2026, quel enjeu est explicitement mis en avant ?",
+"a": "La création d’une nouvelle association",
+"b": "La pérennisation de l’héritage de l’AEEMCI",
+"c": "La modernisation des infrastructures",
+"d": "La compétition entre sous-comités",
+"rep": "B"
+},
+{
+"questionnaire": 13,
+"ordre": 1,
+"enonce": "(Fiqh) Que prononce-t-on pour commencer la prière ?",
+"a": "Assalamou alaykoum",
+"b": "Bismillah",
+"c": "Allahou Akbar",
+"d": "Alhamdoulillah",
+"rep": "C"
+},
+{
+"questionnaire": 13,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire aux prophètes envoyés par Allah fait partie de :",
+"a": "Les piliers de la foi",
+"b": "Les piliers de l’Islam",
+"c": "Les règles du jeûne",
+"d": "Les rites du Hajj",
+"rep": "A"
+},
+{
+"questionnaire": 13,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle est la sourate la plus longue du Coran ?",
+"a": "Al-Fâtiha",
+"b": "Al-Kahf",
+"c": "Al-Ikhlâs",
+"d": "Al-Baqara",
+"rep": "D"
+},
+{
+"questionnaire": 13,
+"ordre": 4,
+"enonce": "(Hadith) Quelle est la seconde source de référence de l’Islam après le Coran ?",
+"a": "La philosophie",
+"b": "La Sunnah",
+"c": "Les lois modernes",
+"d": "Les traditions locales",
+"rep": "B"
+},
+{
+"questionnaire": 13,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) En quelle année, selon la date traditionnellement retenue, le Prophète Muhammad ﷺ est-il né ?",
+"a": "571",
+"b": "581",
+"c": "561",
+"d": "591",
+"rep": "A"
+},
+{
+"questionnaire": 13,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle bataille eut lieu en l’an 2 de l’Hégire ?",
+"a": "Khandaq",
+"b": "Hunayn",
+"c": "Badr",
+"d": "Ohod",
+"rep": "C"
+},
+{
+"questionnaire": 13,
+"ordre": 7,
+"enonce": "(Prophètes) Quel est le premier prophète ?",
+"a": "Nouh",
+"b": "Adam",
+"c": "Idris",
+"d": "Ibrahim",
+"rep": "B"
+},
+{
+"questionnaire": 13,
+"ordre": 8,
+"enonce": "(Culture islamique) Quelle est la révélation qui constitue le livre sacré des musulmans ?",
+"a": "La Thora",
+"b": "Les Psaumes",
+"c": "L’Évangile",
+"d": "Le Coran",
+"rep": "D"
+},
+{
+"questionnaire": 13,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel numéro d’édition est associé aux JOSPIA 2026 ?",
+"a": "14e",
+"b": "12e",
+"c": "15e",
+"d": "13e",
+"rep": "C"
+},
+{
+"questionnaire": 13,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Le thème 2026 invite principalement à réfléchir à :",
+"a": "La transmission de l’héritage de l’AEEMCI entre générations",
+"b": "La seule réussite scolaire",
+"c": "La création d’activités commerciales",
+"d": "L’organisation des vacances",
+"rep": "A"
+},
+{
+"questionnaire": 14,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de rakats obligatoires comporte la prière de l’Isha ?",
+"a": "2",
+"b": "3",
+"c": "5",
+"d": "4",
+"rep": "D"
+},
+{
+"questionnaire": 14,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire en Allah, Unique, constitue :",
+"a": "Le dernier pilier de la foi",
+"b": "Le premier pilier de la foi",
+"c": "Le deuxième pilier de la foi",
+"d": "Une simple recommandation",
+"rep": "B"
+},
+{
+"questionnaire": 14,
+"ordre": 3,
+"enonce": "(Tafsir) Que signifie le mot « Coran » ?",
+"a": "Lecture ou récitation",
+"b": "Lumière",
+"c": "Livre",
+"d": "Sagesse",
+"rep": "A"
+},
+{
+"questionnaire": 14,
+"ordre": 4,
+"enonce": "(Hadith) Que rapportent les hadiths ?",
+"a": "Les lois des pays",
+"b": "Des calculs mathématiques",
+"c": "Les paroles, actes et approbations du Prophète ﷺ",
+"d": "Les récits des poètes",
+"rep": "C"
+},
+{
+"questionnaire": 14,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle ville le Prophète ﷺ est-il enterré ?",
+"a": "Taëf",
+"b": "Médine",
+"c": "La Mecque",
+"d": "Jérusalem",
+"rep": "B"
+},
+{
+"questionnaire": 14,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Qui dirigea la conquête de La Mecque en l’an 8 de l’Hégire ?",
+"a": "Ali ibn Abi Talib",
+"b": "Omar ibn Al-Khattab",
+"c": "Abou Bakr",
+"d": "Le Prophète ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 14,
+"ordre": 7,
+"enonce": "(Prophètes) Combien de prophètes sont nommément cités dans le Coran ?",
+"a": "124 000",
+"b": "40",
+"c": "25",
+"d": "15",
+"rep": "C"
+},
+{
+"questionnaire": 14,
+"ordre": 8,
+"enonce": "(Culture islamique) Vers quelle direction les musulmans se tournent-ils pour prier ?",
+"a": "La Kaaba à La Mecque",
+"b": "L’Est",
+"c": "Médine",
+"d": "Jérusalem",
+"rep": "A"
+},
+{
+"questionnaire": 14,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle activité des JOSPIA est principalement consacrée à l’apprentissage et à la formation ?",
+"a": "La Nuit des Talents",
+"b": "Je me Gbachi’s",
+"c": "Le Cross populaire",
+"d": "Halaqat At-Ta‘lîm",
+"rep": "D"
+},
+{
+"questionnaire": 14,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Que signifie « pérenniser l’héritage » dans le thème des JOSPIA ?",
+"a": "L’abandonner progressivement",
+"b": "Le préserver et le transmettre durablement",
+"c": "Le remplacer entièrement",
+"d": "Le limiter aux anciens membres",
+"rep": "B"
+},
+{
+"questionnaire": 15,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de prières obligatoires sont accomplies chaque jour ?",
+"a": "6",
+"b": "3",
+"c": "5",
+"d": "4",
+"rep": "C"
+},
+{
+"questionnaire": 15,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le premier pilier de l’Islam ?",
+"a": "L’attestation de foi",
+"b": "Le pèlerinage",
+"c": "Le jeûne",
+"d": "La prière",
+"rep": "A"
+},
+{
+"questionnaire": 15,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate ouvre le Coran ?",
+"a": "Al-Baqara",
+"b": "An-Nâs",
+"c": "Al-Ikhlâs",
+"d": "Al-Fâtiha",
+"rep": "D"
+},
+{
+"questionnaire": 15,
+"ordre": 4,
+"enonce": "(Hadith) Qui est le dernier Prophète envoyé par Allah ?",
+"a": "Moussa ﷺ",
+"b": "Muhammad ﷺ",
+"c": "Issa ﷺ",
+"d": "Ibrahim ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 15,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel est le nom du père du Prophète Muhammad ﷺ ?",
+"a": "Abdallah",
+"b": "Abbas",
+"c": "Hamza",
+"d": "Abou Talib",
+"rep": "A"
+},
+{
+"questionnaire": 15,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Dans quelle ville le Prophète ﷺ est-il né ?",
+"a": "Taëf",
+"b": "Jérusalem",
+"c": "La Mecque",
+"d": "Médine",
+"rep": "C"
+},
+{
+"questionnaire": 15,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète construisit l’arche ?",
+"a": "Youssouf ﷺ",
+"b": "Nouh ﷺ",
+"c": "Ibrahim ﷺ",
+"d": "Moussa ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 15,
+"ordre": 8,
+"enonce": "(Culture islamique) Quel jour a lieu la prière hebdomadaire du Jumu‘a ?",
+"a": "Dimanche",
+"b": "Lundi",
+"c": "Mercredi",
+"d": "Vendredi",
+"rep": "D"
+},
+{
+"questionnaire": 15,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel format est prévu pour favoriser les échanges argumentés autour de sujets ?",
+"a": "IQRA’ TIME",
+"b": "Cross populaire",
+"c": "JOSPIA Face-à-Face",
+"d": "Une nuit avec le Qur’an",
+"rep": "C"
+},
+{
+"questionnaire": 15,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Le transfert entre générations implique notamment :",
+"a": "La transmission des valeurs, expériences et responsabilités",
+"b": "La conservation des fonctions sans renouvellement",
+"c": "La rupture systématique avec les anciens",
+"d": "L’exclusion des jeunes",
+"rep": "A"
+},
+{
+"questionnaire": 16,
+"ordre": 1,
+"enonce": "(Fiqh) Quel est le nom de la prière de l’aube ?",
+"a": "Maghrib",
+"b": "Isha",
+"c": "Dhouhr",
+"d": "Fajr",
+"rep": "D"
+},
+{
+"questionnaire": 16,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien y a-t-il de piliers de l’Islam ?",
+"a": "6",
+"b": "5",
+"c": "4",
+"d": "3",
+"rep": "B"
+},
+{
+"questionnaire": 16,
+"ordre": 3,
+"enonce": "(Tafsir) Dans quelle langue le Coran a-t-il été révélé ?",
+"a": "Arabe",
+"b": "Anglais",
+"c": "Français",
+"d": "Hébreu",
+"rep": "A"
+},
+{
+"questionnaire": 16,
+"ordre": 4,
+"enonce": "(Hadith) Comment appelle-t-on une personne qui rapporte un hadith ?",
+"a": "Un poète",
+"b": "Un commerçant",
+"c": "Un narrateur",
+"d": "Un roi",
+"rep": "C"
+},
+{
+"questionnaire": 16,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Comment s’appelait la mère du Prophète ﷺ ?",
+"a": "Khadija",
+"b": "Amina",
+"c": "Fatima",
+"d": "Hafsa",
+"rep": "B"
+},
+{
+"questionnaire": 16,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Vers quelle ville le Prophète ﷺ émigra-t-il ?",
+"a": "Bagdad",
+"b": "Damas",
+"c": "Le Caire",
+"d": "Médine",
+"rep": "D"
+},
+{
+"questionnaire": 16,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète fut englouti par un grand poisson ?",
+"a": "Souleymane ﷺ",
+"b": "Idris ﷺ",
+"c": "Younous ﷺ",
+"d": "Adam ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 16,
+"ordre": 8,
+"enonce": "(Culture islamique) Quel est le mois du jeûne obligatoire ?",
+"a": "Ramadan",
+"b": "Chaabane",
+"c": "Muharram",
+"d": "Rajab",
+"rep": "A"
+},
+{
+"questionnaire": 16,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel cadre permet aux séminaristes de progresser selon leur niveau de connaissances ?",
+"a": "Une activité sans encadrement",
+"b": "Un classement par âge seulement",
+"c": "Une compétition unique",
+"d": "Les niveaux de formation et les halaqat",
+"rep": "D"
+},
+{
+"questionnaire": 16,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel élément est au cœur du thème 2026 ?",
+"a": "La collecte de fonds",
+"b": "La pérennité de l’héritage de l’AEEMCI",
+"c": "La performance sportive",
+"d": "La promotion d’une ville",
+"rep": "B"
+},
+{
+"questionnaire": 17,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière se fait juste après le coucher du soleil ?",
+"a": "Asr",
+"b": "Fajr",
+"c": "Maghrib",
+"d": "Dhouhr",
+"rep": "C"
+},
+{
+"questionnaire": 17,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien y a-t-il de piliers de la foi ?",
+"a": "6",
+"b": "5",
+"c": "7",
+"d": "4",
+"rep": "A"
+},
+{
+"questionnaire": 17,
+"ordre": 3,
+"enonce": "(Tafsir) Quel livre a été révélé au Prophète Muhammad ﷺ ?",
+"a": "Les Psaumes",
+"b": "L’Évangile",
+"c": "La Torah",
+"d": "Le Coran",
+"rep": "D"
+},
+{
+"questionnaire": 17,
+"ordre": 4,
+"enonce": "(Hadith) Les hadiths contribuent notamment à expliquer :",
+"a": "La médecine",
+"b": "La Sunnah du Prophète ﷺ",
+"c": "La géographie",
+"d": "Les mathématiques",
+"rep": "B"
+},
+{
+"questionnaire": 17,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom de la première épouse du Prophète ﷺ ?",
+"a": "Khadija",
+"b": "Mariam",
+"c": "Zaynab",
+"d": "Aïcha",
+"rep": "A"
+},
+{
+"questionnaire": 17,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle ville est surnommée « la ville du Prophète ﷺ » ?",
+"a": "Jérusalem",
+"b": "Bassora",
+"c": "Médine",
+"d": "La Mecque",
+"rep": "C"
+},
+{
+"questionnaire": 17,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète était le père d’Ismaïl ﷺ ?",
+"a": "Moussa ﷺ",
+"b": "Ibrahim ﷺ",
+"c": "Adam ﷺ",
+"d": "Nouh ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 17,
+"ordre": 8,
+"enonce": "(Culture islamique) Quelle fête marque la fin du mois de Ramadan ?",
+"a": "Hajj",
+"b": "Achoura",
+"c": "Laylat al-Qadr",
+"d": "Aïd al-Fitr",
+"rep": "D"
+},
+{
+"questionnaire": 17,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle activité valorise la lecture, la découverte et le partage de connaissances ?",
+"a": "Cross populaire",
+"b": "Je me Gbachi’s",
+"c": "IQRA’ TIME",
+"d": "La Nuit des Talents",
+"rep": "C"
+},
+{
+"questionnaire": 17,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) La transmission intergénérationnelle appelle les générations à :",
+"a": "Construire ensemble et assurer la continuité de l’engagement",
+"b": "Éviter tout échange",
+"c": "Se concurrencer sans coopération",
+"d": "Déléguer toute responsabilité",
+"rep": "A"
+},
+{
+"questionnaire": 18,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de rakats obligatoires comporte la prière du Maghrib ?",
+"a": "2",
+"b": "4",
+"c": "5",
+"d": "3",
+"rep": "D"
+},
+{
+"questionnaire": 18,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le deuxième pilier de l’Islam ?",
+"a": "La Zakât",
+"b": "La prière",
+"c": "Le Hajj",
+"d": "Le jeûne",
+"rep": "B"
+},
+{
+"questionnaire": 18,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle est la sourate la plus courte du Coran ?",
+"a": "Al-Kawthar",
+"b": "Al-Fâtiha",
+"c": "Yâ-Sîn",
+"d": "Al-Baqara",
+"rep": "A"
+},
+{
+"questionnaire": 18,
+"ordre": 4,
+"enonce": "(Hadith) Quel compagnon est particulièrement connu pour avoir rapporté un grand nombre de hadiths ?",
+"a": "Waraqa ibn Nawfal",
+"b": "Abou Talib",
+"c": "Abou Hourayra",
+"d": "Bilal",
+"rep": "C"
+},
+{
+"questionnaire": 18,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quelle fille du Prophète ﷺ épousa Ali ibn Abi Talib ?",
+"a": "Mariam",
+"b": "Fatima",
+"c": "Hafsa",
+"d": "Aïcha",
+"rep": "B"
+},
+{
+"questionnaire": 18,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel événement marque le début du calendrier musulman ?",
+"a": "La conquête de La Mecque",
+"b": "La naissance du Prophète ﷺ",
+"c": "La première révélation",
+"d": "L’Hégire",
+"rep": "D"
+},
+{
+"questionnaire": 18,
+"ordre": 7,
+"enonce": "(Prophètes) Selon les textes islamiques, quel est le premier être humain ?",
+"a": "Moussa ﷺ",
+"b": "Ibrahim ﷺ",
+"c": "Adam ﷺ",
+"d": "Issa ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 18,
+"ordre": 8,
+"enonce": "(Culture islamique) Comment appelle-t-on l’aumône obligatoire en Islam ?",
+"a": "Zakât",
+"b": "Hajj",
+"c": "Adhân",
+"d": "Sawm",
+"rep": "A"
+},
+{
+"questionnaire": 18,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle activité met en valeur les talents des séminaristes ?",
+"a": "IQRA’ TIME",
+"b": "Halaqat At-Ta‘lîm",
+"c": "Défi Mémoire",
+"d": "La Nuit des Talents",
+"rep": "D"
+},
+{
+"questionnaire": 18,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Pourquoi le thème évoque-t-il « l’épreuve du temps » ?",
+"a": "Parce qu’il exclut les évolutions",
+"b": "Parce que l’héritage doit être éprouvé, adapté et transmis dans la durée",
+"c": "Parce qu’il concerne uniquement les anciens",
+"d": "Parce que le séminaire est uniquement chronométré",
+"rep": "B"
+},
+{
+"questionnaire": 19,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière est appelée la prière de midi ?",
+"a": "Isha",
+"b": "Fajr",
+"c": "Dhouhr",
+"d": "Asr",
+"rep": "C"
+},
+{
+"questionnaire": 19,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire au Jour dernier fait partie :",
+"a": "Des piliers de la foi",
+"b": "Des traditions",
+"c": "Des règles de politesse",
+"d": "Des coutumes",
+"rep": "A"
+},
+{
+"questionnaire": 19,
+"ordre": 3,
+"enonce": "(Tafsir) Combien de parties (juz’) compte le Coran ?",
+"a": "40",
+"b": "20",
+"c": "25",
+"d": "30",
+"rep": "D"
+},
+{
+"questionnaire": 19,
+"ordre": 4,
+"enonce": "(Hadith) Que signifie le mot « hadith » ?",
+"a": "Jeûne",
+"b": "Récit ou parole rapportée",
+"c": "Prière",
+"d": "Voyage",
+"rep": "B"
+},
+{
+"questionnaire": 19,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel âge avait le Prophète ﷺ lorsqu’il reçut la première révélation ?",
+"a": "40 ans",
+"b": "35 ans",
+"c": "45 ans",
+"d": "30 ans",
+"rep": "A"
+},
+{
+"questionnaire": 19,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle est la première mosquée construite après l’Hégire, selon la tradition ?",
+"a": "La mosquée du Prophète ﷺ",
+"b": "La Kaaba",
+"c": "La mosquée de Quba",
+"d": "Al-Aqsa",
+"rep": "C"
+},
+{
+"questionnaire": 19,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète reçut les Tables de la Loi ?",
+"a": "Youssouf ﷺ",
+"b": "Moussa ﷺ",
+"c": "Souleymane ﷺ",
+"d": "Younous ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 19,
+"ordre": 8,
+"enonce": "(Culture islamique) Comment appelle-t-on la prière obligatoire du vendredi ?",
+"a": "Salat at-Tarawih",
+"b": "Salat al-Janaza",
+"c": "Salat al-Istikhara",
+"d": "Salat al-Jumu‘a",
+"rep": "D"
+},
+{
+"questionnaire": 19,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel dispositif permet de mesurer les connaissances des séminaristes à leur arrivée et de les orienter ?",
+"a": "Le Cross populaire",
+"b": "La Nuit des Talents",
+"c": "Le test d’entrée",
+"d": "Le forum officiel",
+"rep": "C"
+},
+{
+"questionnaire": 19,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel engagement est cohérent avec la pérennisation de l’héritage de l’AEEMCI ?",
+"a": "Assurer la transmission des valeurs et la relève responsable",
+"b": "Écarter les jeunes de la prise de responsabilité",
+"c": "Réduire les formations",
+"d": "Ignorer les expériences antérieures",
+"rep": "A"
+},
+{
+"questionnaire": 20,
+"ordre": 1,
+"enonce": "(Fiqh) Vers quel lieu se dirigent les musulmans pour accomplir la prière ?",
+"a": "Médine",
+"b": "Jérusalem uniquement",
+"c": "Le mont Arafat",
+"d": "La Kaaba",
+"rep": "D"
+},
+{
+"questionnaire": 20,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien de piliers de l’Islam ?",
+"a": "7",
+"b": "5",
+"c": "10",
+"d": "3",
+"rep": "B"
+},
+{
+"questionnaire": 20,
+"ordre": 3,
+"enonce": "(Tafsir) Quel ange transmit la révélation au Prophète Muhammad ﷺ ?",
+"a": "Jibrîl",
+"b": "Mikâïl",
+"c": "Isrâfîl",
+"d": "L’ange de la mort",
+"rep": "A"
+},
+{
+"questionnaire": 20,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement est fortement recommandé dans l’enseignement islamique ?",
+"a": "L’arrogance",
+"b": "Le mensonge",
+"c": "La bonne moralité",
+"d": "L’injustice",
+"rep": "C"
+},
+{
+"questionnaire": 20,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quelle épouse du Prophète ﷺ le soutint particulièrement au début de la révélation ?",
+"a": "Safiya",
+"b": "Khadija",
+"c": "Hafsa",
+"d": "Aïcha",
+"rep": "B"
+},
+{
+"questionnaire": 20,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle fut la première grande bataille entre les musulmans et les Mecquois ?",
+"a": "Uhud",
+"b": "Hunayn",
+"c": "Khandaq",
+"d": "Badr",
+"rep": "D"
+},
+{
+"questionnaire": 20,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète était connu pour interpréter les rêves ?",
+"a": "Zakaria ﷺ",
+"b": "Adam ﷺ",
+"c": "Youssouf ﷺ",
+"d": "Nouh ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 20,
+"ordre": 8,
+"enonce": "(Culture islamique) Comment appelle-t-on l’appel à la prière ?",
+"a": "Adhân",
+"b": "Tachahoud",
+"c": "Tasbîh",
+"d": "Takbîr",
+"rep": "A"
+},
+{
+"questionnaire": 20,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel événement constitue un temps fort institutionnel des JOSPIA ?",
+"a": "Un examen scolaire externe",
+"b": "Une réunion privée",
+"c": "Une activité commerciale",
+"d": "La cérémonie officielle",
+"rep": "D"
+},
+{
+"questionnaire": 20,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel est le slogan des JOSPIA 2026 ?",
+"a": "JOSPIA, le rendez-vous des générations bien-guidés !",
+"b": "JOSPIA, votre formation notre priorité !",
+"c": "Ensemble pour une génération meilleure",
+"d": "AEEMCI, pour une identité islamique",
+"rep": "B"
+},
+{
+"questionnaire": 21,
+"ordre": 1,
+"enonce": "(Fiqh) Que doit faire un musulman lorsqu’il entend l’appel à la prière ?",
+"a": "Se mettre à manger",
+"b": "Continuer à jouer sans y prêter attention",
+"c": "Se préparer à accomplir la prière",
+"d": "S’endormir",
+"rep": "C"
+},
+{
+"questionnaire": 21,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Comment appelle-t-on les personnes qui croient en Allah et Lui obéissent ?",
+"a": "Les musulmans",
+"b": "Les artistes",
+"c": "Les commerçants",
+"d": "Les voyageurs",
+"rep": "A"
+},
+{
+"questionnaire": 21,
+"ordre": 3,
+"enonce": "(Tafsir) Quel livre Allah a-t-Il révélé au Prophète Muhammad ﷺ ?",
+"a": "Un roman",
+"b": "Un journal",
+"c": "Le Coran",
+"d": "Une histoire",
+"rep": "C"
+},
+{
+"questionnaire": 21,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement le Prophète ﷺ nous a-t-il enseigné ?",
+"a": "Dire la vérité",
+"b": "Se moquer des autres",
+"c": "Être injuste",
+"d": "Mentir",
+"rep": "A"
+},
+{
+"questionnaire": 21,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel est le nom du Prophète de l’Islam ?",
+"a": "Muhammad ﷺ",
+"b": "Ibrahim ﷺ",
+"c": "Nouh ﷺ",
+"d": "Moussa ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 21,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on la maison sacrée située à La Mecque ?",
+"a": "Un palais",
+"b": "La Kaaba",
+"c": "Une école",
+"d": "La mosquée de Médine",
+"rep": "B"
+},
+{
+"questionnaire": 21,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est le premier être humain ?",
+"a": "Adam ﷺ",
+"b": "Issa ﷺ",
+"c": "Ibrahim ﷺ",
+"d": "Moussa ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 21,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel mot prononce-t-on après avoir éternué ?",
+"a": "Bonjour",
+"b": "Merci",
+"c": "Au revoir",
+"d": "Alhamdoulillah",
+"rep": "D"
+},
+{
+"questionnaire": 21,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) À quelle édition des JOSPIA sommes-nous en 2026 ?",
+"a": "15ᵉ édition",
+"b": "14ᵉ édition",
+"c": "13ᵉ édition",
+"d": "16ᵉ édition",
+"rep": "A"
+},
+{
+"questionnaire": 21,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central des JOSPIA 2026 ?",
+"a": "L’éducation islamique pour tous",
+"b": "L’Islam et le développement durable",
+"c": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"d": "La jeunesse musulmane et l’excellence",
+"rep": "C"
+},
+{
+"questionnaire": 22,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on le fait de se tourner vers la Kaaba pendant la prière ?",
+"a": "Le Hajj",
+"b": "La Qibla",
+"c": "Le Sawm",
+"d": "La Zakât",
+"rep": "B"
+},
+{
+"questionnaire": 22,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Qui a créé les cieux et la terre ?",
+"a": "Les anges",
+"b": "Les hommes",
+"c": "Allah",
+"d": "Les animaux",
+"rep": "C"
+},
+{
+"questionnaire": 22,
+"ordre": 3,
+"enonce": "(Tafsir) Quel est le nom de la première sourate du Coran ?",
+"a": "An-Nas",
+"b": "Al-Kawthar",
+"c": "Al-Ikhlas",
+"d": "Al-Fatiha",
+"rep": "D"
+},
+{
+"questionnaire": 22,
+"ordre": 4,
+"enonce": "(Hadith) Comment appelle-t-on les paroles et les enseignements rapportés du Prophète ﷺ ?",
+"a": "Les contes",
+"b": "Les hadiths",
+"c": "Les poèmes",
+"d": "Les chansons",
+"rep": "B"
+},
+{
+"questionnaire": 22,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le prénom de la mère du Prophète ﷺ ?",
+"a": "Amina",
+"b": "Khadija",
+"c": "Fatima",
+"d": "Aïcha",
+"rep": "A"
+},
+{
+"questionnaire": 22,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Dans quelle ville se trouve la tombe du Prophète ﷺ ?",
+"a": "Bagdad",
+"b": "Médine",
+"c": "Damas",
+"d": "La Mecque",
+"rep": "B"
+},
+{
+"questionnaire": 22,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a reçu le Coran ?",
+"a": "Ibrahim ﷺ",
+"b": "Muhammad ﷺ",
+"c": "Adam ﷺ",
+"d": "Nouh ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 22,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel jour a lieu la prière collective du vendredi ?",
+"a": "Dimanche",
+"b": "Mardi",
+"c": "Lundi",
+"d": "Vendredi",
+"rep": "D"
+},
+{
+"questionnaire": 22,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Combien d’éditions des JOSPIA ont été organisées avant l’édition 2026 ?",
+"a": "13 éditions",
+"b": "14 éditions",
+"c": "12 éditions",
+"d": "15 éditions",
+"rep": "B"
+},
+{
+"questionnaire": 22,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central de la 15ᵉ édition des JOSPIA ?",
+"a": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"b": "L’éducation islamique pour tous",
+"c": "La jeunesse musulmane et l’excellence",
+"d": "L’Islam et le développement durable",
+"rep": "A"
+},
+{
+"questionnaire": 23,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on la prière obligatoire en Islam ?",
+"a": "Dhikr",
+"b": "Doua",
+"c": "Sadaqa",
+"d": "Salat",
+"rep": "D"
+},
+{
+"questionnaire": 23,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le nom de notre religion ?",
+"a": "Science",
+"b": "Islam",
+"c": "Philosophie",
+"d": "Histoire",
+"rep": "B"
+},
+{
+"questionnaire": 23,
+"ordre": 3,
+"enonce": "(Tafsir) Le Coran est composé de :",
+"a": "Contes",
+"b": "Poèmes",
+"c": "Sourates",
+"d": "Chapitres de journal",
+"rep": "C"
+},
+{
+"questionnaire": 23,
+"ordre": 4,
+"enonce": "(Hadith) Les hadiths nous renseignent notamment sur la manière de vivre du :",
+"a": "Marchand",
+"b": "Soldat",
+"c": "Prophète Muhammad ﷺ",
+"d": "Roi d’un pays",
+"rep": "C"
+},
+{
+"questionnaire": 23,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel est le nom du père du Prophète Muhammad ﷺ ?",
+"a": "Ali",
+"b": "Abdallah",
+"c": "Omar",
+"d": "Abou Bakr",
+"rep": "B"
+},
+{
+"questionnaire": 23,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on le pèlerinage à La Mecque ?",
+"a": "Hégire",
+"b": "Wudu",
+"c": "Hajj",
+"d": "Adhân",
+"rep": "C"
+},
+{
+"questionnaire": 23,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a été envoyé auprès de Pharaon ?",
+"a": "Youssouf ﷺ",
+"b": "Adam ﷺ",
+"c": "Moussa ﷺ",
+"d": "Younous ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 23,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Que dit un musulman lorsqu’il salue quelqu’un ?",
+"a": "Bismillah",
+"b": "Alhamdoulillah",
+"c": "Assalamou alaykoum",
+"d": "Allahou Akbar",
+"rep": "C"
+},
+{
+"questionnaire": 23,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel événement est organisé par le sous-comité AEEMCI d’Anyama à sa 15ᵉ édition en décembre 2026 ?",
+"a": "Les Journées Spirituelles Islamiques d’Anyama (JOSPIA)",
+"b": "Une Assemblée générale",
+"c": "Le SENAFOI",
+"d": "Une rentrée académique",
+"rep": "A"
+},
+{
+"questionnaire": 23,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central des JOSPIA 2026 ?",
+"a": "Cinquante ans d’engagement islamique et citoyen",
+"b": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"c": "La jeunesse musulmane et l’excellence",
+"d": "L’éducation islamique pour tous",
+"rep": "B"
+},
+{
+"questionnaire": 24,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on les ablutions effectuées avant la prière ?",
+"a": "Hajj",
+"b": "Wudu",
+"c": "Zakât",
+"d": "Sawm",
+"rep": "B"
+},
+{
+"questionnaire": 24,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Qui doit être adoré par les musulmans ?",
+"a": "Les étoiles",
+"b": "Les personnes riches",
+"c": "Les animaux",
+"d": "Allah",
+"rep": "D"
+},
+{
+"questionnaire": 24,
+"ordre": 3,
+"enonce": "(Tafsir) Quel est le nom de la dernière sourate du Coran ?",
+"a": "Al-Baqara",
+"b": "Al-Fatiha",
+"c": "Al-Kahf",
+"d": "An-Nâs",
+"rep": "D"
+},
+{
+"questionnaire": 24,
+"ordre": 4,
+"enonce": "(Hadith) Les hadiths rapportent notamment les paroles et les actes du :",
+"a": "Savants modernes seulement",
+"b": "Prophète ﷺ",
+"c": "Rois",
+"d": "Commerçants",
+"rep": "B"
+},
+{
+"questionnaire": 24,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle ville le Prophète ﷺ est-il né ?",
+"a": "Damas",
+"b": "La Mecque",
+"c": "Médine",
+"d": "Jérusalem",
+"rep": "B"
+},
+{
+"questionnaire": 24,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on les personnes qui ont accompagné le Prophète ﷺ et cru en lui ?",
+"a": "Les soldats romains",
+"b": "Les rois",
+"c": "Les compagnons",
+"d": "Les marchands",
+"rep": "C"
+},
+{
+"questionnaire": 24,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a construit la Kaaba avec son fils Ismaïl ﷺ ?",
+"a": "Moussa ﷺ",
+"b": "Issa ﷺ",
+"c": "Adam ﷺ",
+"d": "Ibrahim ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 24,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel est le mois durant lequel les musulmans jeûnent ?",
+"a": "Muharram",
+"b": "Safar",
+"c": "Ramadan",
+"d": "Chaabane",
+"rep": "C"
+},
+{
+"questionnaire": 24,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel numéro d’édition les JOSPIA célèbrent-elles en 2026 ?",
+"a": "16ᵉ édition",
+"b": "14ᵉ édition",
+"c": "13ᵉ édition",
+"d": "15ᵉ édition",
+"rep": "D"
+},
+{
+"questionnaire": 24,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quelle idée centrale est mise en avant par le thème des JOSPIA 2026 ?",
+"a": "La priorité donnée uniquement aux activités sportives",
+"b": "La compétition entre générations",
+"c": "La transmission de l’héritage de l’AEEMCI entre les générations",
+"d": "L’abandon de l’héritage associatif",
+"rep": "C"
+},
+{
+"questionnaire": 25,
+"ordre": 1,
+"enonce": "(Fiqh) Que doit faire un musulman pendant le mois de Ramadan ?",
+"a": "Dormir toute la journée",
+"b": "Voyager uniquement",
+"c": "Jeûner",
+"d": "Ne pas prier",
+"rep": "C"
+},
+{
+"questionnaire": 25,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Comment appelle-t-on les messagers choisis par Allah ?",
+"a": "Les écrivains",
+"b": "Les prophètes",
+"c": "Les commerçants",
+"d": "Les sportifs",
+"rep": "B"
+},
+{
+"questionnaire": 25,
+"ordre": 3,
+"enonce": "(Tafsir) Comment appelle-t-on une partie du Coran correspondant à un trentième ?",
+"a": "Lettre",
+"b": "Juz’",
+"c": "Livre",
+"d": "Phrase",
+"rep": "B"
+},
+{
+"questionnaire": 25,
+"ordre": 4,
+"enonce": "(Hadith) Le Prophète ﷺ nous a enseigné à aimer :",
+"a": "Le bien",
+"b": "La haine",
+"c": "L’injustice",
+"d": "Le mensonge",
+"rep": "A"
+},
+{
+"questionnaire": 25,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom du grand-père du Prophète ﷺ ?",
+"a": "Abdel Mouttalib",
+"b": "Abdallah",
+"c": "Othman",
+"d": "Abou Bakr",
+"rep": "A"
+},
+{
+"questionnaire": 25,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Qui fut le premier calife après le Prophète ﷺ ?",
+"a": "Ali رضي الله عنه",
+"b": "Abou Bakr رضي الله عنه",
+"c": "Omar رضي الله عنه",
+"d": "Othman رضي الله عنه",
+"rep": "B"
+},
+{
+"questionnaire": 25,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est connu pour sa grande patience face aux épreuves ?",
+"a": "Idriss ﷺ",
+"b": "Adam ﷺ",
+"c": "Ayyoub ﷺ",
+"d": "Younous ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 25,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Comment appelle-t-on l’appel qui annonce l’heure de la prière ?",
+"a": "Hajj",
+"b": "Adhân",
+"c": "Zakât",
+"d": "Sawm",
+"rep": "B"
+},
+{
+"questionnaire": 25,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel est le slogan officiel des JOSPIA 2026 ?",
+"a": "L’AEEMCI, une jeunesse d’excellence",
+"b": "Concevoir pour former, innover pour transformer !",
+"c": "JOSPIA, le rendez-vous des générations bien-guidées !",
+"d": "JOSPIA, votre formation notre priorité !",
+"rep": "D"
+},
+{
+"questionnaire": 25,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) À quel sous-comité AEEMCI les JOSPIA 2026 sont-elles rattachées ?",
+"a": "Anyama 1 et 2",
+"b": "Abobo 1 et 2",
+"c": "Cocody 1 et 2",
+"d": "Yopougon 1 et 2",
+"rep": "A"
+},
+{
+"questionnaire": 26,
+"ordre": 1,
+"enonce": "(Fiqh) Que fait un musulman lorsqu’il veut demander quelque chose à Allah ?",
+"a": "Il dort",
+"b": "Il court",
+"c": "Il chante",
+"d": "Il fait une invocation (dou‘â)",
+"rep": "D"
+},
+{
+"questionnaire": 26,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Comment appelle-t-on les créatures créées par Allah qui Lui obéissent ?",
+"a": "Les animaux",
+"b": "Les rois",
+"c": "Les anges",
+"d": "Les commerçants",
+"rep": "C"
+},
+{
+"questionnaire": 26,
+"ordre": 3,
+"enonce": "(Tafsir) Comment appelle-t-on les chapitres du Coran ?",
+"a": "Livres",
+"b": "Pages uniquement",
+"c": "Sourates",
+"d": "Histoires",
+"rep": "C"
+},
+{
+"questionnaire": 26,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement fait partie des qualités enseignées par le Prophète ﷺ ?",
+"a": "L’orgueil",
+"b": "La gentillesse",
+"c": "Le mensonge",
+"d": "La méchanceté",
+"rep": "B"
+},
+{
+"questionnaire": 26,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom de la première épouse du Prophète ﷺ ?",
+"a": "Aïcha رضي الله عنها",
+"b": "Khadija رضي الله عنها",
+"c": "Hafsa رضي الله عنها",
+"d": "Fatima رضي الله عنها",
+"rep": "B"
+},
+{
+"questionnaire": 26,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on les quatre premiers califes après le Prophète ﷺ ?",
+"a": "Les anges",
+"b": "Les rois d’Arabie",
+"c": "Les prophètes",
+"d": "Les califes bien guidés",
+"rep": "D"
+},
+{
+"questionnaire": 26,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète était le fils d’Ibrahim ﷺ et le père de Ya‘qoub ﷺ ?",
+"a": "Ishaq ﷺ",
+"b": "Adam ﷺ",
+"c": "Nouh ﷺ",
+"d": "Moussa ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 26,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel mot prononce-t-on pour remercier Allah d’un bienfait ?",
+"a": "Alhamdoulillah",
+"b": "Assalamou alaykoum",
+"c": "Astaghfiroullah",
+"d": "Bismillah",
+"rep": "A"
+},
+{
+"questionnaire": 26,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) En quelle année se tient la 15ᵉ édition des JOSPIA ?",
+"a": "2024",
+"b": "2025",
+"c": "2026",
+"d": "2027",
+"rep": "C"
+},
+{
+"questionnaire": 26,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel thème est au cœur de la 15ᵉ édition des JOSPIA ?",
+"a": "L’Islam et le développement durable",
+"b": "La jeunesse musulmane et l’excellence",
+"c": "L’éducation islamique pour tous",
+"d": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"rep": "D"
+},
+{
+"questionnaire": 27,
+"ordre": 1,
+"enonce": "(Fiqh) Quel est le nom de la prière de l’après-midi ?",
+"a": "Asr",
+"b": "Fajr",
+"c": "Isha",
+"d": "Maghrib",
+"rep": "A"
+},
+{
+"questionnaire": 27,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel ange transmet la révélation d’Allah aux prophètes ?",
+"a": "Jibrîl",
+"b": "Malik",
+"c": "Isrâfîl",
+"d": "Mikâïl",
+"rep": "A"
+},
+{
+"questionnaire": 27,
+"ordre": 3,
+"enonce": "(Tafsir) Le Coran est la parole :",
+"a": "Des hommes",
+"b": "D’Allah",
+"c": "Des rois",
+"d": "Des poètes",
+"rep": "B"
+},
+{
+"questionnaire": 27,
+"ordre": 4,
+"enonce": "(Hadith) Qui a transmis les enseignements du Prophète ﷺ aux générations suivantes ?",
+"a": "Les voyageurs",
+"b": "Les commerçants",
+"c": "Les soldats",
+"d": "Les compagnons",
+"rep": "D"
+},
+{
+"questionnaire": 27,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom du père du Prophète ﷺ ?",
+"a": "Talha",
+"b": "Hamza",
+"c": "Abbas",
+"d": "Abdallah",
+"rep": "D"
+},
+{
+"questionnaire": 27,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel est le nom de la grande mosquée de La Mecque où se trouve la Kaaba ?",
+"a": "Al-Masjid Al-Haram",
+"b": "La mosquée de Quba",
+"c": "La mosquée du Prophète",
+"d": "Al-Aqsa",
+"rep": "A"
+},
+{
+"questionnaire": 27,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a reçu la Tawrat ?",
+"a": "Adam ﷺ",
+"b": "Ibrahim ﷺ",
+"c": "Issa ﷺ",
+"d": "Moussa ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 27,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Que signifie le mot « Salam » ?",
+"a": "Nourriture",
+"b": "Guerre",
+"c": "Voyage",
+"d": "Paix",
+"rep": "D"
+},
+{
+"questionnaire": 27,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle est l’édition des JOSPIA organisée en 2026 ?",
+"a": "12ᵉ édition",
+"b": "14ᵉ édition",
+"c": "15ᵉ édition",
+"d": "13ᵉ édition",
+"rep": "C"
+},
+{
+"questionnaire": 27,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central des JOSPIA 2026 ?",
+"a": "L’éducation islamique pour tous",
+"b": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"c": "La jeunesse musulmane et l’excellence",
+"d": "L’Islam et le développement durable",
+"rep": "B"
+},
+{
+"questionnaire": 28,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière se fait après le coucher du soleil ?",
+"a": "Fajr",
+"b": "Asr",
+"c": "Dhouhr",
+"d": "Maghrib",
+"rep": "D"
+},
+{
+"questionnaire": 28,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Croire aux anges fait partie :",
+"a": "Des métiers",
+"b": "Des traditions seulement",
+"c": "Des jeux",
+"d": "Des piliers de la foi",
+"rep": "D"
+},
+{
+"questionnaire": 28,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est souvent appelée « la mère du Coran » ?",
+"a": "An-Nas",
+"b": "Al-Fatiha",
+"c": "Al-Ikhlas",
+"d": "Al-Kawthar",
+"rep": "B"
+},
+{
+"questionnaire": 28,
+"ordre": 4,
+"enonce": "(Hadith) Les hadiths nous apprennent notamment :",
+"a": "Les règles du sport",
+"b": "Les sciences modernes uniquement",
+"c": "La vie et les paroles du Prophète ﷺ",
+"d": "Les histoires des rois",
+"rep": "C"
+},
+{
+"questionnaire": 28,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel métier le Prophète ﷺ exerçait-il avant la révélation ?",
+"a": "Commerçant",
+"b": "Médecin",
+"c": "Agriculteur uniquement",
+"d": "Forgeron",
+"rep": "A"
+},
+{
+"questionnaire": 28,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel compagnon fut le premier homme adulte à accepter l’Islam ?",
+"a": "Abou Bakr رضي الله عنه",
+"b": "Ali رضي الله عنه",
+"c": "Othman رضي الله عنه",
+"d": "Omar رضي الله عنه",
+"rep": "A"
+},
+{
+"questionnaire": 28,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a parlé directement à Allah ?",
+"a": "Moussa ﷺ",
+"b": "Youssouf ﷺ",
+"c": "Louqman",
+"d": "Younous ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 28,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel livre les musulmans lisent-ils pour connaître la parole d’Allah ?",
+"a": "Un magazine",
+"b": "Un journal",
+"c": "Un roman",
+"d": "Le Coran",
+"rep": "D"
+},
+{
+"questionnaire": 28,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel est le slogan des JOSPIA 2026 ?",
+"a": "Une jeunesse responsable, unie et actrice de paix",
+"b": "Concevoir pour former, innover pour transformer !",
+"c": "JOSPIA, votre formation notre priorité !",
+"d": "Le rendez-vous des générations bien-guidées !",
+"rep": "C"
+},
+{
+"questionnaire": 28,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Que vise notamment le thème des JOSPIA 2026 ?",
+"a": "Mettre fin à la transmission associative",
+"b": "Remplacer les générations précédentes",
+"c": "Promouvoir uniquement les activités sportives",
+"d": "Pérenniser l’héritage de l’AEEMCI par la transmission entre générations",
+"rep": "D"
+},
+{
+"questionnaire": 29,
+"ordre": 1,
+"enonce": "(Fiqh) Quel est le nom de la prière de la nuit ?",
+"a": "Asr",
+"b": "Isha",
+"c": "Dhouhr",
+"d": "Fajr",
+"rep": "B"
+},
+{
+"questionnaire": 29,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le dernier pilier de l’Islam ?",
+"a": "Le jeûne",
+"b": "La Zakât",
+"c": "La prière",
+"d": "Le pèlerinage (Hajj)",
+"rep": "D"
+},
+{
+"questionnaire": 29,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate demande protection contre le mal ?",
+"a": "Yâ-Sîn",
+"b": "Al-Fatiha",
+"c": "Al-Falaq",
+"d": "Al-Baqara",
+"rep": "C"
+},
+{
+"questionnaire": 29,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement est recommandé envers les parents ?",
+"a": "Les respecter",
+"b": "Leur manquer de respect",
+"c": "Leur désobéir",
+"d": "Les ignorer",
+"rep": "A"
+},
+{
+"questionnaire": 29,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Comment appelle-t-on le voyage du Prophète ﷺ de La Mecque vers Médine ?",
+"a": "L’Hégire",
+"b": "Le Hajj",
+"c": "Le Sawm",
+"d": "La Zakât",
+"rep": "A"
+},
+{
+"questionnaire": 29,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel mois commence le calendrier musulman ?",
+"a": "Rajab",
+"b": "Ramadan",
+"c": "Muharram",
+"d": "Chawwal",
+"rep": "C"
+},
+{
+"questionnaire": 29,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est né sans père et a été envoyé aux enfants d’Israël ?",
+"a": "Ibrahim ﷺ",
+"b": "Issa ﷺ",
+"c": "Adam ﷺ",
+"d": "Nouh ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 29,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Que doit-on faire lorsqu’on entend le nom du Prophète ﷺ ?",
+"a": "Prononcer les prières et salutations sur lui",
+"b": "Partir",
+"c": "Rire",
+"d": "Dormir",
+"rep": "A"
+},
+{
+"questionnaire": 29,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel événement marque la 15ᵉ édition des JOSPIA en 2026 ?",
+"a": "Une rentrée scolaire",
+"b": "Le SENAFOI",
+"c": "Les Journées Spirituelles Islamiques d’Anyama",
+"d": "Une Assemblée générale ordinaire",
+"rep": "C"
+},
+{
+"questionnaire": 29,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème de la 15ᵉ édition des JOSPIA ?",
+"a": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"b": "La jeunesse musulmane et l’excellence",
+"c": "L’éducation islamique pour tous",
+"d": "L’Islam et le développement durable",
+"rep": "A"
+},
+{
+"questionnaire": 30,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de jours dure généralement le jeûne du mois de Ramadan ?",
+"a": "Une année",
+"b": "Une semaine",
+"c": "Un jour",
+"d": "Environ un mois",
+"rep": "D"
+},
+{
+"questionnaire": 30,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le nom de la croyance en tous les prophètes d’Allah ?",
+"a": "La croyance aux prophètes",
+"b": "Le voyage",
+"c": "Le commerce",
+"d": "Le sport",
+"rep": "A"
+},
+{
+"questionnaire": 30,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate ouvre le Coran ?",
+"a": "An-Nas",
+"b": "Al-Fatiha",
+"c": "Al-Falaq",
+"d": "Al-Ikhlas",
+"rep": "B"
+},
+{
+"questionnaire": 30,
+"ordre": 4,
+"enonce": "(Hadith) Quel bon comportement le Prophète ﷺ nous a-t-il enseigné ?",
+"a": "Être injuste",
+"b": "Faire du mal",
+"c": "Mentir",
+"d": "Aider les autres",
+"rep": "D"
+},
+{
+"questionnaire": 30,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle ville le Prophète ﷺ est-il décédé ?",
+"a": "Taïf",
+"b": "Damas",
+"c": "Médine",
+"d": "La Mecque",
+"rep": "C"
+},
+{
+"questionnaire": 30,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel lieu est au centre du pèlerinage à La Mecque ?",
+"a": "Un marché",
+"b": "La Kaaba",
+"c": "Un palais",
+"d": "Une école",
+"rep": "B"
+},
+{
+"questionnaire": 30,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète a reçu le Zabour ?",
+"a": "Dawoud ﷺ",
+"b": "Moussa ﷺ",
+"c": "Ibrahim ﷺ",
+"d": "Issa ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 30,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel mot utilise-t-on pour remercier Allah ?",
+"a": "Merci seulement",
+"b": "Bonjour",
+"c": "Salut",
+"d": "Alhamdoulillah",
+"rep": "D"
+},
+{
+"questionnaire": 30,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Combien d’éditions des JOSPIA auront été organisées avant la 15ᵉ édition de 2026 ?",
+"a": "15 éditions",
+"b": "12 éditions",
+"c": "14 éditions",
+"d": "13 éditions",
+"rep": "C"
+},
+{
+"questionnaire": 30,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central des JOSPIA 2026 ?",
+"a": "L’éducation islamique pour tous",
+"b": "La jeunesse musulmane et l’excellence",
+"c": "L’Islam et le développement durable",
+"d": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI.",
+"rep": "D"
+},
+{
+"questionnaire": 31,
+"ordre": 1,
+"enonce": "(Fiqh) Quel est le nom de la prière obligatoire accomplie à l’aube ?",
+"a": "Fajr",
+"b": "Dhouhr",
+"c": "Asr",
+"d": "Maghrib",
+"rep": "A"
+},
+{
+"questionnaire": 31,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel principe exprime l’unicité d’Allah ?",
+"a": "La Zakât",
+"b": "Le Tawhîd",
+"c": "Le Hajj",
+"d": "Le Sawm",
+"rep": "B"
+},
+{
+"questionnaire": 31,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate ouvre le Coran ?",
+"a": "Al-Ikhlâs",
+"b": "An-Nâs",
+"c": "Al-Fâtiha",
+"d": "Al-Falaq",
+"rep": "C"
+},
+{
+"questionnaire": 31,
+"ordre": 4,
+"enonce": "(Hadith) Selon l’enseignement islamique, quelle qualité est opposée au mensonge ?",
+"a": "L’orgueil",
+"b": "La négligence",
+"c": "L’impatience",
+"d": "La véracité",
+"rep": "D"
+},
+{
+"questionnaire": 31,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel âge avait le Prophète Muhammad ﷺ au début de la révélation ?",
+"a": "40 ans",
+"b": "25 ans",
+"c": "35 ans",
+"d": "50 ans",
+"rep": "A"
+},
+{
+"questionnaire": 31,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel événement marque le début du calendrier hégirien ?",
+"a": "La bataille de Badr",
+"b": "L’Hégire",
+"c": "La naissance du Prophète ﷺ",
+"d": "La conquête de La Mecque",
+"rep": "B"
+},
+{
+"questionnaire": 31,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète est associé à la construction de l’arche ?",
+"a": "Ibrahim ﷺ",
+"b": "Moussa ﷺ",
+"c": "Nouh ﷺ",
+"d": "Issa ﷺ",
+"rep": "C"
+},
+{
+"questionnaire": 31,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quelle formule est recommandée avant de commencer une action ?",
+"a": "Alhamdoulillah",
+"b": "Astaghfiroullah",
+"c": "Assalamou alaykoum",
+"d": "Bismillah",
+"rep": "D"
+},
+{
+"questionnaire": 31,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) À quelle édition des JOSPIA correspond l’édition 2026 ?",
+"a": "La 15e édition",
+"b": "La 14e édition",
+"c": "La 16e édition",
+"d": "La 13e édition",
+"rep": "A"
+},
+{
+"questionnaire": 31,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel enjeu central est mis en avant par le thème des JOSPIA 2026 ?",
+"a": "La compétition entre les sous-comités",
+"b": "Le transfert entre générations et la pérennisation de l’héritage de l’AEEMCI",
+"c": "La création d’une nouvelle association",
+"d": "La formation exclusivement académique",
+"rep": "B"
+},
+{
+"questionnaire": 32,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on l’aumône obligatoire en Islam ?",
+"a": "Sawm",
+"b": "Hajj",
+"c": "Zakât",
+"d": "Salât",
+"rep": "C"
+},
+{
+"questionnaire": 32,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien de piliers compte l’Islam ?",
+"a": "Six",
+"b": "Quatre",
+"c": "Sept",
+"d": "Cinq",
+"rep": "D"
+},
+{
+"questionnaire": 32,
+"ordre": 3,
+"enonce": "(Tafsir) Dans quel mois le Coran a-t-il commencé à être révélé ?",
+"a": "Ramadan",
+"b": "Muharram",
+"c": "Safar",
+"d": "Rajab",
+"rep": "A"
+},
+{
+"questionnaire": 32,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement le musulman est-il appelé à adopter envers ses parents ?",
+"a": "Les ignorer",
+"b": "La bienveillance et le respect",
+"c": "L’impatience",
+"d": "La désobéissance",
+"rep": "B"
+},
+{
+"questionnaire": 32,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quelle épouse du Prophète ﷺ fut la première personne à croire en sa mission ?",
+"a": "Aïcha",
+"b": "Hafsa",
+"c": "Khadija",
+"d": "Safiyya",
+"rep": "C"
+},
+{
+"questionnaire": 32,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Dans quelle ville se trouve la mosquée du Prophète ﷺ ?",
+"a": "La Mecque",
+"b": "Jérusalem",
+"c": "Damas",
+"d": "Médine",
+"rep": "D"
+},
+{
+"questionnaire": 32,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète a reçu la Torah ?",
+"a": "Moussa ﷺ",
+"b": "Issa ﷺ",
+"c": "Dawoud ﷺ",
+"d": "Ibrahim ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 32,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Comment appelle-t-on le repas pris avant l’aube pendant le jeûne ?",
+"a": "Iftar",
+"b": "Sahour",
+"c": "Zakât",
+"d": "Adhân",
+"rep": "B"
+},
+{
+"questionnaire": 32,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel est le thème central de la 15e édition des JOSPIA ?",
+"a": "La jeunesse musulmane face aux réseaux sociaux",
+"b": "L’éducation islamique pour tous",
+"c": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI",
+"d": "L’excellence académique et professionnelle",
+"rep": "C"
+},
+{
+"questionnaire": 32,
+"ordre": 10,
+"enonce": "(Transmission) Dans le thème JOSPIA 2026, « pérenniser l’héritage » signifie principalement :",
+"a": "Remplacer les anciens sans concertation",
+"b": "Conserver uniquement les archives",
+"c": "Éviter toute évolution",
+"d": "Transmettre les valeurs et acquis aux générations suivantes",
+"rep": "D"
+},
+{
+"questionnaire": 33,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie après le coucher du soleil ?",
+"a": "Fajr",
+"b": "Maghrib",
+"c": "Asr",
+"d": "Dhouhr",
+"rep": "B"
+},
+{
+"questionnaire": 33,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien de piliers de la foi sont généralement enseignés ?",
+"a": "Cinq",
+"b": "Quatre",
+"c": "Six",
+"d": "Sept",
+"rep": "C"
+},
+{
+"questionnaire": 33,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle est la plus longue sourate du Coran ?",
+"a": "Al-Baqara",
+"b": "Al-Fâtiha",
+"c": "Al-Ikhlâs",
+"d": "An-Nâs",
+"rep": "A"
+},
+{
+"questionnaire": 33,
+"ordre": 4,
+"enonce": "(Hadith) Quelle attitude est recommandée lorsqu’on commet une faute ?",
+"a": "La nier systématiquement",
+"b": "Accuser autrui",
+"c": "La répéter sans regret",
+"d": "Se repentir sincèrement",
+"rep": "D"
+},
+{
+"questionnaire": 33,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle grotte le Prophète ﷺ reçut-il la première révélation ?",
+"a": "Thawr",
+"b": "Hirâ’",
+"c": "Uhud",
+"d": "Quba",
+"rep": "B"
+},
+{
+"questionnaire": 33,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle bataille eut lieu en l’an 2 de l’Hégire ?",
+"a": "Uhud",
+"b": "Khandaq",
+"c": "Badr",
+"d": "Hunayn",
+"rep": "C"
+},
+{
+"questionnaire": 33,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète fut jeté dans le feu, mais Allah le sauva ?",
+"a": "Ibrahim ﷺ",
+"b": "Youssouf ﷺ",
+"c": "Younous ﷺ",
+"d": "Moussa ﷺ",
+"rep": "A"
+},
+{
+"questionnaire": 33,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quelle fête marque la fin du mois de Ramadan ?",
+"a": "Aïd al-Adha",
+"b": "Achoura",
+"c": "Mawlid",
+"d": "Aïd al-Fitr",
+"rep": "D"
+},
+{
+"questionnaire": 33,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel numéro d’édition les JOSPIA célèbrent-ils en 2026 ?",
+"a": "La 13e",
+"b": "La 15e",
+"c": "La 14e",
+"d": "La 16e",
+"rep": "B"
+},
+{
+"questionnaire": 33,
+"ordre": 10,
+"enonce": "(Héritage AEEMCI) Le thème des JOSPIA 2026 invite notamment à réfléchir à :",
+"a": "La rupture entre les générations",
+"b": "La seule réussite individuelle",
+"c": "La responsabilité de transmettre et de préserver l’héritage associatif",
+"d": "L’abandon des valeurs historiques",
+"rep": "C"
+},
+{
+"questionnaire": 34,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie à la mi-journée ?",
+"a": "Maghrib",
+"b": "Fajr",
+"c": "Isha",
+"d": "Dhouhr",
+"rep": "D"
+},
+{
+"questionnaire": 34,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Qui est le Créateur de toute chose selon la croyance musulmane ?",
+"a": "Allah",
+"b": "Les anges",
+"c": "Les prophètes",
+"d": "Les humains",
+"rep": "A"
+},
+{
+"questionnaire": 34,
+"ordre": 3,
+"enonce": "(Tafsir) Combien de sourates compte le Coran ?",
+"a": "99",
+"b": "114",
+"c": "120",
+"d": "30",
+"rep": "B"
+},
+{
+"questionnaire": 34,
+"ordre": 4,
+"enonce": "(Hadith) Quel principe est au cœur de nombreux enseignements du Prophète ﷺ ?",
+"a": "L’arrogance",
+"b": "La vengeance",
+"c": "La bonne conduite",
+"d": "La moquerie",
+"rep": "C"
+},
+{
+"questionnaire": 34,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom de la mère du Prophète Muhammad ﷺ ?",
+"a": "Khadija",
+"b": "Fatima",
+"c": "Aïcha",
+"d": "Âmina",
+"rep": "D"
+},
+{
+"questionnaire": 34,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel fut le premier lieu de culte construit par le Prophète ﷺ à son arrivée près de Médine ?",
+"a": "La mosquée de Qubâ",
+"b": "La Kaaba",
+"c": "Al-Aqsa",
+"d": "La mosquée de Badr",
+"rep": "A"
+},
+{
+"questionnaire": 34,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète reçut l’Évangile (Injîl) ?",
+"a": "Moussa ﷺ",
+"b": "Issa ﷺ",
+"c": "Dawoud ﷺ",
+"d": "Ibrahim ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 34,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quelle formule signifie « Louange à Allah » ?",
+"a": "Allahu Akbar",
+"b": "Bismillah",
+"c": "Alhamdoulillah",
+"d": "Astaghfiroullah",
+"rep": "C"
+},
+{
+"questionnaire": 34,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel mot du thème JOSPIA 2026 renvoie à la continuité de l’héritage associatif ?",
+"a": "Rivalité",
+"b": "Isolement",
+"c": "Improvisation",
+"d": "Pérenniser",
+"rep": "D"
+},
+{
+"questionnaire": 34,
+"ordre": 10,
+"enonce": "(Transmission) Quel moyen favorise le transfert de l’expérience entre générations ?",
+"a": "Le dialogue, l’accompagnement et la transmission des savoirs",
+"b": "Le refus de collaborer",
+"c": "La rétention des informations",
+"d": "L’exclusion des nouveaux",
+"rep": "A"
+},
+{
+"questionnaire": 35,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on la prière collective du vendredi ?",
+"a": "Salat al-Fajr",
+"b": "Salat al-Jumu‘a",
+"c": "Salat al-‘Asr",
+"d": "Salat al-‘Isha",
+"rep": "B"
+},
+{
+"questionnaire": 35,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Les prophètes ont été envoyés principalement pour :",
+"a": "Accumuler des richesses",
+"b": "Dominer les peuples",
+"c": "Guider les humains vers Allah",
+"d": "Construire des palais",
+"rep": "C"
+},
+{
+"questionnaire": 35,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est la dernière du Coran dans l’ordre du mushaf ?",
+"a": "Al-Fâtiha",
+"b": "Al-Baqara",
+"c": "Al-Kahf",
+"d": "An-Nâs",
+"rep": "D"
+},
+{
+"questionnaire": 35,
+"ordre": 4,
+"enonce": "(Hadith) Quelle qualité morale est particulièrement valorisée en Islam ?",
+"a": "La sincérité",
+"b": "La jalousie",
+"c": "L’orgueil",
+"d": "La tromperie",
+"rep": "A"
+},
+{
+"questionnaire": 35,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle ville le Prophète Muhammad ﷺ est-il né ?",
+"a": "Médine",
+"b": "La Mecque",
+"c": "Taïf",
+"d": "Jérusalem",
+"rep": "B"
+},
+{
+"questionnaire": 35,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel compagnon est connu sous le surnom d’Al-Fârûq ?",
+"a": "Abou Bakr",
+"b": "Ali ibn Abi Talib",
+"c": "Omar ibn al-Khattab",
+"d": "Othman ibn Affan",
+"rep": "C"
+},
+{
+"questionnaire": 35,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète est connu pour avoir interprété des rêves ?",
+"a": "Nouh ﷺ",
+"b": "Adam ﷺ",
+"c": "Zakariya ﷺ",
+"d": "Youssouf ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 35,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quelle expression est couramment prononcée pour demander pardon à Allah ?",
+"a": "Astaghfiroullah",
+"b": "Subhanallah",
+"c": "Allahu Akbar",
+"d": "Alhamdoulillah",
+"rep": "A"
+},
+{
+"questionnaire": 35,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle expression figure dans le thème central de la 15e JOSPIA ?",
+"a": "La conquête de nouveaux territoires",
+"b": "À l’épreuve du temps",
+"c": "La compétition entre générations",
+"d": "L’excellence financière",
+"rep": "B"
+},
+{
+"questionnaire": 35,
+"ordre": 10,
+"enonce": "(AEEMCI) La pérennisation de l’héritage de l’AEEMCI implique avant tout :",
+"a": "Le rejet de toute innovation utile",
+"b": "La préservation des acquis sans transmission",
+"c": "La transmission des valeurs, de l’expérience et des responsabilités",
+"d": "La limitation de l’engagement aux anciens",
+"rep": "C"
+},
+{
+"questionnaire": 36,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie dans l’après-midi ?",
+"a": "Fajr",
+"b": "Maghrib",
+"c": "Isha",
+"d": "Asr",
+"rep": "D"
+},
+{
+"questionnaire": 36,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le dernier jour de l’existence terrestre et du jugement dans la croyance musulmane ?",
+"a": "Le Jour dernier",
+"b": "Le jour du marché",
+"c": "Le jour du voyage",
+"d": "Le jour de fête",
+"rep": "A"
+},
+{
+"questionnaire": 36,
+"ordre": 3,
+"enonce": "(Tafsir) Quel est le nombre de versets de la sourate Al-Fâtiha ?",
+"a": "Six",
+"b": "Sept",
+"c": "Huit",
+"d": "Dix",
+"rep": "B"
+},
+{
+"questionnaire": 36,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement est recommandé envers les personnes dans le besoin ?",
+"a": "Les éviter",
+"b": "Se moquer d’elles",
+"c": "Leur apporter aide et soutien",
+"d": "Les accuser",
+"rep": "C"
+},
+{
+"questionnaire": 36,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel oncle du Prophète ﷺ s’opposa à sa mission et est mentionné dans la sourate Al-Masad ?",
+"a": "Abou Talib",
+"b": "Hamza",
+"c": "Al-Abbas",
+"d": "Abou Lahab",
+"rep": "D"
+},
+{
+"questionnaire": 36,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel événement est associé à l’ouverture de La Mecque en l’an 8 de l’Hégire ?",
+"a": "La conquête de La Mecque",
+"b": "La bataille de Badr",
+"c": "L’Hégire",
+"d": "La bataille d’Uhud",
+"rep": "A"
+},
+{
+"questionnaire": 36,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète est associé à l’arche et au déluge ?",
+"a": "Ibrahim ﷺ",
+"b": "Nouh ﷺ",
+"c": "Moussa ﷺ",
+"d": "Youssouf ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 36,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quel livre les musulmans récitent-ils comme révélation d’Allah ?",
+"a": "La Torah uniquement",
+"b": "Les Psaumes uniquement",
+"c": "Le Coran",
+"d": "L’Évangile uniquement",
+"rep": "C"
+},
+{
+"questionnaire": 36,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Les JOSPIA 2026 correspondent à quelle édition ?",
+"a": "La 12e",
+"b": "La 13e",
+"c": "La 14e",
+"d": "La 15e",
+"rep": "D"
+},
+{
+"questionnaire": 36,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Le thème appelle les générations à :",
+"a": "Construire ensemble la continuité de l’héritage de l’AEEMCI",
+"b": "Se concurrencer sans coopération",
+"c": "Abandonner les acquis du passé",
+"d": "Se désengager de la vie associative",
+"rep": "A"
+},
+{
+"questionnaire": 37,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on la prière obligatoire de la nuit ?",
+"a": "Dhouhr",
+"b": "Isha",
+"c": "Asr",
+"d": "Fajr",
+"rep": "B"
+},
+{
+"questionnaire": 37,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel terme désigne la croyance en l’unicité d’Allah ?",
+"a": "Sawm",
+"b": "Hajj",
+"c": "Tawhîd",
+"d": "Zakât",
+"rep": "C"
+},
+{
+"questionnaire": 37,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est souvent récitée au début de chaque unité de prière ?",
+"a": "Al-Falaq",
+"b": "An-Nâs",
+"c": "Al-Ikhlâs",
+"d": "Al-Fâtiha",
+"rep": "D"
+},
+{
+"questionnaire": 37,
+"ordre": 4,
+"enonce": "(Hadith) Quel modèle les musulmans sont-ils invités à suivre ?",
+"a": "Le Prophète Muhammad ﷺ",
+"b": "Les rois injustes",
+"c": "Les personnes arrogantes",
+"d": "Les menteurs",
+"rep": "A"
+},
+{
+"questionnaire": 37,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom du grand-père du Prophète Muhammad ﷺ ?",
+"a": "Abdallah",
+"b": "Abdel-Muttalib",
+"c": "Abou Talib",
+"d": "Hamza",
+"rep": "B"
+},
+{
+"questionnaire": 37,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment désigne-t-on les musulmans qui ont rencontré le Prophète ﷺ, cru en lui et sont morts musulmans ?",
+"a": "Les tabi‘ûn",
+"b": "Les savants contemporains",
+"c": "Les Compagnons",
+"d": "Les califes uniquement",
+"rep": "C"
+},
+{
+"questionnaire": 37,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète fut sauvé par Allah de la noyade dans la mer avec son peuple ?",
+"a": "Ibrahim ﷺ",
+"b": "Issa ﷺ",
+"c": "Youssouf ﷺ",
+"d": "Moussa ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 37,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quelle fête est célébrée à l’occasion du sacrifice, durant les jours du Hajj ?",
+"a": "Aïd al-Adha",
+"b": "Aïd al-Fitr",
+"c": "Achoura",
+"d": "Laylat al-Qadr",
+"rep": "A"
+},
+{
+"questionnaire": 37,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle association est mentionnée dans le thème des JOSPIA 2026 ?",
+"a": "La CEDEAO",
+"b": "L’AEEMCI",
+"c": "L’ONU",
+"d": "La CAF",
+"rep": "B"
+},
+{
+"questionnaire": 37,
+"ordre": 10,
+"enonce": "(Transmission) Dans une association, quel rôle les anciens peuvent-ils jouer auprès des nouvelles générations ?",
+"a": "Décider sans écouter",
+"b": "Empêcher toute prise d’initiative",
+"c": "Partager leur expérience et accompagner les relève",
+"d": "Retenir les informations utiles",
+"rep": "C"
+},
+{
+"questionnaire": 38,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie au coucher du soleil ?",
+"a": "Dhouhr",
+"b": "Asr",
+"c": "Fajr",
+"d": "Maghrib",
+"rep": "D"
+},
+{
+"questionnaire": 38,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel ange est chargé de transmettre la révélation aux prophètes ?",
+"a": "Jibrîl",
+"b": "Mikâ’îl",
+"c": "Isrâfîl",
+"d": "Malik",
+"rep": "A"
+},
+{
+"questionnaire": 38,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate évoque la protection contre le mal de la nuit et de la sorcellerie ?",
+"a": "Al-Kawthar",
+"b": "Al-Falaq",
+"c": "Al-‘Asr",
+"d": "Al-Mâ‘ûn",
+"rep": "B"
+},
+{
+"questionnaire": 38,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement le Prophète ﷺ recommandait-il dans les relations avec autrui ?",
+"a": "L’injustice",
+"b": "La médisance",
+"c": "Le bon caractère",
+"d": "La moquerie",
+"rep": "C"
+},
+{
+"questionnaire": 38,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quelle fut la première épouse du Prophète Muhammad ﷺ ?",
+"a": "Aïcha",
+"b": "Hafsa",
+"c": "Zaynab",
+"d": "Khadija",
+"rep": "D"
+},
+{
+"questionnaire": 38,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle ville est surnommée la ville du Prophète ﷺ ?",
+"a": "Médine",
+"b": "La Mecque",
+"c": "Damas",
+"d": "Bagdad",
+"rep": "A"
+},
+{
+"questionnaire": 38,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète est le fils de Maryam ?",
+"a": "Moussa ﷺ",
+"b": "Issa ﷺ",
+"c": "Ibrahim ﷺ",
+"d": "Nouh ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 38,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Que dit-on généralement en saluant un musulman ?",
+"a": "Au revoir",
+"b": "Bonne nuit",
+"c": "Assalamou alaykoum",
+"d": "Merci",
+"rep": "C"
+},
+{
+"questionnaire": 38,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel est l’objectif exprimé par le verbe « pérenniser » dans le thème JOSPIA ?",
+"a": "Mettre fin à l’héritage",
+"b": "Le remplacer intégralement",
+"c": "Le conserver uniquement dans les archives",
+"d": "Le faire durer et le transmettre",
+"rep": "D"
+},
+{
+"questionnaire": 38,
+"ordre": 10,
+"enonce": "(AEEMCI) Le transfert entre générations repose notamment sur :",
+"a": "L’échange, la responsabilité et la transmission",
+"b": "La méfiance systématique",
+"c": "L’absence de dialogue",
+"d": "La rupture avec les anciens",
+"rep": "A"
+},
+{
+"questionnaire": 39,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie à la mi-journée ?",
+"a": "Fajr",
+"b": "Dhouhr",
+"c": "Maghrib",
+"d": "Isha",
+"rep": "B"
+},
+{
+"questionnaire": 39,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Les musulmans croient aux livres révélés par Allah. Cette croyance fait partie :",
+"a": "Des pratiques culturelles",
+"b": "Des piliers du Hajj",
+"c": "Des piliers de la foi",
+"d": "Des règles commerciales",
+"rep": "C"
+},
+{
+"questionnaire": 39,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est connue sous le nom de « La Vache » ?",
+"a": "Al-Fâtiha",
+"b": "An-Nâs",
+"c": "Al-Ikhlâs",
+"d": "Al-Baqara",
+"rep": "D"
+},
+{
+"questionnaire": 39,
+"ordre": 4,
+"enonce": "(Hadith) Quel principe encourage le musulman à accomplir ses engagements ?",
+"a": "La fidélité à la parole donnée",
+"b": "La négligence",
+"c": "La dissimulation",
+"d": "La procrastination",
+"rep": "A"
+},
+{
+"questionnaire": 39,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom du père du Prophète Muhammad ﷺ ?",
+"a": "Abou Talib",
+"b": "Abdallah",
+"c": "Abdel-Muttalib",
+"d": "Hamza",
+"rep": "B"
+},
+{
+"questionnaire": 39,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle ville abrite la Kaaba ?",
+"a": "Médine",
+"b": "Jérusalem",
+"c": "La Mecque",
+"d": "Taïf",
+"rep": "C"
+},
+{
+"questionnaire": 39,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète est connu pour avoir reçu les Psaumes (Zabûr) ?",
+"a": "Moussa ﷺ",
+"b": "Issa ﷺ",
+"c": "Ibrahim ﷺ",
+"d": "Dawoud ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 39,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Que signifie « Allahu Akbar » ?",
+"a": "Allah est le Plus Grand",
+"b": "Louange à Allah",
+"c": "Gloire à Allah",
+"d": "Je demande pardon à Allah",
+"rep": "A"
+},
+{
+"questionnaire": 39,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Le thème central des JOSPIA 2026 porte sur le transfert entre :",
+"a": "Les villes",
+"b": "Les générations",
+"c": "Les écoles",
+"d": "Les pays",
+"rep": "B"
+},
+{
+"questionnaire": 39,
+"ordre": 10,
+"enonce": "(Héritage AEEMCI) Quel comportement est le plus cohérent avec la pérennisation de l’héritage associatif ?",
+"a": "Agir seul sans rendre compte",
+"b": "Refuser toute évolution",
+"c": "Former, responsabiliser et accompagner la relève",
+"d": "Exclure les nouveaux membres",
+"rep": "C"
+},
+{
+"questionnaire": 40,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie avant le lever du soleil ?",
+"a": "Asr",
+"b": "Dhouhr",
+"c": "Maghrib",
+"d": "Fajr",
+"rep": "D"
+},
+{
+"questionnaire": 40,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel terme désigne les anges dans la croyance islamique ?",
+"a": "Malaïka",
+"b": "Jinn",
+"c": "Nâs",
+"d": "Shayâtîn",
+"rep": "A"
+},
+{
+"questionnaire": 40,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est la plus courte du Coran ?",
+"a": "Al-‘Asr",
+"b": "Al-Kawthar",
+"c": "Al-Falaq",
+"d": "Al-Ikhlâs",
+"rep": "B"
+},
+{
+"questionnaire": 40,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement est contraire aux enseignements du Prophète ﷺ ?",
+"a": "La patience",
+"b": "La compassion",
+"c": "L’injustice",
+"d": "La sincérité",
+"rep": "C"
+},
+{
+"questionnaire": 40,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel événement précède l’installation du Prophète ﷺ à Médine ?",
+"a": "La bataille de Uhud",
+"b": "La conquête de La Mecque",
+"c": "Le pèlerinage d’adieu",
+"d": "L’Hégire",
+"rep": "D"
+},
+{
+"questionnaire": 40,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel compagnon fut le premier calife après le décès du Prophète ﷺ ?",
+"a": "Abou Bakr",
+"b": "Omar",
+"c": "Othman",
+"d": "Ali",
+"rep": "A"
+},
+{
+"questionnaire": 40,
+"ordre": 7,
+"enonce": "(Prophètes) Quel prophète fut éprouvé par la maladie et est connu pour sa patience ?",
+"a": "Youssouf ﷺ",
+"b": "Ayyoub ﷺ",
+"c": "Younous ﷺ",
+"d": "Souleymane ﷺ",
+"rep": "B"
+},
+{
+"questionnaire": 40,
+"ordre": 8,
+"enonce": "(Pratique religieuse) Quel mois est consacré au jeûne obligatoire ?",
+"a": "Rajab",
+"b": "Muharram",
+"c": "Ramadan",
+"d": "Safar",
+"rep": "C"
+},
+{
+"questionnaire": 40,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel est le numéro de l’édition des JOSPIA en 2026 ?",
+"a": "La 14e",
+"b": "La 16e",
+"c": "La 13e",
+"d": "La 15e",
+"rep": "D"
+},
+{
+"questionnaire": 40,
+"ordre": 10,
+"enonce": "(Thème JOSPIA 2026) Quel élément le thème invite-t-il à pérenniser ?",
+"a": "L’héritage de l’AEEMCI",
+"b": "Les rivalités entre générations",
+"c": "Les habitudes sans réflexion",
+"d": "Les intérêts individuels",
+"rep": "A"
+},
+{
+"questionnaire": 41,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie après le coucher du soleil ?",
+"a": "Fajr",
+"b": "Maghrib",
+"c": "Asr",
+"d": "Dhouhr",
+"rep": "B"
+},
+{
+"questionnaire": 41,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien de piliers de la foi sont généralement enseignés ?",
+"a": "Cinq",
+"b": "Sept",
+"c": "Six",
+"d": "Quatre",
+"rep": "C"
+},
+{
+"questionnaire": 41,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate ouvre le Coran ?",
+"a": "Al-Fatiha",
+"b": "Al-Ikhlas",
+"c": "An-Nas",
+"d": "Al-Baqara",
+"rep": "A"
+},
+{
+"questionnaire": 41,
+"ordre": 4,
+"enonce": "(Hadith) Selon le hadith célèbre, les actes sont évalués selon :",
+"a": "Leur durée",
+"b": "Leur difficulté",
+"c": "Le nombre de témoins",
+"d": "Les intentions",
+"rep": "D"
+},
+{
+"questionnaire": 41,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle ville Muhammad ﷺ est-il né ?",
+"a": "Médine",
+"b": "La Mecque",
+"c": "Taïf",
+"d": "Jérusalem",
+"rep": "B"
+},
+{
+"questionnaire": 41,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Comment appelle-t-on l’émigration du Prophète ﷺ de La Mecque vers Médine ?",
+"a": "Isra",
+"b": "Mi‘raj",
+"c": "Hégire",
+"d": "Bay‘a",
+"rep": "C"
+},
+{
+"questionnaire": 41,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est considéré comme le père de l’humanité ?",
+"a": "Adam",
+"b": "Ibrahim",
+"c": "Moussa",
+"d": "Nouh",
+"rep": "A"
+},
+{
+"questionnaire": 41,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quelle formule signifie « au nom d’Allah » ?",
+"a": "Alhamdulillah",
+"b": "Subhanallah",
+"c": "Astaghfirullah",
+"d": "Bismillah",
+"rep": "D"
+},
+{
+"questionnaire": 41,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle édition des JOSPIA est organisée en 2026 ?",
+"a": "13e",
+"b": "15e",
+"c": "14e",
+"d": "16e",
+"rep": "B"
+},
+{
+"questionnaire": 41,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le thème central des JOSPIA 2026 ?",
+"a": "La jeunesse musulmane face aux défis numériques",
+"b": "L’éducation islamique pour tous",
+"c": "Le transfert entre générations à l’épreuve du temps : pérenniser l’héritage de l’AEEMCI",
+"d": "La solidarité au service de la paix",
+"rep": "C"
+},
+{
+"questionnaire": 42,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie à l’aube ?",
+"a": "Fajr",
+"b": "Isha",
+"c": "Maghrib",
+"d": "Asr",
+"rep": "A"
+},
+{
+"questionnaire": 42,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Le Tawhid désigne principalement :",
+"a": "Le pèlerinage",
+"b": "Le jeûne",
+"c": "La zakat",
+"d": "L’unicité d’Allah",
+"rep": "D"
+},
+{
+"questionnaire": 42,
+"ordre": 3,
+"enonce": "(Tafsir) Combien de sourates compte le Coran ?",
+"a": "110",
+"b": "114",
+"c": "120",
+"d": "99",
+"rep": "B"
+},
+{
+"questionnaire": 42,
+"ordre": 4,
+"enonce": "(Hadith) Quelle source rapporte les paroles, actes et approbations du Prophète ﷺ ?",
+"a": "La poésie arabe",
+"b": "Les récits des rois",
+"c": "Les hadiths",
+"d": "Les chroniques commerciales",
+"rep": "C"
+},
+{
+"questionnaire": 42,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom de la première épouse du Prophète ﷺ ?",
+"a": "Aïcha",
+"b": "Hafsa",
+"c": "Sawda",
+"d": "Khadija",
+"rep": "D"
+},
+{
+"questionnaire": 42,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel compagnon fut le premier calife après le décès du Prophète ﷺ ?",
+"a": "Abou Bakr",
+"b": "Oumar",
+"c": "Outhman",
+"d": "Ali",
+"rep": "A"
+},
+{
+"questionnaire": 42,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète reçut la Torah ?",
+"a": "Issa",
+"b": "Moussa",
+"c": "Dawoud",
+"d": "Ibrahim",
+"rep": "B"
+},
+{
+"questionnaire": 42,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel mois est associé au jeûne obligatoire ?",
+"a": "Rajab",
+"b": "Safar",
+"c": "Ramadan",
+"d": "Muharram",
+"rep": "C"
+},
+{
+"questionnaire": 42,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Combien d’années d’existence les JOSPIA célèbrent-elles en 2026 ?",
+"a": "10 ans",
+"b": "12 ans",
+"c": "14 ans",
+"d": "15 ans",
+"rep": "D"
+},
+{
+"questionnaire": 42,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel slogan est retenu pour les JOSPIA 2026 ?",
+"a": "JOSPIA, votre formation notre priorité !",
+"b": "JOSPIA, la foi au cœur de l’action !",
+"c": "JOSPIA, bâtir aujourd’hui demain !",
+"d": "JOSPIA, ensemble vers l’excellence !",
+"rep": "A"
+},
+{
+"questionnaire": 43,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie en milieu de journée ?",
+"a": "Asr",
+"b": "Fajr",
+"c": "Dhouhr",
+"d": "Isha",
+"rep": "C"
+},
+{
+"questionnaire": 43,
+"ordre": 2,
+"enonce": "(Doctrine islamique) La croyance au Jour dernier fait partie :",
+"a": "Des cinq piliers de l’Islam",
+"b": "Des six piliers de la foi",
+"c": "Des règles du pèlerinage",
+"d": "Des conditions de la zakat",
+"rep": "B"
+},
+{
+"questionnaire": 43,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est appelée « La Fatiha » ?",
+"a": "La sourate 1",
+"b": "La sourate 2",
+"c": "La sourate 112",
+"d": "La sourate 114",
+"rep": "A"
+},
+{
+"questionnaire": 43,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement le Prophète ﷺ a-t-il particulièrement recommandé ?",
+"a": "L’orgueil",
+"b": "La médisance",
+"c": "La dureté",
+"d": "La véracité",
+"rep": "D"
+},
+{
+"questionnaire": 43,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Dans quelle grotte la première révélation fut-elle reçue ?",
+"a": "Thawr",
+"b": "Hira",
+"c": "Uhud",
+"d": "Badr",
+"rep": "B"
+},
+{
+"questionnaire": 43,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle bataille eut lieu en l’an 2 de l’Hégire ?",
+"a": "Uhud",
+"b": "Khandaq",
+"c": "Badr",
+"d": "Hunayn",
+"rep": "C"
+},
+{
+"questionnaire": 43,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète fut éprouvé par l’épisode du grand poisson ?",
+"a": "Younous",
+"b": "Youssouf",
+"c": "Moussa",
+"d": "Soulayman",
+"rep": "A"
+},
+{
+"questionnaire": 43,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Comment appelle-t-on les ablutions rituelles avant la prière ?",
+"a": "Ghusl",
+"b": "Tayammum",
+"c": "Adhan",
+"d": "Wudu",
+"rep": "D"
+},
+{
+"questionnaire": 43,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel événement marque la 15e édition des JOSPIA ?",
+"a": "Un concours sportif national",
+"b": "Une édition anniversaire",
+"c": "Une conférence internationale",
+"d": "Une campagne de collecte",
+"rep": "B"
+},
+{
+"questionnaire": 43,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel enjeu principal exprime le thème des JOSPIA 2026 ?",
+"a": "Remplacer les anciens responsables",
+"b": "Multiplier les activités sans bilan",
+"c": "Transmettre l’héritage associatif et assurer sa pérennité",
+"d": "Créer une nouvelle association",
+"rep": "C"
+},
+{
+"questionnaire": 44,
+"ordre": 1,
+"enonce": "(Fiqh) Combien de prières obligatoires sont accomplies chaque jour ?",
+"a": "Trois",
+"b": "Quatre",
+"c": "Six",
+"d": "Cinq",
+"rep": "D"
+},
+{
+"questionnaire": 44,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel est le premier pilier de l’Islam ?",
+"a": "La Chahada",
+"b": "Le Hajj",
+"c": "La zakat",
+"d": "Le jeûne",
+"rep": "A"
+},
+{
+"questionnaire": 44,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est la plus longue du Coran ?",
+"a": "Al-Imran",
+"b": "Al-Baqara",
+"c": "An-Nisa",
+"d": "Al-Maida",
+"rep": "B"
+},
+{
+"questionnaire": 44,
+"ordre": 4,
+"enonce": "(Hadith) Le hadith « La religion, c’est le conseil sincère » est connu sous le titre :",
+"a": "Hadith de l’Hégire",
+"b": "Hadith de la patience",
+"c": "Hadith An-Nasihah",
+"d": "Hadith des intentions",
+"rep": "C"
+},
+{
+"questionnaire": 44,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel compagnon accompagna le Prophète ﷺ lors de l’Hégire ?",
+"a": "Oumar",
+"b": "Ali",
+"c": "Outhman",
+"d": "Abou Bakr",
+"rep": "D"
+},
+{
+"questionnaire": 44,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle ville abrite la mosquée Al-Masjid An-Nabawi ?",
+"a": "Médine",
+"b": "La Mecque",
+"c": "Damas",
+"d": "Bagdad",
+"rep": "A"
+},
+{
+"questionnaire": 44,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète construisit la Kaaba avec son fils Ismaïl ?",
+"a": "Moussa",
+"b": "Ibrahim",
+"c": "Dawoud",
+"d": "Issa",
+"rep": "B"
+},
+{
+"questionnaire": 44,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel jour est consacré à la prière collective de Jumu‘a ?",
+"a": "Mardi",
+"b": "Samedi",
+"c": "Vendredi",
+"d": "Dimanche",
+"rep": "C"
+},
+{
+"questionnaire": 44,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle structure de l’AEEMCI organise les JOSPIA à Anyama ?",
+"a": "Le secrétariat national uniquement",
+"b": "Une association partenaire",
+"c": "Le comité des anciens seul",
+"d": "Le sous-comité AEEMCI d’Anyama, avec son comité d’organisation",
+"rep": "D"
+},
+{
+"questionnaire": 44,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le rôle essentiel de la Commission scientifique ?",
+"a": "Concevoir et coordonner les contenus de formation et les activités intellectuelles",
+"b": "Gérer exclusivement la restauration",
+"c": "Assurer uniquement la sécurité",
+"d": "Collecter les cotisations",
+"rep": "A"
+},
+{
+"questionnaire": 45,
+"ordre": 1,
+"enonce": "(Fiqh) Comment appelle-t-on l’appel annonçant l’entrée de l’heure de la prière ?",
+"a": "Iqama",
+"b": "Adhan",
+"c": "Khutba",
+"d": "Taslim",
+"rep": "B"
+},
+{
+"questionnaire": 45,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel attribut signifie qu’Allah est unique ?",
+"a": "Al-Ghafour",
+"b": "Ar-Rahman",
+"c": "Al-Wahid",
+"d": "Al-Aziz",
+"rep": "C"
+},
+{
+"questionnaire": 45,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est la dernière dans l’ordre du Mushaf ?",
+"a": "Al-Falaq",
+"b": "Al-Ikhlas",
+"c": "Al-Masad",
+"d": "An-Nas",
+"rep": "D"
+},
+{
+"questionnaire": 45,
+"ordre": 4,
+"enonce": "(Hadith) Le Prophète ﷺ a enseigné que le musulman est celui dont les autres sont préservés :",
+"a": "De sa langue et de sa main",
+"b": "De son apparence",
+"c": "De ses voyages",
+"d": "De ses possessions",
+"rep": "A"
+},
+{
+"questionnaire": 45,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom du père du Prophète Muhammad ﷺ ?",
+"a": "Abou Talib",
+"b": "Abdallah",
+"c": "Abdel Mouttalib",
+"d": "Hamza",
+"rep": "B"
+},
+{
+"questionnaire": 45,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Dans quelle ville se trouve la Kaaba ?",
+"a": "Médine",
+"b": "Jérusalem",
+"c": "La Mecque",
+"d": "Taïf",
+"rep": "C"
+},
+{
+"questionnaire": 45,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète reçut les Psaumes (Zabour) ?",
+"a": "Moussa",
+"b": "Ibrahim",
+"c": "Issa",
+"d": "Dawoud",
+"rep": "D"
+},
+{
+"questionnaire": 45,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Que répond-on généralement après avoir entendu « Alhamdulillah » prononcé par quelqu’un qui éternue ?",
+"a": "Yarhamukallah",
+"b": "Bismillah",
+"c": "Allahu Akbar",
+"d": "Astaghfirullah",
+"rep": "A"
+},
+{
+"questionnaire": 45,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel format est prévu pour la conférence de la cérémonie officielle ?",
+"a": "Un débat sans modérateur",
+"b": "JOSPIA FORUM",
+"c": "Un concours de récitation",
+"d": "Une séance de cours en dortoir",
+"rep": "B"
+},
+{
+"questionnaire": 45,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel principe est directement lié à la pérennisation de l’héritage de l’AEEMCI ?",
+"a": "L’isolement des générations",
+"b": "La compétition entre anciens et nouveaux",
+"c": "La transmission, l’accompagnement et la responsabilisation",
+"d": "L’abandon des pratiques éprouvées",
+"rep": "C"
+},
+{
+"questionnaire": 46,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie l’après-midi ?",
+"a": "Maghrib",
+"b": "Dhouhr",
+"c": "Fajr",
+"d": "Asr",
+"rep": "D"
+},
+{
+"questionnaire": 46,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Combien de piliers de l’Islam sont traditionnellement enseignés ?",
+"a": "Cinq",
+"b": "Six",
+"c": "Quatre",
+"d": "Sept",
+"rep": "A"
+},
+{
+"questionnaire": 46,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est appelée « Al-Ikhlas » ?",
+"a": "Al-Falaq",
+"b": "Al-Ikhlas",
+"c": "An-Nas",
+"d": "Al-Kawthar",
+"rep": "B"
+},
+{
+"questionnaire": 46,
+"ordre": 4,
+"enonce": "(Hadith) Quel comportement est opposé à l’amana (dépôt/responsabilité) ?",
+"a": "La ponctualité",
+"b": "La sincérité",
+"c": "La trahison",
+"d": "La prudence",
+"rep": "C"
+},
+{
+"questionnaire": 46,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel était le nom de la mère du Prophète ﷺ ?",
+"a": "Khadija",
+"b": "Halima",
+"c": "Fatima",
+"d": "Amina",
+"rep": "D"
+},
+{
+"questionnaire": 46,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel calife est connu pour avoir fait compiler le Coran en un recueil après la bataille de Yamama ?",
+"a": "Abou Bakr",
+"b": "Ali",
+"c": "Oumar",
+"d": "Outhman",
+"rep": "A"
+},
+{
+"questionnaire": 46,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète fut jeté dans le puits par ses frères ?",
+"a": "Younous",
+"b": "Youssouf",
+"c": "Ibrahim",
+"d": "Adam",
+"rep": "B"
+},
+{
+"questionnaire": 46,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel est le nom de la fête célébrée à la fin du Ramadan ?",
+"a": "Aïd Al-Adha",
+"b": "Achoura",
+"c": "Aïd Al-Fitr",
+"d": "Mawlid",
+"rep": "C"
+},
+{
+"questionnaire": 46,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle activité des JOSPIA met en scène un échange argumenté entre positions opposées ?",
+"a": "Parcours Inspirant",
+"b": "IQRA’ TIME",
+"c": "Défi Mémoire",
+"d": "JOSPIA FACE-À-FACE",
+"rep": "D"
+},
+{
+"questionnaire": 46,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel objectif correspond à IQRA’ TIME ?",
+"a": "Valoriser la lecture et le partage de connaissances",
+"b": "Organiser une compétition sportive",
+"c": "Former les équipes de protocole",
+"d": "Évaluer uniquement la mémorisation du Coran",
+"rep": "A"
+},
+{
+"questionnaire": 47,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie la nuit ?",
+"a": "Asr",
+"b": "Isha",
+"c": "Maghrib",
+"d": "Dhouhr",
+"rep": "B"
+},
+{
+"questionnaire": 47,
+"ordre": 2,
+"enonce": "(Doctrine islamique) La croyance aux anges est :",
+"a": "Un pilier du Hajj",
+"b": "Une pratique culturelle",
+"c": "Un pilier de la foi",
+"d": "Une obligation de la zakat",
+"rep": "C"
+},
+{
+"questionnaire": 47,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate est connue comme « Le secours » (An-Nasr) ?",
+"a": "Al-Fil",
+"b": "Al-Kafirun",
+"c": "Al-Ma’un",
+"d": "An-Nasr",
+"rep": "D"
+},
+{
+"questionnaire": 47,
+"ordre": 4,
+"enonce": "(Hadith) Selon le hadith, sourire à son frère constitue :",
+"a": "Une sadaqa",
+"b": "Une obligation de pèlerinage",
+"c": "Un jeûne",
+"d": "Une zakat financière",
+"rep": "A"
+},
+{
+"questionnaire": 47,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel oncle protégea le Prophète ﷺ à La Mecque, sans embrasser l’Islam selon l’avis connu ?",
+"a": "Hamza",
+"b": "Abou Talib",
+"c": "Abbas",
+"d": "Abou Lahab",
+"rep": "B"
+},
+{
+"questionnaire": 47,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel événement marqua le retour du Prophète ﷺ à La Mecque en l’an 8 de l’Hégire ?",
+"a": "La bataille de Badr",
+"b": "L’Hégire",
+"c": "La conquête de La Mecque",
+"d": "Le pacte de Hudaybiya",
+"rep": "C"
+},
+{
+"questionnaire": 47,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est né sans père, par la volonté d’Allah ?",
+"a": "Adam",
+"b": "Moussa",
+"c": "Ibrahim",
+"d": "Issa",
+"rep": "D"
+},
+{
+"questionnaire": 47,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel terme désigne le pèlerinage obligatoire à La Mecque, pour celui qui en a les moyens ?",
+"a": "Hajj",
+"b": "Umra",
+"c": "Sawm",
+"d": "Salat",
+"rep": "A"
+},
+{
+"questionnaire": 47,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel programme de formation figure parmi les activités des JOSPIA ?",
+"a": "Une formation de conduite automobile",
+"b": "Halaqat At-Ta‘lîm",
+"c": "Un atelier de cuisine",
+"d": "Un tournoi de football professionnel",
+"rep": "B"
+},
+{
+"questionnaire": 47,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel dispositif permet de mettre en valeur les parcours et expériences inspirants ?",
+"a": "Défi Mémoire",
+"b": "Cross populaire",
+"c": "Parcours Inspirant",
+"d": "TCHÈW-KA-BARRO",
+"rep": "C"
+},
+{
+"questionnaire": 48,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie au coucher du soleil ?",
+"a": "Isha",
+"b": "Fajr",
+"c": "Asr",
+"d": "Maghrib",
+"rep": "D"
+},
+{
+"questionnaire": 48,
+"ordre": 2,
+"enonce": "(Doctrine islamique) Quel pilier de la foi concerne la croyance aux livres révélés ?",
+"a": "Croire aux livres d’Allah",
+"b": "Croire au destin uniquement",
+"c": "Accomplir le Hajj",
+"d": "Jeûner le Ramadan",
+"rep": "A"
+},
+{
+"questionnaire": 48,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate comporte le verset « Qul huwa Allahu ahad » ?",
+"a": "Al-Falaq",
+"b": "Al-Ikhlas",
+"c": "An-Nas",
+"d": "Al-Kawthar",
+"rep": "B"
+},
+{
+"questionnaire": 48,
+"ordre": 4,
+"enonce": "(Hadith) Le hadith « Le meilleur d’entre vous est celui qui apprend le Coran et l’enseigne » encourage :",
+"a": "La richesse",
+"b": "Le voyage",
+"c": "L’apprentissage et l’enseignement du Coran",
+"d": "La compétition matérielle",
+"rep": "C"
+},
+{
+"questionnaire": 48,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel âge avait le Prophète ﷺ lorsqu’il reçut la première révélation, selon la tradition ?",
+"a": "35 ans",
+"b": "25 ans",
+"c": "50 ans",
+"d": "40 ans",
+"rep": "D"
+},
+{
+"questionnaire": 48,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quelle mosquée fut la première construite par le Prophète ﷺ lors de son arrivée près de Médine ?",
+"a": "Quba",
+"b": "Al-Aqsa",
+"c": "Al-Haram",
+"d": "An-Nabawi",
+"rep": "A"
+},
+{
+"questionnaire": 48,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est connu pour avoir interprété le rêve du roi d’Égypte ?",
+"a": "Moussa",
+"b": "Youssouf",
+"c": "Dawoud",
+"d": "Suleyman",
+"rep": "B"
+},
+{
+"questionnaire": 48,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel mois vient immédiatement après Ramadan dans le calendrier hégirien ?",
+"a": "Muharram",
+"b": "Rajab",
+"c": "Shawwal",
+"d": "Safar",
+"rep": "C"
+},
+{
+"questionnaire": 48,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quelle activité sportive populaire est prévue dans le programme JOSPIA ?",
+"a": "Une course cycliste professionnelle",
+"b": "Un marathon international",
+"c": "Une compétition de natation",
+"d": "Un cross populaire",
+"rep": "D"
+},
+{
+"questionnaire": 48,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quel est le sens de la démarche intergénérationnelle au cœur du thème ?",
+"a": "Faire dialoguer expérience des anciens et engagement de la relève",
+"b": "Écarter les anciens des décisions",
+"c": "Remplacer systématiquement les traditions",
+"d": "Confier tout le travail aux nouveaux",
+"rep": "A"
+},
+{
+"questionnaire": 49,
+"ordre": 1,
+"enonce": "(Fiqh) Quelle prière obligatoire est accomplie à midi ?",
+"a": "Maghrib",
+"b": "Dhouhr",
+"c": "Isha",
+"d": "Fajr",
+"rep": "B"
+},
+{
+"questionnaire": 49,
+"ordre": 2,
+"enonce": "(Doctrine islamique) La croyance au destin, bon ou mauvais, fait partie :",
+"a": "Des cinq piliers de l’Islam",
+"b": "Des règles de la prière",
+"c": "Des six piliers de la foi",
+"d": "Des conditions du jeûne",
+"rep": "C"
+},
+{
+"questionnaire": 49,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate contient le verset du Trône (Ayat al-Kursi) ?",
+"a": "Al-Fatiha",
+"b": "Al-Ikhlas",
+"c": "An-Nas",
+"d": "Al-Baqara",
+"rep": "D"
+},
+{
+"questionnaire": 49,
+"ordre": 4,
+"enonce": "(Hadith) Quel principe résume le hadith « Nul d’entre vous ne croit véritablement jusqu’à ce qu’il aime pour son frère ce qu’il aime pour lui-même » ?",
+"a": "La fraternité et le souhait du bien",
+"b": "L’accumulation des biens",
+"c": "La solitude",
+"d": "La compétition",
+"rep": "A"
+},
+{
+"questionnaire": 49,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quelle fille du Prophète ﷺ fut l’épouse d’Ali ibn Abi Talib ?",
+"a": "Aïcha",
+"b": "Fatima",
+"c": "Zaynab bint Jahsh",
+"d": "Hafsa",
+"rep": "B"
+},
+{
+"questionnaire": 49,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel compagnon est surnommé « Al-Faruq » ?",
+"a": "Abou Bakr",
+"b": "Outhman",
+"c": "Oumar ibn al-Khattab",
+"d": "Ali",
+"rep": "C"
+},
+{
+"questionnaire": 49,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète reçut l’Évangile (Injil) ?",
+"a": "Dawoud",
+"b": "Moussa",
+"c": "Muhammad",
+"d": "Issa",
+"rep": "D"
+},
+{
+"questionnaire": 49,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Que signifie « Assalamu alaykum » ?",
+"a": "Que la paix soit sur vous",
+"b": "Bonne nuit",
+"c": "Merci beaucoup",
+"d": "Au revoir",
+"rep": "A"
+},
+{
+"questionnaire": 49,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel concours/activité confronte les participants à des épreuves de mémorisation ?",
+"a": "IQRA’ TIME",
+"b": "Défi Mémoire",
+"c": "Parcours Inspirant",
+"d": "Cross populaire",
+"rep": "B"
+},
+{
+"questionnaire": 49,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Pourquoi la Commission scientifique doit-elle vérifier les contenus avant leur diffusion ?",
+"a": "Pour augmenter la durée des activités",
+"b": "Pour réduire le nombre de participants",
+"c": "Pour garantir la fiabilité, la pertinence et la qualité pédagogique",
+"d": "Pour remplacer les responsables du CO",
+"rep": "C"
+},
+{
+"questionnaire": 50,
+"ordre": 1,
+"enonce": "(Fiqh) Quel acte est obligatoire pour tout musulman adulte capable durant le Ramadan ?",
+"a": "Le Hajj chaque année",
+"b": "La zakat al-fitr uniquement",
+"c": "La prière de l’Aïd",
+"d": "Le jeûne du mois",
+"rep": "D"
+},
+{
+"questionnaire": 50,
+"ordre": 2,
+"enonce": "(Doctrine islamique) La Chahada affirme notamment :",
+"a": "Qu’Allah est unique et que Muhammad est Son messager",
+"b": "Que tous les prophètes sont des anges",
+"c": "Que le jeûne est facultatif",
+"d": "Que la Kaaba est une divinité",
+"rep": "A"
+},
+{
+"questionnaire": 50,
+"ordre": 3,
+"enonce": "(Tafsir) Quelle sourate commence par « Inna a‘tayna-kal-kawthar » ?",
+"a": "Al-Asr",
+"b": "Al-Kawthar",
+"c": "An-Nasr",
+"d": "Al-Ikhlas",
+"rep": "B"
+},
+{
+"questionnaire": 50,
+"ordre": 4,
+"enonce": "(Hadith) Le hadith « Celui qui ne fait pas miséricorde ne recevra pas miséricorde » enseigne :",
+"a": "La sévérité systématique",
+"b": "L’indifférence",
+"c": "La compassion",
+"d": "La rivalité",
+"rep": "C"
+},
+{
+"questionnaire": 50,
+"ordre": 5,
+"enonce": "(Vie du Prophète ﷺ) Quel événement précéda immédiatement l’Hégire dans la chronologie de la mission à La Mecque ?",
+"a": "La bataille de Badr",
+"b": "La conquête de La Mecque",
+"c": "Le pacte de Hudaybiya",
+"d": "Le complot visant à assassiner le Prophète ﷺ",
+"rep": "D"
+},
+{
+"questionnaire": 50,
+"ordre": 6,
+"enonce": "(Histoire de l’Islam) Quel lieu est la première qibla des musulmans ?",
+"a": "Al-Masjid Al-Aqsa",
+"b": "Al-Masjid An-Nabawi",
+"c": "La Kaaba",
+"d": "Mosquée Quba",
+"rep": "A"
+},
+{
+"questionnaire": 50,
+"ordre": 7,
+"enonce": "(Chaîne des Prophètes) Quel prophète est associé à la construction de l’arche lors du déluge ?",
+"a": "Ibrahim",
+"b": "Nouh",
+"c": "Moussa",
+"d": "Younous",
+"rep": "B"
+},
+{
+"questionnaire": 50,
+"ordre": 8,
+"enonce": "(J’apprends ma religion) Quel acte correspond à la zakat ?",
+"a": "Une prière surérogatoire",
+"b": "Une invocation personnelle",
+"c": "Une aumône obligatoire selon des conditions établies",
+"d": "Un pèlerinage",
+"rep": "C"
+},
+{
+"questionnaire": 50,
+"ordre": 9,
+"enonce": "(JOSPIA 2026) Quel titre désigne le rendez-vous de réflexion prévu autour du thème intergénérationnel ?",
+"a": "IQRA’ TIME",
+"b": "Nuit des Talents",
+"c": "Halaqat At-Ta‘lîm",
+"d": "JOSPIA FORUM",
+"rep": "D"
+},
+{
+"questionnaire": 50,
+"ordre": 10,
+"enonce": "(JOSPIA 2026) Quelle valeur est essentielle pour transmettre durablement l’héritage de l’AEEMCI ?",
+"a": "Responsabilité, fidélité aux valeurs et engagement",
+"b": "Recherche de prestige individuel",
+"c": "Rupture avec toute expérience antérieure",
+"d": "Absence de redevabilité",
+"rep": "A"
+}
+]

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/questionnaires.php';
 exigerRole(['seminariste']);
 $u = utilisateurCourant();
 
@@ -38,18 +39,9 @@ if ($etat && strpos($etat, '|') !== false) {
 // Les questions et l'heure de début sont fixées côté serveur dès l'ouverture du test
 // (le chrono continue même si la page est rechargée, et la correction porte sur les mêmes questions).
 if (empty($_SESSION[$cleSession]['ids'])) {
-    $configBanques = $pdo->query("SELECT * FROM config_quiz")->fetchAll();
-    $ids = [];
-    foreach ($configBanques as $banque) {
-        if ($banque['nb_questions_a_tirer'] > 0) {
-            $st = $pdo->prepare("SELECT id FROM questions WHERE banque = ? ORDER BY RAND() LIMIT ?");
-            $st->bindValue(1, $banque['banque'], PDO::PARAM_INT);
-            $st->bindValue(2, $banque['nb_questions_a_tirer'], PDO::PARAM_INT);
-            $st->execute();
-            foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $qid) { $ids[] = (int)$qid; }
-        }
-    }
-    shuffle($ids);
+    // Questionnaire attribué selon l'ordre d'arrivée (1er -> n° 1 … 50e -> n° 50, 51e -> n° 1…), 10 questions dans l'ordre du fichier
+    $numQuestionnaire = questionnaireAttribuer($pdo, (int)$seminariste['id']);
+    $ids = questionnaireQuestions($pdo, $numQuestionnaire);
     $_SESSION[$cleSession] = ['ids' => $ids, 'debut' => time()];
     $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")
         ->execute([$cleSession, time() . '|' . implode(',', $ids)]);
@@ -105,7 +97,7 @@ require_once __DIR__ . '/includes/header.php';
 <section class="section">
     <div class="container form-wrap">
         <div class="section-titre">
-            <span class="eyebrow">Test d'entrée - Noté sur 20</span>
+            <span class="eyebrow">Test d'entrée · Questionnaire n° <?= questionnaireAttribuer($pdo, (int)$seminariste['id']) ?> · Noté sur 20</span>
             <h2>Bonne chance, <?= e($seminariste['nom_prenoms']) ?> !</h2>
             <p style="color:var(--texte-doux);">Répondez aux <?= count($questions) ?> questions ci-dessous. Vous avez <strong><?= DUREE_TEST_MINUTES ?> minutes</strong> : à la fin du temps, le test est soumis automatiquement avec les réponses déjà données.</p>
         </div>
