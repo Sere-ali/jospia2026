@@ -1,8 +1,11 @@
 <?php
 /**
  * Test d'entrée JOSPIA 2026 : 50 questionnaires de 10 questions (fichiers « Questionnaires 1 à 50 »).
- * Chaque séminariste qui ouvre le test reçoit un questionnaire TIRÉ AU SORT parmi les 50
- * (attribué à la première ouverture du test, puis conservé).
+ * ANTI-TRICHE : chaque séminariste reçoit un test PERSONNALISÉ de 10 questions, une par rubrique
+ * (rubrique n = question n des questionnaires : Fiqh, Doctrine, Coran, Hadith, Vie du Prophète, … Thème JOSPIA).
+ * Pour chaque rubrique, on prend la question la moins tirée jusqu'ici (au hasard en cas d'égalité) :
+ * les 50 variantes tournent équitablement, deux voisins n'ont presque jamais la même question.
+ * L'ordre des questions et l'ordre des 4 réponses (A, B, C, D) sont aussi mélangés pour chacun.
  */
 const TEST_NB_QUESTIONNAIRES = 50;
 const TEST_CATEGORIE = "Test d'entrée JOSPIA 2026";
@@ -20,6 +23,9 @@ function questionnairesPreparer(PDO $pdo) {
     $fait = true;
     if (!questionnairesColonne($pdo, 'questions', 'questionnaire')) {
         $pdo->exec("ALTER TABLE questions ADD COLUMN questionnaire INT NULL, ADD COLUMN ordre INT NULL, ADD INDEX idx_questionnaire (questionnaire, ordre)");
+    }
+    if (!questionnairesColonne($pdo, 'questions', 'nb_tirages')) {
+        $pdo->exec("ALTER TABLE questions ADD COLUMN nb_tirages INT NOT NULL DEFAULT 0");
     }
     if (!questionnairesColonne($pdo, 'seminaristes', 'questionnaire_test')) {
         $pdo->exec("ALTER TABLE seminaristes ADD COLUMN questionnaire_test INT NULL, ADD COLUMN rang_test INT NULL");
@@ -63,4 +69,32 @@ function questionnaireQuestions(PDO $pdo, $numero) {
     $st = $pdo->prepare("SELECT id FROM questions WHERE questionnaire = ? ORDER BY ordre, id");
     $st->execute([(int)$numero]);
     return array_map('intval', $st->fetchAll(PDO::FETCH_COLUMN));
+}
+
+/**
+ * Compose un test personnalisé : 10 questions (une par rubrique 1 à 10), chacune choisie parmi les moins tirées,
+ * sans deux énoncés identiques. Retourne [ids mélangés, permutations des réponses (ex. "CADB" : la case A affiche la réponse C)].
+ */
+function testComposer(PDO $pdo) {
+    questionnairesPreparer($pdo);
+    $pdo->query("SELECT GET_LOCK('jospia_test_compo', 10)");
+    try {
+        $ids = []; $vus = [];
+        $st = $pdo->prepare("SELECT id, enonce FROM questions WHERE questionnaire IS NOT NULL AND ordre = ? ORDER BY nb_tirages ASC, RAND() LIMIT 12");
+        for ($k = 1; $k <= 10; $k++) {
+            $st->execute([$k]);
+            foreach ($st->fetchAll() as $q) {
+                $cle = mb_strtolower(preg_replace('/^\([^)]*\)\s*|\W+/u', '', $q['enonce']), 'UTF-8');
+                if (isset($vus[$cle])) continue;
+                $vus[$cle] = true; $ids[] = (int)$q['id']; break;
+            }
+        }
+        if ($ids) { $pdo->exec("UPDATE questions SET nb_tirages = nb_tirages + 1 WHERE id IN (" . implode(',', $ids) . ")"); }
+    } finally {
+        $pdo->query("SELECT RELEASE_LOCK('jospia_test_compo')");
+    }
+    shuffle($ids);
+    $perms = [];
+    foreach ($ids as $_) { $l = ['A', 'B', 'C', 'D']; shuffle($l); $perms[] = implode('', $l); }
+    return [$ids, $perms];
 }

@@ -35,7 +35,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-titre">
             <span class="eyebrow">Commission scientifique</span>
             <h2>Test d'entrée</h2>
-            <p><?= TEST_NB_QUESTIONNAIRES ?> questionnaires de 10 questions. Chaque séminariste reçoit un questionnaire tiré au sort parmi les <?= TEST_NB_QUESTIONNAIRES ?>, et le garde même s'il se reconnecte. Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20 (2 points par bonne réponse).</p>
+            <p><?= TEST_NB_QUESTIONNAIRES ?> questionnaires de 10 questions. <strong>Anti-triche :</strong> chaque séminariste reçoit un test personnalisé de 10 questions (une par rubrique, choisie parmi les 50 variantes en faisant tourner les moins utilisées), avec les questions et les réponses A-B-C-D mélangées. Le test reste le même s'il se reconnecte. Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20 (2 points par bonne réponse).</p>
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 
@@ -57,15 +57,15 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="carte" style="overflow-x:auto;">
             <h3>Résultats</h3>
             <table>
-                <thead><tr><th>Matricule</th><th>Nom et prénoms</th><th>Questionnaire</th><th>Note /20</th><th>Niveau</th><th>Action</th></tr></thead>
+                <thead><tr><th>Matricule</th><th>Nom et prénoms</th><th>Note /20</th><th>Niveau</th><th>Action</th></tr></thead>
                 <tbody>
                 <?php foreach ($resultats as $r): ?>
                     <tr>
-                        <td class="mono"><?= e($r['matricule']) ?></td><td><?= e($r['nom_prenoms']) ?></td><td><?= $r['questionnaire_test'] ? 'n° ' . (int)$r['questionnaire_test'] : '—' ?></td><td><?= e($r['note_test']) ?></td><td><?= e($r['niveau_affecte']) ?></td>
+                        <td class="mono"><?= e($r['matricule']) ?></td><td><?= e($r['nom_prenoms']) ?></td><td><?= e($r['note_test']) ?></td><td><?= e($r['niveau_affecte']) ?></td>
                         <td><a href="<?= BASE_URL ?>/admin/correction?id=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline">Correction</a></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (!$resultats): ?><tr><td colspan="6" class="text-center">Aucun test composé pour le moment.</td></tr><?php endif; ?>
+                <?php if (!$resultats): ?><tr><td colspan="5" class="text-center">Aucun test composé pour le moment.</td></tr><?php endif; ?>
                 </tbody>
             </table>
         </div>

@@ -30,8 +30,9 @@ $stEtat = $pdo->prepare("SELECT valeur FROM parametres WHERE cle = ?");
 $stEtat->execute([$cleSession]);
 $etat = $stEtat->fetchColumn();
 if ($etat && strpos($etat, '|') !== false) {
-    [$debutDb, $listeDb] = explode('|', $etat, 2);
-    $_SESSION[$cleSession] = ['debut' => (int)$debutDb, 'ids' => array_values(array_filter(array_map('intval', explode(',', $listeDb))))];
+    $parts = explode('|', $etat, 3);
+    $_SESSION[$cleSession] = ['debut' => (int)$parts[0], 'ids' => array_values(array_filter(array_map('intval', explode(',', $parts[1] ?? '')))),
+                              'perms' => isset($parts[2]) && $parts[2] !== '' ? explode(',', $parts[2]) : []];
 } else {
     unset($_SESSION[$cleSession]);
 }
@@ -39,14 +40,15 @@ if ($etat && strpos($etat, '|') !== false) {
 // Les questions et l'heure de début sont fixées côté serveur dès l'ouverture du test
 // (le chrono continue même si la page est rechargée, et la correction porte sur les mêmes questions).
 if (empty($_SESSION[$cleSession]['ids'])) {
-    // Questionnaire attribué selon l'ordre d'arrivée (1er -> n° 1 … 50e -> n° 50, 51e -> n° 1…), 10 questions dans l'ordre du fichier
-    $numQuestionnaire = questionnaireAttribuer($pdo, (int)$seminariste['id']);
-    $ids = questionnaireQuestions($pdo, $numQuestionnaire);
-    $_SESSION[$cleSession] = ['ids' => $ids, 'debut' => time()];
+    // Anti-triche : test personnalisé (1 question par rubrique, la moins tirée), questions et réponses mélangées
+    [$ids, $perms] = testComposer($pdo);
+    $_SESSION[$cleSession] = ['ids' => $ids, 'perms' => $perms, 'debut' => time()];
     $pdo->prepare("INSERT INTO parametres (cle, valeur) VALUES (?, ?) ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)")
-        ->execute([$cleSession, time() . '|' . implode(',', $ids)]);
+        ->execute([$cleSession, time() . '|' . implode(',', $ids) . '|' . implode(',', $perms)]);
 }
 $idsQuiz = $_SESSION[$cleSession]['ids'];
+$permsQuiz = $_SESSION[$cleSession]['perms'] ?? [];
+$permDe = function ($i) use ($permsQuiz) { $p = $permsQuiz[$i] ?? 'ABCD'; return preg_match('/^[ABCD]{4}$/', $p) ? $p : 'ABCD'; };
 $questions = [];
 if ($idsQuiz) {
     $in = implode(',', array_fill(0, count($idsQuiz), '?'));
@@ -71,9 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $tempsEcoule) {
     $totalQuestionsTirees = count($questions);
     $insertReponse = $pdo->prepare("INSERT INTO reponses_test (seminariste_id, question_id, reponse_donnee, correcte) VALUES (?,?,?,?)");
     
-    foreach ($questions as $q) {
+    foreach ($questions as $i => $q) {
         $rep = $_POST['q' . $q['id']] ?? null;
         if (!in_array($rep, ['A','B','C','D'], true)) { $rep = null; }
+        else { $rep = $permDe($i)[ord($rep) - 65]; } // case affichée -> réponse d'origine
         $correcte = ($rep !== null && $rep === $q['bonne_reponse']) ? 1 : 0;
         if ($correcte) $bonnesReponses++;
         $insertReponse->execute([$seminariste['id'], $q['id'], $rep, $correcte]);
@@ -97,7 +100,7 @@ require_once __DIR__ . '/includes/header.php';
 <section class="section">
     <div class="container form-wrap">
         <div class="section-titre">
-            <span class="eyebrow">Test d'entrée · Questionnaire n° <?= questionnaireAttribuer($pdo, (int)$seminariste['id']) ?> · Noté sur 20</span>
+            <span class="eyebrow">Test d'entrée · Noté sur 20</span>
             <h2>Bonne chance, <?= e($seminariste['nom_prenoms']) ?> !</h2>
             <p style="color:var(--texte-doux);">Répondez aux <?= count($questions) ?> questions ci-dessous. Vous avez <strong><?= DUREE_TEST_MINUTES ?> minutes</strong> : à la fin du temps, le test est soumis automatiquement avec les réponses déjà données.</p>
         </div>
@@ -107,12 +110,11 @@ require_once __DIR__ . '/includes/header.php';
         <form method="post" id="quiz-form">
             <?php foreach ($questions as $i => $q): ?>
                 <div class="carte question-card">
-                    <span class="categorie"><?= e($q['categorie']) ?></span>
-                    <h3>Q<?= $i + 1 ?>. <?= e($q['enonce']) ?></h3>
-                    <label class="option-item"><input type="radio" name="q<?= $q['id'] ?>" value="A"> <?= e($q['option_a']) ?></label>
-                    <label class="option-item"><input type="radio" name="q<?= $q['id'] ?>" value="B"> <?= e($q['option_b']) ?></label>
-                    <label class="option-item"><input type="radio" name="q<?= $q['id'] ?>" value="C"> <?= e($q['option_c']) ?></label>
-                    <label class="option-item"><input type="radio" name="q<?= $q['id'] ?>" value="D"> <?= e($q['option_d']) ?></label>
+                    <span class="categorie"><?= e(preg_match('/^\(([^)]*)\)/u', $q['enonce'], $mc) ? $mc[1] : $q['categorie']) ?></span>
+                    <h3>Q<?= $i + 1 ?>. <?= e(preg_replace('/^\([^)]*\)\s*/u', '', $q['enonce'])) ?></h3>
+                    <?php foreach (['A', 'B', 'C', 'D'] as $j => $case): $orig = $permDe($i)[$j]; ?>
+                    <label class="option-item"><input type="radio" name="q<?= $q['id'] ?>" value="<?= $case ?>"> <?= e($q['option_' . strtolower($orig)]) ?></label>
+                    <?php endforeach; ?>
                 </div>
             <?php endforeach; ?>
             <button type="submit" class="btn btn-primaire btn-block">Soumettre mes réponses</button>
