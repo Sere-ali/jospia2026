@@ -35,7 +35,7 @@ require_once __DIR__ . '/../includes/admin_nav.php';
         <div class="section-titre">
             <span class="eyebrow">Commission scientifique</span>
             <h2>Test d'entrée</h2>
-            <p><?= TEST_NB_QUESTIONNAIRES ?> questionnaires de 10 questions. Chaque séminariste reçoit un questionnaire selon son ordre d'arrivée : le 1er → n° 1, le 2e → n° 2… le 50e → n° 50, puis le 51e retombe sur le n° 1. Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20 (2 points par bonne réponse).</p>
+            <p><?= TEST_NB_QUESTIONNAIRES ?> questionnaires de 10 questions. Chaque séminariste reçoit un questionnaire tiré au sort parmi les <?= TEST_NB_QUESTIONNAIRES ?>, et le garde même s'il se reconnecte. Durée : <?= DUREE_TEST_MINUTES ?> minutes, soumission automatique à la fin du temps. Noté sur 20 (2 points par bonne réponse).</p>
         </div>
         <?php if (!empty($_SESSION['flash_succes'])): ?><div class="alert alert-succes"><?= e($_SESSION['flash_succes']) ?></div><?php unset($_SESSION['flash_succes']); endif; ?>
 

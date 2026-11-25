@@ -1,9 +1,8 @@
 <?php
 /**
  * Test d'entrée JOSPIA 2026 : 50 questionnaires de 10 questions (fichiers « Questionnaires 1 à 50 »).
- * Chaque séminariste qui ouvre le test reçoit un questionnaire selon son ordre d'arrivée :
- * le 1er séminariste -> questionnaire 1, le 2e -> questionnaire 2, … le 50e -> questionnaire 50,
- * puis le 51e retombe sur le questionnaire 1, et ainsi de suite (par blocs de 50).
+ * Chaque séminariste qui ouvre le test reçoit un questionnaire TIRÉ AU SORT parmi les 50
+ * (attribué à la première ouverture du test, puis conservé).
  */
 const TEST_NB_QUESTIONNAIRES = 50;
 const TEST_CATEGORIE = "Test d'entrée JOSPIA 2026";
@@ -37,7 +36,7 @@ function questionnairesPreparer(PDO $pdo) {
     }
 }
 
-/** Questionnaire du séminariste (attribué à la première ouverture du test, puis conservé). */
+/** Questionnaire du séminariste : tiré au sort à la première ouverture du test, puis conservé. */
 function questionnaireAttribuer(PDO $pdo, $seminaristeId) {
     questionnairesPreparer($pdo);
     $st = $pdo->prepare("SELECT questionnaire_test FROM seminaristes WHERE id = ?");
@@ -50,7 +49,7 @@ function questionnaireAttribuer(PDO $pdo, $seminaristeId) {
         $q = $st->fetchColumn();
         if ($q) return (int)$q;
         $rang = (int)$pdo->query("SELECT COALESCE(MAX(rang_test), 0) FROM seminaristes")->fetchColumn() + 1;
-        $q = ($rang - 1) % TEST_NB_QUESTIONNAIRES + 1;
+        $q = random_int(1, TEST_NB_QUESTIONNAIRES); // tirage au sort
         $pdo->prepare("UPDATE seminaristes SET questionnaire_test = ?, rang_test = ? WHERE id = ?")->execute([$q, $rang, $seminaristeId]);
         return $q;
     } finally {
