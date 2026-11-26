@@ -147,9 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['etape'] ?? '') !== 'ticket
                     <legend>Numéro de ticket</legend>
                     <div class="form-group">
                         <label for="ticket">Numéro de ticket <span class="req">*</span></label>
-                        <input type="text" name="ticket" id="ticket" required autocomplete="off" autocapitalize="characters" placeholder="Ex : KI001" maxlength="12"
+                        <input type="text" name="ticket" id="ticket" required autocomplete="off" autocapitalize="characters" maxlength="12"
                                value="<?= e($_POST['ticket'] ?? '') ?>" style="text-transform:uppercase;font-size:1.25rem;letter-spacing:2px;font-weight:700;">
-                        <div class="help-text">Le numéro est inscrit sur votre ticket (« N° KI001 », par exemple). Sans ticket valide, l'inscription n'est pas possible. Un ticket = un participant.</div>
+                        <div class="help-text">Le numéro est inscrit sur votre ticket. Sans ticket valide, l'inscription n'est pas possible. Un ticket = un participant.</div>
                     </div>
                 </fieldset>
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Vérifier mon ticket</span><i aria-hidden="true">→</i></button>

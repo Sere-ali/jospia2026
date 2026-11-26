@@ -563,7 +563,7 @@ function ticketNormaliser($saisie) {
 function ticketVerifierPourInscription(PDO $pdo, $saisie) {
     ticketsInscriptionPreparer($pdo);
     $code = ticketNormaliser($saisie);
-    if ($code === '') return [$code, "Saisissez le numéro inscrit sur votre ticket (ex. KI001)."];
+    if ($code === '') return [$code, "Saisissez le numéro inscrit sur votre ticket."];
     $st = $pdo->prepare("SELECT COUNT(*) FROM tickets WHERE code = ?");
     $st->execute([$code]);
     if (!(int)$st->fetchColumn()) return [$code, "Le numéro de ticket « $code » n'est pas reconnu. Vérifiez le numéro inscrit sur votre ticket ou rapprochez-vous de la commission Finance."];
