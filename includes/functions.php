@@ -540,6 +540,39 @@ function ticketsPreparer(PDO $pdo) {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE KEY uniq_ticket_numero (numero), UNIQUE KEY uniq_ticket_code (code)) ENGINE=InnoDB");
 }
 
+/** Le séminariste doit saisir un numéro de ticket valide (généré par la Finance) et non encore utilisé. */
+function ticketsInscriptionPreparer(PDO $pdo) {
+    static $ok = false;
+    if ($ok) return;
+    $ok = true;
+    ticketsPreparer($pdo);
+    $st = $pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'seminaristes' AND column_name = 'ticket_code'");
+    if (!(int)$st->fetchColumn()) {
+        $pdo->exec("ALTER TABLE seminaristes ADD COLUMN ticket_code VARCHAR(20) NULL, ADD UNIQUE KEY uniq_sem_ticket (ticket_code)");
+    }
+}
+
+/** Met un numéro saisi au format des tickets : « ki 1 », « KI-001 » -> « KI001 ». */
+function ticketNormaliser($saisie) {
+    $t = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)$saisie));
+    if (preg_match('/^([A-Z]{2})0*([0-9]{1,3})$/', $t, $m)) return $m[1] . str_pad($m[2], 3, '0', STR_PAD_LEFT);
+    return $t;
+}
+
+/** Vérifie un numéro de ticket pour l'inscription. Retourne [code normalisé, null] si valide, sinon [code, message d'erreur]. */
+function ticketVerifierPourInscription(PDO $pdo, $saisie) {
+    ticketsInscriptionPreparer($pdo);
+    $code = ticketNormaliser($saisie);
+    if ($code === '') return [$code, "Saisissez le numéro inscrit sur votre ticket (ex. KI001)."];
+    $st = $pdo->prepare("SELECT COUNT(*) FROM tickets WHERE code = ?");
+    $st->execute([$code]);
+    if (!(int)$st->fetchColumn()) return [$code, "Le numéro de ticket « $code » n'est pas reconnu. Vérifiez le numéro inscrit sur votre ticket ou rapprochez-vous de la commission Finance."];
+    $st = $pdo->prepare("SELECT COUNT(*) FROM seminaristes WHERE ticket_code = ?");
+    $st->execute([$code]);
+    if ((int)$st->fetchColumn()) return [$code, "Le ticket « $code » a déjà été utilisé pour une inscription. Un ticket = un participant."];
+    return [$code, null];
+}
+
 /** Séries de tickets : 5 séries (KI, AS, MS, OK, NS) de 5 souches de 20 tickets = 500 tickets. */
 const TICKETS_SERIES = ['KI', 'AS', 'MS', 'OK', 'NS'];
 const TICKETS_PAR_SOUCHE = 20;

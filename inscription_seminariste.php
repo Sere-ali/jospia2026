@@ -13,8 +13,27 @@ $succes = null;
 $identifiantsGeneres = null;
 $sections = sectionsParAnyama();
 anyamaPreparer($pdo);
+ticketsInscriptionPreparer($pdo);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Étape 1 : numéro de ticket. Sans ticket valide (généré par la commission Finance et non utilisé), pas d'inscription.
+$ticketValide = $_SESSION['ticket_inscription'] ?? null;
+if ($ticketValide) { [, $errT] = ticketVerifierPourInscription($pdo, $ticketValide); if ($errT) { $ticketValide = null; unset($_SESSION['ticket_inscription']); } }
+$erreurTicket = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['etape'] ?? '') === 'ticket') {
+    $essais = $_SESSION['ticket_essais'] ?? ['n' => 0, 't' => time()];
+    if (time() - $essais['t'] > 900) { $essais = ['n' => 0, 't' => time()]; }
+    if ($essais['n'] >= 10) {
+        $erreurTicket = "Trop d'essais de numéro de ticket. Réessayez dans 15 minutes ou rapprochez-vous de la commission Finance.";
+    } else {
+        [$codeT, $erreurTicket] = ticketVerifierPourInscription($pdo, $_POST['ticket'] ?? '');
+        if ($erreurTicket) { $essais['n']++; } else { $_SESSION['ticket_inscription'] = $ticketValide = $codeT; $essais = ['n' => 0, 't' => time()]; }
+    }
+    $_SESSION['ticket_essais'] = $essais;
+    if (!$erreurTicket) { redirect('/inscription_seminariste'); }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['changer_ticket'])) { unset($_SESSION['ticket_inscription']); redirect('/inscription_seminariste'); }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['etape'] ?? '') !== 'ticket') {
     $nom = trim($_POST['nom_prenoms'] ?? '');
     $genre = $_POST['genre'] ?? '';
     $niveauEtude = mb_strtoupper(trim($_POST['niveau_etude'] ?? ''), 'UTF-8');
@@ -44,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($parentNom === '') $erreurs[] = "Le nom du parent/tuteur (contact d'urgence) est obligatoire.";
     if ($parentContact === '' || !preg_match('/^[0-9]{10}$/', $parentContact)) $erreurs[] = "Le contact du parent/tuteur doit contenir uniquement des chiffres (10 chiffres).";
     if (empty($_FILES['photo']['name'])) $erreurs[] = "La photo est obligatoire.";
+    if (!$ticketValide) $erreurs[] = "Saisissez d'abord un numéro de ticket valide.";
 
     // PAIEMENT : en espèces, auprès de la commission Finance (aucun paiement en ligne).
     $referenceTx = '';
@@ -61,6 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Le dossier est créé ; le paiement en espèces sera enregistré et validé par la commission Finance.
         $r = creerInscriptionSeminariste($pdo, $donnees, $nomPhoto, $referenceTx, null, 0);
+        try {
+            $pdo->prepare("UPDATE seminaristes SET ticket_code = ? WHERE id = ?")->execute([$ticketValide, $r['id']]);
+        } catch (PDOException $ex) {
+            // ticket pris entre-temps par une autre inscription : on annule ce dossier
+            $pdo->prepare("DELETE FROM comptes WHERE seminariste_id = ?")->execute([$r['id']]);
+            $pdo->prepare("DELETE FROM seminaristes WHERE id = ?")->execute([$r['id']]);
+            unset($_SESSION['ticket_inscription']);
+            $_SESSION['flash_erreur'] = "Ce ticket vient d'être utilisé pour une autre inscription. Un ticket = un participant.";
+            redirect('/inscription_seminariste');
+        }
+        unset($_SESSION['ticket_inscription']);
         $stC = $pdo->prepare("SELECT * FROM comptes WHERE seminariste_id = ? AND role = 'seminariste' LIMIT 1");
         $stC->execute([$r['id']]);
         $nouveauCompte = false;
@@ -107,7 +138,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-erreur"><?= e($err) ?></div>
             <?php endforeach; ?>
 
+            <?php if (!empty($_SESSION['flash_erreur'])): ?><div class="alert alert-erreur"><?= e($_SESSION['flash_erreur']) ?></div><?php unset($_SESSION['flash_erreur']); endif; ?>
+            <?php if (!$ticketValide): ?>
+            <?php if ($erreurTicket): ?><div class="alert alert-erreur"><?= e($erreurTicket) ?></div><?php endif; ?>
+            <form method="post" class="form-pro" id="form-ticket">
+                <input type="hidden" name="etape" value="ticket">
+                <fieldset>
+                    <legend>Numéro de ticket</legend>
+                    <div class="form-group">
+                        <label for="ticket">Numéro de ticket <span class="req">*</span></label>
+                        <input type="text" name="ticket" id="ticket" required autocomplete="off" autocapitalize="characters" placeholder="Ex : KI001" maxlength="12"
+                               value="<?= e($_POST['ticket'] ?? '') ?>" style="text-transform:uppercase;font-size:1.25rem;letter-spacing:2px;font-weight:700;">
+                        <div class="help-text">Le numéro est inscrit sur votre ticket (« N° KI001 », par exemple). Sans ticket valide, l'inscription n'est pas possible. Un ticket = un participant.</div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primaire btn-block btn-envoi"><span>Vérifier mon ticket</span><i aria-hidden="true">→</i></button>
+            </form>
+            <?php else: ?>
+            <div class="alert alert-succes">Ticket <strong><?= e($ticketValide) ?></strong> vérifié. Complétez maintenant votre inscription. <a href="<?= BASE_URL ?>/inscription_seminariste?changer_ticket=1" style="margin-left:6px;">Changer de ticket</a></div>
             <form method="post" enctype="multipart/form-data" novalidate class="form-pro" id="form-inscription">
+                <fieldset>
+                    <legend>Numéro de ticket</legend>
+                    <div class="form-group">
+                        <label>Numéro de ticket <span class="req">*</span></label>
+                        <input type="text" value="<?= e($ticketValide) ?>" readonly style="font-weight:700;letter-spacing:2px;background:#f3f6f4;">
+                    </div>
+                </fieldset>
                 <fieldset>
                     <legend>Identité</legend>
                     <div class="form-group">
@@ -215,6 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primaire btn-block btn-envoi" id="btn-valider"><span>Valider mon inscription</span><i aria-hidden="true">→</i></button>
                 <p class="form-note">Paiement en espèces · <?= number_format(FRAIS_PARTICIPATION, 0, ',', ' ') ?> FCFA, à remettre à la commission Finance</p>
             </form>
+            <?php endif; ?>
         <?php endif; ?>
         </div>
     </div>

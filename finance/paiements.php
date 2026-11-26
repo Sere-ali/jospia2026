@@ -31,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['paiement_id'], $_POST
 }
 
 // Récupérer la liste des paiements avec infos du séminariste
-$query = "SELECT p.*, s.nom_prenoms, s.matricule, s.contact, s.anyama, s.section, c.nom_affiche as admin_nom
+ticketsInscriptionPreparer($pdo);
+$query = "SELECT p.*, s.nom_prenoms, s.matricule, s.ticket_code, s.contact, s.anyama, s.section, c.nom_affiche as admin_nom
           FROM paiements p
           JOIN seminaristes s ON p.seminariste_id = s.id
           LEFT JOIN comptes c ON p.admin_validateur_id = c.id
@@ -119,7 +120,7 @@ require_once __DIR__ . '/../includes/finance_nav.php';
                         <td style="font-size:0.9rem;"><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
                         <td>
                             <strong><?= e($p['nom_prenoms']) ?></strong><br>
-                            <small class="tag"><?= e($p['matricule']) ?></small>
+                            <small class="tag"><?= e($p['matricule']) ?></small><?php if (!empty($p['ticket_code'])): ?> <small class="tag">Ticket <?= e($p['ticket_code']) ?></small><?php endif; ?>
                         </td>
                         <td><?= e($p['contact']) ?></td>
                         <td style="font-family: monospace; font-size: 1.15em;"><strong><?= e($p['numero_wave'] ?: '-') ?></strong></td>
