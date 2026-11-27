@@ -161,7 +161,7 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <?php endif; ?>
 
-        <?php if ($recu): // Badge visible uniquement après validation du paiement ?>
+        <?php if ($recu && parametre('publier_badge_diplome_seminaristes', '0') === '1'): // Badge : visible après validation du paiement ET publication par l'administration ?>
         <div style="max-width:340px;margin:30px auto 0;">
             <h3 style="text-align:center;">Mon badge</h3>
             <?php $s = $seminariste; require __DIR__ . '/../includes/badge_seminariste_carte.php'; ?>
@@ -210,7 +210,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php endif; ?>
         </div>
 
-        <?php if ($recu): // Diplôme visible uniquement après validation du paiement ?>
+        <?php if ($recu && parametre('publier_badge_diplome_seminaristes', '0') === '1'): // Diplôme : visible après validation du paiement ET publication par l'administration ?>
         <div class="carte" style="max-width:900px;margin:24px auto 0;">
             <h3>Mon diplôme</h3>
             <?php $nomCertificat = $seminariste['nom_prenoms']; require __DIR__ . '/../includes/certificat_seminariste_carte.php'; ?>

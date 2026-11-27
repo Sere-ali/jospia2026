@@ -11,6 +11,7 @@ $defs = [
 $bascules = [
     'inscriptions_seminaristes' => ['Inscriptions des séminaristes ouvertes', '1'],
     'inscriptions_commission'   => ['Inscriptions des membres de commission ouvertes', '1'],
+    'publier_badge_diplome_seminaristes' => ['Badge et diplôme visibles dans l\'espace des séminaristes', '0'],
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
