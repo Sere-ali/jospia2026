@@ -34,7 +34,7 @@ function exigerConnexion() {
     if ($u && $u['role'] === 'seminariste') {
         // Ne pas bloquer s'il est déjà sur la page de paiement ou de logout
         $currentPage = basename($_SERVER['PHP_SELF']);
-        if (!in_array($currentPage, ['paiement.php', 'logout.php', 'fiche.php'])) {
+        if (!in_array($currentPage, ['paiement.php', 'logout.php', 'fiche.php', 'quiz.php'])) { // le test d'entrée reste accessible avant la validation du paiement
             global $pdo;
             if (isset($pdo)) {
                 $stmt = $pdo->prepare("SELECT statut FROM paiements WHERE seminariste_id = ? ORDER BY created_at DESC LIMIT 1");

@@ -54,6 +54,7 @@ $page = basename($_SERVER['PHP_SELF']);
                     <a href="<?= BASE_URL ?>/admin/commission_scientifique">Commission scientifique</a>
                 <?php endif; ?>
                 <?php if (estResponsableCommission($pdo)): ?><a href="<?= BASE_URL ?>/espace/rapport">Rapports</a><?php endif; ?>
+                <?php if (($u['role'] ?? '') === 'seminariste'): ?><a href="<?= BASE_URL ?>/espace/fiche#test-entree" style="font-weight:800;color:var(--orange,#F77F00);">Test d'entrée</a><?php endif; ?>
                 <?php if (!estAdmin() || !empty($u['membre_id']) || !empty($u['seminariste_id'])): ?><a href="<?= BASE_URL ?>/espace/sortie">Sortie camp</a><?php endif; ?>
                 <a href="<?= BASE_URL ?>/compte">Mon compte</a>
                 <a href="<?= BASE_URL ?>/logout" class="btn-nav">Déconnexion</a>

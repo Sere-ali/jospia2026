@@ -124,6 +124,29 @@ require_once __DIR__ . '/../includes/header.php';
             <a href="<?= BASE_URL ?>/espace/sortie" class="btn btn-or btn-sm">Autorisation de sortie</a></p>
         </div>
 
+        <div id="test-entree" class="carte" style="max-width:720px;margin:0 auto 26px;border:3px solid var(--orange,#F77F00);box-shadow:0 10px 30px rgba(247,127,0,.18);">
+            <h3 style="display:flex;align-items:center;gap:10px;margin-top:0;"><span style="background:var(--orange,#F77F00);color:#fff;border-radius:8px;padding:4px 10px;font-size:.85rem;letter-spacing:1px;">IMPORTANT</span> Test d'entrée</h3>
+            <?php if ($seminariste['dortoir'] === 'Pépinière'): ?>
+                <p style="color:var(--texte-doux);">Les séminaristes du sous-comité <strong>Pépinière</strong> ne composent pas de test d'entrée. Niveau : <span class="pill pill-vert">Pépinière</span></p>
+            <?php elseif (!$seminariste['test_complete']): ?>
+                <p>Vous n'avez pas encore composé le test d'entrée : <strong>10 questions, <?= (int)DUREE_TEST_MINUTES ?> minutes</strong>. Il détermine automatiquement votre niveau (<?= e(implode(', ', nomsNiveaux())) ?>).</p>
+                <?php if (testOuvert($pdo)): ?>
+                    <a href="<?= BASE_URL ?>/quiz" class="btn btn-or btn-block" style="font-size:1.15rem;padding:16px 20px;font-weight:800;">Composer le test d'entrée maintenant →</a>
+                    <p class="help-text" style="margin-top:8px;">Le chrono démarre dès l'ouverture. Prévoyez <?= (int)DUREE_TEST_MINUTES ?> minutes sans interruption.</p>
+                <?php else: ?>
+                    <div class="acces-restreint">Le test d'entrée n'est pas encore ouvert. Il sera ouvert par la commission scientifique : revenez sur cette page à ce moment-là.</div>
+                <?php endif; ?>
+            <?php else: ?>
+                <p><strong>Test terminé.</strong> Note obtenue : <strong><?= e($seminariste['note_test']) ?> / 20</strong><br>
+                   Niveau d'affectation : <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>
+                <?php if (correctionOuverte($pdo)): ?>
+                    <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">Voir la correction détaillée de mon test</a>
+                <?php else: ?>
+                    <div class="acces-restreint">La correction détaillée du test est verrouillée pour le moment.</div>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
         <?php if (isset($_GET['inscrit'])): ?><div class="alert alert-succes" style="max-width:720px;margin:0 auto 16px;">Inscription enregistrée. Voici vos identifiants de connexion ci-dessous : notez-les. Vous pouvez télécharger votre fiche (PDF) avec son QR code.</div><?php endif; ?>
         <?php if ($recu): // La fiche d'inscription n'est visible qu'après validation du paiement par la commission Finance ?>
         <div class="fiche" id="ficheImprimable">
@@ -187,28 +210,7 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <?php endif; ?>
 
-        <div class="carte" style="max-width:720px;margin:30px auto 0;">
-            <h3>Test d'entrée</h3>
-            <?php if ($seminariste['dortoir'] === 'Pépinière'): ?>
-                <p style="color:var(--texte-doux);">Les séminaristes du sous-comité <strong>Pépinière</strong> ne composent pas de test d'entrée. Niveau : <span class="pill pill-vert">Pépinière</span></p>
-            <?php elseif (!$seminariste['test_complete']): ?>
-                <p>Vous n'avez pas encore composé le test d'entrée en ligne. Il détermine automatiquement votre niveau d'affectation (<?= e(implode(', ', nomsNiveaux())) ?>).</p>
-                <?php if (testOuvert($pdo)): ?>
-                    <a href="<?= BASE_URL ?>/quiz" class="btn btn-or">Composer le test maintenant</a>
-                <?php else: ?>
-                    <div class="acces-restreint">Le test d'entrée est verrouillé pour le moment. Il sera ouvert par la commission scientifique : revenez sur cette page à ce moment-là.</div>
-                <?php endif; ?>
-            <?php else: ?>
-                <p><strong>Note obtenue :</strong> <?= e($seminariste['note_test']) ?> / 20<br>
-                   <strong>Niveau d'affectation :</strong> <span class="pill pill-vert"><?= e($seminariste['niveau_affecte']) ?></span></p>
-                <?php if (correctionOuverte($pdo)): ?>
-                    <a href="<?= BASE_URL ?>/espace/correction" class="btn btn-outline btn-sm">Voir la correction détaillée de mon test</a>
-                <?php else: ?>
-                    <div class="acces-restreint">La correction détaillée du test est verrouillée pour le moment.</div>
-                <?php endif; ?>
 
-            <?php endif; ?>
-        </div>
 
         <?php if ($recu && parametre('publier_badge_diplome_seminaristes', '0') === '1'): // Diplôme : visible après validation du paiement ET publication par l'administration ?>
         <div class="carte" style="max-width:900px;margin:24px auto 0;">
